@@ -386,13 +386,13 @@ function answerQuiz(chosen, correct, explainEnc) {
 
 const CARD_IMAGES = {
   taejo_wiki: "https://www.storiespreschool.com/images/taejo_joseon0.jpg",
-  sejong_wiki: "https://i.namu.wiki/i/rqS_sa8Ni41mUq0igRTJ_AuESFCwdHsNsgttQQhigmNsQDEfUregED4-gZyANryGmTtPO2SfG0aVzmMqTSnC9D6J5-VD_dYaCDz3rELLJm4Oiwqxfed6CbiC1s2DxIE6f7Y3LtZzcKtfgoMqBMLDDTelScM2r0CnEenvuHF9X4c.webp",
+  sejong_wiki: "https://i0.wp.com/yoonsb.com/wp-content/uploads/2016/11/ec84b8eca285ec96b4eca784.jpg?fit=816%2C459&ssl=1",
   yeongjo_wiki: "https://i.namu.wiki/i/WNnaKDc2vWmqIHrj74zxc4pm9-SNsWPGwA1J5A-X1fROSO_ic8hEsnnnZBlDg1JsK1eWgtOlvriSXM6in_q4SjHslSYL0GZyKK72se6WywQtWIQLPNY1NaP3iTo_2lJOVZa7CGqDC2OctjwQAsKHAg.webp",
-  gojong_wiki: "https://i.namu.wiki/i/uHlaYDsj0O8m-5bqb85Rj-gw6Y8FBr_UG0EfuimO34S_QWEOjU6COWExaExbmbPuT_K8nSRyX0MLVG_NZUo5iw.webp",
+  gojong_wiki: "https://preview.redd.it/one-of-the-asian-generic-portraits-is-emperor-gojong-of-v0-6fwz520b08g11.jpg?width=575&format=pjpg&auto=webp&s=e109ce33fc0aab4d76b0eeef9f46ee2c6d5012d6",
   yisunshin_wiki: "https://cdn.kidshankook.kr/news/photo/202504/13608_34487_317.jpg",
-  anjungeun_wiki: "https://i.namu.wiki/i/b6rUUETUrHe1wltUqZqNQfnjl1Y1IyISWMSRl7gdxP_fIuQJrZ-B_O1juh2lBnrDH75zAu8Hx30ym-U6QaOHKgrWXbAbmUoFl4OcrG1hE3uAFFuK7kTLPRM5Im8JXhsbYKSVzJD-DLCetAF-eCGtXg.webp",
-  imjin_wiki: "https://ko.wikipedia.org/wiki/%ED%8C%8C%EC%9D%BC:Busanjinsunjeoldo.jpg",
-  japanrule_wiki: "https://postfiles.pstatic.net/MjAxOTA4MjNfNTAg/MDAxNTY2NTQ2Nzc0Mzgz.WkG57OD_yzQJA6DKVzIFkvzOGRBfheqYwQ1y-jrn8dUg.v08zXItXIhsJBWQvW-Aixqrbr3IznqJ003-15zhRQq0g.PNG.nanum_in/%EC%82%AC_b%EB%8B%A8%EC%9E%A5_%EC%9E%AC%EC%9D%BC%EC%A0%9C%EC%A3%BC%EC%9D%B809.png?type=w966",
+  anjungeun_wiki: "https://www.koya-culture.com/data/photos/20190312/art_15534302871578_2e841b.jpg",
+  imjin_wiki: "https://dh.aks.ac.kr/Encyves/wiki/images/d/d3/%EA%B9%80%ED%98%95%EA%B5%AC-%ED%95%9C%EC%82%B0%EB%8C%80%EC%B2%A9%28%EC%9D%B4%EC%88%9C%EC%8B%A0%29-1975s.jpg",
+  japanrule_wiki: "https://upload.wikimedia.org/wikipedia/commons/7/7f/IJA_Special_Volunteers_by_Korean_people.JPG",
   koreanwar_wiki: "https://i.namu.wiki/i/MvA1MhTe9TbY3z5AZpDsPNTYWWmZ5SVyb4XiMY9BGWvs50GV5QBtGZMG6vKQGJPRVoui0H5ynob4oL5N9uV4bA.webp",
   northkorea_wiki: "https://i.namu.wiki/i/rqS_sa8Ni41mUq0igRTJ_Dy8uzGfeP4bVXFCllYjYxhC0Uj8bfJW7REpUgF2XZk3qPeGGL0eoY-qQA_-4B5uMjDwp1Ke76yYJ1yvyS91CZkmpePyoWU1RmXdBwnm3bd1SKKydm-H2FItQzevyHqmc2XYMOWHKnVLXjQq53xbWFw.webp",
   yugwansun_wiki: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZk3Qn5LmyWd8rDkdM49EDyuDl2_QspULN0A&s",
@@ -402,7 +402,6 @@ const CARD_IMAGES = {
   seoul_olympics_wiki: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWY2IkKLNFiCOAOEjDRAgRI_5zJYyGIo1aKA&s",
   modern_korea_wiki: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS_O66GGfVMWmU3ANNpSyGWJetP7OsUj9Lpw&s",
 };
-
 const modalData = {
   taejo:{image:'taejo_wiki',period:'1대 · 1392–1398',nameKo:'태조 이성계',nameEn:"King Taejo — Founder of Joseon",why:"The Goryeo dynasty had become weak and corrupt. General Yi Seonggye was a brilliant military commander with the loyalty of the army. In 1392, he overthrew the last Goryeo king and founded an entirely new dynasty: Joseon.",story:["Yi Seonggye was not born royal — he was a general who earned power through military victories. He was famous for defeating Japanese pirates (왜구) and Mongol raiders who terrorized Korea's borders.","After taking power, he moved the capital from Gaeseong to Hanyang — the city we call Seoul today. He built city walls, palaces like Gyeongbokgung (경복궁), and established Confucian values as the foundation of the new society.","He ruled only 6 years before conflict among his sons forced him to abdicate. He spent his final years as a Buddhist monk — a dramatic end for the man who founded a 500-year dynasty."],fact:"Seoul's famous Gyeongbokgung Palace (경복궁) was built by Taejo in 1395. Its name means 'Palace Greatly Blessed by Heaven.' You can still visit it today!",today:["The Joseon dynasty Taejo founded lasted 518 years — until Japan's annexation in 1910. Almost everything about traditional Korean culture — the palaces, the Confucian values, hanbok clothing — comes from this era."],quiz:{q:"What is the modern name of the capital city that King Taejo moved to when he founded Joseon?",opts:["Gaeseong","Busan","Seoul (then called Hanyang)","Gyeongju"],correct:2,explain:"King Taejo moved the capital to Hanyang in 1394 — the city we now call Seoul. It has been Korea's capital for over 600 years!"}},
 
