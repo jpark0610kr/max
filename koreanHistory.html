@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한국 역사 | Korean History Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Bebas+Neue&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #C0392B;
+  --gold: #D4A017;
+  --dark-gold: #9A7209;
+  --ink: #12100E;
+  --ink2: #1C1712;
+  --cream: #F0E6CC;
+  --muted: rgba(240,230,204,0.55);
+  --blue: #1B4F8A;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body { background:var(--ink); color:var(--cream); font-family:'Noto Sans KR',sans-serif; font-weight:500; overflow-x:hidden; }
+
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1rem 2rem;
+  background:rgba(18,16,14,0.93);
+  border-bottom:1px solid rgba(212,160,23,0.12);
+  backdrop-filter:blur(8px);
+}
+.nav-logo { font-family:'Noto Serif KR',serif; font-weight:900; font-size:1.1rem; color:var(--gold); cursor:pointer; letter-spacing:0.05em; }
+.nav-links { display:flex; gap:0.2rem; flex-wrap:wrap; }
+.nav-btn {
+  background:none; border:none; color:var(--muted);
+  font-family:'Noto Sans KR',sans-serif; font-size:0.75rem;
+  padding:0.4rem 0.8rem; cursor:pointer; letter-spacing:0.04em;
+  transition:color 0.2s; border-radius:2px;
+}
+.nav-btn:hover, .nav-btn.active { color:var(--gold); background:rgba(212,160,23,0.08); }
+
+.page { display:none; min-height:100vh; padding-top:60px; background:#12100E; }
+.page.active { display:block; }
+
+/* HERO */
+.hero {
+  min-height:calc(100vh - 60px);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:4rem 2rem;
+  position:relative; overflow:hidden;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%, #2C1A0E 0%, var(--ink) 70%);
+}
+.hero-bg { position:absolute; font-family:'Noto Serif KR',serif; font-weight:900; font-size:22vw; color:rgba(212,160,23,0.05); user-select:none; top:50%; left:50%; transform:translate(-50%,-50%); white-space:nowrap; }
+.hero-tag { font-size:0.7rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--gold); margin-bottom:1.5rem; opacity:0.8; animation:fadeUp 0.8s ease both; }
+.hero-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(4.5rem,14vw,11rem); line-height:0.88; letter-spacing:0.02em; color:var(--cream); animation:fadeUp 0.8s 0.1s ease both; }
+.hero-title em { display:block; font-style:normal; font-family:'Noto Serif KR',serif; font-weight:900; font-size:clamp(1.8rem,5vw,4rem); color:var(--gold); letter-spacing:0.2em; }
+.hero-sub { margin-top:1.8rem; font-size:0.95rem; color:var(--muted); font-weight:300; line-height:1.8; max-width:500px; animation:fadeUp 0.8s 0.2s ease both; }
+.hero-cards { display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-top:3rem; animation:fadeUp 0.8s 0.35s ease both; }
+.hero-card { background:rgba(255,255,255,0.04); border:1px solid rgba(212,160,23,0.15); padding:1.2rem 1.8rem; cursor:pointer; transition:all 0.25s ease; display:flex; flex-direction:column; align-items:center; gap:0.4rem; min-width:130px; }
+.hero-card:hover { background:rgba(212,160,23,0.1); border-color:rgba(212,160,23,0.4); transform:translateY(-3px); }
+.hero-card-icon { font-size:1.8rem; }
+.hero-card-ko { font-family:'Noto Serif KR',serif; font-weight:700; font-size:1rem; color:var(--gold); }
+.hero-card-en { font-size:0.65rem; letter-spacing:0.15em; color:var(--muted); text-transform:uppercase; }
+
+/* PAGE HEADER */
+.page-header { padding:4rem 2rem 3rem; max-width:1100px; margin:0 auto; border-bottom:1px solid rgba(212,160,23,0.12); background:#12100E; }
+.back-btn { background:none; border:none; color:var(--gold); font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; cursor:pointer; margin-bottom:2rem; display:inline-flex; align-items:center; gap:0.4rem; transition:gap 0.2s; }
+.back-btn:hover { gap:0.7rem; }
+.page-ko { font-family:'Noto Serif KR',serif; font-weight:900; font-size:clamp(3rem,8vw,5.5rem); color:var(--gold); line-height:1; }
+.page-en { font-family:'Bebas Neue',sans-serif; font-size:clamp(1.2rem,3vw,2.2rem); letter-spacing:0.18em; color:rgba(240,230,204,0.5); margin-top:0.2rem; }
+.page-intro { margin-top:1.2rem; font-size:0.95rem; line-height:1.85; color:#D4C8B0; max-width:580px; font-weight:500; }
+
+/* SECTION */
+.section { max-width:1100px; margin:0 auto; padding:3rem 2rem 5rem; background:#12100E; }
+.section-label { font-size:0.65rem; letter-spacing:0.4em; text-transform:uppercase; color:rgba(212,160,23,0.7); margin-bottom:1.8rem; font-weight:700; }
+
+/* CARDS */
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:1.25rem; }
+.card { background:#1E1A14; border:1px solid rgba(212,160,23,0.18); cursor:pointer; transition:all 0.25s ease; overflow:hidden; }
+.card:hover { background:#2A2118; border-color:rgba(212,160,23,0.4); transform:translateY(-3px); }
+.card-top { padding:1.8rem 1.8rem 0; }
+.card-period { font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); margin-bottom:0.7rem; font-weight:700; }
+.card-name-ko { font-family:'Noto Serif KR',serif; font-weight:700; font-size:1.45rem; color:#FFFFFF; margin-bottom:0.15rem; }
+.card-name-en { font-size:0.8rem; color:rgba(240,230,204,0.6); letter-spacing:0.07em; margin-bottom:1rem; font-weight:500; }
+.card-desc { font-size:0.88rem; line-height:1.8; color:#D4C8B0; font-weight:500; padding:0 1.8rem 1.5rem; }
+.card-footer { padding:0.9rem 1.8rem; border-top:1px solid rgba(212,160,23,0.08); display:flex; align-items:center; justify-content:space-between; }
+.card-tag { font-size:0.6rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); opacity:0.7; }
+.card-arrow { color:var(--gold); opacity:0; transform:translateX(-6px); transition:all 0.25s ease; }
+.card:hover .card-arrow { opacity:1; transform:translateX(0); }
+
+/* MODAL */
+.modal-overlay { display:none; position:fixed; inset:0; z-index:200; background:rgba(8,6,4,0.95) !important; backdrop-filter:blur(6px); align-items:flex-start; justify-content:center; padding:80px 1.5rem 2rem; overflow-y:auto; }
+.modal-overlay.open { display:flex; }
+.modal { background:#2A2118 !important; border:1px solid rgba(212,160,23,0.2); max-width:680px; width:100%; position:relative; animation:fadeUp 0.3s ease both; }
+.modal-close { position:absolute; top:1.2rem; right:1.2rem; background:none; border:none; color:rgba(240,230,204,0.6); font-size:1.4rem; cursor:pointer; line-height:1; transition:color 0.2s; }
+.modal-close:hover { color:var(--cream); }
+.modal-header { padding:2.5rem 2.5rem 1.8rem; border-bottom:1px solid rgba(212,160,23,0.15); background:#1F1810; }
+.modal-period { font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:0.7rem; font-weight:700; }
+.modal-name-ko { font-family:'Noto Serif KR',serif; font-weight:900; font-size:2.2rem; color:#FFFFFF; }
+.modal-name-en { font-size:0.92rem; color:rgba(240,230,204,0.75); letter-spacing:0.07em; margin-top:0.2rem; font-weight:500; }
+.modal-body { padding:2rem 2.5rem; background:#2A2118; }
+.info-block { margin-bottom:2rem; }
+.info-block h4 { font-size:0.68rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem; font-weight:700; }
+.info-block p { font-size:0.95rem; line-height:1.9; color:#E8DCCA; font-weight:500; }
+.info-block p+p { margin-top:0.8rem; }
+.did-you-know { background:rgba(212,160,23,0.12); border-left:3px solid var(--gold); padding:1.2rem 1.5rem; margin-bottom:2rem; }
+.did-you-know .label { font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:0.5rem; font-weight:700; }
+.did-you-know p { font-size:0.92rem; line-height:1.8; color:#F0E6CC; font-weight:500; }
+.why-block { background:rgba(192,57,43,0.12); border-left:3px solid var(--red); padding:1.2rem 1.5rem; margin-bottom:2rem; }
+.why-block .label { font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase; color:#F0A0A0; margin-bottom:0.5rem; font-weight:700; }
+.why-block p { font-size:0.92rem; line-height:1.8; color:#E8DCCA; font-weight:500; }
+
+/* QUIZ */
+.quiz-section { border-top:1px solid rgba(212,160,23,0.15); padding:2rem 2.5rem 2.5rem; background:#1F1810; }
+.quiz-section h4 { font-size:0.68rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem; font-weight:700; }
+.quiz-q { font-family:'Noto Sans KR',sans-serif; font-size:1rem; font-weight:700; color:#FFFFFF; line-height:1.6; margin-bottom:1.2rem; }
+.quiz-opts { display:flex; flex-direction:column; gap:0.6rem; }
+.quiz-opt { background:rgba(255,255,255,0.06); border:1px solid rgba(212,160,23,0.2); padding:0.9rem 1.1rem; cursor:pointer; font-size:0.9rem; color:#E8DCCA; text-align:left; font-family:'Noto Sans KR',sans-serif; font-weight:500; transition:all 0.2s; border-radius:2px; }
+.quiz-opt:hover:not(:disabled) { background:rgba(212,160,23,0.15); border-color:rgba(212,160,23,0.5); color:#FFFFFF; }
+.quiz-opt.correct { background:rgba(40,120,60,0.25); border-color:#4CAF50; color:#C8F0C8; font-weight:700; }
+.quiz-opt.wrong { background:rgba(192,57,43,0.25); border-color:var(--red); color:#F0C0C0; }
+.quiz-opt:disabled { cursor:default; }
+.quiz-feedback { margin-top:1rem; padding:1rem 1.2rem; font-size:0.9rem; line-height:1.75; color:#F0E6CC; background:rgba(212,160,23,0.1); border-left:2px solid var(--gold); display:none; font-weight:500; }
+.quiz-feedback.show { display:block; }
+
+/* TIMELINE */
+.timeline { position:relative; padding:1rem 0; }
+.timeline::before { content:''; position:absolute; left:1.5rem; top:0; bottom:0; width:1px; background:rgba(212,160,23,0.2); }
+.tl-item { display:flex; gap:2rem; margin-bottom:2.5rem; position:relative; padding-left:4rem; }
+.tl-dot { position:absolute; left:1.1rem; top:0.3rem; width:10px; height:10px; border-radius:50%; background:var(--gold); border:2px solid var(--ink); outline:1px solid rgba(212,160,23,0.4); }
+.tl-dot.red { background:var(--red); outline-color:rgba(192,57,43,0.4); }
+.tl-dot.green { background:#4CAF50; outline-color:rgba(76,175,80,0.4); }
+.tl-year { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--gold); letter-spacing:0.05em; white-space:nowrap; min-width:90px; }
+.tl-content h4 { font-family:'Noto Sans KR',serif; font-weight:700; font-size:1rem; color:#FFFFFF; margin-bottom:0.3rem; }
+.tl-content p { font-size:0.88rem; line-height:1.75; color:#D4C8B0; font-weight:500; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+@media(max-width:640px){
+  nav { padding:0.8rem 1rem; }
+  .nav-btn { font-size:0.68rem; padding:0.3rem 0.55rem; }
+  .page-header, .section { padding-left:1.2rem; padding-right:1.2rem; }
+  .modal-header, .modal-body, .quiz-section { padding-left:1.5rem; padding-right:1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">한국 역사</div>
+  <div class="nav-links">
+    <button class="nav-btn" onclick="showPage('kings')">👑 왕들</button>
+    <button class="nav-btn" onclick="showPage('heroes')">🦸 영웅들</button>
+    <button class="nav-btn" onclick="showPage('wars')">⚔️ 전쟁</button>
+    <button class="nav-btn" onclick="showPage('history')">📜 역사</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="home" class="page active">
+  <section class="hero">
+    <div class="hero-bg">한국</div>
+    <p class="hero-tag">Explore · 탐험 · Learn · 배움</p>
+    <h1 class="hero-title">KOREAN<em>역사 HISTORY</em></h1>
+    <p class="hero-sub">Discover the kings, heroes, wars, and stories that made Korea what it is today. 한국의 역사를 탐험해보자!</p>
+    <div class="hero-cards">
+      <div class="hero-card" onclick="showPage('kings')"><span class="hero-card-icon">👑</span><span class="hero-card-ko">왕들</span><span class="hero-card-en">Kings</span></div>
+      <div class="hero-card" onclick="showPage('heroes')"><span class="hero-card-icon">🦸</span><span class="hero-card-ko">영웅들</span><span class="hero-card-en">Heroes</span></div>
+      <div class="hero-card" onclick="showPage('wars')"><span class="hero-card-icon">⚔️</span><span class="hero-card-ko">전쟁</span><span class="hero-card-en">Wars</span></div>
+      <div class="hero-card" onclick="showPage('history')"><span class="hero-card-icon">📜</span><span class="hero-card-ko">역사</span><span class="hero-card-en">History</span></div>
+    </div>
+  </section>
+</div>
+
+<!-- KINGS -->
+<div id="kings" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')">← Home</button>
+    <div class="page-ko">왕들</div>
+    <div class="page-en">KINGS OF JOSEON · 조선의 왕들</div>
+    <p class="page-intro">The Joseon Dynasty lasted over 500 years (1392–1910) with 27 kings. Here are the most important ones — kings who changed Korea forever. Click any card to read their story and take a quiz!</p>
+  </div>
+  <div class="section">
+    <div class="section-label">Featured Kings · 주요 왕들 — Click to explore</div>
+    <div class="grid">
+      <div class="card" onclick="openModal('taejo')">
+        <div class="card-top"><div class="card-period">1대 · 1392–1398</div><div class="card-name-ko">태조 이성계</div><div class="card-name-en">King Taejo · Founder of Joseon</div></div>
+        <div class="card-desc">A great military general who overthrew the Goryeo dynasty and founded Joseon. He moved the capital to Hanyang — today's Seoul!</div>
+        <div class="card-footer"><span class="card-tag">🏰 Dynasty Founder</span><span class="card-arrow">→</span></div>
+      </div>
+      <div class="card" onclick="openModal('sejong')">
+        <div class="card-top"><div class="card-period">4대 · 1418–1450</div><div class="card-name-ko">세종대왕</div><div class="card-name-en">King Sejong the Great</div></div>
+        <div class="card-desc">Korea's most beloved king. He invented Hangeul (한글) — the Korean alphabet — so ordinary people could read and write. A genius in science, music, and culture.</div>
+        <div class="card-footer"><span class="card-tag">📚 Scholar King</span><span class="card-arrow">→</span></div>
+      </div>
+      <div class="card" onclick="openModal('yeonsangun')">
+        <div class="card-top"><div class="card-period">10대 · 1494–1506</div><div class="card-name-ko">연산군</div><div class="card-name-en">Yeonsangun · The Tyrant King</div></div>
+        <div class="card-desc">Joseon's most infamous tyrant. He killed scholars, forced people to become his entertainers, and was eventually overthrown. One of the most dramatic stories in Korean history.</div>
+        <div class="card-footer"><span class="card-tag">😈 Tyrant King</span><span class="card-arrow">→</span></div>
+      </div>
+      <div class="card" onclick="openModal('seonjo')">
+        <div class="card-top"><div class="card-period">14대 · 1567–1608</div><div class="card-name-ko">선조</div><div class="card-name-en">King Seonjo · The Imjin War King</div></div>
+        <div class="card-desc">King during Japan's massive invasion (임진왜란). He famously fled the capital leaving citizens behind — but Admiral Yi Sun-sin saved the country.</div>
+        <div class="card-footer"><span class="card-tag">⚔️ Imjin War Era</span><span class="card-arrow">→</span></div>
+      </div>
+      <div class="card" onclick="openModal('yeongjo')">
+        <div class="card-top"><div class="card-period">21대 · 1724–1776</div><div class="card-name-ko">영조</div><div class="card-name-en">King Yeongjo · The Reform King</div></div>
+        <div class="card-desc">Reigned 52 years — the longest in Joseon history. A great reformer, but remembered for one of history's most tragic decisions: executing his own son by locking him in a rice chest.</div>
+        <div class="card-footer"><span class="card-tag">📖 Longest Reign</span><span class="card-arrow">→</span></div>
+      </div>
+      <div class="card" onclick="openModal('gojong')">
+        <div class="card-top"><div class="card-period">26대 · 1863–1907</div><div class="card-name-ko">고종</div><div class="card-name-en">King Gojong · The Last Emperor</div></div>
+        <div class="card-desc">Korea's last real ruler. He tried to modernize Korea and declared himself Emperor — but Japan was too powerful. In 1910, Japan annexed Korea, ending 518 years of Joseon forever.</div>
+        <div class="card-footer"><span class="card-tag">👑 Last Emperor</span><span class="card-arrow">→</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HEROES -->
+<div id="heroes" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')">← Home</button>
+    <div class="page-ko">영웅들</div>
+    <div class="page-en">KOREAN HEROES · 한국의 영웅들</div>
+    <p class="page-intro">These people were not kings — but they changed Korean history with their courage, brilliance, and sacrifice. Click any card to discover their incredible stories.</p>
+  </div>
+  <div class="section">
+    <div class="section-label">Heroes · 영웅들 — Click to explore</div>
+    <div class="grid">
+      <div class="card" onclick="openModal('yisunshin')" style="border-color:rgba(212,160,23,0.28)">
+        <div class="card-top"><div class="card-period">1545–1598 · 임진왜란</div><div class="card-name-ko">⚓ 이순신 장군</div><div class="card-name-en">Admiral Yi Sun-sin · Korea's Greatest Hero</div></div>
+        <div class="card-desc">Never lost a single battle. With only 13 ships he defeated 133 Japanese warships. Invented the world's first ironclad warship — the Turtle Ship (거북선). Korea's most celebrated hero of all time.</div>
+        <div class="card-footer"><span class="card-tag">🐢 Never Lost a Battle</span><span class="card-arrow">→</span></div>
+      </div>
+      <div class="card" onclick="openModal('anjungeun')">
+        <div class="card-top"><div class="card-period">1879–1910 · 독립운동</div><div class="card-name-ko">안중근</div><div class="card-name-en">Ahn Jung-geun · Independence Martyr</div></div>
+        <div class="card-desc">A Korean independence activist who assassinated Japan's top leader to resist colonization. Executed at 31, he became one of Korea's greatest national heroes.</div>
+        <div class="card-footer"><span class="card-tag">🕊️ Independence Hero</span><span class="card-arrow">→</span></div>
+      </div>
+      <div class="card" onclick="openModal('yugwansun')">
+        <div class="card-top"><div class="card-period">1902–1920 · 삼일운동</div><div class="card-name-ko">유관순</div><div class="card-name-en">Yu Gwan-sun · The Joan of Arc of Korea</div></div>
+        <div class="card-desc">A 16-year-old student who led massive independence protests against Japan. Arrested, tortured, and died in prison at 18 — but never gave up. One of Korea's most beloved heroes.</div>
+        <div class="card-footer"><span class="card-tag">💪 Student Hero</span><span class="card-arrow">→</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WARS -->
+<div id="wars" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')">← Home</button>
+    <div class="page-ko">전쟁</div>
+    <div class="page-en">WARS & CONFLICTS · 전쟁과 갈등</div>
+    <p class="page-intro">Why did these wars happen? Why is Korea still divided? Why don't Korea and Japan get along? Click each card to find out the real story behind the history.</p>
+  </div>
+  <div class="section">
+    <div class="section-label">Why did it happen? · 왜 일어났나? — Click to find out</div>
+    <div class="grid">
+      <div class="card" onclick="openModal('imjin')">
+        <div class="card-top"><div class="card-period">1592–1598</div><div class="card-name-ko">임진왜란</div><div class="card-name-en">The Japanese Invasion · Imjin War</div></div>
+        <div class="card-desc">Japan invaded Korea with 150,000 soldiers. Nearly every city was burned. But Admiral Yi Sun-sin and his turtle ships (거북선) fought back and saved Korea.</div>
+        <div class="card-footer"><span class="card-tag">🐢 Turtle Ships</span><span class="card-arrow">→</span></div>
+      </div>
+      <div class="card" onclick="openModal('japanrule')">
+        <div class="card-top"><div class="card-period">1910–1945</div><div class="card-name-ko">일제강점기</div><div class="card-name-en">Japanese Occupation · Why Still Bad Blood?</div></div>
+        <div class="card-desc">Japan ruled Korea for 35 years. Koreans were forced to use Japanese names and language. This is the main reason Korea and Japan still have tension today.</div>
+        <div class="card-footer"><span class="card-tag">🤔 Why Still Bad Blood?</span><span class="card-arrow">→</span></div>
+      </div>
+      <div class="card" onclick="openModal('koreanwar')">
+        <div class="card-top"><div class="card-period">1950–1953</div><div class="card-name-ko">한국전쟁</div><div class="card-name-en">The Korean War · Why Is Korea Divided?</div></div>
+        <div class="card-desc">North Korea invaded South Korea in 1950. The US, China, and 15 other countries got involved. The war ended in a ceasefire — not a peace treaty. Korea is still divided today.</div>
+        <div class="card-footer"><span class="card-tag">🌏 Still Divided Today</span><span class="card-arrow">→</span></div>
+      </div>
+      <div class="card" onclick="openModal('northkorea')">
+        <div class="card-top"><div class="card-period">1953 – Today</div><div class="card-name-ko">남북 분단</div><div class="card-name-en">North vs South Korea · Why Two Koreas?</div></div>
+        <div class="card-desc">After the war, Korea split into two very different countries. North Korea became one of the world's most isolated nations. South Korea became a modern democracy and K-pop powerhouse.</div>
+        <div class="card-footer"><span class="card-tag">🔴 Two Koreas</span><span class="card-arrow">→</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div id="history" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')">← Home</button>
+    <div class="page-ko">역사</div>
+    <div class="page-en">KOREAN HISTORY TIMELINE · 한국 역사 타임라인</div>
+    <p class="page-intro">5,000 years of Korean history — from ancient kingdoms to modern K-pop. Here's how it all connects.</p>
+  </div>
+  <div class="section">
+    <div class="section-label">Timeline · 시간순서</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2333 BC</div><div class="tl-content"><h4>고조선 · Gojoseon — The First Kingdom</h4><p>According to legend, Dangun (단군) founded the first Korean kingdom. This is why Koreans say their history is 5,000 years old. October 3rd is still celebrated as National Foundation Day (개천절).</p></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">57 BC–668 AD</div><div class="tl-content"><h4>삼국시대 · Three Kingdoms Era</h4><p>Three kingdoms — Goguryeo (고구려) in the north, Baekje (백제) in the southwest, and Silla (신라) in the southeast — competed for 700 years. Eventually Silla unified Korea. This era inspired countless Korean dramas and movies!</p></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">918–1392</div><div class="tl-content"><h4>고려 · Goryeo Dynasty — Where "Korea" Comes From</h4><p>The word "Korea" comes from "Goryeo." Famous for beautiful celadon pottery (청자) and the world's first metal movable type — invented 200 years before Gutenberg in Europe! The Mongol Empire invaded multiple times but Korea survived.</p></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">1392–1910</div><div class="tl-content"><h4>조선 · Joseon Dynasty — 518 Years</h4><p>Korea's longest dynasty. King Sejong invented Hangeul (한글). Japan invaded during the Imjin War (1592). Eventually Japan colonized Korea in 1910, ending Joseon after 518 years.</p></div></div>
+      <div class="tl-item"><div class="tl-dot red"></div><div class="tl-year">1910–1945</div><div class="tl-content"><h4>일제강점기 · Japanese Colonial Period</h4><p>Japan ruled Korea for 35 painful years. Koreans were forced to use Japanese names and speak Japanese at school. Independence fighters resisted throughout. Korea was liberated in 1945 when Japan lost WWII.</p></div></div>
+      <div class="tl-item"><div class="tl-dot red"></div><div class="tl-year">1950–1953</div><div class="tl-content"><h4>한국전쟁 · The Korean War</h4><p>North Korea invaded the South. The US and allies helped the South; China helped the North. Millions died. A ceasefire was signed in 1953 — but no peace treaty. The war technically never ended.</p></div></div>
+      <div class="tl-item"><div class="tl-dot green"></div><div class="tl-year">1988</div><div class="tl-content"><h4>서울 올림픽 · Seoul Olympics</h4><p>South Korea hosted the Summer Olympics — showing the world how much the country had rebuilt after the war. The "Korean Miracle" (한강의 기적) was real.</p></div></div>
+      <div class="tl-item"><div class="tl-dot green"></div><div class="tl-year">Today</div><div class="tl-content"><h4>대한민국 · Modern South Korea</h4><p>South Korea is now a world leader in technology (Samsung, LG, Hyundai), entertainment (K-pop, K-dramas, Parasite), and food. From war-torn rubble in 1953 to global cultural powerhouse in 70 years — one of the most incredible stories in history.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const map = {kings:0,heroes:1,wars:2,history:3};
+  if(map[id]!==undefined) document.querySelectorAll('.nav-btn')[map[id]].classList.add('active');
+  window.scrollTo(0,0);
+}
+function closeModal(e) { if(e.target===document.getElementById('modalOverlay')) closeModalDirect(); }
+function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+function openModal(id) {
+  const d = modalData[id]; if(!d) return;
+  const imgTag = d.image && CARD_IMAGES[d.image] ? `<img src="${CARD_IMAGES[d.image]}" alt="${d.nameEn}" style="width:100%;max-height:260px;object-fit:cover;display:block;">` : '';
+  let html = `<div class="modal-header" style="background:#1F1810;padding:0;border-bottom:1px solid rgba(212,160,23,0.15);">
+    ${imgTag}
+    <div style="padding:1.8rem 2.5rem 1.5rem;">
+    <div class="modal-period" style="font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:#D4A017;margin-bottom:0.7rem;font-weight:700;">${d.period}</div>
+    <div class="modal-name-ko" style="font-family:'Noto Serif KR',serif;font-weight:900;font-size:2.2rem;color:#FFFFFF;">${d.nameKo}</div>
+    <div class="modal-name-en" style="font-size:0.92rem;color:rgba(240,230,204,0.8);margin-top:0.2rem;font-weight:500;">${d.nameEn}</div>
+    </div>
+  </div>
+  <div style="background:#2A2118;padding:2rem 2.5rem;">`;
+
+  if(d.why) html+=`<div style="background:rgba(192,57,43,0.12);border-left:3px solid #C0392B;padding:1.2rem 1.5rem;margin-bottom:2rem;">
+    <div style="font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:#F0A0A0;margin-bottom:0.5rem;font-weight:700;">🤔 WHY DID THIS HAPPEN? · 왜 일어났나?</div>
+    <p style="font-size:0.95rem;line-height:1.9;color:#F0E0D0;font-weight:500;">${d.why}</p>
+  </div>`;
+
+  html+=`<div style="margin-bottom:2rem;">
+    <h4 style="font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:#D4A017;margin-bottom:0.8rem;font-weight:700;">📖 THE STORY · 이야기</h4>
+    ${d.story.map(s=>`<p style="font-size:0.95rem;line-height:1.9;color:#E8DCCA;font-weight:500;margin-bottom:0.8rem;">${s}</p>`).join('')}
+  </div>`;
+
+  if(d.fact) html+=`<div style="background:rgba(212,160,23,0.12);border-left:3px solid #D4A017;padding:1.2rem 1.5rem;margin-bottom:2rem;">
+    <div style="font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:#D4A017;margin-bottom:0.5rem;font-weight:700;">💡 DID YOU KNOW? · 알고 있었나요?</div>
+    <p style="font-size:0.92rem;line-height:1.8;color:#F0E6CC;font-weight:500;">${d.fact}</p>
+  </div>`;
+
+  if(d.today) html+=`<div style="margin-bottom:2rem;">
+    <h4 style="font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:#D4A017;margin-bottom:0.8rem;font-weight:700;">🌏 HOW IT CONNECTS TO TODAY · 오늘날과의 연결</h4>
+    ${d.today.map(s=>`<p style="font-size:0.95rem;line-height:1.9;color:#E8DCCA;font-weight:500;margin-bottom:0.8rem;">${s}</p>`).join('')}
+  </div>`;
+
+  html+=`</div>`;
+
+  if(d.quiz) {
+    html+=`<div style="background:#1F1810;border-top:1px solid rgba(212,160,23,0.15);padding:2rem 2.5rem 2.5rem;">
+      <h4 style="font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:#D4A017;margin-bottom:1.2rem;font-weight:700;">🧠 QUICK QUIZ · 퀴즈 — Now that you know the story, test yourself!</h4>
+      <div style="font-size:1rem;font-weight:700;color:#FFFFFF;line-height:1.6;margin-bottom:1.2rem;">${d.quiz.q}</div>
+      <div id="quizOpts" style="display:flex;flex-direction:column;gap:0.6rem;">
+        ${d.quiz.opts.map((o,i)=>`<button class="quiz-opt" onclick="answerQuiz(${i},${d.quiz.correct},'${encodeURIComponent(d.quiz.explain)}')">${o}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="quizFeedback"></div>
+    </div>`;
+  }
+
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('modalOverlay').scrollTop = 0;
+}
+
+function answerQuiz(chosen, correct, explainEnc) {
+  const explain = decodeURIComponent(explainEnc);
+  document.querySelectorAll('.quiz-opt').forEach((o,i)=>{ o.disabled=true; if(i===correct) o.classList.add('correct'); else if(i===chosen&&chosen!==correct) o.classList.add('wrong'); });
+  const fb=document.getElementById('quizFeedback');
+  fb.innerHTML=(chosen===correct?'✅ Correct! ':'❌ Not quite — ')+explain;
+  fb.classList.add('show');
+}
+
+const CARD_IMAGES = {
+  taejo_wiki: "https://www.storiespreschool.com/images/taejo_joseon0.jpg",
+  sejong_wiki: "https://i.namu.wiki/i/rqS_sa8Ni41mUq0igRTJ_AuESFCwdHsNsgttQQhigmNsQDEfUregED4-gZyANryGmTtPO2SfG0aVzmMqTSnC9D6J5-VD_dYaCDz3rELLJm4Oiwqxfed6CbiC1s2DxIE6f7Y3LtZzcKtfgoMqBMLDDTelScM2r0CnEenvuHF9X4c.webp",
+  yeongjo_wiki: "https://i.namu.wiki/i/WNnaKDc2vWmqIHrj74zxc4pm9-SNsWPGwA1J5A-X1fROSO_ic8hEsnnnZBlDg1JsK1eWgtOlvriSXM6in_q4SjHslSYL0GZyKK72se6WywQtWIQLPNY1NaP3iTo_2lJOVZa7CGqDC2OctjwQAsKHAg.webp",
+  gojong_wiki: "https://i.namu.wiki/i/uHlaYDsj0O8m-5bqb85Rj-gw6Y8FBr_UG0EfuimO34S_QWEOjU6COWExaExbmbPuT_K8nSRyX0MLVG_NZUo5iw.webp",
+  yisunshin_wiki: "https://cdn.kidshankook.kr/news/photo/202504/13608_34487_317.jpg",
+  anjungeun_wiki: "https://i.namu.wiki/i/b6rUUETUrHe1wltUqZqNQfnjl1Y1IyISWMSRl7gdxP_fIuQJrZ-B_O1juh2lBnrDH75zAu8Hx30ym-U6QaOHKgrWXbAbmUoFl4OcrG1hE3uAFFuK7kTLPRM5Im8JXhsbYKSVzJD-DLCetAF-eCGtXg.webp",
+  imjin_wiki: "https://ko.wikipedia.org/wiki/%ED%8C%8C%EC%9D%BC:Busanjinsunjeoldo.jpg",
+  japanrule_wiki: "https://postfiles.pstatic.net/MjAxOTA4MjNfNTAg/MDAxNTY2NTQ2Nzc0Mzgz.WkG57OD_yzQJA6DKVzIFkvzOGRBfheqYwQ1y-jrn8dUg.v08zXItXIhsJBWQvW-Aixqrbr3IznqJ003-15zhRQq0g.PNG.nanum_in/%EC%82%AC_b%EB%8B%A8%EC%9E%A5_%EC%9E%AC%EC%9D%BC%EC%A0%9C%EC%A3%BC%EC%9D%B809.png?type=w966",
+  koreanwar_wiki: "https://i.namu.wiki/i/MvA1MhTe9TbY3z5AZpDsPNTYWWmZ5SVyb4XiMY9BGWvs50GV5QBtGZMG6vKQGJPRVoui0H5ynob4oL5N9uV4bA.webp",
+  northkorea_wiki: "https://i.namu.wiki/i/rqS_sa8Ni41mUq0igRTJ_Dy8uzGfeP4bVXFCllYjYxhC0Uj8bfJW7REpUgF2XZk3qPeGGL0eoY-qQA_-4B5uMjDwp1Ke76yYJ1yvyS91CZkmpePyoWU1RmXdBwnm3bd1SKKydm-H2FItQzevyHqmc2XYMOWHKnVLXjQq53xbWFw.webp",
+  yugwansun_wiki: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZk3Qn5LmyWd8rDkdM49EDyuDl2_QspULN0A&s",
+  threekingdoms_wiki: "https://upload.wikimedia.org/wikipedia/commons/3/32/History_of_Korea-410.png",
+  goryeo_wiki: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/History_of_Korea-Goryeo_Period-1389_CE.gif/330px-History_of_Korea-Goryeo_Period-1389_CE.gif",
+  joseon_wiki: "https://i.namu.wiki/i/xO2mDEV-0B7AVmknvOC9g5Du-KfBfmHGsoQqehNRanSp0fPaoLy5IAvTINqM7l_qWSIxU3M0bNzkIC3N9utZ2g.webp",
+  seoul_olympics_wiki: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWY2IkKLNFiCOAOEjDRAgRI_5zJYyGIo1aKA&s",
+  modern_korea_wiki: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS_O66GGfVMWmU3ANNpSyGWJetP7OsUj9Lpw&s",
+};
+
+const modalData = {
+  taejo:{image:'taejo_wiki',period:'1대 · 1392–1398',nameKo:'태조 이성계',nameEn:"King Taejo — Founder of Joseon",why:"The Goryeo dynasty had become weak and corrupt. General Yi Seonggye was a brilliant military commander with the loyalty of the army. In 1392, he overthrew the last Goryeo king and founded an entirely new dynasty: Joseon.",story:["Yi Seonggye was not born royal — he was a general who earned power through military victories. He was famous for defeating Japanese pirates (왜구) and Mongol raiders who terrorized Korea's borders.","After taking power, he moved the capital from Gaeseong to Hanyang — the city we call Seoul today. He built city walls, palaces like Gyeongbokgung (경복궁), and established Confucian values as the foundation of the new society.","He ruled only 6 years before conflict among his sons forced him to abdicate. He spent his final years as a Buddhist monk — a dramatic end for the man who founded a 500-year dynasty."],fact:"Seoul's famous Gyeongbokgung Palace (경복궁) was built by Taejo in 1395. Its name means 'Palace Greatly Blessed by Heaven.' You can still visit it today!",today:["The Joseon dynasty Taejo founded lasted 518 years — until Japan's annexation in 1910. Almost everything about traditional Korean culture — the palaces, the Confucian values, hanbok clothing — comes from this era."],quiz:{q:"What is the modern name of the capital city that King Taejo moved to when he founded Joseon?",opts:["Gaeseong","Busan","Seoul (then called Hanyang)","Gyeongju"],correct:2,explain:"King Taejo moved the capital to Hanyang in 1394 — the city we now call Seoul. It has been Korea's capital for over 600 years!"}},
+
+  sejong:{image:'sejong_wiki',period:'4대 · 1418–1450',nameKo:'세종대왕',nameEn:"King Sejong the Great",why:"Before Hangeul existed, Koreans had to use Chinese characters (한자) to write. Chinese characters are incredibly difficult — you need to memorize thousands of them. Only wealthy scholars could read and write. Ordinary farmers, women, and children had no way to write their own language. Sejong thought this was deeply unfair.",story:["In 1443, King Sejong gathered brilliant scholars into a group called the Hall of Worthies (집현전) and created Hangeul — a completely new alphabet designed specifically for Korean. You can learn Hangeul in just a few hours. It has only 24 letters.","Sejong announced Hangeul to the public in 1446. Some scholars were furious — they thought using Chinese characters was more sophisticated. But Sejong believed every Korean deserved to read and write.","Beyond Hangeul, Sejong advanced science and technology. He invented the rain gauge (측우기) to help farmers, created water clocks and sundials, and produced detailed star maps. He did all this while suffering from severe diabetes and near-blindness."],fact:"Sejong was so dedicated he often read by candlelight until late at night, even as his eyesight failed. His face appears on the 10,000 won bill (₩10,000) — the most common Korean banknote.",today:["Every time you read or write Korean — every K-pop lyric, every Korean text message — you're using King Sejong's invention. October 9th is celebrated as Hangeul Day (한글날) in South Korea."],quiz:{q:"Why did King Sejong invent Hangeul (한글)?",opts:["To make Korean look more beautiful","So ordinary people who couldn't learn Chinese characters could read and write","Because Chinese characters were too old","To impress other countries"],correct:1,explain:"Sejong believed it was unfair that only wealthy scholars could read and write using complex Chinese characters. He created Hangeul so that every Korean — farmers, women, children — could learn to read and write their own language easily."}},
+
+  yeonsangun:{image:'yeonsangun',period:'10대 · 1494–1506',nameKo:'연산군',nameEn:"Yeonsangun — The Tyrant King",why:"Yeonsangun had a traumatic childhood. His mother, Queen Yun, was forced to drink poison by political rivals when he was just 4 years old. He didn't discover this until he became king — and the rage and grief transformed him into one of Korea's most dangerous rulers.",story:["At first, Yeonsangun seemed like a normal king. But as he learned about his mother's death, he became consumed by rage. He executed the officials who ordered her death — including digging up graves of already-dead enemies.","He threw wild parties in the royal palace, forcing scholars to become his entertainers. He expelled Buddhist monks from the capital, turned temples into stables, and used examination halls as hunting grounds.","He was overthrown in a coup by officials in 1506, becoming one of only two Joseon kings to be deposed. Because he was dethroned, he was never given a royal temple name — just 'Yeonsangun' (군 = prince) instead of the usual king title."],fact:"Because he was deposed, history records him as 'Yeonsangun' (군) instead of 'King' (왕). This is the mark of disgrace. His story has been made into multiple Korean movies and dramas!",today:["Yeonsangun's story shows how the Joseon system worked: officials had real power to check a bad king, and they used it. His dramatic story — a king destroyed by childhood trauma and grief — is one of the most popular subjects in Korean historical dramas."],quiz:{q:"Why did Yeonsangun become a tyrant?",opts:["He was born evil","He discovered his mother had been executed when he was a child, and the grief and rage changed him","He lost a war against Japan","He wanted more money"],correct:1,explain:"Yeonsangun's mother Queen Yun was forced to drink poison when he was only 4. He discovered this after becoming king — and the trauma transformed him into a tyrant who took revenge on everyone connected to her death."}},
+
+  seonjo:{image:'seonjo',period:'14대 · 1567–1608',nameKo:'선조',nameEn:"King Seonjo — The Imjin War King",story:["King Seonjo is remembered as one of Joseon's weakest kings. When Japan invaded with 150,000 soldiers in 1592, Seonjo panicked and fled the capital, abandoning the citizens of Seoul.","Furious citizens actually burned down royal palaces as he fled — a sign of how betrayed they felt. He kept moving north, away from the fighting, while the country burned.","His one great decision was to trust Admiral Yi Sun-sin (이순신), who won battle after battle. But rivals eventually convinced Seonjo to demote Yi. Without Yi, Korea suffered a catastrophic naval defeat. Seonjo desperately reinstated him — and Yi won again, including the impossible Battle of Myeongnyang with only 13 ships."],fact:"When Seonjo fled Seoul, citizens were so angry they set fire to two royal palaces — Gyeongbokgung and Changdeokgung. The king abandoning the capital was seen as a complete betrayal. The palaces weren't rebuilt for centuries.",today:["Seonjo's failure and Yi Sun-sin's heroism during the Imjin War are deeply remembered in Korea. Yi is the greatest hero; Seonjo is the king who nearly lost everything. The contrast between a failed leader and an extraordinary hero makes this one of the most powerful stories in Korean history."],quiz:{q:"What did King Seonjo do when Japan invaded Korea in 1592?",opts:["He personally led the army into battle","He fled the capital and abandoned the citizens","He negotiated peace with Japan","He called on Admiral Yi Sun-sin immediately"],correct:1,explain:"King Seonjo panicked and fled the capital, abandoning the citizens of Seoul. People were so furious they burned down the royal palaces as he left. His failure made Admiral Yi Sun-sin's heroism even more remarkable by contrast."}},
+
+  yeongjo:{image:'yeongjo_wiki',period:'21대 · 1724–1776',nameKo:'영조',nameEn:"King Yeongjo — The Reform King",story:["Yeongjo ruled for 52 years — the longest reign in all of Joseon history. He was a reform-minded king who worked to reduce harsh taxes on ordinary farmers and modernize the government.","But his legacy is forever shadowed by one of Joseon's most tragic events. His son, Crown Prince Sado (사도세자), struggled with severe mental illness and reportedly harmed people during episodes. After years of conflict, Yeongjo made the agonizing decision to execute his own son in 1762.","The method was extraordinary: because he couldn't execute a crown prince by sword (it was forbidden), Yeongjo ordered Sado to climb into a large wooden rice chest (뒤주). He was locked inside for 8 days in summer heat and died. Yeongjo reportedly cried throughout. It haunted him for the rest of his life."],fact:"Crown Prince Sado's son became King Jeongjo (정조) — Yeongjo's grandson. Jeongjo spent his entire reign trying to restore his father's honor and became one of Joseon's greatest kings. The rice chest story has been made into the acclaimed film 'The Throne' (사도, 2015).",today:["Yeongjo's story reminds us that history is complicated — great kings can still make terrible decisions. His grandson Jeongjo's determination to honor his wronged father became the driving force of an entire reign."],quiz:{q:"How did Yeongjo's reign become both famous and tragic?",opts:["He lost Korea to Japan","He ruled 52 years (longest in Joseon) but executed his own son by locking him in a rice chest","He burned down the royal palace","He invented Hangeul"],correct:1,explain:"Yeongjo had the longest reign in Joseon history at 52 years and was a reform-minded king — but he is also remembered for the tragic execution of his son Crown Prince Sado, who was locked in a wooden rice chest for 8 days in summer heat."}},
+
+  gojong:{image:'gojong_wiki',period:'26대 · 1863–1907',nameKo:'고종',nameEn:"King Gojong — The Last Emperor",why:"By the 1800s, powerful foreign countries — Japan, Russia, China, and Western nations — were competing for influence over Korea. Japan, which had rapidly modernized with Western technology after being almost completely isolated, was especially aggressive. After defeating China (1894) and Russia (1905) in major wars, Japan became the dominant power in Asia.",story:["Gojong became king at age 11 in 1863. In 1897, he made a bold move — declaring Korea an empire (대한제국) and naming himself Emperor, equal in status to the emperors of China and Japan. He tried to modernize Korea with railways, electricity, and a new military.","But Japan was already too powerful. They forced Gojong to sign treaties giving Japan more and more control over Korea.","In 1907, Japan forced Gojong to abdicate after he secretly sent representatives to the Hague Peace Conference trying to tell the world about Japan's illegal control of Korea. His son Sunjong became the last king — and in 1910, Japan annexed Korea completely, ending 518 years of Joseon."],fact:"After being forced to abdicate, Gojong died in 1919 under suspicious circumstances — many Koreans believed Japan poisoned him. His death sparked the massive March 1st Independence Movement (삼일운동) — millions of Koreans poured into the streets demanding independence.",today:["Gojong's failure to protect Korea from Japan is one of the most debated topics in Korean history. The Japanese annexation he presided over is the root cause of the tension between Korea and Japan that still exists today."],quiz:{q:"What happened to the Joseon Dynasty under King Gojong?",opts:["It was conquered by China","It was absorbed by Japan in 1910, ending 518 years of Joseon rule","Gojong voluntarily merged with Japan","The dynasty ended because of the Korean War"],correct:1,explain:"In 1910, Japan formally annexed Korea, ending the Joseon Dynasty after 518 years. Gojong had tried to resist but Japan was too powerful after defeating both China and Russia in major wars."}},
+
+  yisunshin:{image:'yisunshin_wiki',period:'1545–1598 · 임진왜란',nameKo:'⚓ 이순신 장군',nameEn:"Admiral Yi Sun-sin — Korea's Greatest Military Hero",why:"In 1592, Japan invaded Korea with 150,000 soldiers. Japan's goal was to use Korea as a pathway to conquer China. Korea's army was unprepared and quickly collapsed. But Korea had one extraordinary advantage on the sea: Admiral Yi Sun-sin.",story:["Yi Sun-sin had never lost a single naval battle — but political enemies convinced King Seonjo to demote him and throw him in prison. Without Yi commanding the navy, Korea suffered its worst naval defeat. The king desperately reinstated Yi — but now he had only 13 warships left against over 130 Japanese vessels.","🐢 THE BATTLE OF MYEONGNYANG (명량대첩) — 1597: One of the most extraordinary battles in world history. Yi used his deep knowledge of local sea currents — which reversed direction at certain times — to trap the Japanese fleet in a narrow strait. His 13 ships destroyed or disabled 31 Japanese vessels and stopped the entire Japanese advance. 13 vs 133.","🌊 THE TURTLE SHIP (거북선): Yi Sun-sin developed the turtle ship — the world's first ironclad warship. Covered with iron spikes on top to prevent boarding, with cannons firing in all directions. The Japanese had never seen anything like it.","Yi Sun-sin was killed by a stray bullet during his final and greatest victory — just as the Japanese were retreating from Korea. His last words: 'The battle is at its height. Beat my war drums. Do not announce my death.'"],fact:"Yi Sun-sin's statue stands in the center of Gwanghwamun Square in Seoul — directly in front of the royal palace, the position of greatest honor. He appears on the 100 won coin (₩100). His story inspired the 2014 blockbuster movie 'The Admiral: Roaring Currents' — the highest-grossing Korean film ever made.",today:["Yi Sun-sin is considered the greatest military commander in Korean history — and many historians rank him among the greatest admirals in world history. In Korea, he represents loyalty, brilliance, and self-sacrifice. His story — falsely imprisoned, then single-handedly saving the country — resonates deeply with Koreans to this day."],quiz:{q:"At the Battle of Myeongnyang (명량대첩), how many ships did Yi Sun-sin have against the Japanese fleet?",opts:["100 ships","50 ships","13 ships against over 130 Japanese vessels","200 ships"],correct:2,explain:"13 vs 130+ — and Yi Sun-sin won. He used his knowledge of the reversing sea currents to trap the Japanese fleet, destroying dozens of ships. It is considered one of the greatest military victories against overwhelming odds in world history."}},
+
+  anjungeun:{image:'anjungeun_wiki',period:'1879–1910 · 독립운동',nameKo:'안중근',nameEn:"Ahn Jung-geun — Independence Martyr",why:"By the early 1900s, Japan had taken control of Korea through forced treaties. Ahn Jung-geun believed that Japan's chief architect of Korean colonization — former Prime Minister Itō Hirobumi — was personally responsible for destroying Korean sovereignty.",story:["On October 26, 1909, Ahn Jung-geun shot and killed Itō Hirobumi at Harbin Station in Manchuria (modern China). Itō was the most powerful Japanese statesman of his era — the man who forced Korea to accept Japanese control.","After shooting Itō, Ahn did not flee. He shouted 'Daehan Manse! (대한 만세!)' — 'Long live Korea!' — and was immediately arrested.","During his trial, Ahn argued brilliantly that he was not a murderer but a prisoner of war acting for his country's freedom. He listed 15 crimes Itō had committed against Korea. He was executed on March 26, 1910 at the age of 31."],fact:"In prison, Ahn cut off the tip of his ring finger as a pledge to fight for Korean independence — a traditional gesture of ultimate commitment. He also wrote a book of philosophy. A memorial hall for Ahn was built at Harbin Station in 2014 — Japan officially protested.",today:["Ahn Jung-geun remains a point of major tension between South Korea and Japan. In South Korea, he is a hero. In Japan, he is sometimes called a terrorist. This disagreement over how to remember history is one reason Korea-Japan relations remain complicated even today."],quiz:{q:"Who was Ahn Jung-geun and what did he do?",opts:["A king who fought the Mongols","A Korean independence activist who assassinated Japan's top statesman to resist colonization","A general who invented the turtle ship","A scholar who created Hangeul"],correct:1,explain:"Ahn Jung-geun was a Korean independence activist who assassinated former Japanese Prime Minister Itō Hirobumi in 1909, as a protest against Japan's colonization of Korea. He was executed in 1910 and became a national hero."}},
+
+  yugwansun:{image:'yugwansun_wiki',period:'1902–1920 · 삼일운동',nameKo:'유관순',nameEn:"Yu Gwan-sun — The Joan of Arc of Korea",why:"Japan occupied Korea from 1910 and brutally suppressed Korean culture — forcing people to use Japanese names, speak Japanese at school, and abandon their traditions. By 1919, Koreans had reached their breaking point.",story:["On March 1, 1919 (삼일절), independence leaders across Korea read out the Korean Declaration of Independence. What followed was extraordinary — millions of ordinary Koreans in cities and villages came out to march peacefully, waving Korean flags and shouting 'Manse! (만세!)' — Long live Korea!","Yu Gwan-sun was 16 years old and a student in Seoul. After Japanese authorities closed schools, she returned to her hometown and organized a massive independence demonstration on April 1, 1919. Thousands gathered at Aunae Marketplace.","Japanese police and soldiers opened fire on the crowd. Yu Gwan-sun's parents were killed in front of her. She was arrested, imprisoned, and tortured. Even in prison, she continued to shout 'Manse!' and organize protests. She died in prison on September 28, 1920, at just 17-18 years old — from injuries caused by torture."],fact:"The March 1st Movement (삼일운동) was brutally suppressed — over 7,500 Koreans were killed, 16,000 wounded, and 46,000 arrested. But it shocked the world and proved Koreans would never accept Japanese rule. March 1st is still a national holiday in South Korea today.",today:["Yu Gwan-sun's story is taught to every Korean student. She represents the courage of ordinary people — especially young people — who stood up against unjust power."],quiz:{q:"How old was Yu Gwan-sun when she organized independence protests against Japan?",opts:["25 years old","30 years old","16 years old — she was still a student","40 years old"],correct:2,explain:"Yu Gwan-sun was only 16 when she organized major independence protests. She was arrested, tortured, and died in prison at approximately 17-18 years old. Her youth and courage made her one of Korea's most beloved heroes."}},
+
+  imjin:{image:'imjin_wiki',period:'1592–1598',nameKo:'임진왜란',nameEn:"The Japanese Invasion — The Imjin War",why:"Japan's warlord Toyotomi Hideyoshi had just unified Japan after 100 years of civil war. He had a massive battle-hardened army and enormous ambition. His plan: conquer Korea first, then use it as a stepping stone to invade China, and eventually rule all of Asia. He demanded Korea let Japanese troops pass through. Korea refused.",story:["In April 1592, 150,000 Japanese soldiers landed in Busan. They had muskets — weapons Korea had never faced before. Korea's army collapsed almost immediately. Within weeks, Japan captured Seoul. King Seonjo fled toward the Chinese border.","But on the sea, something different was happening. Admiral Yi Sun-sin won battle after battle, destroying Japanese supply ships. Without supplies, the land army struggled. China sent a massive army to help Korea push Japan back.","After years of brutal fighting, Japan attempted a second invasion in 1597 — and was again stopped, largely by Yi Sun-sin. Japan finally withdrew after Toyotomi Hideyoshi died in 1598. Korea had survived — but was devastated."],fact:"The Imjin War lasted 7 years and may have killed one third of Korea's entire population from fighting, disease, and famine. Japan also forcibly took Korean craftsmen — especially potters — back to Japan. Korean pottery techniques had huge influence on Japanese ceramics because of this.",today:["The Imjin War is a major reason why historical distrust of Japan runs deep in Korea. Japan invaded, burned, and looted the country for 7 years. Yi Sun-sin remains the hero who saved Korea, and his story is central to Korean national identity."],quiz:{q:"Why did Japan invade Korea in 1592?",opts:["Because Korea attacked Japan first","Because Japan's warlord wanted to use Korea as a stepping stone to conquer China and all of Asia","Because Korea refused to trade with Japan","Because Japan needed Korean land for farming"],correct:1,explain:"Toyotomi Hideyoshi had unified Japan and wanted to build an Asian empire. His plan was to march through Korea to conquer China. When Korea refused to let Japanese troops pass, Japan invaded with 150,000 soldiers."}},
+
+  japanrule:{image:'japanrule_wiki',period:'1910–1945',nameKo:'일제강점기',nameEn:"Japanese Occupation — Why Korea and Japan Still Have Bad Blood",why:"After defeating China (1894) and Russia (1905) in major wars, Japan became the most powerful country in Asia. They forced Korea to accept Japanese control through a series of unfair treaties. In 1910, Japan formally annexed Korea — making it part of the Japanese Empire. Most Koreans were never asked, never voted, never consented.",story:["Under Japanese rule, Koreans were forced to: adopt Japanese names (창씨개명), speak Japanese in schools, worship at Japanese Shinto shrines, and give up Korean cultural identity. Teaching Korean history or singing Korean national songs was banned.","Japan extracted enormous wealth from Korea. During World War II, hundreds of thousands of Korean men were forced into labor in Japanese factories and mines (강제징용). Korean women were forced into sexual slavery for the Japanese military (위안부 — 'comfort women') — one of the most painful historical issues between Korea and Japan today.","Korean independence fighters resisted throughout — through armed resistance, protests like the March 1st Movement (삼일운동), and diplomacy. Liberation came on August 15, 1945, when Japan surrendered after the US dropped atomic bombs on Hiroshima and Nagasaki."],fact:"Korea's liberation on August 15, 1945 is called 광복절 (Gwangbokjeol) — literally 'the day the light returned.' Koreans who had spent decades hiding their language, their names, and their identity could finally be Korean again. It is one of the most emotional days in Korean history.",today:["This is the root of almost all tension between South Korea and Japan today. Japan has apologized multiple times, but many Koreans feel the apologies are not sincere or complete enough — especially regarding forced labor and comfort women. Japanese leaders visiting war shrines (like Yasukuni Shrine, which honors some war criminals) still causes major diplomatic crises between the two countries."],quiz:{q:"What is the main reason South Korea and Japan still have difficult relations today?",opts:["They fought over fishing rights","Japan colonized Korea for 35 years, forcing Koreans to give up their names, language, and culture — and these historical wounds have never been fully resolved","Korea and Japan fought in the Korean War","They disagree about K-pop"],correct:1,explain:"Japan colonized Korea from 1910–1945, forcing Koreans to adopt Japanese names, speak Japanese, and give up their cultural identity. Issues like forced labor and comfort women remain deeply unresolved, and this historical injustice is the main reason Korea-Japan relations are still strained today."}},
+
+  koreanwar:{image:'koreanwar_wiki',period:'1950–1953',nameKo:'한국전쟁',nameEn:"The Korean War — Why Is Korea Divided?",why:"When Japan surrendered in 1945, Korea was freed — but immediately, a new problem arose. The US and Soviet Union divided Korea at the 38th parallel as a 'temporary' military arrangement. The US managed the south; the Soviet Union managed the north. The 'temporary' division became permanent as the Cold War began. Two very different governments formed: a communist dictatorship in the North backed by the USSR and China, and a US-backed government in the South.",story:["On June 25, 1950, North Korea's leader Kim Il-sung launched a surprise invasion of South Korea with 75,000 soldiers, backed by Soviet weapons. South Korean and US forces were caught completely off guard. Within days, North Korea had captured Seoul.","The United Nations authorized 21 countries to send troops to defend South Korea. General Douglas MacArthur led a brilliant counterattack — a surprise landing at Incheon (인천상륙작전) in September 1950 that cut North Korean supply lines. UN forces pushed all the way to the Chinese border.","Then China entered the war with over 1 million soldiers, pushing UN forces back south. The war became a brutal back-and-forth stalemate. After 3 years and millions of deaths, a ceasefire was signed on July 27, 1953 — but no peace treaty. The Korean War technically never ended."],fact:"The Korean War is called 'The Forgotten War' in America because it happened between WWII and Vietnam. But for Korea, it was devastating — an estimated 2–3 million Korean civilians died. Millions of families were permanently separated, unable to contact relatives on the other side of the border.",today:["The Korean War never officially ended. North and South Korea are technically still at war today. The DMZ (비무장지대) between them is 4km wide and 250km long — filled with landmines and military bases. Ironically, because no humans have lived in the DMZ for 70 years, it has become an accidental wildlife sanctuary for rare animals. The separation of families — unable to see each other for 70+ years — remains one of the most heartbreaking legacies of the war."],quiz:{q:"Why is Korea still divided into North and South today?",opts:["Korea chose to split into two countries","After the Korean War (1950-1953), a ceasefire was signed but no peace treaty — so the war technically never ended and Korea remains divided at the 38th parallel","Japan divided Korea when they left in 1945","The United Nations permanently divided Korea"],correct:1,explain:"The Korean War ended with a ceasefire in 1953 — not a peace treaty. This means the war technically never officially ended. Korea remains divided at the 38th parallel, with the heavily fortified DMZ between North and South. Millions of families were permanently separated."}},
+
+  northkorea:{image:'northkorea_wiki',period:'1953 – Present',nameKo:'남북 분단',nameEn:"Two Koreas — Why So Different?",why:"After the Korean War ceasefire in 1953, Korea was permanently divided. The north became the DPRK (조선민주주의인민공화국) under Kim Il-sung — a communist dictatorship backed by China and the Soviet Union. The south became the Republic of Korea (대한민국) — initially a US-backed government that gradually became a democracy.",story:["🔴 NORTH KOREA: Kim Il-sung built one of the world's most closed and controlled societies. His family — the Kim dynasty — has ruled for three generations: Kim Il-sung → Kim Jong-il → Kim Jong-un (current leader). Citizens cannot freely travel, access the internet, or criticize the government. The country faces severe food shortages while spending enormous resources on nuclear weapons.","🟢 SOUTH KOREA: Starting from complete poverty and rubble in 1953, South Korea achieved one of the most remarkable economic transformations in history — the 'Miracle on the Han River' (한강의 기적). Within 50 years, South Korea went from one of the world's poorest countries to a top-15 economy. Today it is home to Samsung, LG, Hyundai, K-pop (BTS, BLACKPINK), Korean dramas, and globally beloved food.","THE HUMAN COST: Approximately 10 million Koreans were separated from family members by the division. Grandparents lost grandchildren; siblings lost each other. Rare 'reunion events' allow a small number of elderly Koreans to briefly meet divided family members — often for the first time in 70 years."],fact:"Looking at a satellite image of Korea at night tells the whole story: South Korea blazes with light from cities and homes. North Korea is almost completely dark — with only a tiny glow from the capital Pyongyang. Same people, same language, same culture — separated in 1953, now living in completely different worlds.",today:["The division of Korea remains one of the most painful unresolved situations in the modern world. North Korea's nuclear weapons program has made reunification more complicated. But the dream of one Korea (한민족) has never fully disappeared."],quiz:{q:"What is the biggest difference between North Korea and South Korea today?",opts:["They speak different languages","North Korea became one of the world's most isolated communist dictatorships while South Korea became a thriving democracy and global cultural powerhouse","South Korea is larger in size","North Korea has more people"],correct:1,explain:"Starting from the same point in 1953, North Korea became a closed communist dictatorship under the Kim family, while South Korea transformed into a democracy and economic powerhouse — home to Samsung, K-pop, and Korean culture loved around the world. The contrast is extraordinary."}}
+};
+</script>
+</body>
+</html>
