@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🏕️ Cottage Trip — May 15–18</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+<style>
+:root{--forest:#1a5c3a;--forest-mid:#2d7a52;--forest-light:#4da375;--leaf:#6ec99a;--warm:#f9f4ec;--text:#1e2e24;--text-mid:#4a6355;--text-soft:#8aab97;--card-bg:#fff;--page-bg:#f0f7f2;--radius:20px;--radius-sm:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--page-bg);color:var(--text);padding-bottom:60px;}
+
+.hero{background:linear-gradient(160deg,#1a5c3a 0%,#2d7a52 55%,#4da375 100%);padding:34px 20px 28px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.06);}
+.hero-eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--leaf);font-weight:700;margin-bottom:5px;}
+.hero-title{font-family:'DM Serif Display',serif;font-size:34px;color:#fff;line-height:1.1;margin-bottom:5px;}
+.hero-sub{font-size:13px;color:rgba(255,255,255,0.82);margin-bottom:18px;line-height:1.6;}
+.hero-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;}
+.hero-chip{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:12px;font-weight:600;padding:4px 12px;border-radius:99px;}
+.hero-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.hero-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 8px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;text-decoration:none;}
+.hero-btn-primary{background:#fff;color:#1a5c3a;}
+.hero-btn-secondary{background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.4);color:#fff;}
+
+.nav-wrap{position:sticky;top:0;z-index:100;background:var(--page-bg);padding:10px 14px 8px;border-bottom:1px solid rgba(0,0,0,0.06);}
+.nav-tabs{display:flex;background:rgba(0,0,0,0.06);border-radius:12px;padding:4px;gap:3px;overflow-x:auto;scrollbar-width:none;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.tab-btn{flex:1;min-width:50px;text-align:center;padding:7px 3px;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--text-mid);white-space:nowrap;transition:all .2s;}
+.tab-btn.active{background:#fff;color:var(--forest);box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+
+.page{display:none;padding:14px;}
+.page.active{display:block;}
+.card{background:#fff;border-radius:var(--radius);padding:18px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+.section-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:13px;display:flex;align-items:center;gap:7px;}
+
+.alert{border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;font-weight:600;line-height:1.55;margin-bottom:11px;display:flex;gap:9px;align-items:flex-start;}
+.alert.green{background:#e8f5ee;color:#1a5c3a;border-left:4px solid #2d7a52;}
+.alert.yellow{background:#fff8e6;color:#7a5600;border-left:4px solid #f5c842;}
+.alert.red{background:#fef0ef;color:#8c2a1e;border-left:4px solid #e85c4a;}
+.alert.blue{background:#e8f0ff;color:#1a2e7a;border-left:4px solid #4a7aff;}
+.alert.purple{background:#f5eeff;color:#4a1a7a;border-left:4px solid #9b59b6;}
+.alert-icon{font-size:17px;flex-shrink:0;}
+
+.info-row{display:flex;align-items:flex-start;gap:11px;padding:9px 0;border-bottom:1px solid #f0f0f0;}
+.info-row:last-child{border-bottom:none;}
+.info-key{font-size:11px;color:var(--text-soft);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:1px;}
+.info-val{font-size:14px;font-weight:700;color:var(--text);}
+.info-val.hl{color:#2d7a52;}
+
+.family-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px;}
+.fbox{border-radius:var(--radius-sm);padding:13px 11px;font-size:13px;}
+.fbox.f1{background:#e8f4ef;color:#1a5c3a;}
+.fbox.f2{background:#edf3fd;color:#1a3a7a;}
+.fbox.f3{background:#fdf3e7;color:#7a4300;}
+.fbox.f4{background:#f5eef8;color:#5a1a7a;}
+.fbox .fh{display:flex;align-items:center;gap:5px;margin-bottom:5px;}
+.fbox .fn{font-size:14px;font-weight:900;}
+.fbox .fm{font-size:12px;font-weight:600;opacity:.82;line-height:1.6;}
+
+/* MEAL */
+.day-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft);margin-bottom:7px;padding-left:2px;}
+.day-block{margin-bottom:15px;}
+.meal-item{background:var(--warm);border-radius:var(--radius-sm);padding:12px;margin-bottom:6px;border-left:4px solid #4da375;}
+.meal-item.dim{border-left-color:#ccc;}
+.meal-item.purple{border-left-color:#b07ae0;}
+.meal-item.amber{border-left-color:#f5c842;}
+.meal-type{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#2d7a52;margin-bottom:2px;}
+.meal-name{font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.meal-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.mtag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;}
+.tc{background:#d4edda;color:#1a5c3a;}
+.th{background:#fff3cd;color:#7a5600;}
+.tk{background:#f0e4ff;color:#5a1a7a;}
+.tn{background:#e0f0ff;color:#1a407a;}
+.tt{background:#ffe9e9;color:#991111;}
+
+/* SHOPPING — compact single line */
+.shop-row{display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid #f0f0f0;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.shop-row:last-child{border-bottom:none;}
+.sbadge{font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;white-space:nowrap;flex-shrink:0;}
+.sk{background:#fff3cd;color:#7a4300;}
+.sc{background:#ffe9e9;color:#991111;}
+.sw{background:#e3f0ff;color:#003fa3;}
+.sl{background:#e8f5ee;color:#1a5c3a;}
+.sa{background:#f0f0f0;color:#555;}
+.se{background:#f5e6ff;color:#5a0a9a;}
+.shop-info{flex:1;min-width:0;display:flex;align-items:baseline;gap:6px;overflow:hidden;}
+.shop-name{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.shop-name.done{text-decoration:line-through;opacity:.38;}
+.shop-who{font-size:12px;font-weight:700;color:#2d7a52;white-space:nowrap;flex-shrink:0;}
+.shop-chk{font-size:19px;flex-shrink:0;}
+
+/* SECTION DIVIDER in shopping */
+.shop-section-head{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text-soft);margin:14px 0 6px;padding-left:2px;}
+
+/* FAMILY CHECKLIST tabs */
+.ftab-bar{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;}
+.ftab-bar::-webkit-scrollbar{display:none;}
+.ftab{padding:7px 14px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid transparent;background:#f0f0f0;color:var(--text-mid);white-space:nowrap;transition:all .15s;}
+.ftab.a1{background:#e8f4ef;color:#1a5c3a;border-color:#4da375;}
+.ftab.a2{background:#edf3fd;color:#1a3a7a;border-color:#4a7aff;}
+.ftab.a3{background:#fdf3e7;color:#7a4300;border-color:#f5a623;}
+.ftab.a4{background:#f5eef8;color:#5a1a7a;border-color:#9b59b6;}
+.fpanel{display:none;}.fpanel.active{display:block;}
+
+.check-group-title{font-size:13px;font-weight:800;color:var(--text);margin:12px 0 6px;}
+.check-item{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,0.06);cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;}
+.check-item:last-child{border-bottom:none;}
+.cbox{width:21px;height:21px;border-radius:6px;border:2px solid #bfcfc7;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s;background:#fff;}
+.cbox.checked{background:#2d7a52;border-color:#2d7a52;}
+.cbox.checked::after{content:'✓';color:#fff;font-size:12px;font-weight:800;}
+.clabel{font-size:13px;font-weight:600;color:var(--text);line-height:1.4;}
+.clabel.checked{text-decoration:line-through;color:var(--text-soft);}
+.cnote{font-size:11px;color:var(--text-soft);font-weight:600;margin-top:1px;}
+
+.prog-wrap{background:rgba(0,0,0,0.07);border-radius:99px;height:7px;overflow:hidden;margin-bottom:4px;}
+.prog-fill{height:7px;border-radius:99px;background:linear-gradient(90deg,#2d7a52,#6ec99a);transition:width .3s ease;}
+.prog-text{font-size:12px;font-weight:700;color:var(--text-mid);text-align:right;margin-bottom:11px;}
+
+.duty-row{display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0;gap:8px;}
+.duty-row:last-child{border-bottom:none;}
+.duty-name{font-size:13px;font-weight:700;}
+.duty-ppl{font-size:13px;color:var(--text-mid);font-weight:600;text-align:right;}
+
+.amenity-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.am-item{display:flex;align-items:center;gap:7px;background:var(--warm);border-radius:9px;padding:8px 10px;font-size:12px;font-weight:700;}
+
+.footer{text-align:center;padding:28px 20px;font-size:12px;color:var(--text-soft);font-weight:600;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.page.active .card{animation:fadeUp .22s ease both;}
+.page.active .card:nth-child(2){animation-delay:.04s;}
+.page.active .card:nth-child(3){animation-delay:.08s;}
+.page.active .card:nth-child(4){animation-delay:.12s;}
+.page.active .card:nth-child(5){animation-delay:.16s;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">🌲 4 Families · 3 Nights</div>
+  <div class="hero-title">Cottage Trip</div>
+  <div class="hero-sub">May 15 (Fri) 3 PM — May 18 (Mon) 11 AM<br>The North Retreat · Burk's Falls, ON</div>
+  <div class="hero-chips">
+    <span class="hero-chip">⭐ 4.95</span>
+    <span class="hero-chip">🛏 5 bedrooms</span>
+    <span class="hero-chip">🚿 3 baths</span>
+    <span class="hero-chip">👨‍👩‍👧‍👦 16명</span>
+  </div>
+  <div class="hero-btns">
+    <a class="hero-btn hero-btn-primary" href="https://www.google.com/maps/search/?api=1&query=775+Relative+Road+Burks+Falls+ON+P0A+1C0" target="_blank">📍 길 안내</a>
+    <a class="hero-btn hero-btn-secondary" href="https://www.airbnb.ca/rooms/1096437928073181737" target="_blank">🏡 Airbnb 보기</a>
+  </div>
+</div>
+
+<div class="nav-wrap">
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('info',this)">📋 정보</button>
+    <button class="tab-btn" onclick="showPage('meal',this)">🍽 식사</button>
+    <button class="tab-btn" onclick="showPage('shopping',this)">🛒 장보기</button>
+    <button class="tab-btn" onclick="showPage('checklist',this)">✅ 짐싸기</button>
+    <button class="tab-btn" onclick="showPage('duties',this)">🔥 당번</button>
+  </div>
+</div>
+
+<!-- ===== 정보 ===== -->
+<div id="page-info" class="page active">
+  <div class="alert yellow">
+    <span class="alert-icon">🛏</span>
+    <div><strong>침구 안내</strong><br>이불·베개는 제공되지만 <strong>배딩싯(시트)은 없어요</strong> — 필요하면 챙기세요.<br>수건은 기본은 있지만 많지 않아요 — <strong>각 가정 넉넉히 챙기기!</strong></div>
+  </div>
+  <div class="card">
+    <div class="section-title">🏠 숙소 정보</div>
+    <div class="info-row"><span style="font-size:18px">📍</span><div><div class="info-key">주소</div><div class="info-val">775 Relative Road, Burk's Falls, ON P0A 1C0</div></div></div>
+    <div class="info-row"><span style="font-size:18px">👤</span><div><div class="info-key">호스트</div><div class="info-val">Philip (Superhost) · 📞 905-975-8301</div></div></div>
+    <div class="info-row"><span style="font-size:18px">🗝️</span><div><div class="info-key">체크인</div><div class="info-val hl">5월 15일 (금) 오후 3:00 — Lockbox 셀프</div></div></div>
+    <div class="info-row"><span style="font-size:18px">🚪</span><div><div class="info-key">체크아웃</div><div class="info-val hl">5월 18일 (월) 오전 11:00</div></div></div>
+  </div>
+  <div class="card">
+    <div class="section-title">👨‍👩‍👧‍👦 참가 가정</div>
+    <div class="family-grid">
+      <div class="fbox f1"><div class="fh">🏠 <span class="fn">Max Family</span></div><div class="fm">용일 · 수현<br>민교(Max) · 세린<br>🐕 Ruby &amp; Kami</div></div>
+      <div class="fbox f2"><div class="fh">🏠 <span class="fn">Teo Family</span></div><div class="fm">재호 · 은영<br>태호(Teo) · 태연</div></div>
+      <div class="fbox f3"><div class="fh">🏠 <span class="fn">Sia Family</span></div><div class="fm">중환 · 초승<br>시아(Sia) · 수호</div></div>
+      <div class="fbox f4"><div class="fh">🏠 <span class="fn">Gia Family</span></div><div class="fm">이삭 · 희진<br>지아(Gia) · 리아</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-title">🏡 어메니티</div>
+    <div class="amenity-grid">
+      <div class="am-item">🏊 Swim Spa</div><div class="am-item">♨️ Hot Tub</div>
+      <div class="am-item">🏖️ Sandy Beach</div><div class="am-item">🛶 카약·카누·패들</div>
+      <div class="am-item">🔥 Fire Pit</div><div class="am-item">🍖 BBQ + Smoker</div>
+      <div class="am-item">🏐 비치 발리볼</div><div class="am-item">🏸 배드민턴</div>
+      <div class="am-item">🎱 당구대</div><div class="am-item">🎯 다트보드</div>
+      <div class="am-item">📺 85" TV</div><div class="am-item">🔊 BT 스피커</div>
+      <div class="am-item">☕ Nespresso</div><div class="am-item">🍚 밥솥</div>
+      <div class="am-item">📶 Wifi</div><div class="am-item">🧺 세탁기/건조기</div>
+    </div>
+    <div class="alert green" style="margin-top:11px;margin-bottom:0;">
+      <span class="alert-icon">✅</span><span>샴푸·컨디셔너·바디워시·헤어드라이어·주방용품·식기류 <strong>숙소 제공!</strong></span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-title">🗑️ 주요 공지</div>
+    <div class="alert red"><span class="alert-icon">🚮</span><span><strong>토·일 식사 정리 담당 가정이 쓰레기 모아주세요!</strong> 투명 봉투 필수. 1봉지 초과 시 추가 비용.</span></div>
+    <div class="alert yellow"><span class="alert-icon">♻️</span><span>재활용 최대한 분리해주세요!</span></div>
+    <div class="alert yellow" style="margin-bottom:0;"><span class="alert-icon">🕕</span><span>근처 마트·LCBO 오후 5–6시 마감 — 미리 장봐오기! 근처 피자 가게 있음.</span></div>
+  </div>
+</div>
+
+<!-- ===== 식사 ===== -->
+<div id="page-meal" class="page">
+  <div class="alert green">
+    <span class="alert-icon">👩‍🍳</span>
+    <div><strong>식사 룰</strong> — 배정 가정 메인 준비 · 도우미 1가정 · 나머지 2가정 정리+쓰레기</div>
+  </div>
+  <div class="card">
+    <div class="section-title">🍽 식사 일정</div>
+
+    <div class="day-block">
+      <div class="day-label">Friday, May 15</div>
+      <div class="meal-item dim">
+        <div class="meal-type">저녁</div>
+        <div class="meal-name">각자 해결 후 출발 🚗</div>
+        <div class="meal-tags"><span class="mtag tn">늦은 밤 간식 개인 준비</span></div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-label">Saturday, May 16</div>
+      <div class="meal-item">
+        <div class="meal-type">아침</div>
+        <div class="meal-name">빵 🥐 (Paris Baguette)</div>
+        <div class="meal-tags"><span class="mtag tc">Teo Family 제공</span></div>
+      </div>
+      <div class="meal-item">
+        <div class="meal-type">브런치</div>
+        <div class="meal-name">파스타 🍝</div>
+        <div class="meal-tags"><span class="mtag tc">🍳 Teo</span><span class="mtag th">🤝 Sia</span><span class="mtag tk">🧹 Max + Gia</span><span class="mtag tt">🗑 Max + Gia</span></div>
+      </div>
+      <div class="meal-item">
+        <div class="meal-type">저녁</div>
+        <div class="meal-name">춘닭 🍗</div>
+        <div class="meal-tags"><span class="mtag tc">🍳 Sia</span><span class="mtag th">🤝 Gia</span><span class="mtag tk">🧹 Max + Teo</span><span class="mtag tt">🗑 Max + Teo</span></div>
+      </div>
+      <div class="meal-item purple">
+        <div class="meal-type">야식</div>
+        <div class="meal-name">Late Night Snack 🌙</div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-label">Sunday, May 17</div>
+      <div class="meal-item amber">
+        <div class="meal-type">아침</div>
+        <div class="meal-name">핫케이크 🥞 + 스크램블 에그</div>
+        <div class="meal-tags"><span class="mtag tc">수현 일어나면 시작 😄 못 일어나면 알아서 드셔 ㅋㅋ</span></div>
+      </div>
+      <div class="meal-item">
+        <div class="meal-type">점심</div>
+        <div class="meal-name">피자 &amp; 윙 🍕🍗</div>
+        <div class="meal-tags"><span class="mtag tc">🍳 Gia</span><span class="mtag th">🤝 Sia</span><span class="mtag tk">🧹 Teo + Max</span><span class="mtag tt">🗑 Teo + Max</span></div>
+      </div>
+      <div class="meal-item">
+        <div class="meal-type">저녁</div>
+        <div class="meal-name">BBQ 🔥</div>
+        <div class="meal-tags"><span class="mtag tc">🍳 Max</span><span class="mtag th">🤝 Teo</span><span class="mtag tk">🧹 Gia + Sia</span><span class="mtag tt">🗑 Gia + Sia</span></div>
+      </div>
+      <div class="meal-item purple">
+        <div class="meal-type">야식</div>
+        <div class="meal-name">Late Night Snack 🌙</div>
+      </div>
+    </div>
+
+    <div class="day-block" style="margin-bottom:0">
+      <div class="day-label">Monday, May 18</div>
+      <div class="meal-item amber">
+        <div class="meal-type">아침</div>
+        <div class="meal-name">컵라면 🍜 (간단히 체크아웃)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 장보기 ===== -->
+<div id="page-shopping" class="page">
+
+  <!-- 공동 구매 -->
+  <div class="card">
+    <div class="section-title">🤝 공동 구매 목록</div>
+    <div class="alert blue" style="margin-bottom:10px;"><span class="alert-icon">💡</span><span>다같이 쓰는 거! 탭하면 완료 체크돼요.</span></div>
+    <div id="shared-list"></div>
+  </div>
+
+  <!-- 가정별 -->
+  <div class="card">
+    <div class="section-title">👨‍👩‍👧‍👦 가정별 담당</div>
+    <div class="alert green" style="margin-bottom:10px;"><span class="alert-icon">✅</span><span>각 가정이 맡은 항목!</span></div>
+    <div id="family-list"></div>
+  </div>
+
+  <!-- 매장 가이드 -->
+  <div class="card">
+    <div class="section-title">🏪 추천 매장</div>
+    <div class="shop-row" style="cursor:default;"><span class="sbadge sc">Costco</span><span class="shop-name" style="white-space:normal;">빵, 달걀, 치즈, 일본 소시지, 음료, 물</span></div>
+    <div class="shop-row" style="cursor:default;"><span class="sbadge sw">Walmart</span><span class="shop-name" style="white-space:normal;">버거 패티, 샐러드, 마시멜로, 로스팅 스틱</span></div>
+    <div class="shop-row" style="cursor:default;"><span class="sbadge sk">Korean</span><span class="shop-name" style="white-space:normal;">라면, 한국 과자, 쌀, 김, 춘닭 재료</span></div>
+    <div class="shop-row" style="cursor:default;border-bottom:none;"><span class="sbadge sl">Local</span><span class="shop-name" style="white-space:normal;">술, 비상 물품, 장작</span></div>
+  </div>
+</div>
+
+<!-- ===== 짐싸기 ===== -->
+<div id="page-checklist" class="page">
+  <div class="ftab-bar" id="ftab-bar">
+    <button class="ftab a1" onclick="showFamily(0,this)">🏠 Max</button>
+    <button class="ftab" onclick="showFamily(1,this)" style="background:#edf3fd;color:#1a3a7a;border-color:#4a7aff;">🏠 Teo</button>
+    <button class="ftab" onclick="showFamily(2,this)" style="background:#fdf3e7;color:#7a4300;border-color:#f5a623;">🏠 Sia</button>
+    <button class="ftab" onclick="showFamily(3,this)" style="background:#f5eef8;color:#5a1a7a;border-color:#9b59b6;">🏠 Gia</button>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+  <div class="prog-text" id="prog-label">0 / 0 완료</div>
+  <div id="checklist-panels"></div>
+</div>
+
+<!-- ===== 당번 ===== -->
+<div id="page-duties" class="page">
+  <div class="card">
+    <div class="section-title">🔥 파이어핏 당번</div>
+    <div class="duty-row"><span class="duty-name">토요일 (May 16)</span><span class="duty-ppl">Kenneth (Max) + 이삭 (Gia)</span></div>
+    <div class="duty-row"><span class="duty-name">일요일 (May 17)</span><span class="duty-ppl">Jay (Sia) + 재호 (Teo)</span></div>
+  </div>
+  <div class="card">
+    <div class="section-title">👗 빨래 당번</div>
+    <div class="alert blue" style="margin-bottom:10px;"><span class="alert-icon">👕</span><span>애들 물놀이 후 젖은 옷 처리!</span></div>
+    <div class="duty-row"><span class="duty-name">2째날 — 빨래/건조</span><span class="duty-ppl">Max Family</span></div>
+    <div class="duty-row"><span class="duty-name">2째날 — 접기</span><span class="duty-ppl">Teo Family</span></div>
+    <div class="duty-row"><span class="duty-name">3째날 — 빨래/건조</span><span class="duty-ppl">Sia Family</span></div>
+    <div class="duty-row"><span class="duty-name">3째날 — 접기</span><span class="duty-ppl">Gia Family</span></div>
+  </div>
+  <div class="card">
+    <div class="section-title">🗑️ 쓰레기 처리</div>
+    <div class="alert red" style="margin-bottom:10px;"><span class="alert-icon">⚠️</span><span>식사 정리 담당 가정이 바로 쓰레기 모아주세요! 투명 봉투 필수.</span></div>
+    <div class="duty-row"><span class="duty-name">토 브런치 후</span><span class="duty-ppl">Max + Gia</span></div>
+    <div class="duty-row"><span class="duty-name">토 저녁 후</span><span class="duty-ppl">Max + Teo</span></div>
+    <div class="duty-row"><span class="duty-name">일 점심 후</span><span class="duty-ppl">Teo + Max</span></div>
+    <div class="duty-row"><span class="duty-name">일 저녁 후</span><span class="duty-ppl">Gia + Sia</span></div>
+    <div class="duty-row"><span class="duty-name">최종 드롭오프</span><span class="duty-ppl">Kenneth + 재호</span></div>
+  </div>
+  <div class="card">
+    <div class="section-title">🍳 식사 당번 요약</div>
+    <div class="duty-row"><span class="duty-name">토 브런치 (파스타)</span><span class="duty-ppl">🍳 Teo · 🤝 Sia</span></div>
+    <div class="duty-row"><span class="duty-name">토 저녁 (춘닭)</span><span class="duty-ppl">🍳 Sia · 🤝 Gia</span></div>
+    <div class="duty-row"><span class="duty-name">일 점심 (피자&amp;윙)</span><span class="duty-ppl">🍳 Gia · 🤝 Sia</span></div>
+    <div class="duty-row"><span class="duty-name">일 저녁 (BBQ)</span><span class="duty-ppl">🍳 Max · 🤝 Teo</span></div>
+  </div>
+  <div class="card">
+    <div class="section-title">🛏 방 구성</div>
+    <div class="duty-row"><span class="duty-name">방 1 — King (전용 욕실)</span><span class="duty-ppl">Upper</span></div>
+    <div class="duty-row"><span class="duty-name">방 2 — Queen</span><span class="duty-ppl">Upper · 공용 욕실</span></div>
+    <div class="duty-row"><span class="duty-name">방 3 — Queen+Double+벙크</span><span class="duty-ppl">Lower · 최대 5명</span></div>
+    <div class="duty-row"><span class="duty-name">방 4 — Queen</span><span class="duty-ppl">Lower</span></div>
+    <div class="duty-row"><span class="duty-name">방 5 (Nook) — Double+벙크</span><span class="duty-ppl">Lower · 3명</span></div>
+  </div>
+</div>
+
+<div class="footer">🌲 Cottage Trip 2025 · Made with ❤️</div>
+
+<script>
+// ── SHOPPING ──
+// 공동 구매 (다 같이 쓰는 것)
+const sharedItems = [
+  { store:'sk', sl:'Korean', name:'컵라면', who:'각 가정 1–2개씩' },
+  { store:'sk', sl:'Korean', name:'애들용 라면', who:'각 가정 1–2개씩' },
+  { store:'sc', sl:'Costco', name:'일회용 접시 / 그릇', who:'희진 or 은영' },
+  { store:'sc', sl:'Costco', name:'일회용 컵', who:'희진 or 은영' },
+  { store:'sc', sl:'Costco', name:'물 2박스 (24개입×2)', who:'수현·초승 or 은영·희진' },
+  { store:'sw', sl:'Walmart', name:'음료 캔', who:'희진 or 은영' },
+  { store:'sw', sl:'Walmart', name:'페이퍼타올', who:'패밀리당 알아서' },
+  { store:'sw', sl:'Walmart/Dollar', name:'마시멜로 (큰 사이즈)', who:'찾는 사람이! 🙋' },
+  { store:'sw', sl:'Walmart/Dollar', name:'캠프파이어 로스팅 스틱', who:'찾는 사람이! 🙋' },
+  { store:'sl', sl:'Local', name:'Fire Starter', who:'누군가' },
+  { store:'sl', sl:'Local', name:'장작 (Firewood)', who:'현지 구매 가능' },
+  { store:'se', sl:'기타', name:'스낵 / 개인 간식', who:'각 가정 알아서' },
+  { store:'sl', sl:'Local', name:'술', who:'각 가정 알아서' },
+];
+
+// 가정별 담당
+const familyItems = [
+  { store:'sk', sl:'Korean', name:'김', who:'수현 (Max)' },
+  { store:'sk', sl:'Korean', name:'라면 (비빔면·짜장면 한 팩씩)', who:'수현 (Max)' },
+  { store:'sk', sl:'Korean', name:'한국 과자 / 버터오징어 / 쫀드기', who:'수현 (Max)' },
+  { store:'sk', sl:'Korean', name:'나무젓가락', who:'수현 (Max)' },
+  { store:'se', sl:'기타', name:'벌레 스프레이 / 버그 킬러', who:'수현 (있는 사람)' },
+  { store:'sa', sl:'어디서나', name:'나무젓가락 (추가)', who:'초승 (Sia)' },
+  { store:'sa', sl:'어디서나', name:'케찹 / 마요네즈', who:'초승 (Sia)' },
+  { store:'sc', sl:'Costco', name:'계란 한 판 + 우유 한 팩', who:'확인 필요' },
+];
+
+function renderShopList(items, elId, prefix) {
+  const el = document.getElementById(elId);
+  items.forEach((item, i) => {
+    const id = prefix + i;
+    const row = document.createElement('div');
+    row.className = 'shop-row';
+    row.innerHTML = `<span class="sbadge ${item.store}">${item.sl}</span><div class="shop-info"><span class="shop-name" id="sn${id}">${item.name}</span><span class="shop-who">· ${item.who}</span></div><span class="shop-chk" id="sc${id}">☐</span>`;
+    row.onclick = () => {
+      const sn = document.getElementById('sn'+id), sc = document.getElementById('sc'+id);
+      const done = sc.textContent === '✅';
+      sc.textContent = done ? '☐' : '✅';
+      sn.classList.toggle('done', !done);
+    };
+    el.appendChild(row);
+  });
+}
+renderShopList(sharedItems, 'shared-list', 's');
+renderShopList(familyItems, 'family-list', 'f');
+
+// ── CHECKLIST ──
+const commonItems = [
+  { label:'침대 시트 (배딩싯)', note:'이불·베개는 있지만 시트 없음!' },
+  { label:'수건 (목욕용)', note:'기본은 있지만 부족 — 넉넉히 챙기기' },
+  { label:'비치타월', note:'수영·핫텁·Swim Spa용' },
+  { label:'칫솔 / 치약' },
+  { label:'스킨케어 / 개인 세면도구' },
+  { label:'개인 상비약' },
+  { label:'잠옷 / 파자마' },
+  { label:'후드 / 가벼운 자켓', note:'5월 밤 쌀 수 있어요' },
+  { label:'여벌 옷 충분히', note:'물놀이 많으니 아이들 특히 넉넉히' },
+  { label:'수영복' },
+  { label:'슬리퍼 / 실내화' },
+  { label:'선크림 (자외선차단제)' },
+  { label:'모기 기피제', note:'수현이 챙김 (없으면 본인이)' },
+  { label:'아이 구명조끼', note:'수상 안전 — 숙소 미제공' },
+  { label:'폰 충전기' },
+  { label:'아이패드 / 닌텐도 충전기' },
+  { label:'보조배터리' },
+  { label:'개인 커피 / 차' },
+  { label:'개인 간식 / 주전부리' },
+  { label:'보드게임 / 운동용품', note:'애들 원하는 거 각자 챙기기' },
+];
+
+const familySpecific = [
+  [ // Max
+    { label:'팬케이크 믹스 + 재료', note:'일요일 아침 핫케이크 수현 담당!' },
+    { label:'요거트', note:'은영 담당 — Teo Family' },
+    { label:'과일', note:'각 가정 챙기기' },
+    { label:'강아지 사료 / 간식', note:'Ruby & Kami' },
+    { label:'강아지 리드줄 / 배변 봉투', note:'Ruby & Kami' },
+    { label:'강아지 이동장 / 담요', note:'Ruby & Kami' },
+  ],
+  [ // Teo
+    { label:'Paris Baguette 빵', note:'토요일 아침 제공!' },
+    { label:'요거트', note:'은영 담당' },
+    { label:'과일', note:'각 가정 챙기기' },
+  ],
+  [ // Sia
+    { label:'🃏 포커칩', note:'⚠️ 중환 — 절대 잊지 말 것!!! ㅋㅋ' },
+    { label:'과일', note:'각 가정 챙기기' },
+  ],
+  [ // Gia
+    { label:'과일', note:'각 가정 챙기기' },
+  ],
+];
+
+const families = ['Max','Teo','Sia','Gia'];
+const panelContainer = document.getElementById('checklist-panels');
+let allCheckIds = [];
+
+families.forEach((fname, fi) => {
+  const panel = document.createElement('div');
+  panel.className = 'fpanel' + (fi === 0 ? ' active' : '');
+  panel.id = 'fpanel' + fi;
+
+  let html = `<div class="card"><div class="section-title">📦 공통 짐 — ${fname} Family</div>`;
+  commonItems.forEach(item => {
+    const id = 'c_' + fi + '_' + allCheckIds.length;
+    allCheckIds.push(id);
+    html += `<div class="check-item" onclick="toggleCheck('${id}')"><div class="cbox" id="box_${id}"></div><div><div class="clabel" id="lbl_${id}">${item.label}</div>${item.note?`<div class="cnote">${item.note}</div>`:''}</div></div>`;
+  });
+  html += '</div>';
+
+  if (familySpecific[fi].length > 0) {
+    html += `<div class="card"><div class="section-title">⭐ ${fname} Family 전용</div>`;
+    familySpecific[fi].forEach(item => {
+      const id = 'c_' + fi + '_' + allCheckIds.length;
+      allCheckIds.push(id);
+      html += `<div class="check-item" onclick="toggleCheck('${id}')"><div class="cbox" id="box_${id}"></div><div><div class="clabel" id="lbl_${id}">${item.label}</div>${item.note?`<div class="cnote">${item.note}</div>`:''}</div></div>`;
+    });
+    html += '</div>';
+  }
+
+  panel.innerHTML = html;
+  panelContainer.appendChild(panel);
+});
+
+function toggleCheck(id) {
+  document.getElementById('box_'+id).classList.toggle('checked');
+  document.getElementById('lbl_'+id).classList.toggle('checked');
+  updateProg();
+}
+
+let currentFamily = 0;
+function showFamily(idx, btn) {
+  currentFamily = idx;
+  document.querySelectorAll('.fpanel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ftab-bar .ftab').forEach(b => b.style.fontWeight = '700');
+  document.getElementById('fpanel'+idx).classList.add('active');
+  document.querySelectorAll('.ftab-bar button').forEach(b => b.style.outline = 'none');
+  btn.style.outline = '2px solid currentColor';
+  updateProg();
+}
+
+function updateProg() {
+  const panelEl = document.getElementById('fpanel'+currentFamily);
+  const total = panelEl.querySelectorAll('.cbox').length;
+  const done = panelEl.querySelectorAll('.cbox.checked').length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('prog').style.width = pct+'%';
+  document.getElementById('prog-label').textContent = done+' / '+total+' 완료 ('+pct+'%)';
+}
+updateProg();
+
+// ── PAGE TABS ──
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
