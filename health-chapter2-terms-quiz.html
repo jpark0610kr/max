@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Chapter 2 Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00D4AA; --purple:#A855F7; --yellow:#FFD700; --green:#2ECC71; --red:#FF4757;
+    --orange:#FF8C00; --blue:#3B82F6; --dark:#0f0f1a; --card:#1a1a2e; --card2:#16213e;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Nunito',sans-serif; background:var(--dark); min-height:100vh; overflow-x:hidden; color:white; }
+  body::before { content:''; position:fixed; inset:0; background-image:radial-gradient(circle,rgba(0,212,170,.06) 1px,transparent 1px); background-size:44px 44px; pointer-events:none; }
+  .bg-floats { position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
+  .bg-float { position:absolute; opacity:.06; animation:floatUp linear infinite; }
+  @keyframes floatUp { 0%{transform:translateY(100vh) rotate(0deg);opacity:0} 10%{opacity:.06} 90%{opacity:.06} 100%{transform:translateY(-100px) rotate(360deg);opacity:0} }
+  .container { position:relative; z-index:1; max-width:850px; margin:0 auto; padding:20px; }
+  .header { text-align:center; padding:28px 0 18px; }
+  .header h1 { font-family:'Fredoka One',cursive; font-size:clamp(2rem,6vw,3.4rem); color:var(--teal); text-shadow:0 0 30px rgba(0,212,170,.4),4px 4px 0 rgba(0,0,0,.3); animation:titlePop .6s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes titlePop { from{transform:scale(.5);opacity:0} to{transform:scale(1);opacity:1} }
+  .header p { color:var(--purple); font-size:1.05rem; font-weight:800; margin-top:6px; letter-spacing:1px; }
+  .score-bar { display:flex; justify-content:space-between; align-items:center; background:var(--card); border:2px solid rgba(255,255,255,.08); border-radius:20px; padding:14px 24px; margin-bottom:20px; box-shadow:0 4px 20px rgba(0,0,0,.3); }
+  .score-item { text-align:center; } .score-label { font-size:.68rem; text-transform:uppercase; letter-spacing:2px; color:rgba(255,255,255,.45); font-weight:800; }
+  .score-value { font-family:'Fredoka One',cursive; font-size:1.75rem; line-height:1; margin-top:2px; }
+  .stars .score-value{color:var(--yellow)} .correct .score-value{color:var(--green)} .total .score-value{color:var(--teal)}
+  .progress-wrap { background:rgba(255,255,255,.08); border-radius:50px; height:12px; margin-bottom:26px; overflow:hidden; }
+  .progress-bar { height:100%; background:linear-gradient(90deg,var(--teal),var(--purple)); border-radius:50px; transition:width .5s ease; position:relative; overflow:hidden; }
+  .progress-bar::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent); animation:shimmer 1.5s infinite; }
+  @keyframes shimmer { from{transform:translateX(-100%)} to{transform:translateX(100%)} }
+  .question-card { background:var(--card); border:2px solid rgba(255,255,255,.07); border-radius:28px; padding:30px; margin-bottom:20px; box-shadow:0 8px 40px rgba(0,0,0,.4); animation:slideIn .4s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes slideIn { from{transform:translateY(30px) scale(.95);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
+  .question-badge { display:inline-flex; align-items:center; gap:6px; background:linear-gradient(135deg,var(--teal),#059669); color:white; font-size:.72rem; font-weight:900; text-transform:uppercase; letter-spacing:1.5px; padding:5px 14px; border-radius:50px; margin-bottom:14px; }
+  .question-text { font-size:clamp(1.05rem,2.8vw,1.35rem); font-weight:900; color:white; line-height:1.55; margin-bottom:10px; }
+  .definition-box { background:rgba(255,255,255,.05); border:2px solid rgba(255,255,255,.1); border-radius:18px; padding:18px; margin:14px 0 22px; color:rgba(255,255,255,.9); font-size:1.05rem; line-height:1.45; font-weight:800; }
+  .options-grid { display:grid; grid-template-columns:1fr 1fr; gap:11px; } @media(max-width:500px){.options-grid{grid-template-columns:1fr} .score-bar{padding:12px} }
+  .option-btn { background:rgba(255,255,255,.04); border:2px solid rgba(255,255,255,.1); border-radius:15px; padding:14px 16px; color:white; font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:800; cursor:pointer; text-align:left; transition:all .2s; display:flex; align-items:center; gap:11px; }
+  .option-btn:hover:not(:disabled) { background:rgba(0,212,170,.12); border-color:var(--teal); transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,212,170,.18); }
+  .letter { width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:.95rem;flex-shrink:0;transition:all .2s; }
+  .option-btn:hover:not(:disabled) .letter{background:var(--teal);color:var(--dark)}
+  .option-btn.correct{background:rgba(46,204,113,.18);border-color:var(--green);animation:correctPulse .5s ease} .option-btn.correct .letter{background:var(--green);color:white}
+  .option-btn.wrong{background:rgba(255,71,87,.18);border-color:var(--red);animation:shake .4s ease} .option-btn.wrong .letter{background:var(--red);color:white}
+  .option-btn:disabled{cursor:not-allowed;opacity:.75} @keyframes correctPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}} @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .feedback{margin-top:15px;padding:13px 17px;border-radius:13px;font-weight:800;font-size:.95rem;display:none;align-items:flex-start;gap:10px;line-height:1.5} .feedback.show{display:flex;animation:fadeIn .3s ease}
+  .correct-fb{background:rgba(46,204,113,.13);border:2px solid rgba(46,204,113,.35);color:#7FFFC4} .wrong-fb{background:rgba(255,71,87,.13);border:2px solid rgba(255,71,87,.35);color:#FFB3BB}
+  .feedback-icon{font-size:1.35rem;flex-shrink:0} @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+  .next-btn{display:none;width:100%;margin-top:15px;background:linear-gradient(135deg,var(--yellow),var(--orange));border:none;border-radius:15px;padding:15px;color:var(--dark);font-family:'Fredoka One',cursive;font-size:1.25rem;cursor:pointer;transition:all .2s;box-shadow:0 4px 15px rgba(255,215,0,.28)} .next-btn.show{display:block;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)} .next-btn:hover{transform:translateY(-3px) scale(1.02)} @keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+  .result-screen{display:none;text-align:center;padding:40px 20px;animation:slideIn .5s ease} .result-screen.show{display:block} .result-emoji{font-size:5rem;margin-bottom:18px;animation:bounce 1s infinite} @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+  .result-title{font-family:'Fredoka One',cursive;font-size:clamp(2rem,6vw,3rem);margin-bottom:8px} .result-score-big{font-family:'Fredoka One',cursive;font-size:clamp(3rem,10vw,5rem);line-height:1;margin:18px 0} .result-msg{font-size:1.05rem;font-weight:800;color:rgba(255,255,255,.65);margin-bottom:28px} .stars-display{font-size:2.4rem;margin:8px 0 18px}
+  .restart-btn{background:linear-gradient(135deg,var(--purple),#6D28D9);border:none;border-radius:18px;padding:17px 44px;color:white;font-family:'Fredoka One',cursive;font-size:1.35rem;cursor:pointer;transition:all .2s;box-shadow:0 6px 25px rgba(168,85,247,.38)} .restart-btn:hover{transform:translateY(-3px)}
+  .confetti-piece{position:fixed;pointer-events:none;animation:confettiFall linear forwards} @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+<div class="bg-floats" id="bgFloats"></div>
+<div class="container">
+  <div class="header"><h1>🏥 Health Chapter 2</h1><p>Terms Quiz · All Vocabulary Included</p></div>
+  <div class="score-bar">
+    <div class="score-item stars"><div class="score-label">⭐ Stars</div><div class="score-value" id="starCount">0</div></div>
+    <div class="score-item correct"><div class="score-label">✅ Correct</div><div class="score-value" id="correctCount">0</div></div>
+    <div class="score-item total"><div class="score-label">📋 Total</div><div class="score-value" id="totalCount">0/0</div></div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  <div class="question-card" id="questionCard">
+    <div class="question-badge" id="questionBadge">Question 1</div>
+    <div class="question-text" id="questionText"></div>
+    <div class="definition-box" id="definitionBox"></div>
+    <div id="answerArea"></div>
+    <div class="feedback" id="feedback"><span class="feedback-icon" id="feedbackIcon"></span><span id="feedbackText"></span></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question ➡️</button>
+  </div>
+  <div class="result-screen" id="resultScreen">
+    <div class="result-emoji" id="resultEmoji">🎉</div><div class="result-title" id="resultTitle" style="color:var(--teal);">Quiz Complete!</div>
+    <div class="result-score-big" id="resultScore"></div><div class="stars-display" id="resultStars"></div><div class="result-msg" id="resultMsg"></div>
+    <button class="restart-btn" onclick="restartQuiz()">🔄 Play Again!</button>
+  </div>
+</div>
+<script>
+const terms = [
+  {
+    "category": "Basic Body Terms",
+    "term": "cells",
+    "definition": "smallest parts of living things"
+  },
+  {
+    "category": "Basic Body Terms",
+    "term": "tissue",
+    "definition": "group of similar cells working together to do a specific job for an organ of the body"
+  },
+  {
+    "category": "Basic Body Terms",
+    "term": "organ",
+    "definition": "structure made from tissue designed to do an important job for a system of the body"
+  },
+  {
+    "category": "Basic Body Terms",
+    "term": "system",
+    "definition": "group of organs working together to do a specific job for the body"
+  },
+  {
+    "category": "Nervous System",
+    "term": "nervous system",
+    "definition": "body system which coordinates all activities of the body; brain, spinal cord, and nerves"
+  },
+  {
+    "category": "Nervous System",
+    "term": "central nervous system",
+    "definition": "major part of the nervous system consisting of the brain and spinal cord"
+  },
+  {
+    "category": "Nervous System",
+    "term": "brain",
+    "definition": "main organ of the nervous system; controls the body"
+  },
+  {
+    "category": "Nervous System",
+    "term": "spinal cord",
+    "definition": "bundle of nerve cells in the backbone; carries messages to and from the brain"
+  },
+  {
+    "category": "Nervous System",
+    "term": "reflex",
+    "definition": "automatic action the body does in response to something else"
+  },
+  {
+    "category": "Nervous System",
+    "term": "peripheral nervous system",
+    "definition": "major part of the nervous system consisting of nerves which branch out from the brain and spinal cord"
+  },
+  {
+    "category": "Brain Parts",
+    "term": "cerebrum",
+    "definition": "largest part of the brain; controls the process of thinking and reasoning; receives information from sense organs"
+  },
+  {
+    "category": "Brain Parts",
+    "term": "cerebellum",
+    "definition": "part of the brain that controls balance and coordination of voluntary muscles"
+  },
+  {
+    "category": "Brain Parts",
+    "term": "brain stem",
+    "definition": "controls involuntary functions of the body"
+  },
+  {
+    "category": "Nerves",
+    "term": "sensory nerves",
+    "definition": "carry messages from the body to the brain"
+  },
+  {
+    "category": "Nerves",
+    "term": "motor nerves",
+    "definition": "control movement by carrying messages from the brain to the muscles of the body"
+  },
+  {
+    "category": "Nerves",
+    "term": "olfactory nerve",
+    "definition": "sends odor messages to the brain"
+  },
+  {
+    "category": "Eye",
+    "term": "sclera",
+    "definition": "white of the eye"
+  },
+  {
+    "category": "Eye",
+    "term": "cornea",
+    "definition": "transparent part of the eye; able to transmit light into the eye"
+  },
+  {
+    "category": "Eye",
+    "term": "pupil",
+    "definition": "round hole that lets light into the eye"
+  },
+  {
+    "category": "Eye",
+    "term": "iris",
+    "definition": "ring of muscles which controls the amount of light let into the eye"
+  },
+  {
+    "category": "Eye",
+    "term": "lens",
+    "definition": "focuses the picture of what you are seeing"
+  },
+  {
+    "category": "Eye",
+    "term": "retina",
+    "definition": "layer of nerve cells in the back of the eye"
+  },
+  {
+    "category": "Eye",
+    "term": "optic nerve",
+    "definition": "bundle of nerves which carries messages of sight to the brain"
+  },
+  {
+    "category": "Ear",
+    "term": "auditory canal",
+    "definition": "tube through which sound waves travel"
+  },
+  {
+    "category": "Ear",
+    "term": "eardrum",
+    "definition": "thin piece of tissue on which sound waves vibrate"
+  },
+  {
+    "category": "Ear",
+    "term": "hammer, anvil, and stirrup",
+    "definition": "tiny bones of the middle ear"
+  },
+  {
+    "category": "Ear",
+    "term": "semicircular canals",
+    "definition": "part in the ear that helps the body sense balance"
+  },
+  {
+    "category": "Ear",
+    "term": "cochlea",
+    "definition": "liquid-filled part of the ear which vibrates"
+  },
+  {
+    "category": "Ear",
+    "term": "auditory nerve",
+    "definition": "sends messages of hearing to the brain"
+  },
+  {
+    "category": "Heart",
+    "term": "cardiac muscle",
+    "definition": "heart"
+  },
+  {
+    "category": "Heart",
+    "term": "chamber",
+    "definition": "hollow part of the heart"
+  },
+  {
+    "category": "Heart",
+    "term": "atrium",
+    "definition": "upper chamber of the heart"
+  },
+  {
+    "category": "Heart",
+    "term": "ventricle",
+    "definition": "lower chamber of the heart"
+  },
+  {
+    "category": "Heart",
+    "term": "septum",
+    "definition": "wall of muscle that separates the left side of the heart from the right side"
+  },
+  {
+    "category": "Blood Vessels",
+    "term": "arteries",
+    "definition": "blood vessels which take oxygenated blood away from the heart"
+  },
+  {
+    "category": "Blood Vessels",
+    "term": "capillaries",
+    "definition": "tiny blood vessels which link arteries and veins"
+  },
+  {
+    "category": "Blood Vessels",
+    "term": "veins",
+    "definition": "blood vessels which take deoxygenated blood to the heart"
+  },
+  {
+    "category": "Blood Vessels",
+    "term": "carbon dioxide",
+    "definition": "waste gas produced by the body's cells"
+  },
+  {
+    "category": "Health",
+    "term": "endurance",
+    "definition": "ability to work well over longer periods of time"
+  },
+  {
+    "category": "Health",
+    "term": "air pollution",
+    "definition": "harmful substances that escape into the air we breathe"
+  },
+  {
+    "category": "Health",
+    "term": "nicotine",
+    "definition": "kind of poison found in tobacco"
+  },
+  {
+    "category": "Health",
+    "term": "drug",
+    "definition": "chemical substance that changes what happens in the body"
+  }
+];
+const categoryEmoji = {
+  'Basic Body Terms':'🔬','Nervous System':'🧠','Brain Parts':'🧠','Nerves':'⚡','Eye':'👁️','Ear':'👂','Heart':'❤️','Blood Vessels':'🩸','Health':'💚'
+};
+function shuffle(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+function titleCase(s) { return s.replace(/\w/g, ch => ch.toUpperCase()); }
+function makeQuestions() {
+  return shuffle(terms.map((item, idx) => {
+    const wrongPool = terms.filter(t => t.term !== item.term);
+    const wrongSame = wrongPool.filter(t => t.category === item.category);
+    const picks = [];
+    shuffle(wrongSame).forEach(t => { if(picks.length < 2) picks.push(t.term); });
+    shuffle(wrongPool).forEach(t => { if(picks.length < 3 && !picks.includes(t.term)) picks.push(t.term); });
+    const options = shuffle([item.term, ...picks]);
+    return {
+      type:'mc', badge:`${categoryEmoji[item.category] || '📘'} ${item.category}`,
+      question:'Choose the correct term for this definition:',
+      definition:item.definition, options, answer:options.indexOf(item.term), term:item.term, category:item.category
+    };
+  }));
+}
+let shuffledQ, currentIndex, correctCount, stars, answered;
+function init() { shuffledQ=makeQuestions(); currentIndex=0; correctCount=0; stars=0; answered=false; document.getElementById('resultScreen').classList.remove('show'); document.getElementById('questionCard').style.display='block'; renderQuestion(); }
+function updateScoreBar() { document.getElementById('starCount').textContent=stars; document.getElementById('correctCount').textContent=correctCount; document.getElementById('totalCount').textContent=`${currentIndex}/${shuffledQ.length}`; document.getElementById('progressBar').style.width=`${(currentIndex/shuffledQ.length)*100}%`; }
+function renderQuestion() {
+  answered=false; const q=shuffledQ[currentIndex];
+  document.getElementById('questionBadge').textContent = q.badge + '  Q' + (currentIndex+1) + ' of ' + shuffledQ.length;
+  document.getElementById('questionText').textContent = q.question;
+  document.getElementById('definitionBox').textContent = q.definition;
+  document.getElementById('feedback').className='feedback'; document.getElementById('nextBtn').className='next-btn';
+  const card=document.getElementById('questionCard'); card.style.animation='none'; card.offsetHeight; card.style.animation='slideIn .4s cubic-bezier(.34,1.56,.64,1)';
+  const area=document.getElementById('answerArea'); area.innerHTML='';
+  const grid=document.createElement('div'); grid.className='options-grid'; const letters=['A','B','C','D'];
+  q.options.forEach((opt,i)=>{ const btn=document.createElement('button'); btn.className='option-btn'; btn.innerHTML=`<span class="letter">${letters[i]}</span><span>${opt}</span>`; btn.onclick=()=>selectMC(i); grid.appendChild(btn); });
+  area.appendChild(grid); updateScoreBar();
+}
+function selectMC(idx) {
+  if(answered) return; answered=true; const q=shuffledQ[currentIndex]; const btns=document.querySelectorAll('.option-btn'); btns.forEach(b=>b.disabled=true);
+  if(idx===q.answer) { btns[idx].classList.add('correct'); showFeedback(true, `⭐ Correct! The answer is "${q.term}".`); correctCount++; stars++; sparkle(); }
+  else { btns[idx].classList.add('wrong'); btns[q.answer].classList.add('correct'); showFeedback(false, `❌ Not quite! The answer was "${q.term}".`); }
+  document.getElementById('nextBtn').classList.add('show'); updateScoreBar();
+}
+function showFeedback(isCorrect,text) { const fb=document.getElementById('feedback'); fb.className='feedback show '+(isCorrect?'correct-fb':'wrong-fb'); document.getElementById('feedbackIcon').textContent=isCorrect?'🎉':'💙'; document.getElementById('feedbackText').textContent=text; }
+function nextQuestion() { currentIndex++; if(currentIndex>=shuffledQ.length) showResult(); else renderQuestion(); }
+function showResult() {
+  document.getElementById('questionCard').style.display='none'; document.getElementById('resultScreen').classList.add('show'); updateScoreBar();
+  const pct=Math.round((correctCount/shuffledQ.length)*100); document.getElementById('resultScore').textContent=`${correctCount} / ${shuffledQ.length}`;
+  let emoji,title,msg,starStr,color;
+  if(pct===100){emoji='🏆';title='PERFECT SCORE!';msg='Amazing! You mastered all Health Chapter 2 terms!';starStr='⭐⭐⭐⭐⭐';color='#FFD700';launchConfetti();}
+  else if(pct>=80){emoji='🎉';title='Great Job!';msg='You know these terms really well!';starStr='⭐⭐⭐⭐';color='#2ECC71';}
+  else if(pct>=60){emoji='👍';title='Good Try!';msg='Review the tricky terms and try again!';starStr='⭐⭐⭐';color='#00D4AA';}
+  else{emoji='💪';title='Keep Studying!';msg='Practice one more time. You can do it!';starStr='⭐⭐';color='#FF8C00';}
+  document.getElementById('resultEmoji').textContent=emoji; document.getElementById('resultTitle').textContent=title; document.getElementById('resultMsg').textContent=msg; document.getElementById('resultStars').textContent=starStr; document.getElementById('resultScore').style.color=color;
+}
+function restartQuiz() { document.getElementById('resultScreen').classList.remove('show'); init(); }
+function sparkle() { for(let i=0;i<8;i++) setTimeout(()=>{ const el=document.createElement('div'); el.textContent=['⭐','✨','💫','🌟'][Math.floor(Math.random()*4)]; el.style.cssText=`position:fixed;font-size:1.5rem;pointer-events:none;z-index:999;left:${20+Math.random()*60}%;top:${20+Math.random()*50}%;animation:confettiFall 1s ease forwards;`; document.body.appendChild(el); setTimeout(()=>el.remove(),1000); },i*60); }
+function launchConfetti() { const colors=['#00D4AA','#A855F7','#FFD700','#2ECC71','#FF4757','#3B82F6']; for(let i=0;i<60;i++) setTimeout(()=>{ const el=document.createElement('div'); el.className='confetti-piece'; el.style.cssText=`left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};width:${6+Math.random()*10}px;height:${6+Math.random()*10}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()}s;`; document.body.appendChild(el); setTimeout(()=>el.remove(),4000); },i*30); }
+function createBgFloats() { const container=document.getElementById('bgFloats'); const emojis=['🏥','🧠','👁️','👂','❤️','🩸','🔬','💚']; for(let i=0;i<14;i++){ const el=document.createElement('div'); el.className='bg-float'; el.textContent=emojis[Math.floor(Math.random()*emojis.length)]; el.style.cssText=`left:${Math.random()*100}%;font-size:${20+Math.random()*22}px;animation-duration:${13+Math.random()*16}s;animation-delay:${Math.random()*14}s;`; container.appendChild(el); } }
+createBgFloats(); init();
+</script>
+</body>
+</html>
