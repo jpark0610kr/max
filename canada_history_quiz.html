@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canada History Quiz 🍁</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #16213e;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .screen { display: none; width: 100%; max-width: 660px; }
+  .screen.active { display: block; }
+
+  /* ── START SCREEN ── */
+  #start {
+    background: #1a1a2e;
+    border-radius: 28px;
+    padding: 40px 28px;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  }
+  .maple { font-size: 72px; display: block; margin-bottom: 12px; animation: bounce 2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+  h1 { font-family:'Fredoka One',cursive; font-size:2.4rem; color:#FFF8E7; line-height:1.1; margin-bottom:6px; }
+  .subtitle { color:#FFD700; font-weight:700; font-size:1rem; letter-spacing:1px; margin-bottom:28px; }
+
+  .tabs { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:24px; }
+  .tab {
+    padding: 9px 18px;
+    border-radius: 20px;
+    border: 2px solid #4a4a7c;
+    background: #2a2a4c;
+    color: #ccc;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .tab:hover { background:#3a3a6c; color:#fff; }
+  .tab.active { background:#FFD700; color:#1a1a2e; border-color:#FFD700; }
+
+  .btn-start {
+    background: #C8102E;
+    color: white;
+    border: none;
+    padding: 16px 48px;
+    border-radius: 50px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #9B0B22;
+    transition: all 0.15s;
+  }
+  .btn-start:hover { transform:translateY(-3px); box-shadow:0 9px 0 #9B0B22; }
+  .btn-start:active { transform:translateY(3px); box-shadow:0 2px 0 #9B0B22; }
+
+  /* ── QUIZ SCREEN ── */
+  #quiz { }
+
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .q-counter { color:rgba(255,255,255,0.5); font-weight:700; font-size:0.85rem; letter-spacing:1px; }
+  .btn-clear {
+    background: transparent;
+    color: rgba(255,100,100,0.6);
+    border: 1.5px solid rgba(255,100,100,0.3);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-clear:hover { color:#E74C3C; border-color:#E74C3C; background:rgba(231,76,60,0.08); }
+
+  .progress-wrap { background:rgba(255,255,255,0.12); border-radius:8px; height:8px; margin-bottom:18px; }
+  .progress-bar { background:linear-gradient(90deg,#FFD700,#C8102E); height:100%; border-radius:8px; transition:width 0.4s ease; }
+
+  .card {
+    background: #FFF8E7;
+    border-radius: 22px;
+    padding: 28px 24px;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.35);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:5px;
+    background: linear-gradient(90deg,#C8102E,#FFD700);
+  }
+
+  .section-badge {
+    display:inline-block; background:#C8102E; color:white;
+    padding:3px 12px; border-radius:20px; font-size:0.72rem;
+    font-weight:800; letter-spacing:1px; margin-bottom:14px;
+  }
+  .q-text { font-size:1.1rem; font-weight:800; color:#1a1a2e; line-height:1.5; margin-bottom:20px; }
+
+  /* options */
+  .options { display:flex; flex-direction:column; gap:10px; }
+  .opt {
+    background: white;
+    border: 2.5px solid #e0d5c0;
+    border-radius: 14px;
+    padding: 13px 16px;
+    text-align: left;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #1a1a2e;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .opt:hover:not(:disabled) { border-color:#C8102E; background:#fff5f5; transform:translateX(3px); }
+  .opt .ltr {
+    width:30px; height:30px; border-radius:50%; background:#f0e8d5;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:0.8rem; flex-shrink:0; transition:all 0.15s;
+  }
+  .opt.correct { background:#d4f5e2; border-color:#2ECC71; }
+  .opt.correct .ltr { background:#2ECC71; color:white; }
+  .opt.wrong { background:#fde8e8; border-color:#E74C3C; }
+  .opt.wrong .ltr { background:#E74C3C; color:white; }
+  .opt:disabled { cursor:default; }
+
+  /* true/false */
+  .tf-wrap { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .tf {
+    border: 2.5px solid #e0d5c0; border-radius:14px; padding:18px;
+    text-align:center; font-family:'Fredoka One',cursive; font-size:1.3rem;
+    cursor:pointer; transition:all 0.15s; background:white;
+  }
+  .tf:hover:not(:disabled) { transform:translateY(-3px); }
+  .tf.t { color:#27AE60; }
+  .tf.f { color:#E74C3C; }
+  .tf.correct { background:#d4f5e2; border-color:#2ECC71; }
+  .tf.wrong   { background:#fde8e8; border-color:#E74C3C; }
+  .tf:disabled { cursor:default; }
+
+  /* feedback */
+  .feedback {
+    margin-top:16px; padding:13px 16px; border-radius:12px;
+    font-weight:700; font-size:0.9rem; line-height:1.5;
+    display:none;
+  }
+  .feedback.show { display:block; animation:fadeIn 0.25s ease; }
+  .feedback.ok  { background:#d4f5e2; color:#1a6b38; border:2px solid #2ECC71; }
+  .feedback.bad { background:#fde8e8; color:#8B0000; border:2px solid #E74C3C; }
+
+  /* nav buttons */
+  .nav { display:flex; gap:10px; margin-top:14px; }
+  .btn-back {
+    background: #2a2a4c;
+    color: white;
+    border: none;
+    padding: 13px 20px;
+    border-radius: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .btn-back:hover { background:#3a3a6c; transform:translateY(-2px); }
+  .btn-back:disabled { opacity:0.3; cursor:default; transform:none; }
+
+  .btn-next {
+    flex: 1;
+    background: #1a1a2e;
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: none;
+  }
+  .btn-next.show { display:block; animation:fadeIn 0.25s ease; }
+  .btn-next:hover { background:#C8102E; transform:translateY(-2px); }
+
+  /* ── RESULT SCREEN ── */
+  #result {
+    background: #FFF8E7;
+    border-radius: 24px;
+    padding: 36px 28px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .result-emoji { font-size:3rem; display:block; margin-bottom:16px; }
+  .score-ring {
+    width:130px; height:130px; border-radius:50%; background:#1a1a2e;
+    border:6px solid #FFD700; margin:0 auto 20px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .score-num { font-family:'Fredoka One',cursive; font-size:2.2rem; color:#FFD700; line-height:1; }
+  .score-lbl { color:rgba(255,255,255,0.5); font-size:0.75rem; font-weight:700; }
+  .result-title { font-family:'Fredoka One',cursive; font-size:1.8rem; color:#1a1a2e; margin-bottom:6px; }
+  .result-msg { color:#666; font-weight:600; font-size:0.95rem; margin-bottom:24px; }
+
+  .result-btns { display:flex; gap:12px; justify-content:center; margin-bottom:20px; }
+  .btn-retry {
+    background:#C8102E; color:white; border:none;
+    padding:13px 28px; border-radius:50px;
+    font-family:'Fredoka One',cursive; font-size:1.1rem;
+    cursor:pointer; box-shadow:0 4px 0 #9B0B22; transition:all 0.15s;
+  }
+  .btn-retry:hover { transform:translateY(-2px); }
+  .btn-home {
+    background:#2a2a4c; color:white; border:none;
+    padding:13px 28px; border-radius:50px;
+    font-family:'Fredoka One',cursive; font-size:1.1rem;
+    cursor:pointer; transition:all 0.15s;
+  }
+  .btn-home:hover { background:#3a3a6c; transform:translateY(-2px); }
+
+  .review { text-align:left; display:flex; flex-direction:column; gap:7px; }
+  .review-item {
+    padding:10px 14px; border-radius:10px;
+    font-size:0.85rem; font-weight:600;
+    display:flex; align-items:flex-start; gap:8px;
+  }
+  .review-item.ok   { background:#d4f5e2; color:#1a6b38; }
+  .review-item.miss { background:#fde8e8; color:#8B0000; }
+
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes pop    { 0%,100%{transform:scale(1)} 50%{transform:scale(1.03)} }
+  @keyframes shake  { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+</style>
+</head>
+<body>
+
+<!-- START -->
+<div id="start" class="screen active">
+  <span class="maple">🍁</span>
+  <h1>Canada History<br>Quiz Time!</h1>
+  <p class="subtitle">Chapter 10 · The Dominion of Canada</p>
+  <div class="tabs">
+    <button class="tab active" data-section="all">All Sections</button>
+    <button class="tab" data-section="10.1">10.1 Northwest</button>
+    <button class="tab" data-section="10.2">10.2 Mounties</button>
+    <button class="tab" data-section="10.3">10.3 Rebellion</button>
+  </div>
+  <button class="btn-start" id="btn-start">▶ Start Quiz!</button>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="q-counter">1 / 18</span>
+    <button class="btn-clear" id="btn-clear">🏠 Home</button>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+  </div>
+  <div class="card">
+    <span class="section-badge" id="section-badge">10.1</span>
+    <p class="q-text" id="q-text"></p>
+    <div id="answer-area"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="nav">
+      <button class="btn-back" id="btn-back">← Back</button>
+      <button class="btn-next" id="btn-next">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="screen">
+  <span class="result-emoji" id="r-emoji">🏆</span>
+  <div class="score-ring">
+    <span class="score-num" id="r-score">0/0</span>
+    <span class="score-lbl">SCORE</span>
+  </div>
+  <h2 class="result-title" id="r-title">Amazing!</h2>
+  <p class="result-msg" id="r-msg"></p>
+  <div class="result-btns">
+    <button class="btn-retry" id="btn-retry">🔄 Try Again</button>
+    <button class="btn-home" id="btn-home">🏠 Home</button>
+  </div>
+  <div class="review" id="review"></div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // 10.1
+  { s:'10.1', type:'mc', q:"Who was Canada's first Prime Minister when Canada was formed in 1867?",
+    opts:['Sir Wilfrid Laurier','John A. Macdonald','Gabriel Dumont','Louis Riel'], ans:1,
+    ex:'John A. Macdonald joined together Ontario, Quebec, Nova Scotia, and New Brunswick in 1867.' },
+  { s:'10.1', type:'mc', q:'Which native tribe lived in the Northwest, occupying Alberta, Saskatchewan, and Montana?',
+    opts:['Cree','Sioux','Blackfoot','Assiniboine'], ans:2,
+    ex:'The Blackfoot tribe lived in the Northwest and occupied those three regions.' },
+  { s:'10.1', type:'mc', q:'What were people of both Native and European descent called?',
+    opts:["Nor'westers",'Metis','Settlers','Loyalists'], ans:1,
+    ex:'Children of explorers and native women of both Native and European descent were called the Metis.' },
+  { s:'10.1', type:'tf', q:"True or False: The Hudson Bay Company had a greater advantage because they had bigger boats and were closer to the west.",
+    ans:true, ex:'TRUE! Bigger boats + closer to the west = bigger advantage for Hudson Bay Company.' },
+  { s:'10.1', type:'mc', q:'What was officially created by the Manitoba Act of 1870?',
+    opts:['The Northwest Territories','The province of Manitoba','The RCMP','Fort Garry'], ans:1,
+    ex:'Canada passed the Manitoba Act in 1870, officially creating the province of Manitoba.' },
+  { s:'10.1', type:'mc', q:"Who was executed by Louis Riel's rebel government in March 1870?",
+    opts:['Gabriel Dumont','Jerry Potts','Thomas Scott','Douglas Selkirk'], ans:2,
+    ex:'Thomas Scott, an English-speaking Ontario settler who opposed the rebel government, was executed.' },
+
+  // 10.2
+  { s:'10.2', type:'mc', q:'What did American traders bring to trade for furs with Native people?',
+    opts:['Blankets and tools','Cheap liquor','Horses and guns','Food and medicine'], ans:1,
+    ex:'The Americans brought cheap liquor to trade for furs — this corrupted the Native people.' },
+  { s:'10.2', type:'mc', q:'What was the most infamous whiskey trading fort called?',
+    opts:['Fort Slide Out','Fort Standoff','Fort Whoop-Up','Fort Garry'], ans:2,
+    ex:'Fort Whoop-Up was the wildest and most infamous of the whisky trading forts!' },
+  { s:'10.2', type:'mc', q:"What colour are the Mounties' famous uniforms?",
+    opts:['Blue','Red','Green','Black'], ans:1,
+    ex:'The North-West Mounted Police wore bright RED uniforms — still iconic today!' },
+  { s:'10.2', type:'mc', q:'In what year were the North-West Mounted Police officially established?',
+    opts:['1867','1870','1873','1876'], ans:2,
+    ex:'The Mounties were officially established in 1873.' },
+  { s:'10.2', type:'mc', q:'Under the Dominion Lands Act of 1872, how many acres could a settler receive?',
+    opts:['80 acres','100 acres','120 acres','160 acres'], ans:3,
+    ex:'The Dominion Lands Act gave each family or 21-year-old man 160 acres of land.' },
+  { s:'10.2', type:'mc', q:'Jerry Potts worked as a scout for the Mounties for how many years?',
+    opts:['10 years','15 years','22 years','30 years'], ans:2,
+    ex:'Jerry Potts worked as a scout for the Mounties for 22 years and became a western legend!' },
+  { s:'10.2', type:'tf', q:'True or False: Natives automatically became Canadian citizens through Treaty 6.',
+    ans:false, ex:'FALSE! Treaty 6 did NOT recognize natives as citizens. They had to be fluent in English/French AND give up treaty rights.' },
+
+  // 10.3
+  { s:'10.3', type:'mc', q:'Why did the Natives feel cheated by the government?',
+    opts:['They were not given land','Buffalo disappeared and they only got poor quality rations instead of promised food','Their chiefs were arrested','The Mounties took their horses'], ans:1,
+    ex:'Because of settlers and the CPR, buffalo disappeared. The government promised food under Treaty 6 but gave only poor quality rations.' },
+  { s:'10.3', type:'mc', q:'Who convinced Louis Riel to return from the United States?',
+    opts:['Chief Big Bear','Chief Poundmaker','Gabriel Dumont','General Middleton'], ans:2,
+    ex:'Gabriel Dumont, the Metis leader, went to the US and convinced Louis Riel to return and fight.' },
+  { s:'10.3', type:'mc', q:'Name the two Cree native leaders who joined the Metis rebellion.',
+    opts:['Chief Sitting Bull & Chief Crazy Horse','Chief Poundmaker & Chief Big Bear','Chief Blackfoot & Chief Riel','Chief Jerry & Chief Dumont'], ans:1,
+    ex:'The Cree were led by Chief Poundmaker and Chief Big Bear, who both joined the Metis revolt.' },
+  { s:'10.3', type:'mc', q:'What happened at the Battle of Duck Lake (March 26, 1885)?',
+    opts:['The Mounties defeated the Metis easily','The Metis ambushed the Mounties — 12 killed, 12 wounded, forced to retreat','Louis Riel was captured','The Cree surrendered'], ans:1,
+    ex:'The Metis rebels ambushed the Mounties. 12 killed, 12 wounded — the Mounties retreated!' },
+  { s:'10.3', type:'mc', q:'Where were the Metis rebels finally defeated?',
+    opts:['Duck Lake','Fort Garry','Batoche','Winnipeg'], ans:2,
+    ex:'At Batoche! After 3 days of fighting and running out of ammo (they used nails & buttons!), defeated May 12, 1885.' },
+  { s:'10.3', type:'mc', q:'What happened to Louis Riel after the rebellion?',
+    opts:['He escaped to the US like Dumont','He was sentenced to 3 years in prison','He was tried for high treason and hanged in Regina','He was pardoned'], ans:2,
+    ex:'Louis Riel was tried for high treason and hanged in Regina on November 16, 1885.' },
+];
+
+// ── State ──
+let pool = [];       // current question pool (shuffled)
+let idx = 0;         // current question index
+let score = 0;
+let answered = false;
+let log = [];        // {q, correct} per question answered
+let section = 'all';
+
+// ── Helpers ──
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ── Start ──
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    section = tab.dataset.section;
+  });
+});
+
+document.getElementById('btn-start').addEventListener('click', () => {
+  const src = section === 'all' ? QUESTIONS : QUESTIONS.filter(q => q.s === section);
+  pool = shuffle(src);
+  idx = 0; score = 0; log = []; answered = false;
+  show('quiz');
+  renderQuestion();
+});
+
+// ── Clear ──
+document.getElementById('btn-clear').addEventListener('click', goHome);
+
+function goHome() {
+  pool = []; idx = 0; score = 0; log = []; answered = false;
+  // reset tab to 'all'
+  section = 'all';
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.tab[data-section="all"]').classList.add('active');
+  show('start');
+}
+
+// ── Render question ──
+function renderQuestion() {
+  const q = pool[idx];
+  answered = false;
+
+  // header
+  document.getElementById('q-counter').textContent = `${idx+1} / ${pool.length}`;
+  document.getElementById('progress-bar').style.width = `${(idx/pool.length)*100}%`;
+  document.getElementById('section-badge').textContent = `Section ${q.s}`;
+  document.getElementById('q-text').textContent = q.q;
+
+  // reset feedback
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.textContent = '';
+
+  // reset next btn
+  const nb = document.getElementById('btn-next');
+  nb.className = 'btn-next';
+  nb.textContent = idx === pool.length-1 ? '🏁 See Results!' : 'Next →';
+
+  // back btn
+  document.getElementById('btn-back').disabled = (idx === 0);
+
+  // fresh answer area
+  const area = document.getElementById('answer-area');
+  area.innerHTML = '';
+
+  if (q.type === 'mc') {
+    const wrap = document.createElement('div');
+    wrap.className = 'options';
+    ['A','B','C','D'].forEach((ltr, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.innerHTML = `<span class="ltr">${ltr}</span>${q.opts[i]}`;
+      btn.addEventListener('click', () => checkMC(i));
+      wrap.appendChild(btn);
+    });
+    area.appendChild(wrap);
+  } else {
+    const wrap = document.createElement('div');
+    wrap.className = 'tf-wrap';
+    const t = document.createElement('button');
+    t.className = 'tf t'; t.textContent = '✅ TRUE';
+    t.addEventListener('click', () => checkTF(true));
+    const f = document.createElement('button');
+    f.className = 'tf f'; f.textContent = '❌ FALSE';
+    f.addEventListener('click', () => checkTF(false));
+    wrap.appendChild(t); wrap.appendChild(f);
+    area.appendChild(wrap);
+  }
+}
+
+// ── Check answers ──
+function checkMC(chosen) {
+  if (answered) return;
+  answered = true;
+  const q = pool[idx];
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b => b.disabled = true);
+  const correct = chosen === q.ans;
+  btns[chosen].classList.add(correct ? 'correct' : 'wrong');
+  btns[chosen].style.animation = correct ? 'pop 0.3s ease' : 'shake 0.35s ease';
+  if (!correct) btns[q.ans].classList.add('correct');
+  recordAndShow(correct, q.ex);
+}
+
+function checkTF(chosen) {
+  if (answered) return;
+  answered = true;
+  const q = pool[idx];
+  const btns = document.querySelectorAll('.tf');
+  btns.forEach(b => b.disabled = true);
+  const correct = chosen === q.ans;
+  const chosenBtn = chosen ? btns[0] : btns[1];
+  chosenBtn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) (q.ans ? btns[0] : btns[1]).classList.add('correct');
+  recordAndShow(correct, q.ex);
+}
+
+function recordAndShow(correct, explain) {
+  // only log once per question visit
+  if (log.length <= idx) {
+    log.push({ q: pool[idx].q, correct });
+    if (correct) score++;
+  } else {
+    // re-answering after back: update existing log entry
+    const old = log[idx];
+    if (old.correct !== correct) {
+      if (old.correct) score--;
+      if (correct) score++;
+      log[idx] = { q: pool[idx].q, correct };
+    }
+  }
+
+  const fb = document.getElementById('feedback');
+  fb.textContent = correct ? `🎉 Correct! ${explain}` : `❌ Not quite. ${explain}`;
+  fb.className = `feedback show ${correct ? 'ok' : 'bad'}`;
+
+  document.getElementById('btn-next').className = 'btn-next show';
+}
+
+// ── Navigation ──
+document.getElementById('btn-next').addEventListener('click', () => {
+  if (!answered) return;
+  idx++;
+  if (idx >= pool.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+});
+
+document.getElementById('btn-back').addEventListener('click', () => {
+  if (idx <= 0) return;
+  // if current question was answered, remove that log entry and adjust score
+  if (answered && log.length > idx) {
+    const entry = log.pop();
+    if (entry.correct) score--;
+  }
+  idx--;
+  // also remove the previous question's log so it can be re-answered fresh
+  if (log.length > idx) {
+    const prev = log.pop();
+    if (prev.correct) score--;
+  }
+  renderQuestion();
+});
+
+// ── Result ──
+function showResult() {
+  document.getElementById('progress-bar').style.width = '100%';
+  show('result');
+
+  const pct = score / pool.length;
+  document.getElementById('r-score').textContent = `${score}/${pool.length}`;
+
+  let emoji, title, msg;
+  if (pct === 1)      { emoji='🏆'; title='PERFECT SCORE!';    msg="You're a Canadian history champion! 🍁"; }
+  else if (pct >= .8) { emoji='🌟'; title='Excellent!';         msg='Almost perfect — you really know this stuff!'; }
+  else if (pct >= .6) { emoji='👍'; title='Good Job!';           msg='Solid! Review the missed ones and try again.'; }
+  else if (pct >= .4) { emoji='📚'; title='Keep Studying!';     msg="You've got some of it! Read the chapter again."; }
+  else                { emoji='🍁'; title="Let's Study More!";  msg="Don't give up! Go over the chapter and retry."; }
+
+  document.getElementById('r-emoji').textContent = emoji;
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-msg').textContent = msg;
+
+  document.getElementById('review').innerHTML = log.map(a =>
+    `<div class="review-item ${a.correct?'ok':'miss'}">
+      <span>${a.correct?'✅':'❌'}</span><span>${a.q}</span>
+    </div>`
+  ).join('');
+}
+
+document.getElementById('btn-retry').addEventListener('click', () => {
+  // same section, reshuffle
+  idx=0; score=0; log=[]; answered=false;
+  pool = shuffle(pool);
+  show('quiz');
+  renderQuestion();
+});
+
+document.getElementById('btn-home').addEventListener('click', goHome);
+</script>
+</body>
+</html>
