@@ -45,7 +45,12 @@
   .feedback{margin-top:15px;padding:13px 17px;border-radius:13px;font-weight:800;font-size:.95rem;display:none;align-items:flex-start;gap:10px;line-height:1.5} .feedback.show{display:flex;animation:fadeIn .3s ease}
   .correct-fb{background:rgba(46,204,113,.13);border:2px solid rgba(46,204,113,.35);color:#7FFFC4} .wrong-fb{background:rgba(255,71,87,.13);border:2px solid rgba(255,71,87,.35);color:#FFB3BB}
   .feedback-icon{font-size:1.35rem;flex-shrink:0} @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-  .next-btn{display:none;width:100%;margin-top:15px;background:linear-gradient(135deg,var(--yellow),var(--orange));border:none;border-radius:15px;padding:15px;color:var(--dark);font-family:'Fredoka One',cursive;font-size:1.25rem;cursor:pointer;transition:all .2s;box-shadow:0 4px 15px rgba(255,215,0,.28)} .next-btn.show{display:block;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)} .next-btn:hover{transform:translateY(-3px) scale(1.02)} @keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+  .nav-buttons{display:grid;grid-template-columns:1fr;gap:12px;margin-top:15px}
+  .back-btn{display:none;width:100%;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.16);border-radius:15px;padding:14px;color:white;font-family:'Fredoka One',cursive;font-size:1.15rem;cursor:pointer;transition:all .2s}
+  .back-btn.show{display:block;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+  .back-btn:hover{background:rgba(0,212,170,.12);border-color:var(--teal);transform:translateY(-2px)}
+  .back-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+  .next-btn{display:none;width:100%;background:linear-gradient(135deg,var(--yellow),var(--orange));border:none;border-radius:15px;padding:15px;color:var(--dark);font-family:'Fredoka One',cursive;font-size:1.25rem;cursor:pointer;transition:all .2s;box-shadow:0 4px 15px rgba(255,215,0,.28)} .next-btn.show{display:block;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)} .next-btn:hover{transform:translateY(-3px) scale(1.02)} @keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
   .result-screen{display:none;text-align:center;padding:40px 20px;animation:slideIn .5s ease} .result-screen.show{display:block} .result-emoji{font-size:5rem;margin-bottom:18px;animation:bounce 1s infinite} @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
   .result-title{font-family:'Fredoka One',cursive;font-size:clamp(2rem,6vw,3rem);margin-bottom:8px} .result-score-big{font-family:'Fredoka One',cursive;font-size:clamp(3rem,10vw,5rem);line-height:1;margin:18px 0} .result-msg{font-size:1.05rem;font-weight:800;color:rgba(255,255,255,.65);margin-bottom:28px} .stars-display{font-size:2.4rem;margin:8px 0 18px}
   .restart-btn{background:linear-gradient(135deg,var(--purple),#6D28D9);border:none;border-radius:18px;padding:17px 44px;color:white;font-family:'Fredoka One',cursive;font-size:1.35rem;cursor:pointer;transition:all .2s;box-shadow:0 6px 25px rgba(168,85,247,.38)} .restart-btn:hover{transform:translateY(-3px)}
@@ -68,7 +73,10 @@
     <div class="definition-box" id="definitionBox"></div>
     <div id="answerArea"></div>
     <div class="feedback" id="feedback"><span class="feedback-icon" id="feedbackIcon"></span><span id="feedbackText"></span></div>
-    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question ➡️</button>
+    <div class="nav-buttons">
+      <button class="back-btn" id="backBtn" onclick="prevQuestion()">⬅️ Back</button>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question ➡️</button>
+    </div>
   </div>
   <div class="result-screen" id="resultScreen">
     <div class="result-emoji" id="resultEmoji">🎉</div><div class="result-title" id="resultTitle" style="color:var(--teal);">Quiz Complete!</div>
@@ -310,30 +318,100 @@ function makeQuestions() {
   }));
 }
 let shuffledQ, currentIndex, correctCount, stars, answered;
-function init() { shuffledQ=makeQuestions(); currentIndex=0; correctCount=0; stars=0; answered=false; document.getElementById('resultScreen').classList.remove('show'); document.getElementById('questionCard').style.display='block'; renderQuestion(); }
-function updateScoreBar() { document.getElementById('starCount').textContent=stars; document.getElementById('correctCount').textContent=correctCount; document.getElementById('totalCount').textContent=`${currentIndex}/${shuffledQ.length}`; document.getElementById('progressBar').style.width=`${(currentIndex/shuffledQ.length)*100}%`; }
+let userAnswers = [];
+let questionResults = [];
+function init() {
+  shuffledQ=makeQuestions();
+  currentIndex=0;
+  correctCount=0;
+  stars=0;
+  answered=false;
+  userAnswers = Array(shuffledQ.length).fill(null);
+  questionResults = Array(shuffledQ.length).fill(null);
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('questionCard').style.display='block';
+  renderQuestion();
+}
+function updateScoreBar() {
+  document.getElementById('starCount').textContent=stars;
+  document.getElementById('correctCount').textContent=correctCount;
+  document.getElementById('totalCount').textContent=`${Math.min(currentIndex + 1, shuffledQ.length)}/${shuffledQ.length}`;
+  document.getElementById('progressBar').style.width=`${(currentIndex/shuffledQ.length)*100}%`;
+}
 function renderQuestion() {
-  answered=false; const q=shuffledQ[currentIndex];
+  answered = questionResults[currentIndex] !== null;
+  const q=shuffledQ[currentIndex];
   document.getElementById('questionBadge').textContent = q.badge + '  Q' + (currentIndex+1) + ' of ' + shuffledQ.length;
   document.getElementById('questionText').textContent = q.question;
   document.getElementById('definitionBox').textContent = q.definition;
-  document.getElementById('feedback').className='feedback'; document.getElementById('nextBtn').className='next-btn';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('nextBtn').className='next-btn';
+  document.getElementById('backBtn').className = currentIndex > 0 ? 'back-btn show' : 'back-btn';
+  document.getElementById('backBtn').disabled = currentIndex === 0;
   const card=document.getElementById('questionCard'); card.style.animation='none'; card.offsetHeight; card.style.animation='slideIn .4s cubic-bezier(.34,1.56,.64,1)';
   const area=document.getElementById('answerArea'); area.innerHTML='';
   const grid=document.createElement('div'); grid.className='options-grid'; const letters=['A','B','C','D'];
   q.options.forEach((opt,i)=>{ const btn=document.createElement('button'); btn.className='option-btn'; btn.innerHTML=`<span class="letter">${letters[i]}</span><span>${opt}</span>`; btn.onclick=()=>selectMC(i); grid.appendChild(btn); });
-  area.appendChild(grid); updateScoreBar();
+  area.appendChild(grid);
+
+  if (answered) {
+    const saved = userAnswers[currentIndex];
+    const isCorrect = questionResults[currentIndex] === true;
+    const btns = grid.querySelectorAll('.option-btn');
+    btns.forEach(b => b.disabled = true);
+    if (saved !== null) {
+      btns[saved].classList.add(isCorrect ? 'correct' : 'wrong');
+    }
+    if (!isCorrect) btns[q.answer].classList.add('correct');
+    showFeedback(isCorrect, isCorrect ? `⭐ Correct! The answer is "${q.term}".` : `❌ Not quite! The answer was "${q.term}".`);
+    document.getElementById('nextBtn').classList.add('show');
+  }
+
+  updateScoreBar();
 }
 function selectMC(idx) {
-  if(answered) return; answered=true; const q=shuffledQ[currentIndex]; const btns=document.querySelectorAll('.option-btn'); btns.forEach(b=>b.disabled=true);
-  if(idx===q.answer) { btns[idx].classList.add('correct'); showFeedback(true, `⭐ Correct! The answer is "${q.term}".`); correctCount++; stars++; sparkle(); }
-  else { btns[idx].classList.add('wrong'); btns[q.answer].classList.add('correct'); showFeedback(false, `❌ Not quite! The answer was "${q.term}".`); }
-  document.getElementById('nextBtn').classList.add('show'); updateScoreBar();
+  if(answered) return;
+  answered=true;
+  const q=shuffledQ[currentIndex];
+  const btns=document.querySelectorAll('.option-btn');
+  btns.forEach(b=>b.disabled=true);
+
+  const isCorrect = idx === q.answer;
+  userAnswers[currentIndex] = idx;
+  questionResults[currentIndex] = isCorrect;
+
+  if(isCorrect) {
+    btns[idx].classList.add('correct');
+    showFeedback(true, `⭐ Correct! The answer is "${q.term}".`);
+    correctCount++;
+    stars++;
+    sparkle();
+  }
+  else {
+    btns[idx].classList.add('wrong');
+    btns[q.answer].classList.add('correct');
+    showFeedback(false, `❌ Not quite! The answer was "${q.term}".`);
+  }
+  document.getElementById('nextBtn').classList.add('show');
+  updateScoreBar();
 }
 function showFeedback(isCorrect,text) { const fb=document.getElementById('feedback'); fb.className='feedback show '+(isCorrect?'correct-fb':'wrong-fb'); document.getElementById('feedbackIcon').textContent=isCorrect?'🎉':'💙'; document.getElementById('feedbackText').textContent=text; }
-function nextQuestion() { currentIndex++; if(currentIndex>=shuffledQ.length) showResult(); else renderQuestion(); }
+function prevQuestion() {
+  if (currentIndex <= 0) return;
+  currentIndex--;
+  renderQuestion();
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if(currentIndex>=shuffledQ.length) showResult();
+  else renderQuestion();
+}
 function showResult() {
-  document.getElementById('questionCard').style.display='none'; document.getElementById('resultScreen').classList.add('show'); updateScoreBar();
+  document.getElementById('questionCard').style.display='none';
+  document.getElementById('resultScreen').classList.add('show');
+  document.getElementById('totalCount').textContent=`${shuffledQ.length}/${shuffledQ.length}`;
+  document.getElementById('progressBar').style.width='100%';
   const pct=Math.round((correctCount/shuffledQ.length)*100); document.getElementById('resultScore').textContent=`${correctCount} / ${shuffledQ.length}`;
   let emoji,title,msg,starStr,color;
   if(pct===100){emoji='🏆';title='PERFECT SCORE!';msg='Amazing! You mastered all Health Chapter 2 terms!';starStr='⭐⭐⭐⭐⭐';color='#FFD700';launchConfetti();}
