@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 4 — Machines, Gears & Pulleys Quiz</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;min-height:100vh;padding:20px}
+  .wrap{max-width:640px;margin:0 auto}
+  .screen{display:none}
+  .screen.active{display:block}
+
+  /* HOME */
+  .home-title{text-align:center;padding:2rem 0 1.5rem}
+  .home-title h1{font-size:26px;font-weight:600;color:#1a1a1a;margin-bottom:8px}
+  .home-title p{font-size:14px;color:#666}
+  .sector-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+  .sc{background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:18px 14px;cursor:pointer;text-align:center;transition:all 0.15s}
+  .sc:hover{background:#f8f8f8;border-color:#ccc;transform:translateY(-1px)}
+  .sc .si{font-size:28px;margin-bottom:8px}
+  .sc .sn{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
+  .sc .sq{font-size:12px;color:#999}
+  .sc .sbadge{font-size:11px;margin-top:8px;padding:3px 10px;border-radius:20px;display:inline-block;background:#f0f0f0;color:#666}
+  .sc.done .sbadge{background:#e8f5e9;color:#2e7d32}
+  .all-btn{width:100%;padding:14px;background:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;color:#fff;margin-top:4px;transition:background 0.15s}
+  .all-btn:hover{background:#333}
+
+  /* QUIZ */
+  .prog-row{display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:6px}
+  .prog-wrap{background:#e5e5e5;border-radius:99px;height:7px;margin-bottom:16px;overflow:hidden}
+  .prog-bar{height:100%;background:#4caf50;border-radius:99px;transition:width 0.35s}
+  .sector-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#888;margin-bottom:10px}
+  .qcard{background:#fff;border:1px solid #e5e5e5;border-radius:16px;padding:22px;margin-bottom:14px}
+  .qtext{font-size:17px;color:#1a1a1a;line-height:1.55}
+  .choices{display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
+  .cbtn{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:13px 16px;text-align:left;cursor:pointer;font-size:14px;color:#1a1a1a;transition:all 0.15s;display:flex;align-items:flex-start;gap:10px;line-height:1.45}
+  .cbtn:hover:not(:disabled){background:#f8f8f8;border-color:#bbb}
+  .cbtn:disabled{cursor:default}
+  .cbtn.correct{background:#e8f5e9;border-color:#4caf50;color:#1b5e20}
+  .cbtn.wrong{background:#ffebee;border-color:#ef5350;color:#b71c1c}
+  .cbtn.show-correct{background:#e8f5e9;border-color:#4caf50;color:#1b5e20;opacity:0.75}
+  .cletter{font-weight:700;min-width:20px;flex-shrink:0;font-size:13px}
+  .expl{background:#f9f9f9;border-left:4px solid #4caf50;border-radius:0 10px 10px 0;padding:12px 16px;font-size:13px;color:#444;margin-bottom:14px;line-height:1.6}
+  .nxt-btn{width:100%;padding:13px;border-radius:12px;background:#fff;border:1px solid #ccc;font-size:15px;font-weight:600;cursor:pointer;color:#1a1a1a;transition:all 0.15s}
+  .nxt-btn:hover{background:#f5f5f5}
+
+  /* RESULT */
+  .rcard{background:#fff;border:1px solid #e5e5e5;border-radius:16px;padding:2rem;text-align:center;margin-bottom:14px}
+  .rscore{font-size:56px;font-weight:700;color:#1a1a1a;line-height:1}
+  .rlabel{font-size:14px;color:#888;margin-top:6px}
+  .rgrade{display:inline-block;padding:8px 24px;border-radius:99px;margin:16px 0 8px;font-size:18px;font-weight:700}
+  .grade-s{background:#e8f5e9;color:#2e7d32}
+  .grade-a{background:#e3f2fd;color:#1565c0}
+  .grade-b{background:#fff8e1;color:#f57f17}
+  .grade-c{background:#ffebee;color:#c62828}
+  .miss-head{font-size:13px;font-weight:600;color:#888;text-align:left;margin:12px 0 8px;text-transform:uppercase;letter-spacing:0.05em}
+  .mitem{font-size:13px;color:#555;padding:8px 0;border-bottom:1px solid #f0f0f0;text-align:left;line-height:1.5}
+  .mitem:last-child{border-bottom:none}
+  .mitem strong{color:#1a1a1a;display:block;margin-bottom:2px}
+  .btn-row{display:flex;gap:8px}
+  .bbtn{flex:1;padding:12px;border-radius:12px;background:#fff;border:1px solid #ccc;font-size:14px;font-weight:600;cursor:pointer;color:#1a1a1a;transition:all 0.15s}
+  .bbtn:hover{background:#f5f5f5}
+  .bbtn.primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+  .bbtn.primary:hover{background:#333}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HOME -->
+  <div id="s-home" class="screen active">
+    <div class="home-title">
+      <h1>⚙️ Machines, Gears &amp; Pulleys</h1>
+      <p>Grade 4 Quiz Game — pick a topic to study!</p>
+    </div>
+    <div class="sector-grid" id="sgrid"></div>
+    <button class="all-btn" onclick="startQuiz('all')">🚀 Play all questions</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="s-quiz" class="screen">
+    <div class="prog-row"><span id="ptext"></span><span id="stext"></span></div>
+    <div class="prog-wrap"><div class="prog-bar" id="pbar"></div></div>
+    <div class="sector-tag" id="qtag"></div>
+    <div class="qcard"><div class="qtext" id="qtext"></div></div>
+    <div class="choices" id="choices"></div>
+    <div class="expl" id="expl" style="display:none"></div>
+    <button class="nxt-btn" id="nxtbtn" style="display:none" onclick="nextQ()">Next question →</button>
+  </div>
+
+  <!-- RESULT -->
+  <div id="s-result" class="screen">
+    <div class="rcard">
+      <div class="rscore" id="rscore"></div>
+      <div class="rlabel" id="rlabel"></div>
+      <div class="rgrade" id="rgrade"></div>
+      <div id="missblock"></div>
+    </div>
+    <div class="btn-row">
+      <button class="bbtn" onclick="goHome()">← Home</button>
+      <button class="bbtn" onclick="retryMissed()" id="retrybtn">Try missed questions</button>
+      <button class="bbtn primary" onclick="startQuiz(currentSector)">Play again</button>
+    </div>
+  </div>
+
+</div>
+<script>
+const SECTORS = [
+  {id:'machines',  label:'Machines',         icon:'🔧'},
+  {id:'gears',     label:'Gears',            icon:'⚙️'},
+  {id:'pulleys',   label:'Pulleys',          icon:'🔄'},
+  {id:'motion',    label:'Motion',           icon:'🌀'},
+  {id:'truefalse', label:'True / False',     icon:'✅'},
+];
+
+const Q = [
+  // --- MACHINES ---
+  {s:'machines', q:'What is a machine?',
+   c:['A tool only used for digging','Anything that makes a force stronger','A type of wheel and rope system','A gear with teeth'],
+   a:1, ex:'A machine is anything that makes a force stronger — like a hammer, knife, or fork.'},
+  {s:'machines', q:'Why is a hammer considered a machine?',
+   c:['It has wheels inside it','It runs on electricity','It lets us apply a stronger force on a nail than our hands alone','It is made of metal'],
+   a:2, ex:'A hammer multiplies the force our muscles produce — that is what makes it a machine.'},
+  {s:'machines', q:'Which of these is NOT one of the 6 simple machines?',
+   c:['Lever','Gear','Wedge','Screw'],
+   a:1, ex:'The 6 simple machines are: lever, wheel and axle, pulley, wedge, screw, inclined plane. Gears are not in that list!'},
+  {s:'machines', q:'What do complex machines do?',
+   c:['Use only one simple machine','Run only on electricity','Combine two or more simple machines together','Reduce force at all times'],
+   a:2, ex:'Complex machines combine simple machines. Cars, bicycles, can openers, and staplers are all complex machines.'},
+  {s:'machines', q:'Which of these is an example of a complex machine?',
+   c:['Lever','Wedge','Bicycle','Inclined plane'],
+   a:2, ex:'A bicycle combines gears, wheels, and axles — making it a complex machine.'},
+  {s:'machines', q:'Knives and forks are machines because they…',
+   c:['Cut food automatically','Magnify the force of our hands','Convert electricity to motion','Change direction of motion by 90 degrees'],
+   a:1, ex:'Knives and forks magnify the force of our hands by producing more force onto our food.'},
+  {s:'machines', q:'How many simple machines are there?',
+   c:['4','5','6','7'],
+   a:2, ex:'There are exactly 6 simple machines: lever, wheel and axle, pulley, wedge, screw, and inclined plane.'},
+  {s:'machines', q:'Simple machines are the basic mechanical devices that allow us to…',
+   c:['Run faster','Apply more force','Reduce weight','Generate electricity'],
+   a:1, ex:'Simple machines are basic devices that let us apply more force than our muscles alone.'},
+
+  // --- GEARS ---
+  {s:'gears', q:'What is a gear?',
+   c:['A rope used in pulleys','A wheel with teeth that slot together','A type of lever','A straight rack that moves in a line'],
+   a:1, ex:'A gear is a wheel with teeth. When gears slot together, turning one makes the other turn too.'},
+  {s:'gears', q:'What do smaller gears do compared to bigger gears?',
+   c:['Turn more slowly and need more force','Turn quicker and need less force','Change direction by 90 degrees','Convert rotary to linear motion'],
+   a:1, ex:'Smaller gears turn quicker and require less force. Bigger gears turn more slowly and need more force.'},
+  {s:'gears', q:'What is a gear train?',
+   c:['A train that runs on gears','Two or more gears working together','A chain connecting pedals to wheels','A rack and pinion system'],
+   a:1, ex:'A gear train is when two or more gears work together.'},
+  {s:'gears', q:'What does the DRIVER gear do in a gear train?',
+   c:['Receives the motion','Changes direction only','Starts the motion','Sits between other gears'],
+   a:2, ex:'The driver gear starts the motion. The driven gear receives the motion.'},
+  {s:'gears', q:'What does an IDLER gear do?',
+   c:['Increases speed of the gear train','Starts the motion','Changes the direction of rotation','Converts rotary to linear motion'],
+   a:2, ex:'An idler gear sits between driver and driven gear and changes the direction of rotation.'},
+  {s:'gears', q:'Where are spur gears commonly used?',
+   c:['Only in cars','Clocks, toys, and machinery','Only in bicycles','Only in hand drills'],
+   a:1, ex:'Spur gears move in one plane and are found in clocks, toys, and machinery.'},
+  {s:'gears', q:'What is special about bevel gears?',
+   c:['They look like screws','They connect at an angle and can change direction by 90 degrees','They convert rotary motion to linear motion','They only work with chains'],
+   a:1, ex:'Bevel gears connect at an angle and can change the direction of motion by 90 degrees. A hand drill uses them.'},
+  {s:'gears', q:'Which tool uses bevel gears?',
+   c:['Bicycle','Clock','Hand drill','Train'],
+   a:2, ex:'A hand drill uses bevel gears because motion changes from vertical to horizontal — a 90 degree change.'},
+  {s:'gears', q:'What do worm gears look like?',
+   c:['Flat wheels','Screws','Straight racks','Chains'],
+   a:1, ex:'Worm gears look like screws. They slow motion down and increase force.'},
+  {s:'gears', q:'What is true about worm gears?',
+   c:['They speed motion up','They are easy to turn backwards','They slow motion and increase force','They only work in one flat plane'],
+   a:2, ex:'Worm gears slow motion, increase force, and cannot easily be turned backwards.'},
+  {s:'gears', q:'In a rack and pinion system, what is the PINION?',
+   c:['The straight gear','The chain','The round gear','The idler gear'],
+   a:2, ex:'Pinion = round gear. Rack = straight gear. Together they convert rotary motion into linear motion.'},
+  {s:'gears', q:'What does a rack and pinion system do?',
+   c:['Changes direction by 90 degrees','Converts rotary motion into linear motion','Increases speed only','Connects gears with a chain'],
+   a:1, ex:'Rack and pinion converts rotary (circular) motion into linear (straight-line) motion. Example: train systems.'},
+  {s:'gears', q:'On a bicycle, what does a LARGER pedal gear give you?',
+   c:['Easier uphill riding','More speed','More force going uphill','Less speed downhill'],
+   a:1, ex:'Larger pedal gear = more speed. Smaller pedal gear = easier uphill riding.'},
+  {s:'gears', q:'What does the chain do on a bicycle?',
+   c:['Steers the bicycle','Transfers force from the pedals to the wheel','Changes direction by 90 degrees','Acts as an idler gear'],
+   a:1, ex:'The chain connects the pedal gear and wheel gear, transferring turning force between them.'},
+  {s:'gears', q:'If the driving gear turns clockwise, which way does the driven gear turn?',
+   c:['Clockwise','Counter-clockwise','It stops moving','It turns sideways'],
+   a:1, ex:'Meshed gears turn in opposite directions. Clockwise driver = counter-clockwise driven gear.'},
+  {s:'gears', q:'What can gear ratios increase?',
+   c:['Only force','Only speed','Either force or speed','Only direction'],
+   a:2, ex:'Gear ratios can increase either force (bigger gears) or speed (smaller gears) depending on the setup.'},
+
+  // --- PULLEYS ---
+  {s:'pulleys', q:'What is a pulley?',
+   c:['A wheel with teeth','A simple machine using a wheel and rope to raise, lower, or move a load','A gear that looks like a screw','A type of bevel gear'],
+   a:1, ex:'A pulley is a simple machine that uses a wheel and rope to raise, lower, or move a load.'},
+  {s:'pulleys', q:'What does a FIXED pulley do?',
+   c:['Moves with the load','Has mechanical advantage','Changes the direction of force','Increases the speed of the load'],
+   a:2, ex:'A fixed pulley is attached to a structure. It changes the direction of force but has NO mechanical advantage.'},
+  {s:'pulleys', q:'What is true about a MOVEABLE pulley?',
+   c:['It is attached to a fixed structure','It only changes direction of force','It moves with the load and has mechanical advantage','It has no mechanical advantage'],
+   a:2, ex:'A moveable pulley moves with the load, makes lifting easier, and HAS mechanical advantage.'},
+  {s:'pulleys', q:'What happens when you add more pulleys to a system?',
+   c:['You need more force but less rope','You need less force but must pull more rope','Speed increases automatically','The load gets heavier'],
+   a:1, ex:'More pulleys = less force needed, but you have to pull a greater length of rope.'},
+  {s:'pulleys', q:'What does "mechanical advantage" mean?',
+   c:['A machine that runs on its own','Using less force to move a heavy object','A gear that changes direction','A pulley attached to a wall'],
+   a:1, ex:'Mechanical advantage means the machine multiplies your force so you need less effort to move a heavy object.'},
+  {s:'pulleys', q:'In pulley terms, what is the "load"?',
+   c:['The rope you pull','The wheel in the pulley','The object being lifted or moved','The fixed structure it hangs from'],
+   a:2, ex:'The load is the object being lifted or moved by the pulley.'},
+  {s:'pulleys', q:'Which pulley has mechanical advantage?',
+   c:['Fixed pulley','Moveable pulley','Both have the same advantage','Neither has any advantage'],
+   a:1, ex:'Only the moveable pulley has mechanical advantage. The fixed pulley just changes direction of the force.'},
+  {s:'pulleys', q:'What is a pulley system?',
+   c:['A single fixed pulley on a wall','Two or more pulleys working together','A rack and pinion system','A gear train using a chain'],
+   a:1, ex:'A pulley system is two or more pulleys working together to make lifting easier.'},
+
+  // --- MOTION ---
+  {s:'motion', q:'What type of motion moves in a circle?',
+   c:['Linear motion','Reciprocating motion','Rotary motion','Oscillating motion'],
+   a:2, ex:'Rotary motion is motion in a circle — like a wheel turning.'},
+  {s:'motion', q:'What type of motion moves in a straight line?',
+   c:['Rotary motion','Linear motion','Oscillating motion','Reciprocating motion'],
+   a:1, ex:'Linear motion is motion in a straight line.'},
+  {s:'motion', q:'What is reciprocating motion?',
+   c:['Motion in a circle','Side-to-side swinging','Back and forth motion','Motion in a straight line'],
+   a:2, ex:'Reciprocating motion is back and forth motion — like a piston.'},
+  {s:'motion', q:'What is oscillating motion?',
+   c:['Motion in a circle','Back and forth in a line','Motion in a straight line','Side-to-side swinging motion'],
+   a:3, ex:'Oscillating motion is side-to-side swinging — like a pendulum on a clock.'},
+  {s:'motion', q:'How many types of motion are there?',
+   c:['2','3','4','5'],
+   a:2, ex:'There are 4 types: rotary (circle), linear (straight line), reciprocating (back and forth), oscillating (side to side).'},
+  {s:'motion', q:'Which is an example of rotary motion?',
+   c:['A train moving along a track','A swing moving side to side','A wheel turning','A piston going back and forth'],
+   a:2, ex:'A wheel turning is rotary motion — it moves in a circle.'},
+  {s:'motion', q:'Rack and pinion gears convert rotary motion into which type of motion?',
+   c:['Oscillating motion','Reciprocating motion','Linear motion','Rotary motion'],
+   a:2, ex:'Rack and pinion gears convert rotary (circular) motion into linear (straight-line) motion.'},
+
+  // --- TRUE / FALSE ---
+  {s:'truefalse', q:'True or False: The larger the gear, the LESS force you need to apply.',
+   c:['True','False'],
+   a:1, ex:'FALSE — Bigger gears need MORE force. Smaller gears need less force but spin faster.'},
+  {s:'truefalse', q:'True or False: A bicycle gear system will work without a chain.',
+   c:['True','False'],
+   a:1, ex:'FALSE — The chain is essential. It connects the pedal gear to the wheel gear and transfers force.'},
+  {s:'truefalse', q:'True or False: The driver gear is the gear at the END of a gear train.',
+   c:['True','False'],
+   a:1, ex:'FALSE — The driver gear STARTS the motion. The driven gear is at the receiving end.'},
+  {s:'truefalse', q:'True or False: An idler gear changes the direction of rotation.',
+   c:['True','False'],
+   a:0, ex:'TRUE — The idler gear sits between driver and driven gear and changes the direction of rotation.'},
+  {s:'truefalse', q:'True or False: Spur gears operate in one plane.',
+   c:['True','False'],
+   a:0, ex:'TRUE — Spur gears move in one plane and are used in clocks, toys, and machinery.'},
+  {s:'truefalse', q:'True or False: If the driving gear turns clockwise, the driven gear also turns clockwise.',
+   c:['True','False'],
+   a:1, ex:'FALSE — Meshed gears turn in OPPOSITE directions. Clockwise driver = counter-clockwise driven.'},
+  {s:'truefalse', q:'True or False: Worm gears can easily be turned backwards.',
+   c:['True','False'],
+   a:1, ex:'FALSE — Worm gears cannot easily be turned backwards. That is one of their key features.'},
+  {s:'truefalse', q:'True or False: A fixed pulley has mechanical advantage.',
+   c:['True','False'],
+   a:1, ex:'FALSE — A fixed pulley only changes direction of force. It has NO mechanical advantage.'},
+  {s:'truefalse', q:'True or False: Adding more pulleys means you need to pull more rope.',
+   c:['True','False'],
+   a:0, ex:'TRUE — More pulleys reduce the force needed, but you must pull a longer length of rope.'},
+  {s:'truefalse', q:'True or False: Bevel gears can change the direction of motion by 90 degrees.',
+   c:['True','False'],
+   a:0, ex:'TRUE — Bevel gears connect at an angle and can change direction of motion by 90 degrees.'},
+  {s:'truefalse', q:'True or False: The driven gear is affected by how much force goes into the driver gear.',
+   c:['True','False'],
+   a:0, ex:'TRUE — The driven gear receives motion from the driver gear, so it is affected by the driver\'s force.'},
+  {s:'truefalse', q:'True or False: You can multiply force by using a smaller and larger gear together.',
+   c:['True','False'],
+   a:0, ex:'TRUE — Combining different gear sizes lets you multiply either force or speed.'},
+];
+
+const sScores = {};
+SECTORS.forEach(s => { sScores[s.id] = {done:false, score:0, total:0}; });
+
+let activeQ=[], idx=0, score=0, answered=false, missedQ=[];
+let currentSector = 'all';
+
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goHome(){
+  showScreen('s-home');
+  renderSectors();
+}
+
+function renderSectors(){
+  const g = document.getElementById('sgrid');
+  g.innerHTML = '';
+  SECTORS.forEach(s => {
+    const cnt = Q.filter(q=>q.s===s.id).length;
+    const inf = sScores[s.id];
+    g.innerHTML += `<div class="sc${inf.done?' done':''}" onclick="startQuiz('${s.id}')">
+      <div class="si">${s.icon}</div>
+      <div class="sn">${s.label}</div>
+      <div class="sq">${cnt} questions</div>
+      <div class="sbadge">${inf.done ? inf.score+'/'+inf.total+' correct' : 'Not started'}</div>
+    </div>`;
+  });
+}
+
+function startQuiz(sid){
+  currentSector = sid;
+  const pool = sid==='all' ? Q : Q.filter(q=>q.s===sid);
+  activeQ = shuffle(pool);
+  idx=0; score=0; missedQ=[];
+  showScreen('s-quiz');
+  showQ();
+}
+
+function showQ(){
+  answered = false;
+  const q = activeQ[idx];
+  const pct = Math.round((idx / activeQ.length)*100);
+  document.getElementById('ptext').textContent = `Question ${idx+1} of ${activeQ.length}`;
+  document.getElementById('stext').textContent  = `Score: ${score}`;
+  document.getElementById('pbar').style.width   = pct+'%';
+  const sec = SECTORS.find(s=>s.id===q.s);
+  document.getElementById('qtag').textContent   = sec ? sec.icon+' '+sec.label : '';
+  document.getElementById('qtext').textContent  = q.q;
+  document.getElementById('expl').style.display = 'none';
+  document.getElementById('nxtbtn').style.display = 'none';
+
+  const letters = ['A','B','C','D'];
+  const ch = document.getElementById('choices');
+  ch.innerHTML = '';
+  q.c.forEach((txt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'cbtn';
+    btn.innerHTML = `<span class="cletter">${letters[i]}</span><span>${txt}</span>`;
+    btn.onclick = () => handleAnswer(i, btn);
+    ch.appendChild(btn);
+  });
+}
+
+function handleAnswer(chosen, btn){
+  if(answered) return;
+  answered = true;
+  const q = activeQ[idx];
+  const allBtns = document.querySelectorAll('.cbtn');
+  allBtns.forEach(b=>b.disabled=true);
+
+  if(chosen === q.a){
+    btn.classList.add('correct');
+    score++;
+  } else {
+    btn.classList.add('wrong');
+    allBtns[q.a].classList.add('show-correct');
+    missedQ.push(q);
+  }
+
+  document.getElementById('expl').textContent = q.ex;
+  document.getElementById('expl').style.display = 'block';
+  document.getElementById('nxtbtn').style.display = 'block';
+  document.getElementById('stext').textContent = `Score: ${score}`;
+}
+
+function nextQ(){
+  idx++;
+  if(idx >= activeQ.length){
+    showResult();
+  } else {
+    showQ();
+  }
+}
+
+function showResult(){
+  if(currentSector !== 'all'){
+    sScores[currentSector] = {done:true, score:score, total:activeQ.length};
+  }
+  showScreen('s-result');
+  const pct = Math.round((score/activeQ.length)*100);
+  document.getElementById('rscore').textContent = score+'/'+activeQ.length;
+  document.getElementById('rlabel').textContent = pct+'% correct';
+
+  let grade='', gcls='';
+  if(pct>=90){grade='⭐ Excellent!';gcls='grade-s';}
+  else if(pct>=75){grade='👍 Great job!';gcls='grade-a';}
+  else if(pct>=60){grade='😊 Good try!';gcls='grade-b';}
+  else{grade='📚 Keep studying!';gcls='grade-c';}
+
+  const gr = document.getElementById('rgrade');
+  gr.textContent = grade;
+  gr.className = 'rgrade '+gcls;
+
+  const mb = document.getElementById('missblock');
+  if(missedQ.length===0){
+    mb.innerHTML='<p style="color:#4caf50;font-weight:600;margin-top:12px">Perfect score! Amazing! 🎉</p>';
+  } else {
+    let html='<div class="miss-head">Review these (' + missedQ.length + '):</div>';
+    missedQ.forEach(q=>{
+      html+=`<div class="mitem"><strong>${q.q}</strong>${q.c[q.a]}</div>`;
+    });
+    mb.innerHTML=html;
+  }
+
+  document.getElementById('retrybtn').style.display = missedQ.length>0 ? 'block':'none';
+}
+
+function retryMissed(){
+  if(!missedQ.length) return;
+  activeQ = shuffle([...missedQ]);
+  idx=0; score=0; missedQ=[];
+  showScreen('s-quiz');
+  showQ();
+}
+
+renderSectors();
+</script>
+</body>
+</html>
