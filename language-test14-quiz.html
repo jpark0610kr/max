@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Max's Language Test 14 Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1a237e;
+  --blue: #1565c0;
+  --sky: #4fc3f7;
+  --yellow: #ffd600;
+  --orange: #ff6d00;
+  --green: #00c853;
+  --red: #f44336;
+  --purple: #7c4dff;
+  --teal: #00bcd4;
+  --white: #ffffff;
+  --light: #e3f2fd;
+  --card-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(160deg, #0d1b6e 0%, #1a237e 50%, #1565c0 100%);
+  min-height: 100vh;
+  padding: 16px;
+}
+
+/* ── HEADER ── */
+.header { text-align: center; margin-bottom: 20px; }
+.header h1 {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  color: var(--yellow);
+  text-shadow: 3px 3px 0 rgba(0,0,0,.3);
+  margin-bottom: 4px;
+}
+.header p { color: rgba(255,255,255,.8); font-weight: 700; font-size: .95rem; }
+
+/* ── SCORE BAR ── */
+.score-bar {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  justify-content: center; margin-bottom: 18px;
+}
+.chip {
+  background: rgba(255,255,255,.15);
+  border: 2px solid rgba(255,255,255,.3);
+  border-radius: 50px;
+  padding: 7px 18px;
+  color: #fff; font-weight: 800; font-size: .9rem;
+  display: flex; align-items: center; gap: 6px;
+}
+.chip-icon { font-size: 1.1rem; }
+
+/* ── TABS ── */
+.tab-wrap {
+  display: flex; flex-wrap: wrap; gap: 7px;
+  justify-content: center; margin-bottom: 16px;
+}
+.tab {
+  font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .78rem;
+  padding: 7px 13px; border-radius: 50px;
+  border: 2px solid rgba(255,255,255,.35);
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.7); cursor: pointer;
+  transition: all .2s;
+}
+.tab:hover, .tab.active {
+  background: var(--yellow); color: var(--navy);
+  border-color: var(--yellow); transform: translateY(-2px);
+}
+
+/* ── PROGRESS ── */
+.prog-wrap {
+  max-width: 700px; margin: 0 auto 14px;
+  background: rgba(255,255,255,.15); border-radius: 50px; height: 9px; overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--yellow), var(--orange));
+  border-radius: 50px; transition: width .5s ease;
+}
+
+/* ── QUIZ CARD ── */
+.quiz-card {
+  max-width: 700px; margin: 0 auto 14px;
+  background: var(--card-bg); border-radius: 22px;
+  padding: 26px; box-shadow: 0 12px 40px rgba(0,0,0,.3);
+  animation: slideUp .35s ease;
+}
+.q-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
+}
+.q-num { font-weight: 800; color: #9e9e9e; font-size: .8rem; letter-spacing: 1px; text-transform: uppercase; }
+.badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.badge {
+  font-size: .7rem; font-weight: 800; padding: 3px 11px; border-radius: 50px;
+}
+.badge-lesson { background: #e3f2fd; color: var(--navy); }
+.badge-type { color: #fff; }
+.badge-mc   { background: #7c4dff; }
+.badge-fill { background: #00bcd4; }
+.badge-tf   { background: #ff6d00; }
+.badge-match{ background: #00c853; }
+
+.question {
+  font-size: 1.1rem; font-weight: 700; color: var(--navy);
+  line-height: 1.55; margin-bottom: 16px;
+}
+.hint-box {
+  background: #fff8e1; border-left: 4px solid var(--yellow);
+  border-radius: 8px; padding: 9px 13px; margin-bottom: 14px;
+  font-size: .85rem; color: #5d4037; font-weight: 600;
+}
+
+/* MC options */
+.options { display: flex; flex-direction: column; gap: 9px; }
+.opt {
+  font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .97rem;
+  padding: 12px 16px; border-radius: 13px;
+  border: 2.5px solid #e0e0e0; background: #fff;
+  cursor: pointer; text-align: left;
+  transition: all .18s; color: #333;
+  display: flex; align-items: center; gap: 11px;
+}
+.opt-letter {
+  width: 27px; height: 27px; border-radius: 50%;
+  background: #f5f5f5; display: flex; align-items: center;
+  justify-content: center; font-size: .78rem; font-weight: 800;
+  color: #757575; flex-shrink: 0; transition: all .18s;
+}
+.opt:hover:not(:disabled) { border-color: var(--sky); background: var(--light); transform: translateX(4px); }
+.opt:hover:not(:disabled) .opt-letter { background: var(--sky); color: #fff; }
+.opt.correct { border-color: var(--green); background: #e8f5e9; color: #1b5e20; }
+.opt.correct .opt-letter { background: var(--green); color: #fff; }
+.opt.wrong   { border-color: var(--red);   background: #ffebee; color: #b71c1c; }
+.opt.wrong .opt-letter   { background: var(--red);   color: #fff; }
+.opt.reveal  { border-color: var(--green); background: #e8f5e9; color: #1b5e20; animation: pulse .4s; }
+.opt.reveal .opt-letter  { background: var(--green); color: #fff; }
+.opt:disabled { cursor: default; }
+
+/* True/False */
+.tf-row { display: flex; gap: 12px; }
+.tf-btn {
+  flex: 1; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.1rem;
+  padding: 14px; border-radius: 13px; border: 2.5px solid #e0e0e0;
+  background: #fff; cursor: pointer; transition: all .18s; color: #333;
+}
+.tf-btn:hover:not(:disabled) { transform: translateY(-3px); }
+.tf-btn.true-btn:hover:not(:disabled)  { border-color: var(--green); background: #e8f5e9; color: #1b5e20; }
+.tf-btn.false-btn:hover:not(:disabled) { border-color: var(--red);   background: #ffebee; color: #b71c1c; }
+.tf-btn.correct { border-color: var(--green); background: #e8f5e9; color: #1b5e20; }
+.tf-btn.wrong   { border-color: var(--red);   background: #ffebee; color: #b71c1c; }
+.tf-btn:disabled { cursor: default; }
+
+/* Fill-in */
+.fill-wrap { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.fill-input {
+  font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1rem;
+  flex: 1; min-width: 200px;
+  padding: 12px 15px; border: 2.5px solid #e0e0e0; border-radius: 13px;
+  outline: none; color: var(--navy); transition: border-color .2s;
+}
+.fill-input:focus { border-color: var(--sky); }
+.fill-input.correct { border-color: var(--green); background: #e8f5e9; }
+.fill-input.wrong   { border-color: var(--red);   background: #ffebee; }
+
+/* Matching */
+.match-container { display: flex; gap: 16px; flex-wrap: wrap; }
+.match-col { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 8px; }
+.match-col-title { font-size: .75rem; font-weight: 800; color: #9e9e9e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+.match-item {
+  padding: 10px 14px; border-radius: 11px; border: 2.5px solid #e0e0e0;
+  font-weight: 700; font-size: .9rem; cursor: pointer; transition: all .18s;
+  background: #fff; color: #333;
+}
+.match-item.selected { border-color: var(--purple); background: #ede7f6; color: #4a148c; }
+.match-item.matched-correct { border-color: var(--green); background: #e8f5e9; color: #1b5e20; cursor: default; }
+.match-item.matched-wrong   { border-color: var(--red);   background: #ffebee; color: #b71c1c; }
+.match-item:disabled { cursor: default; }
+
+/* Feedback */
+.feedback {
+  margin-top: 13px; padding: 11px 15px; border-radius: 11px;
+  font-weight: 700; font-size: .9rem; display: none;
+  align-items: flex-start; gap: 9px; line-height: 1.4;
+}
+.feedback.show { display: flex; }
+.feedback.correct { background: #e8f5e9; color: #2e7d32; }
+.feedback.wrong   { background: #ffebee; color: #c62828; }
+
+/* Buttons */
+.btn-row { display: flex; gap: 9px; margin-top: 16px; flex-wrap: wrap; }
+.btn {
+  font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .95rem;
+  padding: 11px 22px; border-radius: 50px; border: none; cursor: pointer;
+  transition: all .2s;
+}
+.btn-primary { background: var(--navy); color: #fff; flex: 1; }
+.btn-primary:hover { background: #283593; transform: translateY(-2px); }
+.btn-primary:disabled { background: #bdbdbd; cursor: default; transform: none; }
+.btn-skip { background: #f5f5f5; color: #757575; }
+.btn-skip:hover { background: #eee; }
+
+/* Result */
+.result-card {
+  max-width: 700px; margin: 0 auto;
+  background: #fff; border-radius: 22px; padding: 40px 26px;
+  text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,.3);
+  display: none; animation: bounceIn .5s ease;
+}
+.result-card.show { display: block; }
+.result-emoji { font-size: 5rem; margin-bottom: 10px; }
+.result-title { font-family: 'Fredoka One', cursive; font-size: 2.4rem; color: var(--navy); margin-bottom: 6px; }
+.result-score { font-size: 1.1rem; color: #555; font-weight: 700; margin-bottom: 22px; }
+.result-chips { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 26px; }
+.rchip { padding: 8px 18px; border-radius: 50px; font-weight: 800; font-size: .88rem; }
+.rchip-c { background: #e8f5e9; color: #2e7d32; }
+.rchip-w { background: #ffebee; color: #c62828; }
+.btn-again { background: var(--yellow); color: var(--navy); padding: 14px 40px; font-size: 1.05rem; }
+.btn-again:hover { transform: scale(1.05); }
+
+/* Review */
+.review-wrap { max-width: 700px; margin: 0 auto 20px; display: none; }
+.review-wrap.show { display: block; }
+.review-title { font-family: 'Fredoka One', cursive; color: var(--yellow); font-size: 1.4rem; text-align: center; margin-bottom: 12px; }
+.review-item {
+  background: #fff; border-radius: 14px; padding: 14px 18px;
+  margin-bottom: 9px; border-left: 5px solid var(--red);
+}
+.ri-q   { font-weight: 700; color: var(--navy); font-size: .9rem; margin-bottom: 4px; }
+.ri-you { color: var(--red);   font-size: .82rem; margin-bottom: 2px; }
+.ri-ans { color: #2e7d32; font-size: .82rem; font-weight: 800; }
+
+/* Lesson section headers inside quiz (for all mode) */
+.section-header {
+  max-width: 700px; margin: 10px auto 6px;
+  font-family: 'Fredoka One', cursive;
+  color: rgba(255,255,255,.5); font-size: .85rem;
+  text-align: center; letter-spacing: 2px; text-transform: uppercase;
+}
+
+@keyframes slideUp   { from { transform: translateY(18px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes bounceIn  { 0% { transform: scale(.8); opacity: 0; } 70% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes pulse     { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+@media (max-width: 480px) {
+  body { padding: 10px; }
+  .quiz-card { padding: 18px; }
+  .question { font-size: 1rem; }
+  .tf-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📝 Language Test 14</h1>
+  <p>Review · Lessons 128–143 · Language 4</p>
+</div>
+
+<div class="score-bar">
+  <div class="chip"><span class="chip-icon">✅</span><span id="c-count">0</span> Correct</div>
+  <div class="chip"><span class="chip-icon">❌</span><span id="w-count">0</span> Wrong</div>
+  <div class="chip"><span class="chip-icon">🏆</span><span id="pct">0</span>%</div>
+  <div class="chip"><span class="chip-icon">📊</span><span id="progress-text">0/0</span></div>
+</div>
+
+<div class="tab-wrap" id="tabs"></div>
+
+<div class="prog-wrap"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+
+<div class="quiz-card" id="quiz-card">
+  <div class="q-meta">
+    <span class="q-num" id="q-num">Q 1</span>
+    <div class="badges">
+      <span class="badge badge-lesson" id="badge-lesson">L128</span>
+      <span class="badge badge-type" id="badge-type">MC</span>
+    </div>
+  </div>
+  <div class="question" id="question"></div>
+  <div class="hint-box" id="hint-box" style="display:none"></div>
+  <div id="answer-area"></div>
+  <div class="feedback" id="feedback"></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" id="check-btn" onclick="checkAnswer()" disabled>Check ✓</button>
+    <button class="btn btn-skip" onclick="skipQ()">Skip →</button>
+  </div>
+</div>
+
+<div class="result-card" id="result-card">
+  <div class="result-emoji" id="r-emoji">🎉</div>
+  <div class="result-title" id="r-title">Amazing!</div>
+  <div class="result-score" id="r-score"></div>
+  <div class="result-chips">
+    <div class="rchip rchip-c" id="r-c"></div>
+    <div class="rchip rchip-w" id="r-w"></div>
+  </div>
+  <button class="btn btn-again" onclick="restart()">🔄 Play Again</button>
+</div>
+
+<div class="review-wrap" id="review-wrap">
+  <div class="review-title">📝 Wrong Answers Review</div>
+  <div id="review-list"></div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   QUESTION BANK
+   type: "mc" | "tf" | "fill" | "match"
+════════════════════════════════════════════ */
+const bank = [
+
+  /* ── L128 Review ── */
+  { l:128, type:"mc", q:"In sentence diagramming, what does 'S' stand for?",
+    opts:["Sentence","Subject","Simple verb","Suffix"], ans:1 },
+  { l:128, type:"tf", q:"TRUE or FALSE: A predicate adjective describes the subject and comes AFTER a linking verb.",
+    ans:true, hint:"Example: The regions are cold. → 'cold' is a predicate adjective." },
+  { l:128, type:"mc", q:"In 'Most Russian regions are too cold for crops', what is the linking verb?",
+    opts:["Most","regions","are","cold"], ans:2 },
+  { l:128, type:"fill", q:"Complete: The mark of punctuation after the greeting of a friendly letter is a ___.",
+    ans:"comma", hint:"Example: 'Dear Max,' ← what's that mark?" },
+  { l:128, type:"mc", q:"'Russia's largest crop is grain.' What is the predicate nominative?",
+    opts:["Russia's","largest","crop","grain"], ans:3,
+    hint:"A predicate nominative renames the subject after a linking verb." },
+  { l:128, type:"tf", q:"TRUE or FALSE: 'Their' and 'they're' mean the same thing.",
+    ans:false, hint:"their = belonging to them / they're = they are" },
+
+  /* ── L130 Direct Objects ── */
+  { l:130, type:"mc", q:"What is a DIRECT OBJECT?",
+    opts:[
+      "A word that describes the subject",
+      "A noun or pronoun that follows an action verb and receives the action",
+      "A linking verb that connects subject to predicate",
+      "An adverb that tells where"
+    ], ans:1 },
+  { l:130, type:"tf", q:"TRUE or FALSE: 'He arrived in Moscow last Monday' has a direct object.",
+    ans:false, hint:"Ask: He arrived WHAT? — No noun receives the action." },
+  { l:130, type:"mc", q:"In 'Alexander brought Russian chocolate for us', what is the direct object?",
+    opts:["Alexander","brought","chocolate","us"], ans:2,
+    hint:"Alexander brought WHAT?" },
+  { l:130, type:"fill", q:"To find a direct object, find the subject and action verb, then ask ___?",
+    ans:"what", hint:"Alexander exchanged ___ ?" },
+  { l:130, type:"mc", q:"In sentence diagramming, Direct Object is abbreviated as:",
+    opts:["D","DC","DO","DV"], ans:2 },
+  { l:130, type:"tf", q:"TRUE or FALSE: A direct object always comes BEFORE the action verb.",
+    ans:false, hint:"The direct object follows the action verb." },
+
+  /* ── L131 Diagramming DO ── */
+  { l:131, type:"mc", q:"In 'Victoria plays the flute', what is the direct object?",
+    opts:["Victoria","plays","the","flute"], ans:3 },
+  { l:131, type:"mc", q:"In 'Her teacher gives kind and helpful tips', what is the direct object?",
+    opts:["teacher","gives","kind","tips"], ans:3 },
+  { l:131, type:"tf", q:"TRUE or FALSE: In sentence diagramming, the direct object is placed on the main horizontal line, separated from the verb by a vertical line.",
+    ans:true },
+  { l:131, type:"mc", q:"'Jesus rebuked the men and welcomed the children.' How many direct objects are there?",
+    opts:["0","1","2","3"], ans:2, hint:"rebuked WHO? welcomed WHO?" },
+  { l:131, type:"fill", q:"In diagramming, AV stands for ___ verb.",
+    ans:"action" },
+
+  /* ── L132 Adverbs – How? + -ly ── */
+  { l:132, type:"mc", q:"An adverb that answers 'How?' tells us ___.",
+    opts:[
+      "When the action happens",
+      "Where the action happens",
+      "How the action is done",
+      "How often the action happens"
+    ], ans:2 },
+  { l:132, type:"fill", q:"Many adverbs end in the suffix ___.",
+    ans:"ly", hint:"Example: loud → loud___" },
+  { l:132, type:"mc", q:"What is the adverb form of 'sloppy'?",
+    opts:["sloppyly","sloppily","sloppily","sloply"], ans:1,
+    hint:"If the root ends in y, change y to i before adding -ly." },
+  { l:132, type:"fill", q:"Change 'happy' into an adverb: ___",
+    ans:"happily", hint:"y → i + ly" },
+  { l:132, type:"mc", q:"In 'The brass instruments played each note clearly', the adverb is:",
+    opts:["brass","instruments","played","clearly"], ans:3 },
+  { l:132, type:"fill", q:"Change 'angry' into an adverb: ___",
+    ans:"angrily", hint:"y → i + ly" },
+  { l:132, type:"tf", q:"TRUE or FALSE: Adverbs can ONLY appear in the predicate part of a sentence.",
+    ans:false, hint:"Example: 'Beautifully, Elise played her flute.' — adverb at start!" },
+
+  /* ── L133 Adverbs – When? How often? ── */
+  { l:133, type:"mc", q:"In 'Yesterday, the marching band practiced', the adverb 'Yesterday' answers which question?",
+    opts:["How?","Where?","When?","How often?"], ans:2 },
+  { l:133, type:"mc", q:"In 'We rehearse together weekly', the adverb 'weekly' answers which question?",
+    opts:["How?","When?","Where?","How often?"], ans:3 },
+  { l:133, type:"fill", q:"An adverb that answers 'When?' tells us ___ the action happens.",
+    ans:"when" },
+  { l:133, type:"tf", q:"TRUE or FALSE: The adverb 'carefully' answers the question 'When?'",
+    ans:false, hint:"Carefully tells HOW the action is done." },
+  { l:133, type:"mc", q:"Which sentence has an adverb answering 'How often?'",
+    opts:[
+      "The band played loudly.",
+      "Yesterday we had practice.",
+      "We practice daily.",
+      "She played outside."
+    ], ans:2 },
+
+  /* ── L134 Adverbs – Where? + diagramming ── */
+  { l:134, type:"mc", q:"In 'Outside, the children played a game', the adverb 'Outside' answers which question?",
+    opts:["How?","When?","Where?","How often?"], ans:2 },
+  { l:134, type:"mc", q:"In 'Some geese flew overhead', the adverb is:",
+    opts:["Some","geese","flew","overhead"], ans:3 },
+  { l:134, type:"tf", q:"TRUE or FALSE: 'I will put his bike away.' — 'away' is an adverb telling where.",
+    ans:true },
+  { l:134, type:"fill", q:"The four questions an adverb can answer are: How?, When?, ___, and Where?",
+    ans:"how often", hint:"We practice ___ ___ ?" },
+  { l:134, type:"mc", q:"In diagramming, an adverb is placed on a ___ line below the verb it describes.",
+    opts:["horizontal","diagonal","vertical","dotted"], ans:1,
+    hint:"Look at the diagramming example: Robert Bruce defended Scotland bravely." },
+
+  /* ── L135 Diagramming Adverbs ── */
+  { l:135, type:"tf", q:"TRUE or FALSE: In 'Robert Bruce defended Scotland bravely', 'bravely' is diagrammed on a diagonal line beneath 'defended'.",
+    ans:true },
+  { l:135, type:"mc", q:"In 'He was constantly defeated by them', what is the adverb?",
+    opts:["He","was","constantly","defeated"], ans:2 },
+  { l:135, type:"mc", q:"The spider 'finally built a strong web.' What question does 'finally' answer?",
+    opts:["How?","When?","Where?","How often?"], ans:1,
+    hint:"Finally = after trying many times = relates to time/sequence" },
+
+  /* ── L136 Adverb Comparison ── */
+  { l:136, type:"mc", q:"'Although we all ran fast, Michael ran (fast)___.' — comparing ALL runners.",
+    opts:["faster","fastest","more fast","most fast"], ans:1,
+    hint:"Comparing 3+ → use -est" },
+  { l:136, type:"mc", q:"'Mr. Smith arrived (late)___ for choir practice than Mr. Green did.'",
+    opts:["late","latest","later","most late"], ans:2,
+    hint:"Comparing TWO → -er" },
+  { l:136, type:"fill", q:"Add -er or -est: Nathan can whistle (high) ___ than Owen can.",
+    ans:"higher", hint:"Comparing 2 → -er" },
+  { l:136, type:"mc", q:"'Of all the violinists, Nathan practices ___ diligently.'",
+    opts:["more","most","diligentlier","much"], ans:1,
+    hint:"Comparing ALL (3+) with a long adverb → use 'most'" },
+  { l:136, type:"tf", q:"TRUE or FALSE: Use 'better' when comparing THREE or more actions.",
+    ans:false, hint:"'better' = 2 things / 'best' = 3+ things" },
+  { l:136, type:"mc", q:"'You are limping ___ today than yesterday.'",
+    opts:["bad","badly","worse","worst"], ans:2,
+    hint:"Comparing TWO situations — special irregular adverb" },
+  { l:136, type:"mc", q:"'Compared to all other competitors, he sang ___.'",
+    opts:["better","best","good","well"], ans:1,
+    hint:"Comparing ALL competitors → use 'best'" },
+  { l:136, type:"fill", q:"The orchestra's second piece is performed ___ rapidly than the first. (more or most?)",
+    ans:"more", hint:"Comparing TWO pieces → more" },
+
+  /* ── L137 Adjective vs Adverb ── */
+  { l:137, type:"mc", q:"An ADJECTIVE tells what kind, how many, how much, which one, or whose about a ___.",
+    opts:["verb","noun or pronoun","adverb","conjunction"], ans:1 },
+  { l:137, type:"mc", q:"An ADVERB tells how, when, how often, or where about a ___.",
+    opts:["noun","pronoun","verb","adjective only"], ans:2 },
+  { l:137, type:"tf", q:"TRUE or FALSE: In 'Jesus prayed compassionately', 'compassionately' is an adverb.",
+    ans:true, hint:"Compassionately tells HOW he prayed." },
+  { l:137, type:"mc", q:"In 'Jesus bore unjust punishment', what is 'unjust'?",
+    opts:["Adverb","Verb","Adjective","Subject"], ans:2,
+    hint:"'unjust' describes punishment (a noun)" },
+  { l:137, type:"tf", q:"TRUE or FALSE: In 'He is alive and in heaven with God the Father now!', the word 'now' is an adverb.",
+    ans:true, hint:"'now' tells WHEN." },
+  { l:137, type:"mc", q:"'There on the cross, He showed His love to them.' What is 'There'?",
+    opts:["Adjective","Adverb","Noun","Verb"], ans:1,
+    hint:"'There' tells WHERE He showed his love." },
+  { l:137, type:"fill", q:"The word 'victoriously' in 'Jesus rose victoriously' is a(n) ___ because it tells HOW.",
+    ans:"adverb" },
+
+  /* ── L138 Modifiers ── */
+  { l:138, type:"tf", q:"TRUE or FALSE: Adjectives and adverbs are both called 'modifiers'.",
+    ans:true },
+  { l:138, type:"mc", q:"What is the correct plural of 'penny'?",
+    opts:["pennys","pennies","penniess","None of these"], ans:1 },
+  { l:138, type:"mc", q:"What is the correct plural of 'trout'?",
+    opts:["trouts","trice","trout","troutes"], ans:2 },
+  { l:138, type:"mc", q:"What is the correct plural of 'loaf'?",
+    opts:["loafs","loavs","loaves","None of these"], ans:2 },
+  { l:138, type:"fill", q:"What is the correct plural of 'state'? (Hint: it's NOT stateses)",
+    ans:"states" },
+  { l:138, type:"tf", q:"TRUE or FALSE: A modifier MODIFIES (describes) another word.",
+    ans:true },
+  { l:138, type:"mc", q:"In 'The musicians' elegant clothes rustled quietly on the wide stage', how many adverbs are there?",
+    opts:["0","1","2","3"], ans:1, hint:"Which word tells HOW they rustled?" },
+
+  /* ── L139 good/well + double negatives ── */
+  { l:139, type:"mc", q:"The word GOOD is a(n) ___ — it tells what KIND of noun.",
+    opts:["adverb","adjective","verb","conjunction"], ans:1 },
+  { l:139, type:"mc", q:"The word WELL is usually a(n) ___ — it tells HOW about a verb.",
+    opts:["adjective","noun","adverb","preposition"], ans:2 },
+  { l:139, type:"fill", q:"'This is a ___ painting.' (good or well?)",
+    ans:"good", hint:"Painting is a NOUN → use adjective" },
+  { l:139, type:"fill", q:"'Christopher writes ___.' (good or well?)",
+    ans:"well", hint:"Writes is a VERB → use adverb" },
+  { l:139, type:"tf", q:"TRUE or FALSE: 'I can't find my book nowhere' is a CORRECT sentence.",
+    ans:false, hint:"Double negative! can't + nowhere = wrong. Use 'anywhere'." },
+  { l:139, type:"mc", q:"Which sentence is CORRECT? (No double negatives!)",
+    opts:[
+      "My grandma hasn't never ridden a plane.",
+      "My grandma hasn't ever ridden a plane.",
+      "My grandma has never not ridden a plane.",
+      "My grandma hasn't ridden no plane."
+    ], ans:1 },
+  { l:139, type:"match",
+    q:"Match each word to its description.",
+    pairs:[
+      { left:"not",    right:"negative adverb" },
+      { left:"never",  right:"negative adverb" },
+      { left:"good",   right:"adjective" },
+      { left:"well",   right:"adverb (how)" },
+    ]
+  },
+  { l:139, type:"mc", q:"Which words are NEGATIVE adverbs?",
+    opts:["and, but, or","good, well, better","not, never, hardly, scarcely","fast, slow, loud"], ans:2 },
+  { l:139, type:"tf", q:"TRUE or FALSE: 'He didn't do anything wrong' is a correct sentence.",
+    ans:true, hint:"didn't (negative) + anything (positive) = correct!" },
+  { l:139, type:"fill", q:"Carlos and Steve (do/don't) want ___ sweet potatoes. (any or no?)",
+    ans:"any", hint:"don't is already negative, so use 'any' not 'no'" },
+
+  /* ── L140 Diagramming + Apostrophes ── */
+  { l:140, type:"mc", q:"In 'José needs a new bow', what is the Direct Object?",
+    opts:["José","needs","new","bow"], ans:3 },
+  { l:140, type:"tf", q:"TRUE or FALSE: In 'He is the youngest musician', 'musician' is a predicate nominative.",
+    ans:true, hint:"He = musician (renames the subject after linking verb 'is')" },
+  { l:140, type:"mc", q:"Which is written correctly?",
+    opts:[
+      "violins, violas, cellos and, basses",
+      "violins, violas, cellos, and basses",
+      "violins violas cellos and basses",
+      "violins; violas; cellos; and basses"
+    ], ans:1 },
+  { l:140, type:"mc", q:"Which is the correct possessive for plural 'oboes'?",
+    opts:["oboe's notes","oboes's notes","oboes' notes","oboess' notes"], ans:2,
+    hint:"Plural nouns ending in s → just add apostrophe after the s" },
+  { l:140, type:"fill", q:"Which is correct: 'conductors baton' or 'conductors' baton'?",
+    ans:"conductors' baton", hint:"Plural possessive → apostrophe AFTER the s" },
+  { l:140, type:"mc", q:"Which is correctly written?",
+    opts:[
+      "\"Ode to joy\" (song)",
+      "\"Ode to Joy\" (song)",
+      "\"ode to joy\" (song)",
+      "\"Ode To Joy\" (song)"
+    ], ans:1, hint:"Song titles: capitalize all important words" },
+
+  /* ── L141 Conjunctions ── */
+  { l:141, type:"mc", q:"A CONJUNCTION does what in a sentence?",
+    opts:[
+      "Describes a noun",
+      "Joins words or groups of words",
+      "Names a person or place",
+      "Shows action"
+    ], ans:1 },
+  { l:141, type:"fill", q:"List all 6 conjunctions from Lesson 141: and, but, or, nor, for, ___",
+    ans:"yet", hint:"and but or nor for ___" },
+  { l:141, type:"mc", q:"'The Old Testament ___ the New Testament both talk about musical instruments.'",
+    opts:["but","or","and","nor"], ans:2 },
+  { l:141, type:"mc", q:"'We do not live in Bible times, ___ we can still use our instruments to praise God.'",
+    opts:["and","or","for","but"], ans:3 },
+  { l:141, type:"tf", q:"TRUE or FALSE: 'because' is one of the 6 conjunctions taught in Lesson 141.",
+    ans:false, hint:"The 6 are: and, but, or, nor, for, yet" },
+  { l:141, type:"mc", q:"'Percussion instruments can be hit ___ shaken.' Best conjunction?",
+    opts:["but","and","or","nor"], ans:2 },
+  { l:141, type:"fill", q:"'Moses' sister Miriam played a timbrel ___ sang after the Hebrew children passed through the Red Sea.'",
+    ans:"and", hint:"Two actions done by the same person → join with?" },
+
+  /* ── L142 Conjunctions + Commas ── */
+  { l:142, type:"mc", q:"When should you use a COMMA with a conjunction?",
+    opts:[
+      "Never — conjunctions don't need commas",
+      "Only before 'but'",
+      "To separate items in a series, and to separate two complete thoughts",
+      "Only at the end of sentences"
+    ], ans:2 },
+  { l:142, type:"tf", q:"TRUE or FALSE: 'Tim wants tomato ketchup and lettuce on his hamburger.' is correctly punctuated for a series of 3 items.",
+    ans:false, hint:"Series needs commas: tomato, ketchup, and lettuce" },
+  { l:142, type:"fill", q:"'A drum, cymbal, blocks, ___ triangle are all percussion instruments.' (add the missing conjunction)",
+    ans:"and", hint:"Completing a list" },
+  { l:142, type:"mc", q:"Which sentence is correctly punctuated?",
+    opts:[
+      "My brother wants to play the drums but Mom says he should play something quieter.",
+      "My brother wants to play the drums, but Mom says he should play something quieter.",
+      "My brother wants, to play the drums but Mom says he should play something quieter.",
+      "My brother wants to play the drums but, Mom says he should play something quieter."
+    ], ans:1,
+    hint:"Two complete thoughts joined by 'but' → comma before 'but'" },
+  { l:142, type:"tf", q:"TRUE or FALSE: 'Last Winter was very cold.' is correctly capitalized.",
+    ans:false, hint:"Seasons (winter, summer, fall, spring) are NOT capitalized." },
+  { l:142, type:"mc", q:"Which sentence is correct?",
+    opts:[
+      "Janelle's Birthday is close to Independence Day.",
+      "Janelle's birthday is close to Independence Day.",
+      "janelle's birthday is close to independence day.",
+      "Janelle's birthday is close to independence day."
+    ], ans:1,
+    hint:"'Independence Day' is a proper noun/holiday → capitalize. 'birthday' is not." },
+
+  /* ── L143 Review ── */
+  { l:143, type:"mc", q:"'The snare drum is the (commonest / most common) drum in the marching band.' Which is correct?",
+    opts:["commonest","most common","more common","commoner"], ans:1,
+    hint:"Long adjectives use 'most' not '-est'" },
+  { l:143, type:"mc", q:"'This week, we have received (more/most) rain than last week.' Which is correct?",
+    opts:["most","more","much","many"], ans:1,
+    hint:"Comparing TWO weeks → 'more'" },
+  { l:143, type:"mc", q:"'The (larger, largest) drum in the orchestra is the timpani.' Which is correct?",
+    opts:["larger","largest","most large","more large"], ans:1,
+    hint:"Only ONE drum is being called the biggest of all → -est" },
+  { l:143, type:"fill", q:"'Jenna chose a ___ book for her last book report.' (good or well?)",
+    ans:"good", hint:"book = noun → use adjective" },
+  { l:143, type:"fill", q:"'Patrick performed very ___ in his recital.' (good or well?)",
+    ans:"well", hint:"performed = verb → use adverb" },
+  { l:143, type:"mc", q:"'Abigail threw the ball, and her dog (catched, caught) it.' Correct verb?",
+    opts:["catched","caught","has catched","have caught"], ans:1 },
+  { l:143, type:"tf", q:"TRUE or FALSE: 'Marco can't find his lunch anywhere!' is correctly written (no double negative).",
+    ans:true, hint:"can't (negative) + anywhere (positive) ✓" },
+  { l:143, type:"mc", q:"'The children's (choir, choirs) sings in church on Wednesday nights.' Which subject agrees with the verb 'sings'?",
+    opts:["choirs","choir","children's","church"], ans:1,
+    hint:"'sings' is singular → singular subject" },
+  { l:143, type:"fill", q:"'San Francisco's Golden ___ Bridge opened to the public in 1937.' What word has a capitalization error?",
+    ans:"gate", hint:"It should be 'Gate' — it's part of a proper noun" },
+  { l:143, type:"tf", q:"TRUE or FALSE: 'My fifth-grade teacher may be Miss Willis or Mrs. Ray.' is correctly capitalized.",
+    ans:true, hint:"Mrs. is an abbreviation before a name → capitalize. 'fifth-grade' before a noun → lowercase." },
+];
+
+/* ════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════ */
+let questions = [];
+let cur = 0, correct = 0, wrong = 0;
+let answered = false;
+let selAnswer = null;
+let wrongLog = [];
+let activeTopic = "all";
+
+// Matching state
+let matchSel = { side: null, idx: null };
+let matchPairs = [];
+let matchDone = 0;
+let matchCorrect = 0;
+
+const topics = [
+  { id:"all",  label:"📚 All" },
+  { id:128,    label:"128 Review" },
+  { id:130,    label:"130 Direct Obj." },
+  { id:131,    label:"131 Diagram DO" },
+  { id:132,    label:"132 Adv. How?" },
+  { id:133,    label:"133 When/Often" },
+  { id:134,    label:"134 Where?" },
+  { id:135,    label:"135 Diag. Adv." },
+  { id:136,    label:"136 Comparison" },
+  { id:137,    label:"137 Adj/Adv" },
+  { id:138,    label:"138 Modifiers" },
+  { id:139,    label:"139 good/well" },
+  { id:140,    label:"140 Diagramming" },
+  { id:141,    label:"141 Conj." },
+  { id:142,    label:"142 Commas" },
+  { id:143,    label:"143 Review" },
+];
+
+function shuffle(arr) { return [...arr].sort(()=>Math.random()-.5); }
+
+function buildTabs() {
+  const w = document.getElementById('tabs');
+  w.innerHTML = '';
+  topics.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (activeTopic === t.id ? ' active' : '');
+    b.textContent = t.label;
+    b.onclick = () => setTopic(t.id);
+    w.appendChild(b);
+  });
+}
+
+function setTopic(id) {
+  activeTopic = id;
+  buildTabs();
+  const src = id === 'all' ? bank : bank.filter(q => q.l === id);
+  questions = shuffle(src);
+  cur = 0; correct = 0; wrong = 0;
+  answered = false; selAnswer = null; wrongLog = [];
+  updateScoreBar();
+  document.getElementById('result-card').classList.remove('show');
+  document.getElementById('review-wrap').classList.remove('show');
+  document.getElementById('quiz-card').style.display = 'block';
+  showQ();
+}
+
+/* ── RENDER QUESTION ── */
+function showQ() {
+  if (cur >= questions.length) { showResult(); return; }
+  answered = false; selAnswer = null;
+  const q = questions[cur];
+
+  document.getElementById('q-num').textContent = `Q ${cur+1} / ${questions.length}`;
+  document.getElementById('badge-lesson').textContent = `L${q.l}`;
+
+  const typeMap = { mc:'MC', tf:'T/F', fill:'Fill', match:'Match' };
+  const colorMap = { mc:'badge-mc', tf:'badge-tf', fill:'badge-fill', match:'badge-match' };
+  const bt = document.getElementById('badge-type');
+  bt.textContent = typeMap[q.type];
+  bt.className = 'badge badge-type ' + colorMap[q.type];
+
+  document.getElementById('question').textContent = q.q;
+
+  const hb = document.getElementById('hint-box');
+  if (q.hint) { hb.style.display='block'; hb.textContent = '💡 ' + q.hint; }
+  else { hb.style.display='none'; }
+
+  document.getElementById('feedback').className = 'feedback';
+
+  const area = document.getElementById('answer-area');
+  area.innerHTML = '';
+
+  if (q.type === 'mc')    renderMC(q, area);
+  else if (q.type === 'tf')   renderTF(q, area);
+  else if (q.type === 'fill') renderFill(q, area);
+  else if (q.type === 'match') renderMatch(q, area);
+
+  document.getElementById('check-btn').textContent = 'Check ✓';
+  document.getElementById('check-btn').onclick = checkAnswer;
+  document.getElementById('check-btn').disabled = (q.type !== 'match');
+
+  const pct = (cur / questions.length) * 100;
+  document.getElementById('prog').style.width = pct + '%';
+  updateScoreBar();
+
+  const card = document.getElementById('quiz-card');
+  card.style.animation = 'none';
+  setTimeout(() => card.style.animation = 'slideUp .35s ease', 10);
+}
+
+/* ── MC ── */
+function renderMC(q, area) {
+  const div = document.createElement('div');
+  div.className = 'options';
+  const letters = ['A','B','C','D','E'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => {
+      if (answered) return;
+      selAnswer = i;
+      document.querySelectorAll('.opt').forEach(b => {
+        b.style.borderColor='#e0e0e0'; b.style.background='#fff';
+        b.querySelector('.opt-letter').style.background='#f5f5f5';
+        b.querySelector('.opt-letter').style.color='#757575';
+      });
+      btn.style.borderColor='#4fc3f7'; btn.style.background='#e3f2fd';
+      btn.querySelector('.opt-letter').style.background='#4fc3f7';
+      btn.querySelector('.opt-letter').style.color='#fff';
+      document.getElementById('check-btn').disabled = false;
+    };
+    div.appendChild(btn);
+  });
+  area.appendChild(div);
+}
+
+/* ── TF ── */
+function renderTF(q, area) {
+  const row = document.createElement('div');
+  row.className = 'tf-row';
+  ['✅ True','❌ False'].forEach((label, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tf-btn ' + (i===0?'true-btn':'false-btn');
+    btn.textContent = label;
+    btn.onclick = () => {
+      if (answered) return;
+      selAnswer = (i===0);
+      document.querySelectorAll('.tf-btn').forEach(b=>{
+        b.style.borderColor='#e0e0e0'; b.style.background='#fff'; b.style.color='#333';
+      });
+      btn.style.borderColor = (i===0?'#00c853':'#f44336');
+      btn.style.background  = (i===0?'#e8f5e9':'#ffebee');
+      btn.style.color       = (i===0?'#1b5e20':'#b71c1c');
+      document.getElementById('check-btn').disabled = false;
+    };
+    row.appendChild(btn);
+  });
+  area.appendChild(row);
+}
+
+/* ── FILL ── */
+function renderFill(q, area) {
+  const wrap = document.createElement('div');
+  wrap.className = 'fill-wrap';
+  const inp = document.createElement('input');
+  inp.className = 'fill-input';
+  inp.type = 'text';
+  inp.placeholder = 'Type your answer...';
+  inp.oninput = () => {
+    document.getElementById('check-btn').disabled = inp.value.trim().length === 0;
+    selAnswer = inp.value.trim();
+  };
+  inp.onkeydown = e => { if (e.key==='Enter' && !document.getElementById('check-btn').disabled) checkAnswer(); };
+  wrap.appendChild(inp);
+  area.appendChild(wrap);
+  inp.focus();
+}
+
+/* ── MATCH ── */
+function renderMatch(q, area) {
+  matchPairs = shuffle(q.pairs.map((p,i)=>({...p, id:i, leftMatched:false, rightMatched:false})));
+  const rightItems = shuffle(matchPairs.map(p=>({text:p.right, id:p.id})));
+  matchSel = { side:null, idx:null };
+  matchDone = 0; matchCorrect = 0;
+
+  const container = document.createElement('div');
+  container.className = 'match-container';
+
+  const leftCol = document.createElement('div');
+  leftCol.className = 'match-col';
+  leftCol.innerHTML = '<div class="match-col-title">Column A</div>';
+
+  const rightCol = document.createElement('div');
+  rightCol.className = 'match-col';
+  rightCol.innerHTML = '<div class="match-col-title">Column B</div>';
+
+  matchPairs.forEach((pair, i) => {
+    const li = document.createElement('div');
+    li.className = 'match-item';
+    li.textContent = pair.left;
+    li.dataset.side = 'left';
+    li.dataset.id = pair.id;
+    li.dataset.idx = i;
+    li.onclick = () => handleMatchClick(li, 'left', i, pair.id);
+    leftCol.appendChild(li);
+  });
+
+  rightItems.forEach((item, i) => {
+    const ri = document.createElement('div');
+    ri.className = 'match-item';
+    ri.textContent = item.text;
+    ri.dataset.side = 'right';
+    ri.dataset.id = item.id;
+    ri.dataset.idx = i;
+    ri.onclick = () => handleMatchClick(ri, 'right', i, item.id);
+    rightCol.appendChild(ri);
+  });
+
+  container.appendChild(leftCol);
+  container.appendChild(rightCol);
+  area.appendChild(container);
+  document.getElementById('check-btn').disabled = true;
+}
+
+function handleMatchClick(el, side, idx, pairId) {
+  if (el.classList.contains('matched-correct') || el.classList.contains('matched-wrong')) return;
+
+  if (matchSel.side === null) {
+    // first selection
+    matchSel = { side, idx, id: pairId, el };
+    document.querySelectorAll('.match-item:not(.matched-correct):not(.matched-wrong)').forEach(e => {
+      if (e !== el) e.classList.remove('selected');
+    });
+    el.classList.add('selected');
+  } else {
+    // second selection — try to match
+    if (matchSel.side === side) {
+      // same column — reselect
+      document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+      matchSel = { side, idx, id: pairId, el };
+      el.classList.add('selected');
+      return;
+    }
+    const isCorrect = (matchSel.id === pairId);
+    const cls = isCorrect ? 'matched-correct' : 'matched-wrong';
+    matchSel.el.classList.remove('selected');
+    matchSel.el.classList.add(cls);
+    el.classList.add(cls);
+
+    if (isCorrect) matchCorrect++;
+    matchDone++;
+    matchSel = { side:null, idx:null };
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+
+    if (matchDone === matchPairs.length) {
+      // all matched
+      selAnswer = matchCorrect;
+      document.getElementById('check-btn').disabled = false;
+    }
+  }
+}
+
+/* ── CHECK ── */
+function checkAnswer() {
+  if (answered) { nextQ(); return; }
+  answered = true;
+  const q = questions[cur];
+  const fb = document.getElementById('feedback');
+  let isCorrect = false;
+
+  if (q.type === 'mc') {
+    const btns = document.querySelectorAll('.opt');
+    btns.forEach(b => b.disabled = true);
+    if (selAnswer === q.ans) {
+      btns[selAnswer].className = 'opt correct';
+      isCorrect = true;
+    } else {
+      if (selAnswer !== null) btns[selAnswer].className = 'opt wrong';
+      btns[q.ans].className = 'opt reveal';
+    }
+  } else if (q.type === 'tf') {
+    const btns = document.querySelectorAll('.tf-btn');
+    btns.forEach(b => b.disabled = true);
+    if (selAnswer === q.ans) {
+      isCorrect = true;
+      btns[selAnswer===true?0:1].className = 'tf-btn correct';
+    } else {
+      if (selAnswer !== null) btns[selAnswer===true?0:1].className = 'tf-btn wrong';
+      btns[q.ans===true?0:1].className = 'tf-btn correct';
+    }
+  } else if (q.type === 'fill') {
+    const inp = document.querySelector('.fill-input');
+    if (inp) {
+      inp.disabled = true;
+      const userVal = (selAnswer||'').toLowerCase().trim().replace(/[^a-z0-9' ]/g,'');
+      const correctVal = q.ans.toLowerCase().trim().replace(/[^a-z0-9' ]/g,'');
+      // allow partial match for multi-word (e.g. "conductors' baton" → check contains)
+      isCorrect = userVal === correctVal || correctVal.includes(userVal) && userVal.length >= correctVal.length - 3;
+      inp.className = 'fill-input ' + (isCorrect ? 'correct' : 'wrong');
+      if (!isCorrect) {
+        const hint2 = document.createElement('div');
+        hint2.style.cssText = 'margin-top:8px;font-size:.85rem;font-weight:700;color:#2e7d32;';
+        hint2.textContent = '✅ Correct answer: ' + q.ans;
+        inp.parentElement.appendChild(hint2);
+      }
+    }
+  } else if (q.type === 'match') {
+    isCorrect = matchCorrect === matchPairs.length;
+  }
+
+  if (isCorrect) {
+    correct++;
+    fb.className = 'feedback correct show';
+    fb.innerHTML = '🎉 ' + getRandom(["Correct! Great job!","Nailed it! ✨","You got it!","Perfect! 🌟","Excellent work!"]);
+  } else {
+    wrong++;
+    const correctTxt = q.type==='mc' ? q.opts[q.ans]
+      : q.type==='tf' ? (q.ans?'True':'False')
+      : q.type==='fill' ? q.ans
+      : `${matchCorrect}/${matchPairs.length} correct pairs`;
+    fb.className = 'feedback wrong show';
+    fb.innerHTML = `❌ Not quite. Correct: <strong>${correctTxt}</strong>`;
+    wrongLog.push({
+      q: q.q,
+      yours: q.type==='mc' ? (selAnswer!==null?q.opts[selAnswer]:'(skipped)')
+           : q.type==='tf' ? (selAnswer!==null?(selAnswer?'True':'False'):'(skipped)')
+           : q.type==='fill' ? (selAnswer||'(blank)')
+           : `${matchCorrect}/${matchPairs.length} pairs`,
+      correct: correctTxt
+    });
+  }
+
+  updateScoreBar();
+  document.getElementById('check-btn').textContent = 'Next →';
+  document.getElementById('check-btn').onclick = nextQ;
+  document.getElementById('check-btn').disabled = false;
+}
+
+function nextQ() {
+  cur++;
+  document.getElementById('check-btn').textContent = 'Check ✓';
+  document.getElementById('check-btn').onclick = checkAnswer;
+  showQ();
+}
+
+function skipQ() {
+  if (!answered) {
+    wrongLog.push({ q: questions[cur].q, yours:'(skipped)', correct:'?' });
+    wrong++;
+    updateScoreBar();
+  }
+  cur++;
+  document.getElementById('check-btn').textContent = 'Check ✓';
+  document.getElementById('check-btn').onclick = checkAnswer;
+  showQ();
+}
+
+/* ── SCORE BAR ── */
+function updateScoreBar() {
+  document.getElementById('c-count').textContent = correct;
+  document.getElementById('w-count').textContent = wrong;
+  const total = correct + wrong;
+  const p = total > 0 ? Math.round((correct/total)*100) : 0;
+  document.getElementById('pct').textContent = p;
+  document.getElementById('progress-text').textContent = `${cur}/${questions.length}`;
+}
+
+/* ── RESULT ── */
+function showResult() {
+  document.getElementById('quiz-card').style.display = 'none';
+  document.getElementById('prog').style.width = '100%';
+  const total = questions.length;
+  const p = Math.round((correct/total)*100);
+  let emoji, title;
+  if (p>=95) { emoji='🏆'; title='PERFECT, MAX!'; }
+  else if (p>=85) { emoji='🌟'; title='Excellent!'; }
+  else if (p>=70) { emoji='👍'; title='Good Job!'; }
+  else if (p>=55) { emoji='💪'; title='Keep Going!'; }
+  else            { emoji='📖'; title='Study More!'; }
+
+  document.getElementById('r-emoji').textContent = emoji;
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-score').textContent = `${correct} out of ${total} correct (${p}%)`;
+  document.getElementById('r-c').textContent = `✅ ${correct} Correct`;
+  document.getElementById('r-w').textContent = `❌ ${wrong} Wrong`;
+  document.getElementById('result-card').classList.add('show');
+
+  if (wrongLog.length > 0) {
+    const rw = document.getElementById('review-wrap');
+    const rl = document.getElementById('review-list');
+    rl.innerHTML = '';
+    wrongLog.forEach(w => {
+      const d = document.createElement('div');
+      d.className = 'review-item';
+      d.innerHTML = `<div class="ri-q">Q: ${w.q}</div>
+        <div class="ri-you">Your answer: ${w.yours}</div>
+        <div class="ri-ans">✅ Correct: ${w.correct}</div>`;
+      rl.appendChild(d);
+    });
+    rw.classList.add('show');
+  }
+}
+
+function restart() {
+  document.getElementById('result-card').classList.remove('show');
+  document.getElementById('review-wrap').classList.remove('show');
+  document.getElementById('quiz-card').style.display = 'block';
+  setTopic(activeTopic);
+}
+
+function getRandom(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+
+/* INIT */
+buildTabs();
+setTopic('all');
+</script>
+</body>
+</html>
