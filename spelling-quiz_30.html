@@ -7,397 +7,222 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --sky: #4fc3f7;
-    --sun: #ffd54f;
-    --grass: #66bb6a;
-    --coral: #ff7043;
-    --purple: #ab47bc;
-    --navy: #1a237e;
-    --card: #fffde7;
-    --correct: #43a047;
-    --wrong: #e53935;
-    --shadow: 0 4px 24px rgba(26,35,126,0.10);
+    --sky:#4fc3f7; --sun:#ffd54f; --grass:#66bb6a;
+    --purple:#ab47bc; --navy:#1a237e;
+    --correct:#43a047; --wrong:#e53935;
+    --shadow:0 4px 24px rgba(26,35,126,0.10);
   }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient(160deg,#e3f2fd 0%,#f3e5f5 50%,#e8f5e9 100%);display:flex;flex-direction:column;align-items:center;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  nav{width:100%;background:var(--navy);padding:14px 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.18);}
+  nav .logo{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--sun);letter-spacing:1px;}
+  .nav-btn{margin-left:auto;background:var(--sun);color:var(--navy);border:none;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:800;padding:7px 18px;border-radius:20px;cursor:pointer;}
+  .nav-btn:hover{background:#ffe082;}
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    min-height: 100vh;
-    background: linear-gradient(160deg, #e3f2fd 0%, #f3e5f5 50%, #e8f5e9 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  .screen{display:none;width:100%;max-width:720px;padding:28px 18px 60px;animation:fadeIn 0.3s ease;}
+  .screen.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-  /* ── NAV ── */
-  nav {
-    width: 100%;
-    background: var(--navy);
-    padding: 14px 28px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
-  }
-  nav .logo {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.5rem;
-    color: var(--sun);
-    letter-spacing: 1px;
-    text-shadow: 1px 2px 0 rgba(0,0,0,0.2);
-  }
-  nav .nav-right {
-    margin-left: auto;
-    display: flex;
-    gap: 10px;
-  }
-  .nav-btn {
-    background: none;
-    border: 2px solid rgba(255,255,255,0.35);
-    color: #fff;
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    padding: 6px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .nav-btn:hover { background: rgba(255,255,255,0.15); border-color: #fff; }
-  .nav-btn.home-btn { background: var(--sun); color: var(--navy); border-color: var(--sun); }
-  .nav-btn.home-btn:hover { background: #ffe082; }
+  .home-hero{text-align:center;padding:24px 0 28px;}
+  .home-hero .emoji{font-size:3.8rem;display:block;margin-bottom:10px;}
+  .home-hero h1{font-family:'Fredoka One',cursive;font-size:2.4rem;color:var(--navy);margin-bottom:8px;}
+  .home-hero p{color:#5c6bc0;font-size:1rem;font-weight:600;}
 
-  /* ── SCREENS ── */
-  .screen { display: none; width: 100%; max-width: 720px; padding: 30px 20px 60px; animation: fadeIn 0.4s ease; }
-  .screen.active { display: block; }
-  @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  .quiz-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px;}
+  @media(max-width:500px){.quiz-cards{grid-template-columns:1fr;}}
 
-  /* ── HOME ── */
-  .home-hero {
-    text-align: center;
-    padding: 20px 0 30px;
-  }
-  .home-hero .emoji { font-size: 4rem; display: block; margin-bottom: 10px; }
-  .home-hero h1 {
-    font-family: 'Fredoka One', cursive;
-    font-size: 2.6rem;
-    color: var(--navy);
-    line-height: 1.1;
-    margin-bottom: 8px;
-  }
-  .home-hero p { color: #5c6bc0; font-size: 1.05rem; font-weight: 600; }
+  .quiz-card{background:white;border-radius:22px;padding:26px 18px;text-align:center;cursor:pointer;box-shadow:var(--shadow);transition:all 0.2s;position:relative;overflow:hidden;}
+  .quiz-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;}
+  .quiz-card.c1::before{background:linear-gradient(90deg,#4fc3f7,#ab47bc);}
+  .quiz-card.c2::before{background:linear-gradient(90deg,#66bb6a,#ffd54f);}
+  .quiz-card.c3::before{background:linear-gradient(90deg,#ff7043,#ffd54f);}
+  .quiz-card.c4::before{background:linear-gradient(90deg,#ab47bc,#4fc3f7);}
+  .quiz-card:hover{transform:translateY(-5px);box-shadow:0 10px 32px rgba(26,35,126,0.16);}
+  .quiz-card .ce{font-size:2.2rem;margin-bottom:8px;}
+  .quiz-card h2{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--navy);margin-bottom:5px;}
+  .quiz-card p{font-size:0.82rem;color:#78909c;font-weight:600;}
+  .card-badge{display:inline-block;color:#fff;font-size:0.72rem;font-weight:800;padding:3px 10px;border-radius:12px;margin-top:9px;}
+  .c1 .card-badge{background:var(--sky);}
+  .c2 .card-badge{background:var(--grass);}
+  .c3 .card-badge{background:#ff7043;}
+  .c4 .card-badge{background:var(--purple);}
 
-  .quiz-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    margin-top: 28px;
-  }
-  @media(max-width:500px){ .quiz-cards { grid-template-columns:1fr; } }
+  .section-header{margin-bottom:18px;}
+  .section-header h2{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--navy);margin-bottom:4px;}
+  .section-header p{color:#5c6bc0;font-size:0.9rem;font-weight:600;}
 
-  .quiz-card {
-    background: white;
-    border-radius: 22px;
-    padding: 28px 20px;
-    text-align: center;
-    cursor: pointer;
-    box-shadow: var(--shadow);
-    border: 3px solid transparent;
-    transition: all 0.22s;
-    position: relative;
-    overflow: hidden;
-  }
-  .quiz-card::before {
-    content: '';
-    position: absolute; top:0; left:0; right:0; height:5px;
-  }
-  .quiz-card.part1::before { background: linear-gradient(90deg, var(--sky), var(--purple)); }
-  .quiz-card.part2::before { background: linear-gradient(90deg, var(--grass), var(--sun)); }
-  .quiz-card:hover { transform: translateY(-5px); box-shadow: 0 10px 32px rgba(26,35,126,0.16); }
-  .quiz-card .card-emoji { font-size: 2.5rem; margin-bottom: 10px; }
-  .quiz-card h2 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--navy); margin-bottom: 6px; }
-  .quiz-card p { font-size: 0.88rem; color: #78909c; font-weight: 600; }
-  .card-badge {
-    display: inline-block;
-    background: var(--sky);
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 800;
-    padding: 3px 10px;
-    border-radius: 12px;
-    margin-top: 10px;
-  }
-  .quiz-card.part2 .card-badge { background: var(--grass); }
+  .prog-wrap{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+  .prog-label{font-size:0.85rem;font-weight:800;color:var(--navy);white-space:nowrap;}
+  .progress-bar-wrap{flex:1;background:#e0e0e0;border-radius:10px;height:10px;overflow:hidden;}
+  .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--sky),var(--purple));border-radius:10px;transition:width 0.4s;}
 
-  /* ── QUIZ HEADER ── */
-  .quiz-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-  }
-  .quiz-header h2 {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.6rem;
-    color: var(--navy);
-    flex: 1;
-  }
-  .progress-bar-wrap {
-    width: 100%;
-    background: #e0e0e0;
-    border-radius: 10px;
-    height: 10px;
-    overflow: hidden;
-  }
-  .progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--sky), var(--purple));
-    border-radius: 10px;
-    transition: width 0.4s ease;
-  }
-  .prog-label { font-size: 0.85rem; font-weight: 800; color: var(--navy); white-space: nowrap; }
+  .q-card{background:white;border-radius:20px;padding:26px 22px;box-shadow:var(--shadow);margin-bottom:16px;border:2px solid #e8eaf6;}
+  .q-label{font-family:'Fredoka One',cursive;font-size:0.82rem;color:#9fa8da;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;}
+  .q-text{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:14px;line-height:1.6;}
 
-  /* ── QUESTION CARD ── */
-  .q-card {
-    background: white;
-    border-radius: 24px;
-    padding: 32px 28px;
-    box-shadow: var(--shadow);
-    margin-bottom: 20px;
-    border: 2px solid #e8eaf6;
-  }
-  .q-num {
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.9rem;
-    color: #9fa8da;
-    margin-bottom: 10px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
+  .listen-btn{background:var(--navy);color:#fff;border:none;border-radius:50px;padding:11px 20px;font-family:'Nunito',sans-serif;font-size:0.92rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:0 3px 10px rgba(26,35,126,0.2);transition:all 0.18s;}
+  .listen-btn:hover{background:#283593;}
+  .listen-btn.speaking{background:var(--purple);}
 
-  /* Part 1 — Spelling */
-  .spell-prompt {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-  .listen-btn {
-    background: var(--navy);
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-    padding: 12px 22px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.18s;
-    box-shadow: 0 3px 10px rgba(26,35,126,0.2);
-  }
-  .listen-btn:hover { background: #283593; transform: scale(1.04); }
-  .listen-btn.speaking { background: var(--purple); animation: pulse 0.8s infinite alternate; }
-  @keyframes pulse { from{transform:scale(1);} to{transform:scale(1.06);} }
-  .listen-btn svg { flex-shrink:0; }
+  .ex-box{font-size:0.9rem;color:#546e7a;font-style:italic;font-weight:600;background:#f5f5f5;border-left:4px solid var(--sky);padding:9px 13px;border-radius:0 10px 10px 0;flex:1;min-width:160px;}
 
-  .example-sentence {
-    font-size: 0.92rem;
-    color: #546e7a;
-    font-style: italic;
-    font-weight: 600;
-    background: #f5f5f5;
-    border-left: 4px solid var(--sky);
-    padding: 10px 14px;
-    border-radius: 0 10px 10px 0;
-    flex: 1;
-    min-width: 180px;
-  }
-  .example-sentence b { color: var(--navy); font-style: normal; }
+  .vocab-def-box{font-size:1.05rem;font-weight:700;color:var(--navy);margin-bottom:16px;padding:12px 15px;background:#f3e5f5;border-radius:12px;border-left:4px solid var(--purple);line-height:1.5;}
 
-  /* Part 2 — Vocab */
-  .vocab-definition {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 20px;
-    line-height: 1.5;
-    padding: 12px 16px;
-    background: #f3e5f5;
-    border-radius: 12px;
-    border-left: 4px solid var(--purple);
-  }
-  .vocab-definition em { color: #7b1fa2; font-style: normal; }
+  .wordbank-box{font-size:0.85rem;color:#90a4ae;font-weight:700;margin-bottom:10px;}
+  .wordbank-box span{color:var(--purple);background:#f3e5f5;padding:2px 8px;border-radius:8px;}
 
-  /* Input */
-  .spell-input {
-    width: 100%;
-    border: 3px solid #e0e0e0;
-    border-radius: 14px;
-    padding: 14px 18px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--navy);
-    outline: none;
-    transition: border 0.2s;
-    letter-spacing: 1px;
-    background: #fafafa;
-  }
-  .spell-input:focus { border-color: var(--sky); background: white; }
-  .spell-input.correct-input { border-color: var(--correct); background: #f1f8e9; }
-  .spell-input.wrong-input { border-color: var(--wrong); background: #ffebee; }
+  /* Build-a-Word inline input */
+  .baw-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;font-size:1.05rem;font-weight:700;color:var(--navy);}
+  .baw-inp{border:none;border-bottom:3px solid #9fa8da;font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:800;color:var(--navy);outline:none;background:transparent;text-align:center;padding:2px 4px;width:70px;transition:border-color 0.2s;}
+  .baw-inp:focus{border-color:var(--sky);}
+  .baw-inp.correct{border-color:var(--correct);color:var(--correct);}
+  .baw-inp.wrong{border-color:var(--wrong);color:var(--wrong);}
 
-  .feedback {
-    margin-top: 12px;
-    font-size: 1rem;
-    font-weight: 800;
-    border-radius: 10px;
-    padding: 10px 16px;
-    display: none;
-  }
-  .feedback.correct { display: block; background: #e8f5e9; color: var(--correct); }
-  .feedback.wrong { display: block; background: #ffebee; color: var(--wrong); }
+  /* Alpha inputs */
+  .alpha-list{list-style:none;padding:0;}
+  .alpha-list li{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-weight:700;color:var(--navy);}
+  .alpha-list li .num{min-width:22px;color:#9fa8da;font-family:'Fredoka One',cursive;}
 
-  /* Buttons */
-  .btn-row { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
-  .btn {
-    border: none;
-    border-radius: 50px;
-    padding: 12px 28px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 1rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.18s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .btn-primary { background: var(--navy); color: #fff; box-shadow: 0 3px 10px rgba(26,35,126,0.2); }
-  .btn-primary:hover { background: #283593; transform: translateY(-2px); }
-  .btn-secondary { background: #e8eaf6; color: var(--navy); }
-  .btn-secondary:hover { background: #c5cae9; }
+  .spell-input{width:100%;border:3px solid #e0e0e0;border-radius:14px;padding:13px 16px;font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);outline:none;transition:border 0.2s;background:#fafafa;letter-spacing:1px;}
+  .spell-input:focus{border-color:var(--sky);background:white;}
+  .spell-input.correct-input{border-color:var(--correct);background:#f1f8e9;}
+  .spell-input.wrong-input{border-color:var(--wrong);background:#ffebee;}
 
-  .btn-next { background: linear-gradient(90deg, var(--sky), var(--purple)); color: #fff; box-shadow: 0 3px 12px rgba(79,195,247,0.3); }
-  .btn-next:hover { opacity: 0.9; transform: translateY(-2px); }
+  .feedback{margin-top:10px;font-size:0.95rem;font-weight:800;border-radius:10px;padding:9px 14px;display:none;}
+  .feedback.correct{display:block;background:#e8f5e9;color:var(--correct);}
+  .feedback.wrong{display:block;background:#ffebee;color:var(--wrong);}
 
-  /* ── RESULTS ── */
-  .result-card {
-    background: white;
-    border-radius: 28px;
-    padding: 40px 30px;
-    text-align: center;
-    box-shadow: var(--shadow);
-    border: 3px solid #e8eaf6;
-  }
-  .result-emoji { font-size: 4rem; margin-bottom: 14px; display: block; }
-  .result-card h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--navy); margin-bottom: 8px; }
-  .score-big { font-size: 3.5rem; font-weight: 800; color: var(--navy); }
-  .score-big span { color: var(--purple); }
-  .score-grade { font-size: 1.1rem; font-weight: 700; color: #78909c; margin-top: 6px; margin-bottom: 24px; }
+  .btn-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  .btn{border:none;border-radius:50px;padding:11px 24px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:800;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:6px;}
+  .btn-primary{background:var(--navy);color:#fff;box-shadow:0 3px 10px rgba(26,35,126,0.2);}
+  .btn-primary:hover{background:#283593;transform:translateY(-2px);}
+  .btn-secondary{background:#e8eaf6;color:var(--navy);}
+  .btn-secondary:hover{background:#c5cae9;}
+  .btn-next{background:linear-gradient(90deg,var(--sky),var(--purple));color:#fff;}
+  .btn-next:hover{opacity:0.9;transform:translateY(-2px);}
+  .btn:disabled{opacity:0.4;cursor:not-allowed;transform:none!important;}
 
-  .review-list { text-align: left; margin-top: 20px; }
-  .review-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 0.92rem;
-  }
-  .ri-num { font-weight: 800; color: #90a4ae; min-width: 28px; }
-  .ri-word { font-weight: 800; color: var(--navy); min-width: 120px; }
-  .ri-user { flex:1; color: #546e7a; }
-  .ri-icon { font-size: 1.1rem; }
-
-  /* Accessibility */
-  input:disabled { opacity: 0.6; cursor: not-allowed; }
-  button:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* Mobile */
-  @media(max-width:480px){
-    .q-card { padding: 22px 16px; }
-    .spell-prompt { flex-direction: column; align-items: flex-start; }
-    nav .logo { font-size: 1.2rem; }
-  }
+  .result-card{background:white;border-radius:28px;padding:36px 28px;text-align:center;box-shadow:var(--shadow);}
+  .result-emoji{font-size:3.8rem;display:block;margin-bottom:12px;}
+  .result-card h2{font-family:'Fredoka One',cursive;font-size:1.9rem;color:var(--navy);margin-bottom:8px;}
+  .score-big{font-size:3.2rem;font-weight:800;color:var(--navy);}
+  .score-big span{color:var(--purple);}
+  .score-grade{font-size:1rem;font-weight:700;color:#78909c;margin-top:4px;margin-bottom:22px;}
+  .review-list{text-align:left;margin-top:18px;}
+  .review-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:0.88rem;}
+  .ri-num{font-weight:800;color:#90a4ae;min-width:26px;}
+  .ri-word{font-weight:800;color:var(--navy);min-width:130px;}
+  .ri-user{flex:1;color:#546e7a;}
 </style>
 </head>
 <body>
 
 <nav>
   <span class="logo">✏️ Spelling Bee</span>
-  <div class="nav-right">
-    <button class="nav-btn home-btn" onclick="goHome()">🏠 Home</button>
-  </div>
+  <button class="nav-btn" onclick="goHome()">🏠 Home</button>
 </nav>
 
-<!-- ══ HOME ══ -->
+<!-- HOME -->
 <div class="screen active" id="homeScreen">
   <div class="home-hero">
-    <span class="emoji">🌟</span>
-    <h1>Grade 4<br>Spelling Quiz</h1>
-    <p>Spelling Test 30 — Choose your quiz!</p>
+    <span class="emoji">📝</span>
+    <h1>Grade 4 Spelling Quiz</h1>
+    <p>Spelling Test 30 — Choose a section!</p>
   </div>
-
   <div class="quiz-cards">
-    <div class="quiz-card part1" onclick="startPart(1)">
-      <div class="card-emoji">🔊</div>
+    <div class="quiz-card c1" onclick="startSection('spell')">
+      <div class="ce">🔊</div>
       <h2>Part 1<br>Spelling Words</h2>
-      <p>Listen to the word and type the correct spelling</p>
-      <div class="card-badge">Questions 1–20</div>
+      <p>Listen and type the correct spelling</p>
+      <div class="card-badge">Words 1–20</div>
     </div>
-    <div class="quiz-card part2" onclick="startPart(2)">
-      <div class="card-emoji">📖</div>
+    <div class="quiz-card c2" onclick="startSection('vocab')">
+      <div class="ce">📖</div>
       <h2>Part 2<br>Vocabulary Words</h2>
-      <p>Read the definition and write the word</p>
-      <div class="card-badge">Questions 21–30</div>
+      <p>Read definition, write the word</p>
+      <div class="card-badge">Words 21–30</div>
+    </div>
+    <div class="quiz-card c3" onclick="startSection('baw')">
+      <div class="ce">🔤</div>
+      <h2>Build-a-Word</h2>
+      <p>Fill in the missing letters</p>
+      <div class="card-badge">6 questions</div>
+    </div>
+    <div class="quiz-card c4" onclick="startSection('vocabbuilder')">
+      <div class="ce">✍️</div>
+      <h2>Vocabulary Builder</h2>
+      <p>Complete the sentence with the right word</p>
+      <div class="card-badge">6 questions</div>
+    </div>
+    <div class="quiz-card c1" onclick="startSection('wordgroup')">
+      <div class="ce">🗂️</div>
+      <h2>Word Groups</h2>
+      <p>Find the word that fits the group</p>
+      <div class="card-badge">3 questions</div>
+    </div>
+    <div class="quiz-card c2" onclick="startSection('alpha')">
+      <div class="ce">🔡</div>
+      <h2>Alphabetize It</h2>
+      <p>Put the words in alphabetical order</p>
+      <div class="card-badge">4 words</div>
     </div>
   </div>
 </div>
 
-<!-- ══ QUIZ ══ -->
+<!-- QUIZ -->
 <div class="screen" id="quizScreen">
-  <div class="quiz-header">
-    <h2 id="quizTitle">Part 1: Spelling Words</h2>
-    <span class="prog-label" id="progLabel">1 / 20</span>
-    <div class="progress-bar-wrap" style="width:100%">
-      <div class="progress-bar-fill" id="progressBar" style="width:5%"></div>
-    </div>
+  <div class="section-header">
+    <h2 id="sectionTitle"></h2>
+    <p id="sectionDesc"></p>
   </div>
+  <div class="prog-wrap">
+    <span class="prog-label" id="progLabel">1 / 1</span>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:10%"></div></div>
+  </div>
+  <div class="q-card">
+    <div class="q-label" id="qLabel">Question 1</div>
 
-  <div class="q-card" id="qCard">
-    <div class="q-num" id="qNum">Question 1 of 20</div>
-
-    <!-- Part 1 UI -->
-    <div id="part1UI">
-      <div class="spell-prompt">
+    <!-- Spelling Part 1 -->
+    <div id="spellUI" style="display:none">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px">
         <button class="listen-btn" id="listenBtn" onclick="speakWord()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
           Listen
         </button>
-        <div class="example-sentence" id="exampleSentence">Press Listen to hear the word!</div>
+        <div class="ex-box" id="exSentence">Press Listen to hear the word!</div>
       </div>
     </div>
 
-    <!-- Part 2 UI -->
-    <div id="part2UI" style="display:none">
-      <div class="vocab-definition" id="vocabDef"></div>
+    <!-- Vocab Part 2 -->
+    <div id="vocabUI" style="display:none">
+      <div class="vocab-def-box" id="vocabDef"></div>
     </div>
 
+    <!-- Build-a-Word -->
+    <div id="bawUI" style="display:none">
+      <div id="bawContent"></div>
+    </div>
+
+    <!-- Vocab Builder -->
+    <div id="vocabBuilderUI" style="display:none">
+      <div class="q-text" id="vbSentence"></div>
+    </div>
+
+    <!-- Word Groups -->
+    <div id="wordGroupUI" style="display:none">
+      <div class="q-text" id="wgContent"></div>
+    </div>
+
+    <!-- Alphabetize -->
+    <div id="alphaUI" style="display:none">
+      <div class="q-text" id="alphaPrompt"></div>
+      <ul class="alpha-list" id="alphaList"></ul>
+    </div>
+
+    <!-- Shared input -->
     <input type="text" class="spell-input" id="answerInput"
-      placeholder="Type your answer here..."
+      placeholder="Type your answer..."
       onkeydown="handleKey(event)"
       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 
@@ -407,333 +232,334 @@
       <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()">← Prev</button>
       <button class="btn btn-primary" onclick="checkAnswer()">✅ Check</button>
       <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()" style="display:none">Next →</button>
-
     </div>
   </div>
 </div>
 
-<!-- ══ RESULTS ══ -->
+<!-- RESULTS -->
 <div class="screen" id="resultScreen">
   <div class="result-card">
     <span class="result-emoji" id="resultEmoji">🎉</span>
-    <h2 id="resultTitle">Quiz Complete!</h2>
-    <div class="score-big" id="scoreBig">—</div>
+    <h2 id="resultTitle">Done!</h2>
+    <div class="score-big" id="scoreBig"></div>
     <div class="score-grade" id="scoreGrade"></div>
-
-    <div class="btn-row" style="justify-content:center; margin-bottom:24px">
+    <div class="btn-row" style="justify-content:center;margin-bottom:22px">
       <button class="btn btn-primary" onclick="retryQuiz()">🔄 Try Again</button>
       <button class="btn btn-secondary" onclick="goHome()">🏠 Home</button>
     </div>
-
     <div class="review-list" id="reviewList"></div>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════
-// DATA
-// ═══════════════════════════════
-const part1Words = [
-  { word: "texture",    example: "The texture of the sandpaper was very rough." },
-  { word: "exclude",   example: "Please do not exclude anyone from the game." },
-  { word: "sixtieth",  example: "Today is my grandma's sixtieth birthday." },
-  { word: "expression",example: "She had a happy expression on her face." },
-  { word: "toxic",     example: "The toxic chemicals must be handled carefully." },
-  { word: "toughen",   example: "Hard work will toughen your muscles." },
-  { word: "roughly",   example: "It takes roughly one hour to drive there." },
-  { word: "highest",   example: "Mount Everest is the highest mountain in the world." },
-  { word: "delight",   example: "The children felt great delight opening their presents." },
-  { word: "slightly",  example: "The temperature was slightly colder today." },
-  { word: "platelets", example: "Platelets help your blood to clot when you have a cut." },
-  { word: "capillaries", example: "Capillaries are the tiny blood vessels in your body." },
-  { word: "behavior",  example: "Good behavior in class is very important." },
-  { word: "confident", example: "She felt confident before her big test." },
-  { word: "equator",   example: "The equator is the imaginary line around the middle of Earth." },
-  { word: "inexpensive", example: "We found an inexpensive but delicious lunch." },
-  { word: "maneuver",  example: "The driver had to maneuver carefully in the tight parking lot." },
-  { word: "resentment",example: "He felt resentment when he was treated unfairly." },
-  { word: "representative", example: "Our class chose a representative to speak at the meeting." },
-  { word: "teammate",  example: "She passed the ball to her teammate during the game." },
-];
+const data = {
+  spell: [
+    {word:"texture",     example:"The _____ of the sandpaper was very rough."},
+    {word:"exclude",     example:"Please do not _____ anyone from the game."},
+    {word:"sixtieth",   example:"Today is my grandma's _____ birthday."},
+    {word:"expression", example:"She had a happy _____ on her face."},
+    {word:"toxic",      example:"The _____ chemicals must be handled carefully."},
+    {word:"toughen",    example:"Hard work will _____ your muscles."},
+    {word:"roughly",    example:"It takes _____ one hour to drive there."},
+    {word:"highest",    example:"Mount Everest is the _____ mountain in the world."},
+    {word:"delight",    example:"The children felt great _____ opening their presents."},
+    {word:"slightly",   example:"The temperature was _____ colder today."},
+    {word:"platelets",  example:"_____ help your blood to clot when you have a cut."},
+    {word:"capillaries",example:"_____ are the tiny blood vessels in your body."},
+    {word:"behavior",   example:"Good _____ in class is very important."},
+    {word:"confident",  example:"She felt _____ before her big test."},
+    {word:"equator",    example:"The _____ is the imaginary line around the middle of Earth."},
+    {word:"inexpensive",example:"We found an _____ but delicious lunch."},
+    {word:"maneuver",   example:"The driver had to _____ carefully in the tight parking lot."},
+    {word:"resentment", example:"He felt _____ when he was treated unfairly."},
+    {word:"representative",example:"Our class chose a _____ to speak at the meeting."},
+    {word:"teammate",   example:"She passed the ball to her _____ during the game."},
+  ],
+  vocab: [
+    {word:"contagious",  definition:"Spread by contact — like a cold that others can catch"},
+    {word:"elevate",     definition:"To raise something up higher"},
+    {word:"encourage",   definition:"To give hope or confidence to someone"},
+    {word:"essential",   definition:"Absolutely necessary; very important"},
+    {word:"intercessor", definition:"One who pleads on behalf of another person"},
+    {word:"justified",   definition:"Cleared of blame or guilt; shown to be right"},
+    {word:"opinion",     definition:"What one thinks or believes about a matter"},
+    {word:"previous",    definition:"Coming or being before; earlier"},
+    {word:"quaint",      definition:"Odd or unusual in an interesting or charming way"},
+    {word:"rhythm",      definition:"A regular repetition of beats in music or poetry"},
+  ],
+  baw: [
+    {before:"",   missing:"six",  after:"tieth",   answer:"six",  full:"sixtieth"},
+    {before:"h",  missing:"igh",  after:"est",     answer:"igh",  full:"highest"},
+    {before:"",   missing:"ex",   after:"pression", answer:"ex",  full:"expression"},
+    {before:"",   missing:"ex",   after:"clude",   answer:"ex",   full:"exclude"},
+    {before:"t",  missing:"ough", after:"en",      answer:"ough", full:"toughen"},
+    {before:"es", missing:"enti", after:"al",      answer:"enti", full:"essential"},
+  ],
+  vocabbuilder: [
+    {sentence:"Because the common cold is so _____, many children catch it.", answer:"contagious", wordbank:"contagious · opinion · intercessor · justified · rhythm · encourage"},
+    {sentence:"It is important to know the difference between a fact and an _____.", answer:"opinion", wordbank:"contagious · opinion · intercessor · justified · rhythm · encourage"},
+    {sentence:'The poem "Hiawatha\'s Childhood" has a pleasing _____.', answer:"rhythm", wordbank:"contagious · opinion · intercessor · justified · rhythm · encourage"},
+    {sentence:"We are _____ by faith in the death, burial, and resurrection of Jesus Christ.", answer:"justified", wordbank:"contagious · opinion · intercessor · justified · rhythm · encourage"},
+    {sentence:"Sometimes we review spelling words from _____ lists.", answer:"previous", wordbank:"previous · essential · elevate · encourage · quaint · intercessor"},
+    {sentence:"Our Lord and Savior, Jesus Christ, is also our great _____.", answer:"intercessor", wordbank:"previous · essential · elevate · encourage · quaint · intercessor"},
+  ],
+  wordgroup: [
+    {prompt:"map   ·   geography   ·   _____\n→ words related to places & location", answer:"equator"},
+    {prompt:"cheap   ·   bargain   ·   _____\n→ words related to low cost", answer:"inexpensive"},
+    {prompt:"conduct   ·   actions   ·   _____\n→ words related to how you act", answer:"behavior"},
+  ],
+  alpha: {
+    words:  ["slightly","teammate","resentment","texture"],
+    answer: ["resentment","slightly","teammate","texture"],
+  },
+};
 
-const part2Words = [
-  { word: "contagious",   definition: "Spread by contact — like a cold that others can catch" },
-  { word: "elevate",      definition: "To raise something up higher" },
-  { word: "encourage",    definition: "To give hope or confidence to someone" },
-  { word: "essential",    definition: "Absolutely necessary; very important" },
-  { word: "intercessor",  definition: "One who pleads on behalf of another person" },
-  { word: "justified",    definition: "Cleared of blame or guilt; shown to be right" },
-  { word: "opinion",      definition: "What one thinks or believes about a matter" },
-  { word: "previous",     definition: "Coming or being before; earlier" },
-  { word: "quaint",       definition: "Odd or unusual in an interesting or charming way" },
-  { word: "rhythm",       definition: "A regular repetition of beats in music or poetry" },
-];
+let currentSection='', currentQ=0, questions=[], results=[], answered=false, alphaInputs=[];
 
-// ═══════════════════════════════
-// STATE
-// ═══════════════════════════════
-let currentPart = 1;
-let currentQ = 0;
-let questions = [];
-let results = [];
-let answered = false;
-let prevScreen = 'homeScreen';
-
-// ═══════════════════════════════
-// NAV
-// ═══════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const backBtn = document.getElementById('backBtn');
-  if (id === 'homeScreen') {
-    backBtn.style.display = 'none';
-  } else {
-    backBtn.style.display = '';
-    prevScreen = id === 'quizScreen' ? 'homeScreen' : 'quizScreen';
-  }
+  window.scrollTo(0,0);
 }
-
-function goHome() {
+function goHome(){
   stopSpeech();
-  if (document.querySelector('.screen.active').id !== 'homeScreen') {
-    if (confirm('Go back to Home? Your progress will be lost.')) showScreen('homeScreen');
-  } else {
-    showScreen('homeScreen');
-  }
+  const active=document.querySelector('.screen.active').id;
+  if(active==='homeScreen'){return;}
+  if(confirm('Go to Home? Progress will be lost.')) showScreen('homeScreen');
 }
 
-// ═══════════════════════════════
-// QUIZ INIT
-// ═══════════════════════════════
-function startPart(part) {
-  currentPart = part;
-  currentQ = 0;
-  results = [];
-  answered = false;
-
-  if (part === 1) {
-    questions = [...part1Words];
-    document.getElementById('quizTitle').textContent = 'Part 1: Spelling Words';
-  } else {
-    questions = [...part2Words];
-    document.getElementById('quizTitle').textContent = 'Part 2: Vocabulary Words';
-  }
-
+function startSection(sec){
+  currentSection=sec; currentQ=0; results=[]; answered=false;
+  const titles={
+    spell:       ['Part 1: Spelling Words','Listen to the word and type it correctly'],
+    vocab:       ['Part 2: Vocabulary Words','Read the definition and write the word'],
+    baw:         ['Build-a-Word','Fill in the missing letters'],
+    vocabbuilder:['Vocabulary Builder','Write the correct word to complete each sentence'],
+    wordgroup:   ['Word Groups','Write the spelling word that belongs with each group'],
+    alpha:       ['Alphabetize It','Put the 4 words in alphabetical order'],
+  };
+  document.getElementById('sectionTitle').textContent=titles[sec][0];
+  document.getElementById('sectionDesc').textContent=titles[sec][1];
+  if(sec==='spell')        questions=data.spell;
+  else if(sec==='vocab')   questions=data.vocab;
+  else if(sec==='baw')     questions=data.baw;
+  else if(sec==='vocabbuilder') questions=data.vocabbuilder;
+  else if(sec==='wordgroup')    questions=data.wordgroup;
+  else if(sec==='alpha')        questions=[data.alpha];
   renderQuestion();
   showScreen('quizScreen');
 }
 
-// ═══════════════════════════════
-// RENDER QUESTION
-// ═══════════════════════════════
-function renderQuestion() {
-  answered = false;
-  stopSpeech();
+function renderQuestion(){
+  answered=false; stopSpeech();
+  const q=questions[currentQ], total=questions.length, num=currentQ+1;
+  document.getElementById('qLabel').textContent=`Question ${num} of ${total}`;
+  document.getElementById('progLabel').textContent=`${num} / ${total}`;
+  document.getElementById('progressBar').style.width=`${(num/total)*100}%`;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('feedback').textContent='';
+  document.getElementById('nextBtn').style.display='none';
+  document.getElementById('prevBtn').disabled=(currentQ===0);
 
-  const q = questions[currentQ];
-  const total = questions.length;
-  const qNum = currentQ + 1;
-  const offset = currentPart === 2 ? 20 : 0;
+  ['spellUI','vocabUI','bawUI','vocabBuilderUI','wordGroupUI','alphaUI'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
+  const inp=document.getElementById('answerInput');
+  inp.style.display=''; inp.value=''; inp.className='spell-input'; inp.disabled=false;
 
-  document.getElementById('qNum').textContent = `Question ${qNum + offset} of ${offset + total}`;
-  document.getElementById('progLabel').textContent = `${qNum} / ${total}`;
-  document.getElementById('progressBar').style.width = `${(qNum / total) * 100}%`;
+  if(currentSection==='spell'){
+    document.getElementById('spellUI').style.display='';
+    document.getElementById('exSentence').textContent='Press Listen to hear the word!';
+    const lb=document.getElementById('listenBtn');
+    lb.className='listen-btn';
+    inp.placeholder='Type the spelling word...';
+    inp.focus();
 
-  const ansInput = document.getElementById('answerInput');
-  ansInput.value = '';
-  ansInput.className = 'spell-input';
-  ansInput.disabled = false;
+  } else if(currentSection==='vocab'){
+    document.getElementById('vocabUI').style.display='';
+    document.getElementById('vocabDef').textContent=q.definition;
+    inp.placeholder='Type the vocabulary word...';
+    inp.focus();
 
-  document.getElementById('feedback').className = 'feedback';
-  document.getElementById('feedback').textContent = '';
-  document.getElementById('nextBtn').style.display = 'none';
+  } else if(currentSection==='baw'){
+    document.getElementById('bawUI').style.display='';
+    inp.style.display='none';
+    const div=document.getElementById('bawContent');
+    div.innerHTML=`
+      <div class="baw-row">
+        <span>${q.before}</span>
+        <input class="baw-inp" id="bawInp" type="text" placeholder="???"
+          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+          style="width:70px" onkeydown="handleKey(event)">
+        <span>${q.after}</span>
+      </div>`;
+    document.getElementById('bawInp').focus();
 
-  if (currentPart === 1) {
-    document.getElementById('part1UI').style.display = '';
-    document.getElementById('part2UI').style.display = 'none';
-    document.getElementById('exampleSentence').innerHTML =
-      `Press <b>Listen</b> to hear the word and example!`;
-    document.getElementById('listenBtn').className = 'listen-btn';
+  } else if(currentSection==='vocabbuilder'){
+    document.getElementById('vocabBuilderUI').style.display='';
+    document.getElementById('vbSentence').innerHTML=
+      q.sentence.replace('_____','<span style="background:#e8eaf6;padding:1px 8px;border-radius:6px">_____</span>');
+    inp.placeholder='Type the correct word...';
+    inp.focus();
+
+  } else if(currentSection==='wordgroup'){
+    document.getElementById('wordGroupUI').style.display='';
+    document.getElementById('wgContent').style.whiteSpace='pre-line';
+    document.getElementById('wgContent').textContent=q.prompt;
+    inp.placeholder='Type the missing word...';
+    inp.focus();
+
+  } else if(currentSection==='alpha'){
+    document.getElementById('alphaUI').style.display='';
+    inp.style.display='none';
+    const words=q.words;
+    document.getElementById('alphaPrompt').innerHTML=
+      `Put these words in <b>alphabetical order</b>:<br>
+       <span style="color:var(--purple);font-size:1.05rem">${words.join(' · ')}</span>`;
+    const ul=document.getElementById('alphaList');
+    ul.innerHTML=''; alphaInputs=[];
+    words.forEach((_,i)=>{
+      const li=document.createElement('li');
+      const num=document.createElement('span');
+      num.className='num'; num.textContent=`${i+1}.`;
+      const inp2=document.createElement('input');
+      inp2.className='spell-input';
+      inp2.style.cssText='flex:1;padding:9px 14px;font-size:1rem';
+      inp2.placeholder=`Word #${i+1}`;
+      inp2.autocomplete='off'; inp2.spellcheck=false;
+      inp2.addEventListener('keydown',handleKey);
+      li.appendChild(num); li.appendChild(inp2);
+      ul.appendChild(li); alphaInputs.push(inp2);
+    });
+    alphaInputs[0].focus();
+  }
+}
+
+function stopSpeech(){if(window.speechSynthesis)window.speechSynthesis.cancel();}
+function speakWord(){
+  if(!window.speechSynthesis||answered)return;
+  const q=questions[currentQ]; stopSpeech();
+  const lb=document.getElementById('listenBtn');
+  lb.className='listen-btn speaking';
+  const say=(text,rate,cb)=>{
+    const u=new SpeechSynthesisUtterance(text);
+    u.rate=rate; u.lang='en-US';
+    if(cb)u.onend=cb;
+    window.speechSynthesis.speak(u);
+  };
+  document.getElementById('exSentence').textContent=q.example;
+  say(q.word,0.8,()=>say(q.example,0.9,()=>say(q.word,0.75,()=>{lb.className='listen-btn';})));
+}
+
+function norm(s){return s.trim().toLowerCase().replace(/[^a-z]/g,'');}
+
+function checkAnswer(){
+  if(answered){nextQuestion();return;}
+  let userVal, correctWord, correct;
+
+  if(currentSection==='baw'){
+    const bi=document.getElementById('bawInp');
+    if(!bi)return;
+    userVal=bi.value; correctWord=questions[currentQ].answer;
+    correct=norm(userVal)===norm(correctWord);
+    bi.disabled=true; bi.classList.add(correct?'correct':'wrong');
+
+  } else if(currentSection==='alpha'){
+    const q=questions[0];
+    let allOk=true;
+    userVal=alphaInputs.map(i=>i.value.trim()).join(' → ');
+    correctWord=q.answer.join(' → ');
+    alphaInputs.forEach((inp,i)=>{
+      const ok=norm(inp.value)===norm(q.answer[i]);
+      inp.disabled=true;
+      inp.className='spell-input '+(ok?'correct-input':'wrong-input');
+      if(!ok)allOk=false;
+    });
+    correct=allOk;
+
   } else {
-    document.getElementById('part1UI').style.display = 'none';
-    document.getElementById('part2UI').style.display = '';
-    document.getElementById('vocabDef').innerHTML =
-      `<em>Definition:</em> ${q.definition}`;
+    const inp=document.getElementById('answerInput');
+    userVal=inp.value;
+    correctWord=(questions[currentQ].answer||questions[currentQ].word);
+    correct=norm(userVal)===norm(correctWord);
+    inp.disabled=true;
+    inp.className='spell-input '+(correct?'correct-input':'wrong-input');
   }
 
-  // Prev button: disable on first question
-  const prevBtn = document.getElementById('prevBtn');
-  if (prevBtn) prevBtn.disabled = currentQ === 0;
-
-  ansInput.focus();
-}
-
-// ═══════════════════════════════
-// PREV QUESTION
-// ═══════════════════════════════
-function prevQuestion() {
-  if (currentQ === 0) return;
-  currentQ--;
-  // Remove last result if it exists for this index
-  if (results.length > currentQ) results.splice(currentQ);
-  answered = false;
-  renderQuestion();
-}
-
-// ═══════════════════════════════
-// SPEECH
-// ═══════════════════════════════
-let currentUtterance = null;
-
-function stopSpeech() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  const btn = document.getElementById('listenBtn');
-  if (btn) btn.className = 'listen-btn';
-}
-
-function speakWord() {
-  if (!window.speechSynthesis) { alert("Your browser doesn't support text-to-speech."); return; }
-  if (answered) return;
-
-  const q = questions[currentQ];
-  stopSpeech();
-
-  const btn = document.getElementById('listenBtn');
-  btn.className = 'listen-btn speaking';
-
-  // Speak: word, then example
-  const wordUtt = new SpeechSynthesisUtterance(q.word);
-  wordUtt.rate = 0.82;
-  wordUtt.pitch = 1.05;
-  wordUtt.lang = 'en-US';
-
-  const exUtt = new SpeechSynthesisUtterance(q.example);
-  exUtt.rate = 0.9;
-  exUtt.lang = 'en-US';
-
-  const word2Utt = new SpeechSynthesisUtterance(q.word);
-  word2Utt.rate = 0.78;
-  word2Utt.lang = 'en-US';
-  word2Utt.onend = () => { btn.className = 'listen-btn'; };
-
-  // Show example with the word blanked out (case-insensitive replace)
-  const blanked = q.example.replace(new RegExp(q.word, 'gi'), '_____');
-  document.getElementById('exampleSentence').innerHTML = blanked;
-
-  window.speechSynthesis.speak(wordUtt);
-  window.speechSynthesis.speak(exUtt);
-  window.speechSynthesis.speak(word2Utt);
-}
-
-// ═══════════════════════════════
-// CHECK / NEXT / SKIP
-// ═══════════════════════════════
-function normalize(str) {
-  return str.trim().toLowerCase().replace(/[^a-z]/g, '');
-}
-
-function checkAnswer() {
-  if (answered) { nextQuestion(); return; }
-
-  const input = document.getElementById('answerInput');
-  const userVal = input.value;
-  const correctWord = questions[currentQ].word;
-  const isCorrect = normalize(userVal) === normalize(correctWord);
-
-  answered = true;
-  stopSpeech();
-  input.disabled = true;
-
-  const fb = document.getElementById('feedback');
-  if (isCorrect) {
-    input.classList.add('correct-input');
-    fb.className = 'feedback correct';
-    fb.textContent = `✅ Correct! "${correctWord}" — Great job!`;
+  answered=true; stopSpeech();
+  const fb=document.getElementById('feedback');
+  if(correct){
+    fb.className='feedback correct';
+    fb.textContent='✅ Correct! Great job!';
   } else {
-    input.classList.add('wrong-input');
-    fb.className = 'feedback wrong';
-    fb.innerHTML = `❌ The correct spelling is: <b>${correctWord}</b>`;
+    fb.className='feedback wrong';
+    fb.innerHTML=`❌ Answer: <b>${correctWord}</b>`;
   }
 
-  results.push({ question: questions[currentQ], userAnswer: userVal, correct: isCorrect });
-
-  // Reveal full example sentence after answering
-  if (currentPart === 1) {
-    document.getElementById('exampleSentence').innerHTML =
-      questions[currentQ].example.replace(
-        new RegExp(questions[currentQ].word, 'gi'),
-        `<b style="color:var(--correct)">${questions[currentQ].word}</b>`
-      );
+  if(currentSection==='spell'){
+    const q=questions[currentQ];
+    document.getElementById('exSentence').innerHTML=
+      q.example.replace('_____',`<b style="color:var(--correct)">${q.word}</b>`);
   }
 
-  document.getElementById('nextBtn').style.display = '';
+  const label=getLabel();
+  results.push({label, userAnswer:userVal, correctAnswer:correctWord, correct});
+  document.getElementById('nextBtn').style.display='';
   document.getElementById('nextBtn').focus();
 }
 
+function getLabel(){
+  if(currentSection==='spell') return `#${currentQ+1} ${questions[currentQ].word}`;
+  if(currentSection==='vocab') return `#${currentQ+21} ${questions[currentQ].word}`;
+  if(currentSection==='baw')   return questions[currentQ].full;
+  if(currentSection==='vocabbuilder') return questions[currentQ].answer;
+  if(currentSection==='wordgroup')    return questions[currentQ].answer;
+  if(currentSection==='alpha') return 'Alphabetical order';
+  return '';
+}
 
+function handleKey(e){
+  if(e.key==='Enter'){if(!answered)checkAnswer();else nextQuestion();}
+}
 
-function nextQuestion() {
+function prevQuestion(){
+  if(currentQ===0)return;
+  currentQ--;
+  if(results.length>currentQ)results.splice(currentQ);
+  answered=false; renderQuestion();
+}
+function nextQuestion(){
   currentQ++;
-  if (currentQ >= questions.length) {
-    showResults();
-  } else {
-    renderQuestion();
-  }
+  if(currentQ>=questions.length)showResults();
+  else renderQuestion();
 }
+function retryQuiz(){startSection(currentSection);}
 
-function handleKey(e) {
-  if (e.key === 'Enter') {
-    if (!answered) checkAnswer();
-    else nextQuestion();
-  }
-}
-
-// ═══════════════════════════════
-// RESULTS
-// ═══════════════════════════════
-function showResults() {
+function showResults(){
   stopSpeech();
-  const correct = results.filter(r => r.correct).length;
-  const total = results.length;
-  const pct = Math.round((correct / total) * 100);
-
-  let emoji = '😊', grade = '';
-  if (pct === 100) { emoji = '🏆'; grade = 'Perfect Score! Outstanding!'; }
-  else if (pct >= 90) { emoji = '🌟'; grade = 'Excellent work!'; }
-  else if (pct >= 80) { emoji = '😄'; grade = 'Great job! Keep it up!'; }
-  else if (pct >= 70) { emoji = '👍'; grade = 'Good effort! Practice more!'; }
-  else if (pct >= 60) { emoji = '📚'; grade = 'Keep studying! You can do it!'; }
-  else { emoji = '💪'; grade = 'Let\'s practice more together!'; }
-
-  document.getElementById('resultEmoji').textContent = emoji;
-  document.getElementById('resultTitle').textContent =
-    currentPart === 1 ? 'Part 1 Complete!' : 'Part 2 Complete!';
-  document.getElementById('scoreBig').innerHTML =
-    `<span>${correct}</span> / ${total} <small style="font-size:1.2rem;color:#90a4ae">(${pct}%)</small>`;
-  document.getElementById('scoreGrade').textContent = grade;
-
-  const offset = currentPart === 2 ? 20 : 0;
-  const reviewHtml = results.map((r, i) => {
-    const icon = r.correct ? '✅' : '❌';
-    const userDisp = r.userAnswer || '(blank)';
-    return `<div class="review-item">
-      <span class="ri-num">${i + 1 + offset}.</span>
-      <span class="ri-word">${r.question.word}</span>
-      <span class="ri-user">You wrote: <b>${userDisp}</b></span>
-      <span class="ri-icon">${icon}</span>
-    </div>`;
-  }).join('');
-  document.getElementById('reviewList').innerHTML = reviewHtml;
-
+  const correct=results.filter(r=>r.correct).length, total=results.length;
+  const pct=Math.round((correct/total)*100);
+  let emoji='😊',grade='';
+  if(pct===100){emoji='🏆';grade='Perfect Score! Outstanding!';}
+  else if(pct>=90){emoji='🌟';grade='Excellent work!';}
+  else if(pct>=80){emoji='😄';grade='Great job!';}
+  else if(pct>=70){emoji='👍';grade='Good effort!';}
+  else if(pct>=60){emoji='📚';grade='Keep studying!';}
+  else{emoji='💪';grade="Let's practice more!";}
+  document.getElementById('resultEmoji').textContent=emoji;
+  document.getElementById('resultTitle').textContent='Quiz Complete!';
+  document.getElementById('scoreBig').innerHTML=`<span>${correct}</span> / ${total} <small style="font-size:1.1rem;color:#90a4ae">(${pct}%)</small>`;
+  document.getElementById('scoreGrade').textContent=grade;
+  document.getElementById('reviewList').innerHTML=results.map((r,i)=>`
+    <div class="review-item">
+      <span class="ri-num">${i+1}.</span>
+      <span class="ri-word">${r.label}</span>
+      <span class="ri-user">You: <b>${r.userAnswer||'(blank)'}</b></span>
+      <span>${r.correct?'✅':'❌'}</span>
+    </div>`).join('');
   showScreen('resultScreen');
 }
 
-function retryQuiz() {
-  startPart(currentPart);
-}
-
-// init
 showScreen('homeScreen');
 </script>
 </body>
