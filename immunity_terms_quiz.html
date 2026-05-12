@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Max's Immunity Terms Quiz! 🦠</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #1B4332 !important;
+    background: #1B4332 !important;
+    min-height: 100%;
+    color: #fff;
+  }
+
+  body {
+    min-height: 100vh;
+    padding-bottom: 40px;
+    background: linear-gradient(160deg, #1B4332 0%, #0D3B2A 50%, #081F16 100%) !important;
+  }
+
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* HEADER */
+  .header { text-align: center; padding: 28px 0 16px; }
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    color: #A3E635;
+    text-shadow: 3px 3px 0 #14532D, 0 0 30px rgba(163,230,53,0.4);
+  }
+  .header p { color: #6EE7B7; font-size: 1rem; font-weight: 700; margin-top: 6px; letter-spacing: 1px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .tab-btn {
+    flex: 1; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 14px; padding: 12px 8px; color: rgba(255,255,255,0.6);
+    font-family: 'Fredoka One', cursive; font-size: 1rem; cursor: pointer; transition: all 0.2s;
+  }
+  .tab-btn:hover { background: rgba(163,230,53,0.2); border-color: #A3E635; color: white; }
+  .tab-btn.active { background: #A3E635; border-color: #A3E635; color: #14532D; box-shadow: 0 4px 14px rgba(163,230,53,0.4); }
+
+  /* SCORE BAR */
+  .score-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 18px; padding: 12px 22px; margin-bottom: 16px;
+  }
+  .score-item { text-align: center; }
+  .score-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); font-weight: 700; }
+  .score-value { font-family: 'Fredoka One', cursive; font-size: 1.7rem; line-height: 1; margin-top: 2px; }
+  .score-item.stars .score-value { color: #FFD700; }
+  .score-item.correct .score-value { color: #4ADE80; }
+  .score-item.total .score-value { color: #A3E635; }
+
+  /* PROGRESS */
+  .progress-wrap { background: rgba(0,0,0,0.3); border-radius: 50px; height: 10px; margin-bottom: 20px; overflow: hidden; }
+  .progress-bar {
+    height: 100%; background: linear-gradient(90deg, #A3E635, #34D399);
+    border-radius: 50px; transition: width 0.5s ease;
+  }
+
+  /* MODE SCREENS */
+  .mode-screen { display: none; }
+  .mode-screen.active { display: block; }
+
+  /* ── FLASHCARD ── */
+  .flashcard-wrap { perspective: 1000px; margin-bottom: 6px; }
+  .flashcard {
+    width: 100%; min-height: 210px; position: relative; cursor: pointer;
+    transform-style: preserve-3d; transition: transform 0.55s ease; border-radius: 22px;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .fc-front, .fc-back {
+    position: absolute; inset: 0; border-radius: 22px; backface-visibility: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 28px; text-align: center; min-height: 210px;
+  }
+  .fc-front { background: linear-gradient(135deg, #166534, #14532D); border: 3px solid #4ADE80; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+  .fc-back  { background: linear-gradient(135deg, #134E4A, #0F3E3A); border: 3px solid #34D399; box-shadow: 0 8px 30px rgba(0,0,0,0.4); transform: rotateY(180deg); }
+  .fc-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 10px; }
+  .fc-front .fc-label { color: #86EFAC; }
+  .fc-back  .fc-label { color: #6EE7B7; }
+  .fc-emoji { font-size: 2.4rem; margin-bottom: 8px; }
+  .fc-term  { font-family: 'Fredoka One', cursive; font-size: clamp(1.6rem, 5vw, 2.4rem); color: #A3E635; line-height: 1.2; }
+  .fc-def   { font-size: clamp(0.95rem, 2.5vw, 1.1rem); font-weight: 700; color: #fff; line-height: 1.6; }
+  .fc-taphint { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 10px; font-weight: 600; }
+
+  .fc-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 10px; }
+  .fc-arrow {
+    background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 13px; padding: 12px 20px; color: white;
+    font-family: 'Fredoka One', cursive; font-size: 1.05rem; cursor: pointer; transition: all 0.2s; flex: 1;
+  }
+  .fc-arrow:hover { background: rgba(163,230,53,0.2); border-color: #A3E635; }
+  .fc-counter { font-family: 'Fredoka One', cursive; font-size: 1.05rem; color: rgba(255,255,255,0.5); min-width: 65px; text-align: center; }
+
+  /* ── QUIZ ── */
+  .question-card {
+    background: rgba(0,0,0,0.35); border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 24px; padding: 26px; margin-bottom: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    animation: slideIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes slideIn { from{transform:translateY(24px) scale(0.96);opacity:0;} to{transform:translateY(0) scale(1);opacity:1;} }
+
+  .question-badge {
+    display: inline-block; background: #A3E635; color: #14532D;
+    font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+    padding: 5px 13px; border-radius: 50px; margin-bottom: 12px;
+  }
+  .question-text { font-size: clamp(1rem, 2.8vw, 1.22rem); font-weight: 800; color: #fff; line-height: 1.55; margin-bottom: 20px; }
+
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 500px) { .options-grid { grid-template-columns: 1fr; } }
+
+  .option-btn {
+    background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 13px; padding: 13px 14px; color: #fff;
+    font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; text-align: left; transition: all 0.2s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .option-btn:hover:not(:disabled) { background: rgba(163,230,53,0.15); border-color: #A3E635; transform: translateY(-2px); }
+  .option-btn .letter {
+    width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fredoka One', cursive; font-size: 0.9rem; flex-shrink: 0;
+  }
+  .option-btn.correct { background: rgba(74,222,128,0.2); border-color: #4ADE80; }
+  .option-btn.correct .letter { background: #4ADE80; color: #14532D; }
+  .option-btn.wrong { background: rgba(248,113,113,0.2); border-color: #F87171; animation: shake 0.4s; }
+  .option-btn.wrong .letter { background: #F87171; color: white; }
+  .option-btn:disabled { cursor: not-allowed; opacity: 0.7; }
+  @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-8px);} 75%{transform:translateX(8px);} }
+
+  .fill-input {
+    width: 100%; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 13px; padding: 13px 17px; color: #fff;
+    font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 700; outline: none; transition: all 0.2s;
+  }
+  .fill-input:focus { border-color: #A3E635; background: rgba(163,230,53,0.08); }
+  .fill-input.correct { border-color: #4ADE80; background: rgba(74,222,128,0.1); }
+  .fill-input.wrong   { border-color: #F87171; background: rgba(248,113,113,0.1); }
+  .fill-input::placeholder { color: rgba(255,255,255,0.3); }
+
+  .submit-btn {
+    margin-top: 12px; background: linear-gradient(135deg, #A3E635, #34D399);
+    border: none; border-radius: 13px; padding: 12px 26px; color: #14532D;
+    font-family: 'Fredoka One', cursive; font-size: 1.1rem; cursor: pointer; transition: all 0.2s;
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(163,230,53,0.35); }
+
+  .feedback {
+    margin-top: 12px; padding: 12px 16px; border-radius: 12px;
+    font-weight: 700; font-size: 0.92rem; display: none; align-items: flex-start; gap: 9px; line-height: 1.5;
+  }
+  .feedback.show { display: flex; animation: fadeIn 0.3s ease; }
+  .feedback.correct-fb { background: rgba(74,222,128,0.15); border: 2px solid rgba(74,222,128,0.4); color: #BBF7D0; }
+  .feedback.wrong-fb   { background: rgba(248,113,113,0.15); border: 2px solid rgba(248,113,113,0.4); color: #FECACA; }
+  .feedback-icon { font-size: 1.3rem; flex-shrink: 0; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(5px);} to{opacity:1;transform:translateY(0);} }
+
+  .hint-btn {
+    background: none; border: 2px solid rgba(255,215,0,0.4); border-radius: 50px;
+    padding: 5px 13px; color: #FFD700; font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s; margin-top: 10px;
+  }
+  .hint-btn:hover { background: rgba(255,215,0,0.1); }
+  .hint-text {
+    margin-top: 6px; padding: 8px 12px; background: rgba(255,215,0,0.1);
+    border-radius: 9px; color: #FFD700; font-size: 0.85rem; font-weight: 700; display: none;
+  }
+  .hint-text.show { display: block; animation: fadeIn 0.3s; }
+
+  .next-btn {
+    display: none; width: 100%; margin-top: 12px;
+    background: linear-gradient(135deg, #FFD700, #F97316);
+    border: none; border-radius: 13px; padding: 14px; color: #14532D;
+    font-family: 'Fredoka One', cursive; font-size: 1.2rem; cursor: pointer; transition: all 0.2s;
+  }
+  .next-btn.show { display: block; animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,215,0,0.35); }
+  @keyframes popIn { from{transform:scale(0.8);opacity:0;} to{transform:scale(1);opacity:1;} }
+
+  /* ── MATCH ── */
+  .match-round-label { text-align: center; font-family: 'Fredoka One', cursive; color: #A3E635; font-size: 1rem; margin-bottom: 12px; letter-spacing: 0.5px; }
+  .match-container { display: flex; gap: 12px; }
+  @media (max-width: 540px) { .match-container { flex-direction: column; } }
+  .match-col { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .match-col-label { text-align: center; font-family: 'Fredoka One', cursive; font-size: 0.82rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
+
+  .match-item {
+    background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 13px; padding: 11px 13px; color: #fff;
+    font-size: 0.87rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    min-height: 50px; display: flex; align-items: center; line-height: 1.35; user-select: none;
+  }
+  .match-item.term { justify-content: center; text-align: center; font-family: 'Fredoka One', cursive; font-size: 0.98rem; color: #A3E635; }
+  .match-item:hover { border-color: #A3E635; background: rgba(163,230,53,0.12); transform: translateY(-1px); }
+  .match-item.selected { border-color: #FFD700; background: rgba(255,215,0,0.15); color: #FFD700; }
+  .match-item.matched-correct { border-color: #4ADE80; background: rgba(74,222,128,0.15); color: #BBF7D0; cursor: default; }
+  .match-item.matched-wrong { border-color: #F87171; background: rgba(248,113,113,0.15); animation: shake 0.4s; }
+
+  .match-status { text-align: center; margin-top: 12px; font-family: 'Fredoka One', cursive; font-size: 1.05rem; color: rgba(255,255,255,0.5); min-height: 26px; }
+  .match-next-btn {
+    display: none; width: 100%; margin-top: 12px;
+    background: linear-gradient(135deg, #FFD700, #F97316);
+    border: none; border-radius: 13px; padding: 14px; color: #14532D;
+    font-family: 'Fredoka One', cursive; font-size: 1.2rem; cursor: pointer; transition: all 0.2s;
+  }
+  .match-next-btn.show { display: block; animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+
+  /* RESULT */
+  .result-screen { display: none; text-align: center; padding: 36px 16px; }
+  .result-screen.show { display: block; animation: slideIn 0.5s ease; }
+  .result-emoji { font-size: 4.5rem; margin-bottom: 16px; animation: bounce 1s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-14px);} }
+  .result-title { font-family: 'Fredoka One', cursive; font-size: clamp(2rem,6vw,2.8rem); margin-bottom: 8px; color: #A3E635; }
+  .result-score-big { font-family: 'Fredoka One', cursive; font-size: clamp(3rem,9vw,4.5rem); line-height: 1; margin: 16px 0; color: #FFD700; }
+  .result-msg { font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+  .stars-display { font-size: 2.2rem; margin: 6px 0 16px; }
+  .restart-btn {
+    background: linear-gradient(135deg, #A855F7, #6D28D9); border: none;
+    border-radius: 16px; padding: 16px 40px; color: white;
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem; cursor: pointer; transition: all 0.2s;
+  }
+  .restart-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(168,85,247,0.4); }
+
+  .confetti-piece { position: fixed; pointer-events: none; animation: confettiFall linear forwards; z-index: 9999; }
+  @keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1;} 100%{transform:translateY(110vh) rotate(720deg);opacity:0;} }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>🦠 Immunity Terms Quiz!</h1>
+    <p>Chapter 4 · Vocabulary · 3 Ways to Study!</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchMode('flashcard')">🃏 Flashcards</button>
+    <button class="tab-btn" onclick="switchMode('quiz')">❓ Quiz</button>
+    <button class="tab-btn" onclick="switchMode('match')">🔗 Match It!</button>
+  </div>
+
+  <div class="score-bar" id="scoreBar" style="display:none">
+    <div class="score-item stars"><div class="score-label">⭐ Stars</div><div class="score-value" id="starCount">0</div></div>
+    <div class="score-item correct"><div class="score-label">✅ Correct</div><div class="score-value" id="correctCount">0</div></div>
+    <div class="score-item total"><div class="score-label">📋 Total</div><div class="score-value" id="totalCount">0/15</div></div>
+  </div>
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <div class="progress-bar" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <!-- FLASHCARD -->
+  <div class="mode-screen active" id="flashcardMode">
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="fc-front">
+          <div class="fc-label">📖 TERM</div>
+          <div class="fc-emoji" id="fcEmoji">🛡️</div>
+          <div class="fc-term" id="fcTerm">immunity</div>
+          <div class="fc-taphint">👆 Tap to see definition</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-label">💡 DEFINITION</div>
+          <div class="fc-def" id="fcDef">body's ability to protect itself from a disease</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="fc-arrow" onclick="fcPrev()">← Prev</button>
+      <div class="fc-counter" id="fcCounter">1 / 20</div>
+      <button class="fc-arrow" onclick="fcNext()">Next →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="mode-screen" id="quizMode">
+    <div class="question-card" id="questionCard">
+      <div class="question-badge" id="questionBadge">🦠 Question 1</div>
+      <div class="question-text" id="questionText"></div>
+      <div id="answerArea"></div>
+      <div class="feedback" id="feedback">
+        <span class="feedback-icon" id="feedbackIcon"></span>
+        <span id="feedbackText"></span>
+      </div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question ➡️</button>
+    </div>
+    <div class="result-screen" id="resultScreen">
+      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <div class="result-title" id="resultTitle">Quiz Complete!</div>
+      <div class="result-score-big" id="resultScore"></div>
+      <div class="stars-display" id="resultStars"></div>
+      <div class="result-msg" id="resultMsg"></div>
+      <button class="restart-btn" onclick="restartQuiz()">🔄 Play Again!</button>
+    </div>
+  </div>
+
+  <!-- MATCH -->
+  <div class="mode-screen" id="matchMode">
+    <div class="match-round-label" id="matchRoundLabel">Round 1 of 4 — Match term to definition!</div>
+    <div class="match-container">
+      <div class="match-col"><div class="match-col-label">📖 Terms</div><div id="termsList"></div></div>
+      <div class="match-col"><div class="match-col-label">💡 Definitions</div><div id="defsList"></div></div>
+    </div>
+    <div class="match-status" id="matchStatus"></div>
+    <button class="match-next-btn" id="matchNextBtn" onclick="nextMatchRound()">Next Round ➡️</button>
+  </div>
+
+</div>
+
+<script>
+const terms = [
+  { term:'immunity',                def:'body\'s ability to protect itself from a disease',                                      emoji:'🛡️' },
+  { term:'immune system',           def:'body system which defends against germs and disease',                                   emoji:'⚔️' },
+  { term:'microorganism',           def:'tiny organism too small to see without a microscope',                                   emoji:'🔬' },
+  { term:'pathogen',                def:'microorganism that can cause disease',                                                  emoji:'🦠' },
+  { term:'bacteria',                def:'single-celled microorganisms that reproduce by dividing; treated with antibiotics',     emoji:'🧫' },
+  { term:'virus',                   def:'pathogen smaller than bacteria that reproduces using a host cell',                      emoji:'😷' },
+  { term:'communicable disease',    def:'contagious disease that can be spread from person to person',                          emoji:'🤧' },
+  { term:'noncommunicable disease', def:'disease that CANNOT be spread from person to person',                                  emoji:'🚫' },
+  { term:'fever',                   def:'body temperature of 100.4°F or higher',                                                emoji:'🌡️' },
+  { term:'skin',                    def:'largest organ of the body; first defense against pathogens',                            emoji:'🧴' },
+  { term:'epidermis',               def:'outer layer of skin',                                                                  emoji:'🔝' },
+  { term:'dermis',                  def:'inner layer of skin beneath the epidermis',                                            emoji:'🔽' },
+  { term:'sebum',                   def:'oily substance produced by oil glands in the skin',                                    emoji:'💧' },
+  { term:'mucus',                   def:'thick fluid which traps pathogens',                                                    emoji:'🟢' },
+  { term:'cilia',                   def:'hair-like projections which keep pathogens from getting into the lungs',               emoji:'🪶' },
+  { term:'lymphatic system',        def:'part of the immune system that collects tissue fluid and cleans the body of pathogens',emoji:'🌊' },
+  { term:'lymph nodes',             def:'large bunches of lymphatic tissue located throughout the body',                        emoji:'🫘' },
+  { term:'tonsils and adenoids',    def:'organs made of lymphatic tissue that trap pathogens before they are inhaled or swallowed', emoji:'👄' },
+  { term:'spleen',                  def:'largest organ of the lymphatic system; cleanses the blood',                            emoji:'🩸' },
+  { term:'thymus',                  def:'lymphatic organ that prepares lymphocytes to fight pathogens',                         emoji:'⚗️' },
+];
+
+const hints = {
+  'immunity':'Your body\'s defense power!','immune system':'Like your body\'s army!',
+  'microorganism':'Micro = super tiny!','pathogen':'Bad germs that make you sick!',
+  'bacteria':'Antibiotics can kill these!','virus':'Colds & flu — antibiotics don\'t work!',
+  'communicable disease':'Communicate = spread to others!','noncommunicable disease':'NON = cannot spread!',
+  'fever':'100.4°F is the magic number!','skin':'Covers your whole body!',
+  'epidermis':'Epi = outer, on top!','dermis':'Derm = skin, it\'s under the epidermis!',
+  'sebum':'Natural skin oil!','mucus':'Think sticky snot in your nose!',
+  'cilia':'Tiny hair brooms in your airways!','lymphatic system':'Lymph = cleaning fluid system!',
+  'lymph nodes':'You feel these in your neck when sick!','tonsils and adenoids':'In the back of your throat!',
+  'spleen':'Like a blood filter!','thymus':'Trains your fighter cells!'
+};
+
+// ── FLASHCARD ──
+let fcList = [...terms];
+let fcIdx = 0;
+
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function renderFC(){
+  const t=fcList[fcIdx];
+  document.getElementById('fcEmoji').textContent=t.emoji;
+  document.getElementById('fcTerm').textContent=t.term;
+  document.getElementById('fcDef').textContent=t.def;
+  document.getElementById('fcCounter').textContent=`${fcIdx+1} / ${fcList.length}`;
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function fcNext(){ fcIdx=(fcIdx+1)%fcList.length; renderFC(); }
+function fcPrev(){ fcIdx=(fcIdx-1+fcList.length)%fcList.length; renderFC(); }
+
+// ── QUIZ ──
+const quizQ = [
+  {type:'mc',badge:'🛡️',q:'What is IMMUNITY?',opts:['A tiny germ that causes disease','Body\'s ability to protect itself from disease','The outer layer of skin','Hair-like projections in the lungs'],ans:1,fb:'IMMUNITY = your body\'s power to fight disease! 🛡️',term:'immunity'},
+  {type:'mc',badge:'🦠',q:'What is a PATHOGEN?',opts:['A thick fluid that traps germs','The largest organ of the body','A microorganism that can cause disease','An oily substance from oil glands'],ans:2,fb:'PATHOGEN = a germ that makes you sick! 🦠',term:'pathogen'},
+  {type:'mc',badge:'🧫',q:'How is a VIRUS different from BACTERIA?',opts:['A virus is larger than bacteria','A virus can be treated with antibiotics','A virus reproduces using a host cell and is smaller than bacteria','A virus divides to make copies of itself'],ans:2,fb:'Viruses hijack body cells to reproduce — antibiotics do NOT work on them! 😷',term:'virus'},
+  {type:'mc',badge:'🤧',q:'Which is a COMMUNICABLE disease?',opts:['Diabetes','A cold you caught from a friend','Cancer','A broken bone'],ans:1,fb:'COMMUNICABLE = can spread person to person! Cold, flu, chickenpox! 🤧',term:'communicable disease'},
+  {type:'mc',badge:'🌡️',q:'What temperature counts as a FEVER?',opts:['98.6°F or higher','99.0°F or higher','100.4°F or higher','102°F or higher'],ans:2,fb:'FEVER = 100.4°F or higher! Your body heats up to kill pathogens! 🔥',term:'fever'},
+  {type:'mc',badge:'🔝',q:'What is the EPIDERMIS?',opts:['The inner layer of skin','The oily substance from skin glands','The outer layer of skin','The largest lymphatic organ'],ans:2,fb:'EPIDERMIS = outer top layer of skin! Epi = on top! 🔝',term:'epidermis'},
+  {type:'mc',badge:'🟢',q:'What does MUCUS do?',opts:['Produces oil for the skin','Traps pathogens','Prepares lymphocytes to fight germs','Cleanses the blood'],ans:1,fb:'MUCUS is sticky and traps pathogens — that\'s why your nose runs when sick! 🟢',term:'mucus'},
+  {type:'mc',badge:'🪶',q:'What are CILIA?',opts:['The inner layer of skin','Tiny organs that filter blood','Hair-like projections that keep pathogens from the lungs','Organs in the throat'],ans:2,fb:'CILIA are like tiny hair-brooms that sweep pathogens out of your airways! 🪶',term:'cilia'},
+  {type:'mc',badge:'🩸',q:'What is the SPLEEN?',opts:['Organ in the throat that traps germs','Outer layer of skin','Largest lymphatic organ; cleanses the blood','An organ that trains lymphocytes'],ans:2,fb:'SPLEEN = largest lymphatic organ — it cleans your blood! 🩸',term:'spleen'},
+  {type:'mc',badge:'⚗️',q:'What does the THYMUS do?',opts:['Traps pathogens before you swallow them','Produces oil for the skin','Prepares lymphocytes to fight pathogens','Collects tissue fluid'],ans:2,fb:'THYMUS trains your fighter cells (lymphocytes)! Like a training camp! ⚗️',term:'thymus'},
+  {type:'fill',badge:'📝',q:'______ are single-celled microorganisms that reproduce by dividing and can be treated with antibiotics.',ans:'bacteria',alts:[],fb:'BACTERIA! They split to reproduce. Antibiotics can kill them! 🧫',term:'bacteria'},
+  {type:'fill',badge:'📝',q:'The ______ is the inner layer of skin found beneath the epidermis.',ans:'dermis',alts:[],fb:'DERMIS is the inner layer! Derm = skin! 🔽',term:'dermis'},
+  {type:'fill',badge:'📝',q:'______ is the oily substance produced by oil glands in your skin.',ans:'sebum',alts:[],fb:'SEBUM is your skin\'s natural oil! Keeps it protected! 💧',term:'sebum'},
+  {type:'fill',badge:'📝',q:'The ______ is the part of the immune system that collects tissue fluid and cleans the body of pathogens.',ans:'lymphatic system',alts:['lymphatic'],fb:'LYMPHATIC SYSTEM = your body\'s cleanup crew! 🌊',term:'lymphatic system'},
+  {type:'fill',badge:'📝',q:'______ and ______ are organs in the throat area made of lymphatic tissue that trap pathogens before they are inhaled or swallowed.',ans:'tonsils and adenoids',alts:['tonsils','adenoids','tonsils & adenoids'],fb:'TONSILS and ADENOIDS — throat germ-catchers! That\'s why they swell when you\'re sick! 👄',term:'tonsils and adenoids'},
+];
+
+let shuffledQ, qIdx, correct, stars, answered;
+
+function initQuiz(){
+  shuffledQ=shuffle(quizQ); qIdx=0; correct=0; stars=0; answered=false;
+  updateScore(); renderQ();
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('questionCard').style.display='block';
+}
+function updateScore(){
+  document.getElementById('starCount').textContent=stars;
+  document.getElementById('correctCount').textContent=correct;
+  document.getElementById('totalCount').textContent=`${qIdx}/${shuffledQ.length}`;
+  document.getElementById('progressBar').style.width=`${(qIdx/shuffledQ.length)*100}%`;
+}
+function renderQ(){
+  answered=false;
+  const q=shuffledQ[qIdx];
+  document.getElementById('questionBadge').textContent=q.badge+' Q'+(qIdx+1)+' of '+shuffledQ.length;
+  document.getElementById('questionText').textContent=q.q;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('nextBtn').className='next-btn';
+  const card=document.getElementById('questionCard');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='slideIn 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+  const area=document.getElementById('answerArea'); area.innerHTML='';
+
+  if(q.type==='mc'){
+    const grid=document.createElement('div'); grid.className='options-grid';
+    ['A','B','C','D'].forEach((l,i)=>{
+      const btn=document.createElement('button'); btn.className='option-btn';
+      btn.innerHTML=`<span class="letter">${l}</span><span>${q.opts[i]}</span>`;
+      btn.onclick=()=>pickMC(i); grid.appendChild(btn);
+    });
+    area.appendChild(grid);
+  } else {
+    const inp=document.createElement('input'); inp.type='text'; inp.className='fill-input'; inp.id='fillInput';
+    inp.placeholder='Type your answer...'; inp.onkeydown=e=>{if(e.key==='Enter')checkFill();};
+    area.appendChild(inp);
+    const sub=document.createElement('button'); sub.className='submit-btn'; sub.textContent='✅ Check Answer'; sub.onclick=checkFill;
+    area.appendChild(sub);
+  }
+  const hb=document.createElement('button'); hb.className='hint-btn'; hb.textContent='💡 Hint';
+  const ht=document.createElement('div'); ht.className='hint-text'; ht.textContent='💡 '+(hints[q.term]||'Think carefully!');
+  hb.onclick=()=>ht.classList.toggle('show');
+  area.appendChild(hb); area.appendChild(ht);
+  updateScore();
+}
+function pickMC(idx){
+  if(answered)return; answered=true;
+  const q=shuffledQ[qIdx];
+  const btns=document.querySelectorAll('.option-btn'); btns.forEach(b=>b.disabled=true);
+  if(idx===q.ans){btns[idx].classList.add('correct');showFB(true,'⭐ Correct! '+q.fb);correct++;stars++;sparkle();}
+  else{btns[idx].classList.add('wrong');btns[q.ans].classList.add('correct');showFB(false,'❌ Answer: "'+q.opts[q.ans]+'". '+q.fb);}
+  document.getElementById('nextBtn').classList.add('show'); updateScore();
+}
+function checkFill(){
+  if(answered)return; answered=true;
+  const q=shuffledQ[qIdx];
+  const inp=document.getElementById('fillInput');
+  const ua=inp.value.trim().toLowerCase();
+  inp.disabled=true;
+  const ok=ua===q.ans.toLowerCase()||(q.alts||[]).map(a=>a.toLowerCase()).includes(ua);
+  inp.classList.add(ok?'correct':'wrong');
+  if(ok){showFB(true,'⭐ Correct! '+q.fb);correct++;stars++;sparkle();}
+  else{showFB(false,`❌ Answer: "${q.ans}". ${q.fb}`);}
+  document.getElementById('nextBtn').classList.add('show'); updateScore();
+}
+function showFB(ok,txt){
+  const fb=document.getElementById('feedback');
+  fb.className='feedback show '+(ok?'correct-fb':'wrong-fb');
+  document.getElementById('feedbackIcon').textContent=ok?'🎉':'💙';
+  document.getElementById('feedbackText').textContent=txt;
+}
+function nextQuestion(){ qIdx++; if(qIdx>=shuffledQ.length)showResult(); else renderQ(); }
+function showResult(){
+  document.getElementById('questionCard').style.display='none';
+  document.getElementById('resultScreen').classList.add('show'); updateScore();
+  const pct=Math.round((correct/shuffledQ.length)*100);
+  document.getElementById('resultScore').textContent=`${correct} / ${shuffledQ.length}`;
+  if(pct===100){document.getElementById('resultEmoji').textContent='🏆';document.getElementById('resultTitle').textContent='PERFECT SCORE!';document.getElementById('resultMsg').textContent='Immunity master, Max! 🌟';document.getElementById('resultStars').textContent='⭐⭐⭐⭐⭐';launchConfetti();}
+  else if(pct>=80){document.getElementById('resultEmoji').textContent='🎉';document.getElementById('resultTitle').textContent='Great Job!';document.getElementById('resultMsg').textContent='You really know these terms! 💪';document.getElementById('resultStars').textContent='⭐⭐⭐⭐';}
+  else if(pct>=60){document.getElementById('resultEmoji').textContent='👍';document.getElementById('resultTitle').textContent='Good Try!';document.getElementById('resultMsg').textContent='Try flashcards then quiz again! 📖';document.getElementById('resultStars').textContent='⭐⭐⭐';}
+  else{document.getElementById('resultEmoji').textContent='💪';document.getElementById('resultTitle').textContent='Keep Studying!';document.getElementById('resultMsg').textContent='Start with flashcards first! 🃏';document.getElementById('resultStars').textContent='⭐⭐';}
+}
+function restartQuiz(){document.getElementById('resultScreen').classList.remove('show');initQuiz();}
+
+// ── MATCH ──
+const matchRounds=[
+  ['immunity','immune system','pathogen','bacteria','virus'],
+  ['communicable disease','noncommunicable disease','fever','skin','epidermis'],
+  ['dermis','sebum','mucus','cilia','lymphatic system'],
+  ['lymph nodes','tonsils and adenoids','spleen','thymus','microorganism'],
+];
+let mRound=0, selTerm=null, selDef=null, mCount=0;
+
+function initMatch(){
+  const round=matchRounds[mRound];
+  document.getElementById('matchRoundLabel').textContent=`Round ${mRound+1} of ${matchRounds.length} — Match term to definition!`;
+  mCount=0; selTerm=null; selDef=null;
+  document.getElementById('matchStatus').textContent='';
+  document.getElementById('matchNextBtn').className='match-next-btn';
+  const pairs=round.map(t=>terms.find(x=>x.term===t));
+  const shuffDefs=shuffle([...pairs]);
+  const tl=document.getElementById('termsList'); tl.innerHTML='';
+  const dl=document.getElementById('defsList'); dl.innerHTML='';
+  pairs.forEach(t=>{
+    const el=document.createElement('div'); el.className='match-item term';
+    el.textContent=t.term; el.dataset.term=t.term;
+    el.onclick=()=>pickTerm(el); tl.appendChild(el);
+  });
+  shuffDefs.forEach(t=>{
+    const el=document.createElement('div'); el.className='match-item';
+    el.textContent=t.def; el.dataset.term=t.term;
+    el.onclick=()=>pickDef(el); dl.appendChild(el);
+  });
+}
+function pickTerm(el){
+  if(el.classList.contains('matched-correct'))return;
+  document.querySelectorAll('.match-item.term').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected'); selTerm=el; tryMatch();
+}
+function pickDef(el){
+  if(el.classList.contains('matched-correct'))return;
+  document.querySelectorAll('#defsList .match-item').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected'); selDef=el; tryMatch();
+}
+function tryMatch(){
+  if(!selTerm||!selDef)return;
+  const t=selTerm, d=selDef;
+  selTerm=null; selDef=null;
+  if(t.dataset.term===d.dataset.term){
+    t.classList.remove('selected'); d.classList.remove('selected');
+    t.classList.add('matched-correct'); d.classList.add('matched-correct');
+    t.onclick=null; d.onclick=null; mCount++; sparkle();
+    const total=matchRounds[mRound].length;
+    document.getElementById('matchStatus').textContent=mCount===total?'🎉 All matched! Great job!':`✅ ${mCount}/${total} matched!`;
+    if(mCount===total){
+      const btn=document.getElementById('matchNextBtn');
+      btn.textContent=mRound<matchRounds.length-1?'Next Round ➡️':'🎉 Play Again!';
+      btn.className='match-next-btn show';
+      if(mRound===matchRounds.length-1)launchConfetti();
+    }
+  } else {
+    t.classList.add('matched-wrong'); d.classList.add('matched-wrong');
+    setTimeout(()=>{
+      t.classList.remove('matched-wrong','selected');
+      d.classList.remove('matched-wrong','selected');
+    },700);
+  }
+}
+function nextMatchRound(){ mRound=(mRound+1)%matchRounds.length; initMatch(); }
+
+// ── SWITCH MODE ──
+function switchMode(mode){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['flashcard','quiz','match'][i]===mode));
+  document.querySelectorAll('.mode-screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(mode+'Mode').classList.add('active');
+  const sq=mode==='quiz';
+  document.getElementById('scoreBar').style.display=sq?'flex':'none';
+  document.getElementById('progressWrap').style.display=sq?'block':'none';
+  if(mode==='quiz')initQuiz();
+  if(mode==='match'){mRound=0;initMatch();}
+  if(mode==='flashcard'){fcList=shuffle([...terms]);fcIdx=0;renderFC();}
+}
+
+// ── FX ──
+function sparkle(){
+  for(let i=0;i<7;i++)setTimeout(()=>{
+    const el=document.createElement('div');
+    el.textContent=['⭐','✨','💫','🌟'][Math.floor(Math.random()*4)];
+    el.style.cssText=`position:fixed;font-size:1.4rem;pointer-events:none;z-index:9999;left:${20+Math.random()*60}%;top:${20+Math.random()*50}%;animation:confettiFall 1s ease forwards;`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),1000);
+  },i*60);
+}
+function launchConfetti(){
+  const c=['#A3E635','#A855F7','#FFD700','#4ADE80','#F87171','#34D399'];
+  for(let i=0;i<60;i++)setTimeout(()=>{
+    const el=document.createElement('div');el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}vw;background:${c[Math.floor(Math.random()*c.length)]};width:${6+Math.random()*10}px;height:${6+Math.random()*10}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()}s;`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),4000);
+  },i*30);
+}
+
+renderFC();
+</script>
+</body>
+</html>
