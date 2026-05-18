@@ -473,8 +473,9 @@ function speakWord(){
     u.rate=rate; u.lang='en-US'; if(cb)u.onend=cb;
     window.speechSynthesis.speak(u);
   };
+  const spokenExample = q.example.replace('_____', q.word);
   document.getElementById('exSentence').textContent=q.example;
-  say(q.word,0.8,()=>say(q.example,0.9,()=>say(q.word,0.75,()=>{lb.className='listen-btn';})));
+  say(q.word,0.8,()=>say(spokenExample,0.9,()=>say(q.word,0.75,()=>{lb.className='listen-btn';})));
 }
 
 function norm(s){return s.trim().toLowerCase().replace(/[^a-z|]/g,'');}
