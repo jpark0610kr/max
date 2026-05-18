@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Max's Comprehension Quiz! 📖</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Nunito', 'Arial Rounded MT Bold', Arial, sans-serif;
+    background: #1E1B4B;
+    background: linear-gradient(160deg, #1E1B4B 0%, #312E81 50%, #0F0A2A 100%);
+    min-height: 100%;
+    color: #fff;
+  }
+  body { min-height: 100vh; padding-bottom: 40px; }
+  .container { max-width: 820px; margin: 0 auto; padding: 20px; }
+
+  .header { text-align: center; padding: 28px 0 16px; }
+  .header h1 {
+    font-family: 'Fredoka One', 'Comic Sans MS', cursive;
+    font-size: clamp(1.9rem, 5.5vw, 3rem);
+    color: #C4B5FD;
+    text-shadow: 3px 3px 0 #1E1B4B, 0 0 30px rgba(196,181,253,0.4);
+  }
+  .header p { color: #A5B4FC; font-size: 0.95rem; font-weight: 700; margin-top: 6px; letter-spacing: 1px; }
+
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .tab-btn {
+    flex: 1; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 14px; padding: 12px 8px; color: rgba(255,255,255,0.55);
+    font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 1rem; cursor: pointer; transition: all 0.2s;
+  }
+  .tab-btn:hover { background: rgba(196,181,253,0.2); border-color: #C4B5FD; color: white; }
+  .tab-btn.active { background: #C4B5FD; border-color: #C4B5FD; color: #1E1B4B; box-shadow: 0 4px 14px rgba(196,181,253,0.4); }
+
+  .score-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 18px; padding: 12px 22px; margin-bottom: 16px;
+  }
+  .score-item { text-align: center; }
+  .score-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.45); font-weight: 700; }
+  .score-value { font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 1.7rem; line-height: 1; margin-top: 2px; }
+  .score-item.stars .score-value { color: #FFD700; }
+  .score-item.correct .score-value { color: #86EFAC; }
+  .score-item.total .score-value { color: #C4B5FD; }
+
+  .progress-wrap { background: rgba(0,0,0,0.3); border-radius: 50px; height: 10px; margin-bottom: 20px; overflow: hidden; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, #C4B5FD, #818CF8); border-radius: 50px; transition: width 0.5s ease; }
+
+  .mode-screen { display: none; }
+  .mode-screen.active { display: block; }
+
+  /* CHAPTER BADGE */
+  .ch-badge {
+    display: inline-block; font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.5px; padding: 4px 12px; border-radius: 50px; margin-bottom: 12px;
+  }
+  .ch4 { background: #4ADE80; color: #14532D; }
+  .ch5 { background: #FB923C; color: #7C2D12; }
+
+  /* QUIZ */
+  .question-card {
+    background: rgba(0,0,0,0.35); border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 24px; padding: 26px; margin-bottom: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    animation: slideIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes slideIn { from{transform:translateY(24px) scale(0.96);opacity:0;} to{transform:translateY(0) scale(1);opacity:1;} }
+  .question-text { font-size: clamp(1rem, 2.8vw, 1.22rem); font-weight: 800; color: #fff; line-height: 1.6; margin-bottom: 20px; }
+  .q-num { font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-bottom: 4px; letter-spacing: 1px; }
+
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 500px) { .options-grid { grid-template-columns: 1fr; } }
+  .option-btn {
+    background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 13px; padding: 13px 14px; color: #fff;
+    font-family: 'Nunito', Arial, sans-serif; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; text-align: left; transition: all 0.2s; display: flex; align-items: center; gap: 10px;
+  }
+  .option-btn:hover:not(:disabled) { background: rgba(196,181,253,0.15); border-color: #C4B5FD; transform: translateY(-2px); }
+  .option-btn .letter {
+    width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 0.88rem; flex-shrink: 0;
+  }
+  .option-btn.correct { background: rgba(74,222,128,0.2); border-color: #4ADE80; }
+  .option-btn.correct .letter { background: #4ADE80; color: #14532D; }
+  .option-btn.wrong { background: rgba(248,113,113,0.2); border-color: #F87171; animation: shake 0.4s; }
+  .option-btn.wrong .letter { background: #F87171; color: white; }
+  .option-btn:disabled { cursor: not-allowed; opacity: 0.7; }
+  @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-8px);} 75%{transform:translateX(8px);} }
+
+  .tf-wrap { display: flex; gap: 12px; }
+  .tf-btn {
+    flex: 1; background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 13px; padding: 14px; color: white;
+    font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 1.2rem; cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .tf-btn.true-btn:hover:not(:disabled) { background: rgba(74,222,128,0.15); border-color: #4ADE80; }
+  .tf-btn.false-btn:hover:not(:disabled) { background: rgba(248,113,113,0.15); border-color: #F87171; }
+  .tf-btn.correct { background: rgba(74,222,128,0.2); border-color: #4ADE80; animation: correctPulse 0.5s; }
+  .tf-btn.wrong { background: rgba(248,113,113,0.2); border-color: #F87171; animation: shake 0.4s; }
+  .tf-btn:disabled { cursor: not-allowed; opacity: 0.7; }
+  @keyframes correctPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.03);} }
+
+  .fill-input {
+    width: 100%; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.18);
+    border-radius: 13px; padding: 13px 17px; color: #fff;
+    font-family: 'Nunito', Arial, sans-serif; font-size: 1rem; font-weight: 700; outline: none; transition: all 0.2s;
+  }
+  .fill-input:focus { border-color: #C4B5FD; background: rgba(196,181,253,0.08); }
+  .fill-input.correct { border-color: #4ADE80; background: rgba(74,222,128,0.1); }
+  .fill-input.wrong { border-color: #F87171; background: rgba(248,113,113,0.1); }
+  .fill-input::placeholder { color: rgba(255,255,255,0.28); }
+
+  .submit-btn {
+    margin-top: 12px; background: linear-gradient(135deg, #C4B5FD, #818CF8);
+    border: none; border-radius: 13px; padding: 12px 26px; color: #1E1B4B;
+    font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 1.1rem; cursor: pointer; transition: all 0.2s;
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(196,181,253,0.35); }
+
+  .feedback {
+    margin-top: 12px; padding: 12px 16px; border-radius: 12px;
+    font-weight: 700; font-size: 0.92rem; display: none; align-items: flex-start; gap: 9px; line-height: 1.5;
+  }
+  .feedback.show { display: flex; animation: fadeIn 0.3s ease; }
+  .feedback.correct-fb { background: rgba(74,222,128,0.13); border: 2px solid rgba(74,222,128,0.35); color: #BBF7D0; }
+  .feedback.wrong-fb   { background: rgba(248,113,113,0.13); border: 2px solid rgba(248,113,113,0.35); color: #FECACA; }
+  .feedback-icon { font-size: 1.3rem; flex-shrink: 0; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(5px);} to{opacity:1;transform:translateY(0);} }
+
+  .hint-btn {
+    background: none; border: 2px solid rgba(255,215,0,0.35); border-radius: 50px;
+    padding: 5px 13px; color: #FFD700; font-family: 'Nunito', Arial, sans-serif;
+    font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s; margin-top: 10px;
+  }
+  .hint-btn:hover { background: rgba(255,215,0,0.09); }
+  .hint-text { margin-top: 6px; padding: 8px 12px; background: rgba(255,215,0,0.09); border-radius: 9px; color: #FFD700; font-size: 0.85rem; font-weight: 700; display: none; }
+  .hint-text.show { display: block; animation: fadeIn 0.3s; }
+
+  .next-btn {
+    display: none; width: 100%; margin-top: 12px;
+    background: linear-gradient(135deg, #FFD700, #F97316);
+    border: none; border-radius: 13px; padding: 14px; color: #1E1B4B;
+    font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 1.2rem; cursor: pointer; transition: all 0.2s;
+  }
+  .next-btn.show { display: block; animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  .next-btn:hover { transform: translateY(-2px); }
+  @keyframes popIn { from{transform:scale(0.8);opacity:0;} to{transform:scale(1);opacity:1;} }
+
+  /* MATCH */
+  .match-round-label { text-align: center; font-family: 'Fredoka One', 'Comic Sans MS', cursive; color: #C4B5FD; font-size: 1rem; margin-bottom: 12px; }
+  .match-container { display: flex; gap: 12px; }
+  @media (max-width: 540px) { .match-container { flex-direction: column; } }
+  .match-col { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .match-col-label { text-align: center; font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 0.8rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
+  .match-item {
+    background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.13);
+    border-radius: 12px; padding: 10px 12px; color: #fff;
+    font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    min-height: 48px; display: flex; align-items: center; line-height: 1.3; user-select: none;
+  }
+  .match-item.term { justify-content: center; text-align: center; font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 0.92rem; color: #C4B5FD; }
+  .match-item:hover { border-color: #C4B5FD; background: rgba(196,181,253,0.1); transform: translateY(-1px); }
+  .match-item.selected { border-color: #FFD700; background: rgba(255,215,0,0.12); color: #FFD700; }
+  .match-item.matched-correct { border-color: #4ADE80; background: rgba(74,222,128,0.12); color: #BBF7D0; cursor: default; }
+  .match-item.matched-wrong { border-color: #F87171; background: rgba(248,113,113,0.12); animation: shake 0.4s; }
+  .match-status { text-align: center; margin-top: 12px; font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 1rem; color: rgba(255,255,255,0.45); min-height: 24px; }
+  .match-next-btn {
+    display: none; width: 100%; margin-top: 12px;
+    background: linear-gradient(135deg, #FFD700, #F97316);
+    border: none; border-radius: 13px; padding: 14px; color: #1E1B4B;
+    font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 1.2rem; cursor: pointer; transition: all 0.2s;
+  }
+  .match-next-btn.show { display: block; animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+
+  /* RESULT */
+  .result-screen { display: none; text-align: center; padding: 36px 16px; }
+  .result-screen.show { display: block; animation: slideIn 0.5s ease; }
+  .result-emoji { font-size: 4.5rem; margin-bottom: 16px; animation: bounce 1s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-14px);} }
+  .result-title { font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: clamp(2rem,6vw,2.8rem); margin-bottom: 8px; color: #C4B5FD; }
+  .result-score-big { font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: clamp(3rem,9vw,4.5rem); line-height: 1; margin: 16px 0; color: #FFD700; }
+  .result-msg { font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.65); margin-bottom: 24px; }
+  .stars-display { font-size: 2.2rem; margin: 6px 0 16px; }
+  .restart-btn {
+    background: linear-gradient(135deg, #C4B5FD, #6D28D9); border: none;
+    border-radius: 16px; padding: 16px 40px; color: white;
+    font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 1.3rem; cursor: pointer; transition: all 0.2s;
+  }
+  .restart-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(196,181,253,0.4); }
+
+  .confetti-piece { position: fixed; pointer-events: none; animation: confettiFall linear forwards; z-index: 9999; }
+  @keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1;} 100%{transform:translateY(110vh) rotate(720deg);opacity:0;} }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>📖 Comprehension Quiz!</h1>
+    <p>Ch.4 Body's Defenses · Ch.5 Fuel for a Healthy Body</p>
+  </div>
+
+  <div class="score-bar" id="scoreBar">
+    <div class="score-item stars"><div class="score-label">⭐ Stars</div><div class="score-value" id="starCount">0</div></div>
+    <div class="score-item correct"><div class="score-label">✅ Correct</div><div class="score-value" id="correctCount">0</div></div>
+    <div class="score-item total"><div class="score-label">📋 Total</div><div class="score-value" id="totalCount">0/24</div></div>
+  </div>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-bar" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="mode-screen active" id="quizMode">
+    <div class="question-card" id="questionCard">
+      <div class="q-num" id="qNum">Q1 of 24</div>
+      <div class="ch-badge ch4" id="chBadge">Ch.4 · Body's Defenses</div>
+      <div class="question-text" id="questionText"></div>
+      <div id="answerArea"></div>
+      <div class="feedback" id="feedback">
+        <span class="feedback-icon" id="feedbackIcon"></span>
+        <span id="feedbackText"></span>
+      </div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question ➡️</button>
+    </div>
+    <div class="result-screen" id="resultScreen">
+      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <div class="result-title" id="resultTitle">Quiz Complete!</div>
+      <div class="result-score-big" id="resultScore"></div>
+      <div class="stars-display" id="resultStars"></div>
+      <div class="result-msg" id="resultMsg"></div>
+      <button class="restart-btn" onclick="restartQuiz()">🔄 Play Again!</button>
+    </div>
+  </div>
+
+
+</div>
+<script>
+// ── QUIZ QUESTIONS ──
+const quizQ = [
+  // ── CH.4: PATHOGENS & DISEASE ──
+  {ch:'ch4',chLabel:"Ch.4 · Pathogens & Disease",
+   type:'mc',q:'What is a PATHOGEN?',
+   opts:['A type of white blood cell','A microorganism that can cause disease','The outer layer of skin','A part of the lymphatic system'],
+   ans:1,fb:'A pathogen is any microorganism that causes disease — like bacteria or viruses! 🦠',hint:'Pathogens make you sick!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Pathogens & Disease",
+   type:'mc',q:'How is a VIRUS different from BACTERIA?',
+   opts:['A virus is larger than bacteria','Bacteria can only be treated with surgery','A virus reproduces using a host cell; bacteria reproduce by dividing','Bacteria cause more diseases than viruses'],
+   ans:2,fb:'Viruses hijack your body\'s cells to reproduce. Bacteria just divide on their own! 🧫',hint:'Think about how each one reproduces!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Pathogens & Disease",
+   type:'mc',q:'Which disease CAN be spread from person to person?',
+   opts:['Diabetes','A cold','Cancer','A broken bone'],
+   ans:1,fb:'A cold is communicable — it spreads from person to person! 🤧',hint:'Communicable = contagious!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Pathogens & Disease",
+   type:'tf',q:'TRUE or FALSE: Bacteria can be treated with antibiotics, but viruses cannot.',
+   ans:true,fb:'TRUE! Antibiotics kill bacteria but do NOT work on viruses. That\'s why doctors don\'t give antibiotics for colds! 💊',hint:'Think about what antibiotics are designed to fight!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Pathogens & Disease",
+   type:'mc',q:'Pathogens can spread by DIRECT CONTACT. Which is an example?',
+   opts:['Breathing in air droplets from a sneeze','Touching a doorknob someone sick touched','Shaking hands with a sick person','Eating uncooked food'],
+   ans:2,fb:'Shaking hands is direct contact — the pathogen goes straight from one person to another! 🤝',hint:'Direct = person touches person directly!'},
+
+  // ── CH.4: SKIN ──
+  {ch:'ch4',chLabel:"Ch.4 · Skin Defenses",
+   type:'mc',q:'What is the EPIDERMIS?',
+   opts:['The inner layer of skin','The largest organ of the lymphatic system','The outer layer of skin','A fluid that traps pathogens'],
+   ans:2,fb:'Epidermis = the outer layer of skin. It\'s your first barrier against pathogens! 🛡️',hint:'Epi = outer, on top!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Skin Defenses",
+   type:'mc',q:'What does MUCUS do to help defend the body?',
+   opts:['Produces oil to keep skin soft','Traps pathogens before they get inside the body','Prepares lymphocytes to fight disease','Cleanses the blood'],
+   ans:1,fb:'Mucus is sticky and traps pathogens in your nose and throat! 🟢',hint:'Think of the sticky stuff in your nose!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Skin Defenses",
+   type:'mc',q:'What do CILIA do in your airways?',
+   opts:['Produce digestive juices','Absorb nutrients into the blood','Keep pathogens from getting into the lungs','Control the amount of light entering the eye'],
+   ans:2,fb:'Cilia are tiny hair-like projections that sweep pathogens out of your airways! 🪶',hint:'Think of tiny brooms in your airways!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Skin Defenses",
+   type:'tf',q:'TRUE or FALSE: The skin is the largest organ of the body.',
+   ans:true,fb:'TRUE! Your skin is the largest organ — it covers your whole body and is your first line of defense! 🧴',hint:'What covers your entire body?'},
+
+  // ── CH.4: LYMPHATIC SYSTEM ──
+  {ch:'ch4',chLabel:"Ch.4 · Lymphatic System",
+   type:'mc',q:'What is the main job of the LYMPHATIC SYSTEM?',
+   opts:['Break down food into nutrients','Carry oxygen to the cells','Collect tissue fluid and clean the body of pathogens','Control thinking and reasoning'],
+   ans:2,fb:'The lymphatic system is your body\'s cleanup crew — it removes pathogens from tissue fluid! 🌊',hint:'Think of it as your body\'s cleaning service!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Lymphatic System",
+   type:'mc',q:'Which organ of the lymphatic system CLEANSES THE BLOOD?',
+   opts:['Thymus','Tonsils','Lymph nodes','Spleen'],
+   ans:3,fb:'The SPLEEN is the largest lymphatic organ and it cleanses your blood! 🩸',hint:'It\'s the largest lymphatic organ!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Lymphatic System",
+   type:'mc',q:'What do LYMPH NODES do?',
+   opts:['Produce saliva to digest food','Filter pathogens from lymph fluid — they swell when you\'re sick','Train lymphocytes to fight disease','Carry food from mouth to stomach'],
+   ans:1,fb:'Lymph nodes filter out pathogens! That\'s why they feel swollen when you\'re fighting an infection! 🫘',hint:'You can feel them in your neck when sick!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Lymphatic System",
+   type:'mc',q:'What does the THYMUS do?',
+   opts:['Cleanses the blood','Traps pathogens in the throat','Prepares lymphocytes to fight pathogens','Produces mucus to trap germs'],
+   ans:2,fb:'The THYMUS trains lymphocytes to become germ-fighters! Like a training camp for your immune cells! ⚗️',hint:'It trains your fighter cells!'},
+
+  // ── CH.4: CARING FOR IMMUNE SYSTEM ──
+  {ch:'ch4',chLabel:"Ch.4 · Caring for Your Immune System",
+   type:'mc',q:'Which is the BEST way to stop the spread of pathogens?',
+   opts:['Eat more sugar','Wash your hands with soap and water','Stay up late every night','Skip meals'],
+   ans:1,fb:'Washing hands with soap and water is one of the best ways to stop pathogens from spreading! 🧼',hint:'Think about what removes germs from your hands!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Caring for Your Immune System",
+   type:'tf',q:'TRUE or FALSE: Getting enough sleep helps keep your immune system strong.',
+   ans:true,fb:'TRUE! When you don\'t sleep enough, your immune system gets weaker and you\'re more likely to get sick! 😴',hint:'Think about how you feel after a bad night\'s sleep!'},
+
+  {ch:'ch4',chLabel:"Ch.4 · Caring for Your Immune System",
+   type:'mc',q:'If you are sick with a fever, what should you do?',
+   opts:['Go to school so you don\'t miss work','Exercise as hard as you can','Stay home and rest to avoid spreading pathogens','Eat as much sugar as possible'],
+   ans:2,fb:'Stay home when you\'re sick! It helps you recover AND stops the spread to others! 🏠',hint:'Think about what helps you get better AND protects others!'},
+
+  // ── CH.5: DIGESTION ──
+  {ch:'ch5',chLabel:"Ch.5 · Digestion",
+   type:'mc',q:'Where does DIGESTION begin?',
+   opts:['In the stomach','In the small intestine','In the large intestine','In the mouth'],
+   ans:3,fb:'Digestion begins in the MOUTH — chewing breaks food into smaller pieces and saliva starts breaking it down chemically! 👄',hint:'It\'s where you first put your food!'},
+
+  {ch:'ch5',chLabel:"Ch.5 · Digestion",
+   type:'mc',q:'What does SALIVA do?',
+   opts:['Churns food and mixes it with digestive juices','Absorbs nutrients into the bloodstream','Softens food and begins the process of digestion','Prepares waste to leave the body'],
+   ans:2,fb:'Saliva softens food and contains enzymes that begin breaking it down — digestion starts in your mouth! 💧',hint:'It\'s the liquid in your mouth!'},
+
+  {ch:'ch5',chLabel:"Ch.5 · Digestion",
+   type:'mc',q:'What is the job of the STOMACH?',
+   opts:['Absorb nutrients into the bloodstream','Churn food and mix it with digestive juices','Carry food from the mouth','Prepare waste to leave the body'],
+   ans:1,fb:'The STOMACH churns food and mixes it with digestive juices — like a powerful food blender! 🫃',hint:'It\'s like a muscular bag that squeezes and mixes food!'},
+
+  {ch:'ch5',chLabel:"Ch.5 · Digestion",
+   type:'mc',q:'Where are nutrients from food ABSORBED into the bloodstream?',
+   opts:['Mouth','Stomach','Small intestine','Large intestine'],
+   ans:2,fb:'The SMALL INTESTINE is where nutrients are absorbed into the blood — it\'s the most important part of digestion! 🌀',hint:'Think about which intestine absorbs the good stuff!'},
+
+  {ch:'ch5',chLabel:"Ch.5 · Digestion",
+   type:'mc',q:'What are VILLI?',
+   opts:['Digestive juices in the stomach','Enzymes that break down protein','Hair-like projections in the small intestine that pass nutrients to the bloodstream','Muscles that push food through the esophagus'],
+   ans:2,fb:'Villi are tiny finger-like bumps that line the small intestine and pass nutrients into your blood! 🪶',hint:'Think of tiny fingers grabbing nutrients!'},
+
+  {ch:'ch5',chLabel:"Ch.5 · Digestion",
+   type:'tf',q:'TRUE or FALSE: The large intestine is where most nutrients are absorbed into the blood.',
+   ans:false,fb:'FALSE! Nutrients are absorbed in the SMALL intestine. The large intestine prepares WASTE to leave the body! 🔚',hint:'Think about what each intestine is named for!'},
+
+  // ── CH.5: NUTRIENTS ──
+  {ch:'ch5',chLabel:"Ch.5 · Nutrients",
+   type:'mc',q:'Which nutrient is the body\'s MAIN SOURCE OF ENERGY?',
+   opts:['Protein','Fats and oils','Vitamins','Carbohydrates'],
+   ans:3,fb:'CARBOHYDRATES are the body\'s main energy source! Bread, rice, and pasta give you quick energy! 🍞',hint:'Think about what gives you energy the fastest!'},
+
+  {ch:'ch5',chLabel:"Ch.5 · Nutrients",
+   type:'mc',q:'What does PROTEIN do for the body?',
+   opts:['Provides the main source of quick energy','Helps the body store energy and use vitamins','Helps the body grow, repair, and replace cells and build muscle','Carries oxygen to cells'],
+   ans:2,fb:'PROTEIN builds and repairs your muscles and cells! Meat, eggs, beans, and nuts are great sources! 💪',hint:'Think about what helps you build muscle!'},
+];
+
+// ── VALIDATION ──
+(function validate(){
+  const mcErrors = quizQ.filter(q=>q.type==='mc' && q.opts.length!==4);
+  const ansErrors = quizQ.filter(q=>q.type==='mc' && q.ans>=q.opts.length);
+  const noHint = quizQ.filter(q=>!q.hint);
+  const noFb = quizQ.filter(q=>!q.fb);
+  if(mcErrors.length||ansErrors.length||noHint.length||noFb.length){
+    console.warn('ERRORS:',{mcErrors:mcErrors.length,ansErrors:ansErrors.length,noHint:noHint.length,noFb:noFb.length});
+  } else {
+    console.log(`✅ Validation passed: ${quizQ.length} questions`);
+  }
+})();
+
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+// ── QUIZ ──
+let shuffledQ, qIdx, correct, stars, answered;
+function initQuiz(){
+  shuffledQ=shuffle(quizQ); qIdx=0; correct=0; stars=0; answered=false;
+  updateScore(); renderQ();
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('questionCard').style.display='block';
+}
+function updateScore(){
+  document.getElementById('starCount').textContent=stars;
+  document.getElementById('correctCount').textContent=correct;
+  document.getElementById('totalCount').textContent=`${qIdx}/${shuffledQ.length}`;
+  document.getElementById('progressBar').style.width=`${(qIdx/shuffledQ.length)*100}%`;
+}
+function renderQ(){
+  answered=false;
+  const q=shuffledQ[qIdx];
+  document.getElementById('qNum').textContent=`Q${qIdx+1} of ${shuffledQ.length}`;
+  const badge=document.getElementById('chBadge');
+  badge.textContent=q.chLabel;
+  badge.className='ch-badge '+(q.ch==='ch4'?'ch4':'ch5');
+  document.getElementById('questionText').textContent=q.q;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('nextBtn').className='next-btn';
+  const card=document.getElementById('questionCard');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='slideIn 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+  const area=document.getElementById('answerArea'); area.innerHTML='';
+
+  if(q.type==='mc'){
+    const grid=document.createElement('div'); grid.className='options-grid';
+    ['A','B','C','D'].forEach((l,i)=>{
+      const btn=document.createElement('button'); btn.className='option-btn';
+      btn.innerHTML=`<span class="letter">${l}</span><span>${q.opts[i]}</span>`;
+      btn.onclick=()=>pickMC(i); grid.appendChild(btn);
+    });
+    area.appendChild(grid);
+  } else {
+    const wrap=document.createElement('div'); wrap.className='tf-wrap';
+    const tb=document.createElement('button'); tb.className='tf-btn true-btn'; tb.textContent='✅ TRUE'; tb.onclick=()=>pickTF(true);
+    const fb=document.createElement('button'); fb.className='tf-btn false-btn'; fb.textContent='❌ FALSE'; fb.onclick=()=>pickTF(false);
+    wrap.appendChild(tb); wrap.appendChild(fb); area.appendChild(wrap);
+  }
+
+  const hb=document.createElement('button'); hb.className='hint-btn'; hb.textContent='💡 Hint';
+  const ht=document.createElement('div'); ht.className='hint-text'; ht.textContent='💡 '+q.hint;
+  hb.onclick=()=>ht.classList.toggle('show');
+  area.appendChild(hb); area.appendChild(ht);
+  updateScore();
+}
+function pickMC(idx){
+  if(answered)return; answered=true;
+  const q=shuffledQ[qIdx];
+  const btns=document.querySelectorAll('.option-btn'); btns.forEach(b=>b.disabled=true);
+  if(idx===q.ans){btns[idx].classList.add('correct');showFB(true,'⭐ Correct! '+q.fb);correct++;stars++;sparkle();}
+  else{btns[idx].classList.add('wrong');btns[q.ans].classList.add('correct');showFB(false,'❌ Answer: "'+q.opts[q.ans]+'". '+q.fb);}
+  document.getElementById('nextBtn').classList.add('show'); updateScore();
+}
+function pickTF(val){
+  if(answered)return; answered=true;
+  const q=shuffledQ[qIdx];
+  const btns=document.querySelectorAll('.tf-btn'); btns.forEach(b=>b.disabled=true);
+  const ok=val===q.ans;
+  const idx=val?0:1; const othIdx=val?1:0;
+  btns[idx].classList.add(ok?'correct':'wrong');
+  if(!ok) btns[othIdx].classList.add('correct');
+  if(ok){showFB(true,'⭐ Correct! '+q.fb);correct++;stars++;sparkle();}
+  else{showFB(false,'❌ '+q.fb);}
+  document.getElementById('nextBtn').classList.add('show'); updateScore();
+}
+function showFB(ok,txt){
+  const fb=document.getElementById('feedback');
+  fb.className='feedback show '+(ok?'correct-fb':'wrong-fb');
+  document.getElementById('feedbackIcon').textContent=ok?'🎉':'💙';
+  document.getElementById('feedbackText').textContent=txt;
+}
+function nextQuestion(){ qIdx++; if(qIdx>=shuffledQ.length)showResult(); else renderQ(); }
+function showResult(){
+  document.getElementById('questionCard').style.display='none';
+  document.getElementById('resultScreen').classList.add('show'); updateScore();
+  const pct=Math.round((correct/shuffledQ.length)*100);
+  document.getElementById('resultScore').textContent=`${correct} / ${shuffledQ.length}`;
+  if(pct===100){document.getElementById('resultEmoji').textContent='🏆';document.getElementById('resultTitle').textContent='PERFECT SCORE!';document.getElementById('resultMsg').textContent='You crushed it, Max! 🌟';document.getElementById('resultStars').textContent='⭐⭐⭐⭐⭐';launchConfetti();}
+  else if(pct>=80){document.getElementById('resultEmoji').textContent='🎉';document.getElementById('resultTitle').textContent='Great Job!';document.getElementById('resultMsg').textContent='Almost there! Great understanding! 💪';document.getElementById('resultStars').textContent='⭐⭐⭐⭐';}
+  else if(pct>=60){document.getElementById('resultEmoji').textContent='👍';document.getElementById('resultTitle').textContent='Good Try!';document.getElementById('resultMsg').textContent='Review the wrong ones and try again! 📖';document.getElementById('resultStars').textContent='⭐⭐⭐';}
+  else{document.getElementById('resultEmoji').textContent='💪';document.getElementById('resultTitle').textContent='Keep Going!';document.getElementById('resultMsg').textContent='Read the chapter again and try! 📚';document.getElementById('resultStars').textContent='⭐⭐';}
+}
+function restartQuiz(){ document.getElementById('resultScreen').classList.remove('show'); initQuiz(); }
+
+// ── SWITCH ──
+function switchMode(mode){
+  if(mode==='quiz')initQuiz();
+}
+
+// ── FX ──
+function sparkle(){
+  for(let i=0;i<7;i++)setTimeout(()=>{
+    const el=document.createElement('div');
+    el.textContent=['⭐','✨','💫','🌟'][Math.floor(Math.random()*4)];
+    el.style.cssText=`position:fixed;font-size:1.4rem;pointer-events:none;z-index:9999;left:${20+Math.random()*60}%;top:${20+Math.random()*50}%;animation:confettiFall 1s ease forwards;`;
+    document.body.appendChild(el); setTimeout(()=>el.remove(),1000);
+  },i*60);
+}
+function launchConfetti(){
+  const c=['#C4B5FD','#FFD700','#4ADE80','#F87171','#FB923C','#818CF8'];
+  for(let i=0;i<60;i++)setTimeout(()=>{
+    const el=document.createElement('div'); el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}vw;background:${c[Math.floor(Math.random()*c.length)]};width:${6+Math.random()*10}px;height:${6+Math.random()*10}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()}s;`;
+    document.body.appendChild(el); setTimeout(()=>el.remove(),4000);
+  },i*30);
+}
+
+initQuiz();
+</script>
+</body>
+</html>
