@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History Test 11 · Write It! 🍁</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: #0d2818; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .screen { display: none; width: 100%; max-width: 680px; }
+  .screen.active { display: block; }
+
+  /* START */
+  #start { background: #122d1e; border-radius: 28px; padding: 40px 28px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.5); }
+  .maple { font-size: 64px; display: block; margin-bottom: 12px; animation: bounce 2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  h1 { font-family:'Fredoka One',cursive; font-size:2.2rem; color:#FFF8E7; line-height:1.1; margin-bottom:6px; }
+  .subtitle { color:#4ECDC4; font-weight:700; font-size:0.95rem; letter-spacing:1px; margin-bottom:28px; }
+  .mode-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; }
+  .mode-card { background:#1e3d2a; border:2px solid #2d6040; border-radius:16px; padding:16px 12px; cursor:pointer; transition:all 0.18s; text-align:center; }
+  .mode-card:hover { background:#2a5238; border-color:#4ECDC4; transform:translateY(-2px); }
+  .mode-card.active { background:#FFD700; border-color:#FFD700; }
+  .mode-card.active .mc { color:#1a1a2e; }
+  .mode-card.active .md { color:#333; }
+  .mc { font-family:'Fredoka One',cursive; font-size:1rem; color:#fff; margin-bottom:4px; }
+  .md { font-size:0.75rem; color:#aaa; font-weight:600; }
+  .mode-card.active .md { color:#555; }
+  .btn-start { background:#2ECC71; color:white; border:none; padding:16px 48px; border-radius:50px; font-family:'Fredoka One',cursive; font-size:1.4rem; cursor:pointer; box-shadow:0 6px 0 #27AE60; transition:all 0.15s; }
+  .btn-start:hover { transform:translateY(-3px); box-shadow:0 9px 0 #27AE60; }
+  .btn-start:active { transform:translateY(3px); box-shadow:0 2px 0 #27AE60; }
+
+  /* QUIZ */
+  .top-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .q-counter { color:rgba(255,255,255,0.5); font-weight:700; font-size:0.85rem; letter-spacing:1px; }
+  .btn-home-top { background:#1e3d2a; color:#aaa; border:1.5px solid #2d6040; padding:6px 14px; border-radius:8px; font-family:'Nunito',sans-serif; font-weight:700; font-size:0.8rem; cursor:pointer; transition:all 0.18s; }
+  .btn-home-top:hover { color:#fff; border-color:#4ECDC4; }
+  .progress-wrap { background:rgba(255,255,255,0.12); border-radius:8px; height:8px; margin-bottom:18px; }
+  .progress-bar { background:linear-gradient(90deg,#4ECDC4,#2ECC71); height:100%; border-radius:8px; transition:width 0.4s ease; }
+  .card { background:#FFF8E7; border-radius:22px; padding:28px 24px; box-shadow:0 6px 28px rgba(0,0,0,0.35); position:relative; overflow:hidden; }
+  .card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,#4ECDC4,#2ECC71); }
+  .section-badge { display:inline-block; background:#2ECC71; color:white; padding:3px 12px; border-radius:20px; font-size:0.72rem; font-weight:800; letter-spacing:1px; margin-bottom:14px; }
+  .q-text { font-size:1.05rem; font-weight:800; color:#1a1a2e; line-height:1.5; margin-bottom:20px; }
+
+  /* WRITE answer */
+  .write-wrap { display:flex; flex-direction:column; gap:12px; }
+  .write-input { border:2.5px solid #e0d5c0; border-radius:14px; padding:14px 18px; font-family:'Nunito',sans-serif; font-weight:700; font-size:1rem; color:#1a1a2e; outline:none; transition:all 0.15s; background:white; width:100%; }
+  .write-input:focus { border-color:#C8102E; background:#fff5f5; }
+  .write-input:disabled { background:#f5f5f5; color:#888; }
+  .btn-submit { background:#2ECC71; color:white; border:none; padding:14px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1.1rem; cursor:pointer; transition:all 0.15s; }
+  .btn-submit:hover { background:#27AE60; transform:translateY(-2px); }
+
+  /* self check buttons */
+  .selfcheck { display:none; flex-direction:column; gap:10px; margin-top:4px; }
+  .selfcheck.show { display:flex; animation:fadeIn 0.25s ease; }
+  .answer-reveal { background:#122d1e; color:#4ECDC4; border-radius:12px; padding:12px 16px; font-weight:800; font-size:0.95rem; }
+  .answer-reveal span { color:#fff; font-weight:600; }
+  .check-btns { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .btn-correct { background:#2ECC71; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; transition:all 0.15s; }
+  .btn-correct:hover { background:#27AE60; transform:translateY(-2px); }
+  .btn-wrong { background:#E74C3C; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; transition:all 0.15s; }
+  .btn-wrong:hover { background:#c0392b; transform:translateY(-2px); }
+
+  .feedback { margin-top:16px; padding:13px 16px; border-radius:12px; font-weight:700; font-size:0.9rem; line-height:1.5; display:none; }
+  .feedback.show { display:block; animation:fadeIn 0.25s ease; }
+  .feedback.ok { background:#d4f5e2; color:#1a6b38; border:2px solid #2ECC71; }
+  .feedback.bad { background:#fde8e8; color:#8B0000; border:2px solid #E74C3C; }
+  .nav { display:flex; gap:10px; margin-top:14px; }
+  .btn-back { background:#1e3d2a; color:white; border:none; padding:13px 20px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; transition:all 0.15s; flex-shrink:0; }
+  .btn-back:hover { background:#2a5238; transform:translateY(-2px); }
+  .btn-back:disabled { opacity:0.3; cursor:default; transform:none; }
+  .btn-next { flex:1; background:#1e3d2a; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1.1rem; cursor:pointer; transition:all 0.15s; display:none; }
+  .btn-next.show { display:block; animation:fadeIn 0.25s ease; }
+  .btn-next:hover { background:#2ECC71; transform:translateY(-2px); }
+
+  /* FLASHCARD */
+  .fc-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .fc-counter { color:rgba(255,255,255,0.5); font-weight:700; font-size:0.85rem; }
+  .fc-card { background:#FFF8E7; border-radius:22px; padding:28px 24px; box-shadow:0 6px 28px rgba(0,0,0,0.35); position:relative; min-height:200px; }
+  .fc-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,#C8102E,#FFD700); border-radius:22px 22px 0 0; }
+  .fc-badge { display:inline-block; background:#1a1a2e; color:#FFD700; padding:3px 12px; border-radius:20px; font-size:0.72rem; font-weight:800; letter-spacing:1px; margin-bottom:14px; }
+  .fc-question { font-size:1.05rem; font-weight:800; color:#1a1a2e; line-height:1.5; margin-bottom:20px; }
+  .fc-answer { background:#1a1a2e; border-radius:14px; padding:16px 18px; display:none; animation:fadeIn 0.3s ease; }
+  .fc-answer.show { display:block; }
+  .fc-answer ul { padding-left:18px; }
+  .fc-answer li { color:#FFF8E7; font-weight:600; font-size:0.95rem; margin-bottom:6px; line-height:1.5; }
+  .btn-reveal { width:100%; background:#C8102E; color:white; border:none; padding:14px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1.1rem; cursor:pointer; transition:all 0.15s; margin-top:16px; }
+  .btn-reveal:hover { background:#9B0B22; transform:translateY(-2px); }
+  .fc-nav { display:flex; gap:10px; margin-top:12px; }
+  .btn-fc-back { background:#2a2a4c; color:white; border:none; padding:13px 20px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; transition:all 0.15s; flex-shrink:0; }
+  .btn-fc-back:hover { background:#3a3a6c; }
+  .btn-fc-back:disabled { opacity:0.3; cursor:default; }
+  .btn-fc-next { flex:1; background:#1a1a2e; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1.1rem; cursor:pointer; transition:all 0.15s; }
+  .btn-fc-next:hover { background:#C8102E; transform:translateY(-2px); }
+
+  /* RESULT */
+  #result { background:#FFF8E7; border-radius:24px; padding:36px 28px; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+  .result-emoji { font-size:3rem; display:block; margin-bottom:16px; }
+  .score-ring { width:130px; height:130px; border-radius:50%; background:#1a1a2e; border:6px solid #FFD700; margin:0 auto 20px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .score-num { font-family:'Fredoka One',cursive; font-size:2.2rem; color:#FFD700; line-height:1; }
+  .score-lbl { color:rgba(255,255,255,0.5); font-size:0.75rem; font-weight:700; }
+  .result-title { font-family:'Fredoka One',cursive; font-size:1.8rem; color:#1a1a2e; margin-bottom:6px; }
+  .result-msg { color:#666; font-weight:600; font-size:0.95rem; margin-bottom:24px; }
+  .result-btns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
+  .btn-retry { background:#C8102E; color:white; border:none; padding:13px 24px; border-radius:50px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; box-shadow:0 4px 0 #9B0B22; transition:all 0.15s; }
+  .btn-retry:hover { transform:translateY(-2px); }
+  .btn-essay { background:#2a2a4c; color:white; border:none; padding:13px 24px; border-radius:50px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; transition:all 0.15s; }
+  .btn-essay:hover { background:#3a3a6c; transform:translateY(-2px); }
+  .btn-home { background:#555; color:white; border:none; padding:13px 24px; border-radius:50px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; transition:all 0.15s; }
+  .btn-home:hover { background:#777; transform:translateY(-2px); }
+  .review { text-align:left; display:flex; flex-direction:column; gap:7px; }
+  .review-item { padding:10px 14px; border-radius:10px; font-size:0.85rem; font-weight:600; display:flex; align-items:flex-start; gap:8px; }
+  .review-item.ok { background:#d4f5e2; color:#1a6b38; }
+  .review-item.miss { background:#fde8e8; color:#8B0000; }
+
+  #fcdone { background:#1a1a2e; border-radius:24px; padding:36px 28px; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+  #fcdone h2 { font-family:'Fredoka One',cursive; font-size:1.8rem; color:#FFD700; margin-bottom:12px; }
+  #fcdone p { color:#ccc; font-weight:600; margin-bottom:24px; }
+
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<!-- START -->
+<div id="start" class="screen active">
+  <span class="maple">✏️</span>
+  <h1>Write It Out!</h1>
+  <p class="subtitle">History Test 11 · Ch.10 Short Answer Review</p>
+  <div class="mode-grid">
+    <div class="mode-card active" data-mode="all" onclick="selectMode(this)">
+      <div class="mc">📚 All Questions</div>
+      <div class="md">People + Short Answer</div>
+    </div>
+    <div class="mode-card" data-mode="people" onclick="selectMode(this)">
+      <div class="mc">👤 Important People</div>
+      <div class="md">Who is who?</div>
+    </div>
+    <div class="mode-card" data-mode="short" onclick="selectMode(this)">
+      <div class="mc">✏️ Short Answer</div>
+      <div class="md">Facts & dates</div>
+    </div>
+    <div class="mode-card" data-mode="essay" onclick="selectMode(this)">
+      <div class="mc">📝 Essay Review</div>
+      <div class="md">Flashcard style</div>
+    </div>
+  </div>
+  <button class="btn-start" id="btn-start">▶ Start!</button>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="q-counter">1 / 27</span>
+    <button class="btn-home-top" id="btn-home-top">🏠 Home</button>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+  </div>
+  <div class="card">
+    <span class="section-badge" id="section-badge">People</span>
+    <p class="q-text" id="q-text"></p>
+    <div id="answer-area"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="nav">
+      <button class="btn-back" id="btn-back">← Back</button>
+      <button class="btn-next" id="btn-next">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- FLASHCARD -->
+<div id="flashcard" class="screen">
+  <div class="fc-top">
+    <span class="fc-counter" id="fc-counter">Essay 1 / 3</span>
+    <button class="btn-home-top" id="btn-fc-home">🏠 Home</button>
+  </div>
+  <div class="fc-card">
+    <span class="fc-badge">📝 ESSAY REVIEW</span>
+    <p class="fc-question" id="fc-question"></p>
+    <div class="fc-answer" id="fc-answer"></div>
+    <button class="btn-reveal" id="btn-reveal">👁 Show Answer</button>
+  </div>
+  <div class="fc-nav">
+    <button class="btn-fc-back" id="btn-fc-back">← Back</button>
+    <button class="btn-fc-next" id="btn-fc-next">Next →</button>
+  </div>
+</div>
+
+<!-- FC DONE -->
+<div id="fcdone" class="screen">
+  <span style="font-size:3rem;display:block;margin-bottom:16px;">📝</span>
+  <h2>Essay Review Done!</h2>
+  <p>You reviewed all 3 essay topics. Good luck tomorrow!</p>
+  <div class="result-btns">
+    <button class="btn-retry" id="btn-fc-retry">🔄 Review Again</button>
+    <button class="btn-home" id="btn-fc-done-home">🏠 Home</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="screen">
+  <span class="result-emoji" id="r-emoji">🏆</span>
+  <div class="score-ring">
+    <span class="score-num" id="r-score">0/0</span>
+    <span class="score-lbl">SCORE</span>
+  </div>
+  <h2 class="result-title" id="r-title">Amazing!</h2>
+  <p class="result-msg" id="r-msg"></p>
+  <div class="result-btns">
+    <button class="btn-retry" id="btn-retry">🔄 Try Again</button>
+    <button class="btn-essay" id="btn-go-essay">📝 Essay Review</button>
+    <button class="btn-home" id="btn-home">🏠 Home</button>
+  </div>
+  <div class="review" id="review"></div>
+</div>
+
+<script>
+var PEOPLE = [
+  {t:'write',cat:'People',q:'People of both Native and European descent are called ___?',a:'Metis'},
+  {t:'write',cat:'People',q:'What is the wildest and most infamous whiskey trading fort?',a:'Fort Whoop-Up'},
+  {t:'write',cat:'People',q:'Who was Canada\'s first recognized female doctor?',a:'Ginny Trout'},
+  {t:'write',cat:'People',q:'What are people trained to find the shortest and safest way to build railways called?',a:'Surveyors'},
+  {t:'write',cat:'People',q:'Which native tribe lived in the Northwest?',a:'Blackfoot'},
+  {t:'write',cat:'People',q:'She succeeded in forcing the politicians of Manitoba to allow women the right to vote. Who is she?',a:'Nellie McClung'},
+  {t:'write',cat:'People',q:'They were the first official police force of the Canadian prairies. Who are they?',a:'The Mounties'},
+  {t:'write',cat:'People',q:'He went to the United States to convince Louis Riel to come back and help fight. Who is he?',a:'Gabriel Dumont'},
+  {t:'write',cat:'People',q:'He was hanged for rebelling against the Canadian government in November 1885. Who is he?',a:'Louis Riel'},
+  {t:'write',cat:'People',q:'He started the Salvation Army. Who is he?',a:'William Booth'}
+];
+
+var SHORT = [
+  {t:'write',cat:'Short Answer',q:'What colour were the Mounties\' uniforms?',a:'Red'},
+  {t:'write',cat:'Short Answer',q:'What did the American fur traders bring to trade with the natives?',a:'Cheap liquor'},
+  {t:'write',cat:'Short Answer',q:'Which province was the last to allow women to vote and hold office?',a:'Quebec'},
+  {t:'write',cat:'Short Answer',q:'When was the last residential school closed?',a:'1996'},
+  {t:'write',cat:'Short Answer',q:'Which company was the Hudson Bay Company\'s rival?',a:'Northwest Company'},
+  {t:'write',cat:'Short Answer',q:'What is the right to vote called?',a:'Suffrage'},
+  {t:'write',cat:'Short Answer',q:'What was the religious movement that wanted to solve all bad things in society through Christian principles?',a:'Social Gospel'},
+  {t:'write',cat:'Short Answer',q:'What treaty allowed natives to become Canadian citizens?',a:'No treaty'},
+  {t:'write',cat:'Short Answer',q:'How many Chinese workers were brought to Canada to work on the railway?',a:'6000'},
+  {t:'write',cat:'Short Answer',q:'What is Fort Garry now known as today?',a:'Winnipeg'},
+  {t:'write',cat:'Short Answer',q:'The Manitoba Act officially created which province?',a:'Manitoba'},
+  {t:'write',cat:'Short Answer',q:'Which railway connected the east of Canada to British Columbia?',a:'Canadian Pacific Railway'},
+  {t:'write',cat:'Short Answer',q:'What was the greatest obstacle in building the railway?',a:'Rocky Mountains'},
+  {t:'write',cat:'Short Answer',q:'Where did the east and west railway construction crews meet?',a:'Eagle Pass'},
+  {t:'write',cat:'Short Answer',q:'Which railway connected Halifax to Quebec City?',a:'Intercolonial Railway'},
+  {t:'write',cat:'Short Answer',q:'Which treaty promised the natives food and medical help?',a:'Treaty 6'},
+  {t:'write',cat:'Short Answer',q:'How many acres of land could a man receive through the Dominion Lands Act?',a:'160'}
+];
+
+var ESSAYS = [
+  {
+    q:'What 3 things did a new settler have to do on the land received through the Dominion Lands Act?',
+    a:'<ul><li>Pay a <strong>$10 registration fee</strong></li><li>Live on the land for <strong>3 years</strong></li><li>Build a <strong>permanent dwelling</strong></li><li>(Also: cultivate 30 acres)</li></ul>'
+  },
+  {
+    q:'Who were the two native leaders of the Northwest Rebellion? Why did the natives join the rebellion?',
+    a:'<ul><li>The two leaders were <strong>Chief Poundmaker</strong> and <strong>Chief Big Bear</strong> (both Cree)</li><li>The natives felt <strong>cheated by the government</strong> — buffalo had disappeared because of settlers and the CPR</li><li>The government promised food under Treaty 6 but gave only <strong>poor quality rations</strong></li></ul>'
+  },
+  {
+    q:'What was the main goal of residential schools? What were boys and girls not allowed to do?',
+    a:'<ul><li>Main goal: to make Indigenous children <strong>learn to live according to white customs and beliefs</strong></li><li>They were <strong>NOT allowed to speak their language</strong> or practise their culture</li><li>If they did, they were <strong>severely punished</strong></li></ul>'
+  }
+];
+
+var pool=[], idx=0, score=0, answered=false, log=[], mode='all';
+var fcIdx=0;
+
+function selectMode(el) {
+  document.querySelectorAll('.mode-card').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  mode=el.dataset.mode;
+}
+function shuffle(arr) {
+  var a=arr.slice(),i,j,tmp;
+  for(i=a.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));tmp=a[i];a[i]=a[j];a[j]=tmp;}
+  return a;
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+function goHome() {
+  pool=[];idx=0;score=0;log=[];answered=false;fcIdx=0;
+  showScreen('start');
+}
+
+document.getElementById('btn-start').addEventListener('click',function(){
+  if(mode==='essay'){ fcIdx=0; showScreen('flashcard'); renderFC(); return; }
+  var src=mode==='all'?PEOPLE.concat(SHORT):mode==='people'?PEOPLE:SHORT;
+  pool=shuffle(src); idx=0; score=0; log=[]; answered=false;
+  showScreen('quiz'); render();
+});
+
+function render() {
+  var q=pool[idx];
+  answered=false;
+  document.getElementById('q-counter').textContent=(idx+1)+' / '+pool.length;
+  document.getElementById('progress-bar').style.width=(idx/pool.length*100)+'%';
+  document.getElementById('section-badge').textContent=q.cat;
+  document.getElementById('q-text').textContent=q.q;
+  var fb=document.getElementById('feedback');
+  fb.className='feedback'; fb.textContent='';
+  var nb=document.getElementById('btn-next');
+  nb.className='btn-next';
+  nb.textContent=idx===pool.length-1?'🏁 See Results!':'Next →';
+  document.getElementById('btn-back').disabled=(idx===0);
+
+  var area=document.getElementById('answer-area');
+  area.innerHTML='';
+
+  // write answer UI
+  var wrap=document.createElement('div');
+  wrap.className='write-wrap';
+
+  var input=document.createElement('input');
+  input.type='text';
+  input.className='write-input';
+  input.placeholder='Type your answer here...';
+  input.id='write-input';
+  input.addEventListener('keydown',function(e){ if(e.key==='Enter') submitAnswer(); });
+
+  var submitBtn=document.createElement('button');
+  submitBtn.className='btn-submit';
+  submitBtn.textContent='Check Answer ✓';
+  submitBtn.id='btn-submit';
+  submitBtn.addEventListener('click', submitAnswer);
+
+  wrap.appendChild(input);
+  wrap.appendChild(submitBtn);
+
+  // self-check section (hidden until submitted)
+  var selfcheck=document.createElement('div');
+  selfcheck.className='selfcheck';
+  selfcheck.id='selfcheck';
+
+  var ansReveal=document.createElement('div');
+  ansReveal.className='answer-reveal';
+  ansReveal.id='answer-reveal';
+
+  var checkBtns=document.createElement('div');
+  checkBtns.className='check-btns';
+
+  var btnC=document.createElement('button');
+  btnC.className='btn-correct'; btnC.textContent='✅ I got it right!';
+  btnC.addEventListener('click',function(){ markAnswer(true); });
+
+  var btnW=document.createElement('button');
+  btnW.className='btn-wrong'; btnW.textContent='❌ I got it wrong';
+  btnW.addEventListener('click',function(){ markAnswer(false); });
+
+  checkBtns.appendChild(btnC); checkBtns.appendChild(btnW);
+  selfcheck.appendChild(ansReveal); selfcheck.appendChild(checkBtns);
+  wrap.appendChild(selfcheck);
+  area.appendChild(wrap);
+
+  // focus input
+  setTimeout(function(){ document.getElementById('write-input').focus(); }, 100);
+}
+
+function submitAnswer() {
+  if(answered) return;
+  var input=document.getElementById('write-input');
+  if(!input.value.trim()) return;
+  input.disabled=true;
+  document.getElementById('btn-submit').style.display='none';
+
+  var q=pool[idx];
+  var ansReveal=document.getElementById('answer-reveal');
+  ansReveal.innerHTML='Correct answer: <span>'+q.a+'</span>';
+  document.getElementById('selfcheck').className='selfcheck show';
+  answered=true;
+}
+
+function markAnswer(ok) {
+  var q=pool[idx];
+  if(log.length<=idx){ log.push({q:q.q,ok:ok}); if(ok)score++; }
+  else { var old=log[idx]; if(old.ok!==ok){if(old.ok)score--;if(ok)score++;log[idx]={q:q.q,ok:ok};} }
+
+  var fb=document.getElementById('feedback');
+  fb.textContent=ok?'🎉 Great job! Keep it up!':'📖 Review this one again!';
+  fb.className='feedback show '+(ok?'ok':'bad');
+
+  // hide check buttons
+  document.querySelector('.check-btns').style.display='none';
+  document.getElementById('btn-next').className='btn-next show';
+}
+
+document.getElementById('btn-next').addEventListener('click',function(){
+  if(!answered) return;
+  idx++; if(idx>=pool.length) showResult(); else render();
+});
+document.getElementById('btn-back').addEventListener('click',function(){
+  if(idx<=0) return;
+  if(answered&&log.length>idx){var e=log.pop();if(e.ok)score--;}
+  idx--;
+  if(log.length>idx){var p=log.pop();if(p.ok)score--;}
+  render();
+});
+document.getElementById('btn-home-top').addEventListener('click',goHome);
+
+// FLASHCARD
+function renderFC() {
+  var fc=ESSAYS[fcIdx];
+  document.getElementById('fc-counter').textContent='Essay '+(fcIdx+1)+' / '+ESSAYS.length;
+  document.getElementById('fc-question').textContent=fc.q;
+  var ans=document.getElementById('fc-answer');
+  ans.innerHTML=fc.a; ans.className='fc-answer';
+  document.getElementById('btn-reveal').style.display='block';
+  document.getElementById('btn-fc-back').disabled=(fcIdx===0);
+  document.getElementById('btn-fc-next').textContent=fcIdx===ESSAYS.length-1?'🏁 Done!':'Next →';
+}
+document.getElementById('btn-reveal').addEventListener('click',function(){
+  document.getElementById('fc-answer').className='fc-answer show';
+  this.style.display='none';
+});
+document.getElementById('btn-fc-next').addEventListener('click',function(){
+  fcIdx++; if(fcIdx>=ESSAYS.length){ showScreen('fcdone'); return; } renderFC();
+});
+document.getElementById('btn-fc-back').addEventListener('click',function(){
+  if(fcIdx<=0) return; fcIdx--; renderFC();
+});
+document.getElementById('btn-fc-home').addEventListener('click',goHome);
+document.getElementById('btn-fc-retry').addEventListener('click',function(){ fcIdx=0; showScreen('flashcard'); renderFC(); });
+document.getElementById('btn-fc-done-home').addEventListener('click',goHome);
+
+// RESULT
+function showResult(){
+  document.getElementById('progress-bar').style.width='100%';
+  showScreen('result');
+  var pct=score/pool.length;
+  document.getElementById('r-score').textContent=score+'/'+pool.length;
+  var emoji,title,msg;
+  if(pct===1){emoji='🏆';title='PERFECT SCORE!';msg='You are SO ready for tomorrow\'s test! 🍁';}
+  else if(pct>=.8){emoji='🌟';title='Excellent!';msg='Almost perfect — you\'ve got this tomorrow!';}
+  else if(pct>=.6){emoji='👍';title='Good Job!';msg='Solid! Review the missed ones before the test.';}
+  else if(pct>=.4){emoji='📚';title='Keep Studying!';msg='Go over the missed questions one more time!';}
+  else{emoji='🍁';title='Study More!';msg='Don\'t give up! Review the chapter and try again.';}
+  document.getElementById('r-emoji').textContent=emoji;
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-msg').textContent=msg;
+  var html='';
+  for(var i=0;i<log.length;i++){
+    html+='<div class="review-item '+(log[i].ok?'ok':'miss')+'">';
+    html+='<span>'+(log[i].ok?'✅':'❌')+'</span><span>'+log[i].q+'</span></div>';
+  }
+  document.getElementById('review').innerHTML=html;
+}
+document.getElementById('btn-retry').addEventListener('click',function(){
+  idx=0;score=0;log=[];answered=false;pool=shuffle(pool);
+  showScreen('quiz'); render();
+});
+document.getElementById('btn-go-essay').addEventListener('click',function(){
+  fcIdx=0; showScreen('flashcard'); renderFC();
+});
+document.getElementById('btn-home').addEventListener('click',goHome);
+</script>
+</body>
+</html>
