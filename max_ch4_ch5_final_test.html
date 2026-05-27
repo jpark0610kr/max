@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Max's Ch.4-5 Final Test! 🏆</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Nunito', 'Arial Rounded MT Bold', Arial, sans-serif;
+    background: linear-gradient(160deg, #1a0533 0%, #2d0a5e 50%, #0d0020 100%);
+    min-height: 100%; color: #fff;
+  }
+  body { min-height: 100vh; padding-bottom: 40px; }
+  .container { max-width: 820px; margin: 0 auto; padding: 20px; }
+
+  .header { text-align: center; padding: 28px 0 16px; }
+  .header h1 {
+    font-family: 'Fredoka One', 'Comic Sans MS', cursive;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    color: #E9D5FF;
+    text-shadow: 3px 3px 0 #1a0533, 0 0 30px rgba(233,213,255,0.5);
+  }
+  .header p { color: #C084FC; font-size: 0.95rem; font-weight: 700; margin-top: 6px; letter-spacing: 1px; }
+
+  /* SCORE BAR */
+  .score-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 18px; padding: 12px 22px; margin-bottom: 16px;
+  }
+  .score-item { text-align: center; }
+  .score-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.45); font-weight: 700; }
+  .score-value { font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 1.65rem; line-height: 1; margin-top: 2px; }
+  .si-stars .score-value { color: #FFD700; }
+  .si-correct .score-value { color: #86EFAC; }
+  .si-total .score-value { color: #E9D5FF; }
+
+  .progress-wrap { background: rgba(0,0,0,0.35); border-radius: 50px; height: 12px; margin-bottom: 22px; overflow: hidden; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, #A855F7, #EC4899); border-radius: 50px; transition: width 0.5s ease; position: relative; overflow: hidden; }
+  .progress-bar::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent); animation:shimmer 1.5s infinite; }
+  @keyframes shimmer { from{transform:translateX(-100%);} to{transform:translateX(100%);} }
+
+  /* SECTION DIVIDER */
+  .section-divider {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+    font-family: 'Fredoka One', 'Comic Sans MS', cursive; font-size: 0.85rem;
+    color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2px;
+  }
+  .section-divider::before, .section-divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.15); }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: rgba(0,0,0,0.38); border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 24px; padding: 26px; margin-bottom: 18px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    animation: slideIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes slideIn { from{transform:translateY(24px) scale(0.96);opacity:0;} to{transform:translateY(0) scale(1);opacity:1;} }
+
+  .q-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .q-num { font-family:'Fredoka One','Comic Sans MS',cursive; font-size:0.72rem; color:rgba(255,255,255,0.35); letter-spacing:1px; }
+  .ch-badge {
+    font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px;
+    padding:3px 11px; border-radius:50px;
+  }
+  .ch4 { background:#4ADE80; color:#14532D; }
+  .ch5 { background:#FB923C; color:#7C2D12; }
+  .type-badge {
+    font-size:0.65rem; font-weight:800; text-transform:uppercase; letter-spacing:1px;
+    padding:3px 9px; border-radius:50px; background:rgba(255,255,255,0.12); color:rgba(255,255,255,0.6);
+  }
+
+  .question-text { font-size:clamp(1rem,2.8vw,1.22rem); font-weight:800; color:#fff; line-height:1.6; margin-bottom:20px; }
+
+  /* MC */
+  .options-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media(max-width:500px){.options-grid{grid-template-columns:1fr;}}
+  .option-btn {
+    background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.12);
+    border-radius:13px; padding:13px 14px; color:#fff;
+    font-family:'Nunito',Arial,sans-serif; font-size:0.9rem; font-weight:700;
+    cursor:pointer; text-align:left; transition:all 0.2s; display:flex; align-items:center; gap:10px;
+  }
+  .option-btn:hover:not(:disabled){background:rgba(168,85,247,0.15);border-color:#A855F7;transform:translateY(-2px);}
+  .option-btn .letter{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.9rem;flex-shrink:0;}
+  .option-btn.correct{background:rgba(74,222,128,0.2);border-color:#4ADE80;}
+  .option-btn.correct .letter{background:#4ADE80;color:#14532D;}
+  .option-btn.wrong{background:rgba(248,113,113,0.2);border-color:#F87171;animation:shake 0.4s;}
+  .option-btn.wrong .letter{background:#F87171;color:white;}
+  .option-btn:disabled{cursor:not-allowed;opacity:0.7;}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+
+  /* TF */
+  .tf-wrap{display:flex;gap:12px;}
+  .tf-btn{flex:1;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.12);border-radius:13px;padding:14px;color:white;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.2rem;cursor:pointer;transition:all 0.2s;text-align:center;}
+  .tf-btn.true-btn:hover:not(:disabled){background:rgba(74,222,128,0.15);border-color:#4ADE80;}
+  .tf-btn.false-btn:hover:not(:disabled){background:rgba(248,113,113,0.15);border-color:#F87171;}
+  .tf-btn.correct{background:rgba(74,222,128,0.2);border-color:#4ADE80;animation:pulse 0.5s;}
+  .tf-btn.wrong{background:rgba(248,113,113,0.2);border-color:#F87171;animation:shake 0.4s;}
+  .tf-btn:disabled{cursor:not-allowed;opacity:0.7;}
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.03);}}
+
+  /* FILL */
+  .fill-input{width:100%;background:rgba(255,255,255,0.07);border:2px solid rgba(255,255,255,0.18);border-radius:13px;padding:13px 17px;color:#fff;font-family:'Nunito',Arial,sans-serif;font-size:1rem;font-weight:700;outline:none;transition:all 0.2s;}
+  .fill-input:focus{border-color:#A855F7;background:rgba(168,85,247,0.08);}
+  .fill-input.correct{border-color:#4ADE80;background:rgba(74,222,128,0.1);}
+  .fill-input.wrong{border-color:#F87171;background:rgba(248,113,113,0.1);}
+  .fill-input::placeholder{color:rgba(255,255,255,0.28);}
+  .submit-btn{margin-top:12px;background:linear-gradient(135deg,#A855F7,#7C3AED);border:none;border-radius:13px;padding:12px 26px;color:white;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;cursor:pointer;transition:all 0.2s;}
+  .submit-btn:hover{transform:translateY(-2px);}
+
+  /* FEEDBACK */
+  .feedback{margin-top:12px;padding:12px 16px;border-radius:12px;font-weight:700;font-size:0.9rem;display:none;align-items:flex-start;gap:9px;line-height:1.5;}
+  .feedback.show{display:flex;animation:fadeIn 0.3s ease;}
+  .feedback.correct-fb{background:rgba(74,222,128,0.13);border:2px solid rgba(74,222,128,0.35);color:#BBF7D0;}
+  .feedback.wrong-fb{background:rgba(248,113,113,0.13);border:2px solid rgba(248,113,113,0.35);color:#FECACA;}
+  .feedback-icon{font-size:1.3rem;flex-shrink:0;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+
+  /* HINT */
+  .hint-btn{background:none;border:2px solid rgba(255,215,0,0.35);border-radius:50px;padding:5px 13px;color:#FFD700;font-family:'Nunito',Arial,sans-serif;font-size:0.8rem;font-weight:800;cursor:pointer;transition:all 0.2s;margin-top:10px;}
+  .hint-btn:hover{background:rgba(255,215,0,0.09);}
+  .hint-text{margin-top:6px;padding:8px 12px;background:rgba(255,215,0,0.09);border-radius:9px;color:#FFD700;font-size:0.85rem;font-weight:700;display:none;}
+  .hint-text.show{display:block;animation:fadeIn 0.3s;}
+
+  /* NEXT BTN */
+  .next-btn{display:none;width:100%;margin-top:12px;background:linear-gradient(135deg,#FFD700,#F97316);border:none;border-radius:13px;padding:14px;color:#1a0533;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.2rem;cursor:pointer;transition:all 0.2s;}
+  .next-btn.show{display:block;animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+  .next-btn:hover{transform:translateY(-2px);}
+  @keyframes popIn{from{transform:scale(0.8);opacity:0;}to{transform:scale(1);opacity:1;}}
+
+  /* RESULT */
+  .result-screen{display:none;text-align:center;padding:36px 16px;}
+  .result-screen.show{display:block;animation:slideIn 0.5s ease;}
+  .result-emoji{font-size:5rem;margin-bottom:16px;animation:bounce 1s infinite;}
+  @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-16px);}}
+  .result-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:clamp(2rem,6vw,3rem);margin-bottom:8px;color:#E9D5FF;}
+  .result-score-big{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:clamp(3.5rem,10vw,5rem);line-height:1;margin:16px 0;color:#FFD700;}
+  .result-grade{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2rem;margin-bottom:8px;}
+  .result-msg{font-size:1rem;font-weight:700;color:rgba(255,255,255,0.65);margin-bottom:24px;}
+  .stars-display{font-size:2.4rem;margin:6px 0 18px;}
+  .restart-btn{background:linear-gradient(135deg,#A855F7,#6D28D9);border:none;border-radius:16px;padding:16px 44px;color:white;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.3rem;cursor:pointer;transition:all 0.2s;}
+  .restart-btn:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(168,85,247,0.4);}
+
+  .confetti-piece{position:fixed;pointer-events:none;animation:confettiFall linear forwards;z-index:9999;}
+  @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🏆 Ch.4–5 Final Test!</h1>
+    <p>Body's Defenses · Fuel for a Healthy Body · 40 Questions</p>
+  </div>
+
+  <div class="score-bar">
+    <div class="score-item si-stars"><div class="score-label">⭐ Stars</div><div class="score-value" id="starCount">0</div></div>
+    <div class="score-item si-correct"><div class="score-label">✅ Correct</div><div class="score-value" id="correctCount">0</div></div>
+    <div class="score-item si-total"><div class="score-label">📋 Progress</div><div class="score-value" id="totalCount">0/40</div></div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <div class="question-card" id="questionCard">
+    <div class="q-meta">
+      <span class="q-num" id="qNum">Q1 of 40</span>
+      <span class="ch-badge ch4" id="chBadge">Ch.4</span>
+      <span class="type-badge" id="typeBadge">MC</span>
+    </div>
+    <div class="question-text" id="questionText"></div>
+    <div id="answerArea"></div>
+    <div class="feedback" id="feedback">
+      <span class="feedback-icon" id="feedbackIcon"></span>
+      <span id="feedbackText"></span>
+    </div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question ➡️</button>
+  </div>
+
+  <div class="result-screen" id="resultScreen">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <div class="result-title" id="resultTitle">Test Complete!</div>
+    <div class="result-score-big" id="resultScore"></div>
+    <div class="result-grade" id="resultGrade"></div>
+    <div class="stars-display" id="resultStars"></div>
+    <div class="result-msg" id="resultMsg"></div>
+    <button class="restart-btn" onclick="restartQuiz()">🔄 Try Again!</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+  // ── CH.4: PATHOGENS & DISEASE (8) ──
+  {ch:'ch4',chLabel:'Ch.4 · Pathogens',type:'mc',typLabel:'MC',
+   q:'What is a PATHOGEN?',
+   opts:['A type of white blood cell','A microorganism that can cause disease','The outer layer of skin','A part of the lymphatic system'],
+   ans:1,fb:'A PATHOGEN is any germ (microorganism) that can cause disease — like bacteria or viruses! 🦠',
+   hint:'Pathogens make you sick!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Pathogens',type:'tf',typLabel:'T/F',
+   q:'TRUE or FALSE: Bacteria can be treated with antibiotics, but viruses cannot.',
+   ans:true,fb:'TRUE! Antibiotics kill bacteria but do NOT work on viruses — that\'s why doctors don\'t give antibiotics for colds! 💊',
+   hint:'Think about what antibiotics are designed to fight!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Pathogens',type:'mc',typLabel:'MC',
+   q:'How does a VIRUS reproduce?',
+   opts:['By dividing to make copies of itself','By using a host cell of the body','By producing antibodies','Through antibiotic medication'],
+   ans:1,fb:'Viruses are sneaky — they hijack YOUR body\'s cells to reproduce! That\'s why they\'re hard to treat! 😷',
+   hint:'Viruses need to get INSIDE a cell to reproduce!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Pathogens',type:'mc',typLabel:'MC',
+   q:'Which disease CAN spread from person to person?',
+   opts:['Diabetes','Cancer','The flu','A broken bone'],
+   ans:2,fb:'The flu is COMMUNICABLE — it spreads person to person! NON-communicable diseases like diabetes cannot spread! 🤧',
+   hint:'Communicable = contagious!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Pathogens',type:'tf',typLabel:'T/F',
+   q:'TRUE or FALSE: A fever means your body temperature is 100.4°F or higher.',
+   ans:true,fb:'TRUE! 100.4°F or higher = fever. Your body heats up on purpose to help kill pathogens! 🌡️',
+   hint:'Remember the exact temperature!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Skin',type:'fill',typLabel:'Fill',
+   q:'The ______ is the outer layer of skin and the body\'s first barrier against pathogens. (1 word)',
+   ans:'epidermis',alts:[],fb:'EPIDERMIS = outer layer of skin! Epi = on top! It\'s your first line of defense! 🛡️',
+   hint:'Epi = outer, on top!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Skin',type:'mc',typLabel:'MC',
+   q:'What do CILIA do in your airways?',
+   opts:['Produce digestive juices','Keep pathogens from getting into the lungs','Absorb nutrients into the blood','Control how much light enters the eye'],
+   ans:1,fb:'CILIA are tiny hair-like projections that sweep pathogens out of your airways before they reach your lungs! 🪶',
+   hint:'Think of tiny brooms in your airways!'},
+
+  // ── CH.4: LYMPHATIC & IMMUNE SYSTEM (7) ──
+  {ch:'ch4',chLabel:'Ch.4 · Lymphatic System',type:'mc',typLabel:'MC',
+   q:'What is the main job of the LYMPHATIC SYSTEM?',
+   opts:['Break down food into nutrients','Carry oxygen to cells','Collect tissue fluid and clean the body of pathogens','Control thinking and reasoning'],
+   ans:2,fb:'The LYMPHATIC SYSTEM is your body\'s cleanup crew — it removes pathogens from tissue fluid! 🌊',
+   hint:'Think cleanup crew!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Lymphatic System',type:'mc',typLabel:'MC',
+   q:'Which organ of the lymphatic system CLEANSES THE BLOOD?',
+   opts:['Thymus','Lymph nodes','Tonsils','Spleen'],
+   ans:3,fb:'The SPLEEN is the largest lymphatic organ and it cleanses your blood! 🩸',
+   hint:'It\'s the LARGEST lymphatic organ!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Lymphatic System',type:'tf',typLabel:'T/F',
+   q:'TRUE or FALSE: The thymus prepares lymphocytes to fight pathogens.',
+   ans:true,fb:'TRUE! The THYMUS trains lymphocytes — like a training camp for your immune fighter cells! ⚗️',
+   hint:'Think of it as a training camp!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Lymphatic System',type:'fill',typLabel:'Fill',
+   q:'______ ______ are large bunches of lymphatic tissue that filter pathogens — they swell when you\'re sick. (2 words)',
+   ans:'lymph nodes',alts:['lymph node'],fb:'LYMPH NODES filter pathogens from lymph fluid — you can feel them swell in your neck when fighting an infection! 🫘',
+   hint:'You feel these swell in your neck when sick!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Immune Care',type:'mc',typLabel:'MC',
+   q:'What is the BEST way to stop the spread of pathogens?',
+   opts:['Eat more sugar','Exercise as hard as possible','Wash your hands with soap and water','Stay in bed all day'],
+   ans:2,fb:'Washing hands with SOAP and WATER is one of the best ways to prevent spreading pathogens! 🧼',
+   hint:'Simple and effective — something you do every day!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Immune Care',type:'tf',typLabel:'T/F',
+   q:'TRUE or FALSE: Getting enough sleep helps keep your immune system strong.',
+   ans:true,fb:'TRUE! Without enough sleep your immune system weakens — kids need 10-11 hours! 😴',
+   hint:'Think about how you feel after a bad night\'s sleep!'},
+
+  {ch:'ch4',chLabel:'Ch.4 · Immune Care',type:'mc',typLabel:'MC',
+   q:'What should you do if you have a FEVER and are contagious?',
+   opts:['Go to school so you don\'t miss work','Stay home, rest, and avoid spreading pathogens to others','Exercise hard to sweat it out','Eat lots of sugar for energy'],
+   ans:1,fb:'Stay HOME when sick! It helps you recover AND protects others from getting sick! 🏠',
+   hint:'Protect yourself AND others!'},
+
+  // ── CH.5: DIGESTION (5) ──
+  {ch:'ch5',chLabel:'Ch.5 · Digestion',type:'mc',typLabel:'MC',
+   q:'Where does DIGESTION begin?',
+   opts:['Stomach','Small intestine','Mouth','Large intestine'],
+   ans:2,fb:'Digestion begins in the MOUTH — chewing breaks food into pieces and SALIVA starts breaking it down chemically! 👄',
+   hint:'It\'s where you first put food!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Digestion',type:'mc',typLabel:'MC',
+   q:'Where are nutrients from food ABSORBED into the bloodstream?',
+   opts:['Mouth','Stomach','Large intestine','Small intestine'],
+   ans:3,fb:'The SMALL INTESTINE is where nutrients are absorbed into the blood — helped by tiny villi! 🌀',
+   hint:'Small intestine — not the large one!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Digestion',type:'fill',typLabel:'Fill',
+   q:'______ are hair-like projections in the small intestine through which molecules are passed to the bloodstream. (1 word)',
+   ans:'villi',alts:['villus'],fb:'VILLI are tiny finger-like bumps that absorb nutrients and pass them into your blood! 🪶',
+   hint:'Tiny finger-like bumps inside the small intestine!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Digestion',type:'mc',typLabel:'MC',
+   q:'What does the LARGE INTESTINE do?',
+   opts:['Absorbs nutrients into the blood','Churns food with digestive juices','Begins digestion with saliva','Prepares waste to leave the body'],
+   ans:3,fb:'LARGE INTESTINE = the last stop! It prepares waste (things the body can\'t use) to leave! 🔚',
+   hint:'Last stop in digestion!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Digestion',type:'tf',typLabel:'T/F',
+   q:'TRUE or FALSE: Enzymes are proteins that quickly break down food into molecules.',
+   ans:true,fb:'TRUE! ENZYMES are chemical helpers — the enzymes in saliva break down starches into simple sugars! ⚗️',
+   hint:'Chemical helpers that speed up digestion!'},
+
+  // ── CH.5: ENERGY NUTRIENTS (5) ──
+  {ch:'ch5',chLabel:'Ch.5 · Energy Nutrients',type:'mc',typLabel:'MC',
+   q:'Which nutrient is the body\'s MAIN SOURCE OF ENERGY?',
+   opts:['Protein','Fats and oils','Vitamins','Carbohydrates'],
+   ans:3,fb:'CARBOHYDRATES are your body\'s main fuel! Bread, rice, pasta — they all give you energy! 🍞',
+   hint:'Think about what gives you energy fastest!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Energy Nutrients',type:'tf',typLabel:'T/F',
+   q:'TRUE or FALSE: After a "sugar crash," you may feel exhausted and have difficulty concentrating.',
+   ans:true,fb:'TRUE! Sugary foods give a quick burst then a crash — exhausted, moody, hard to focus. Healthy carbs give steady energy instead! 😴',
+   hint:'Think about how you feel after eating too much candy!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Energy Nutrients',type:'mc',typLabel:'MC',
+   q:'What does PROTEIN do for the body?',
+   opts:['Provides the main source of quick energy','Helps store energy and use vitamins','Helps the body grow, repair, and replace cells and build muscle','Carries oxygen to cells'],
+   ans:2,fb:'PROTEIN builds and repairs your muscles and cells! Meat, eggs, beans, nuts — all great protein sources! 💪',
+   hint:'Think about building muscle!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Energy Nutrients',type:'mc',typLabel:'MC',
+   q:'Which type of fat is HEALTHIER and helps prevent heart disease?',
+   opts:['Saturated fats (from animals)','Trans fats','Unsaturated fats (from plants/fish)','Solid fats at room temperature'],
+   ans:2,fb:'UNSATURATED FATS from plants and fish are healthier — olive oil, avocado, nuts! They help prevent heart disease! 🥑',
+   hint:'These are usually liquid at room temperature!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Energy Nutrients',type:'fill',typLabel:'Fill',
+   q:'Water protects body organs, maintains temperature, and helps the body use ______ and remove waste. (1 word)',
+   ans:'nutrients',alts:[],fb:'Water helps your body USE nutrients and removes waste — it\'s essential for every single cell! 💧',
+   hint:'What does food give your body that it needs?'},
+
+  // ── CH.5: VITAMINS & MINERALS (8) ──
+  {ch:'ch5',chLabel:'Ch.5 · Vitamins',type:'mc',typLabel:'MC',
+   q:'Which vitamin is called the "SUNSHINE VITAMIN" because your body makes it when sunlight hits your skin?',
+   opts:['Vitamin A','Vitamin C','Vitamin K','Vitamin D'],
+   ans:3,fb:'VITAMIN D is the sunshine vitamin! It also builds strong bones and teeth! ☀️',
+   hint:'Go outside to get this one!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Vitamins',type:'mc',typLabel:'MC',
+   q:'Which vitamin helps your IMMUNE SYSTEM resist and fight infection?',
+   opts:['Vitamin A','Vitamin B','Vitamin C','Vitamin K'],
+   ans:2,fb:'VITAMIN C fights infection and helps your body repair itself! Oranges, bell peppers, and strawberries are great sources! 🍊',
+   hint:'Found in citrus fruits!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Vitamins',type:'fill',typLabel:'Fill',
+   q:'Vitamin ______ helps your blood to clot when you get a cut or scrape. (1 letter)',
+   ans:'K',alts:['vitamin k'],fb:'VITAMIN K = K for Klotting! Dark leafy greens are the best source! 🩹',
+   hint:'K for Klotting!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Vitamins',type:'mc',typLabel:'MC',
+   q:'What does VITAMIN A do for the body?',
+   opts:['Helps blood to clot','Keeps eyes and skin healthy; supports immune and skeletal systems','Protects cells from damage','Builds strong bones and teeth'],
+   ans:1,fb:'VITAMIN A keeps your eyes and skin healthy AND supports your immune and skeletal systems! Found in carrots, salmon, and spinach! 👁️',
+   hint:'Think eyes and skin!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Minerals',type:'mc',typLabel:'MC',
+   q:'Which mineral makes bones and teeth strong and is the MOST COMMON mineral in the body?',
+   opts:['Iron','Potassium','Calcium','Magnesium'],
+   ans:2,fb:'CALCIUM is #1 most common mineral in your body — found in dairy, dark leafy greens, beans, and nuts! 🦷',
+   hint:'Found in milk and dairy!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Minerals',type:'mc',typLabel:'MC',
+   q:'Which mineral helps the body make HEALTHY BLOOD?',
+   opts:['Calcium','Potassium','Iodine','Iron'],
+   ans:3,fb:'IRON builds healthy blood! Found in meat, shellfish, dark leafy vegetables, beans, and whole grains! 🩸',
+   hint:'Think of the element used in blood!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Minerals',type:'mc',typLabel:'MC',
+   q:'Which mineral does the THYROID GLAND need to work properly?',
+   opts:['Calcium','Magnesium','Iodine','Potassium'],
+   ans:2,fb:'IODINE keeps your thyroid healthy — the thyroid affects how you grow and function! Found in iodized salt and seafood! 🦞',
+   hint:'Found in iodized table SALT!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Minerals',type:'tf',typLabel:'T/F',
+   q:'TRUE or FALSE: Potassium balances fluids in the body and helps the circulatory system.',
+   ans:true,fb:'TRUE! POTASSIUM balances fluids and keeps your circulatory system working well! Bananas and oranges are great sources! 🍌',
+   hint:'Bananas are famous for this mineral!'},
+
+  // ── CH.5: BALANCED DIET & FOOD LABELS (7) ──
+  {ch:'ch5',chLabel:'Ch.5 · Balanced Diet',type:'mc',typLabel:'MC',
+   q:'According to MyPlate, about how much of your daily food should be FRUITS and VEGETABLES combined?',
+   opts:['One quarter','One third','About half','Three quarters'],
+   ans:2,fb:'About HALF your plate should be fruits and vegetables — they\'re packed with vitamins, minerals, and fiber! 🥦🍎',
+   hint:'Look at the MyPlate diagram!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Balanced Diet',type:'tf',typLabel:'T/F',
+   q:'TRUE or FALSE: Whole grains are healthier than refined grains because they contain the bran and germ.',
+   ans:true,fb:'TRUE! The bran and germ have valuable fiber and nutrients — refined grains have these removed! 🌾',
+   hint:'Whole = keeps everything, Refined = parts removed!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Food Labels',type:'mc',typLabel:'MC',
+   q:'On a Nutrition Facts label, a daily value ABOVE 20% means the food is:',
+   opts:['Low in that nutrient','A dangerous food','High in that nutrient','The perfect amount'],
+   ans:2,fb:'Above 20% = HIGH amount! Below 5% = LOW amount! Use these numbers to make smart food choices! 📊',
+   hint:'20% is high, 5% is low!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Food Labels',type:'mc',typLabel:'MC',
+   q:'Ingredients on a food label are listed from:',
+   opts:['Smallest to largest amount','Alphabetical order','Largest to smallest amount — most first','By how healthy they are'],
+   ans:2,fb:'Ingredients are listed MOST to LEAST — if sugar is first, the product has the most sugar of any ingredient! 📋',
+   hint:'First ingredient = most amount!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Food Labels',type:'tf',typLabel:'T/F',
+   q:'TRUE or FALSE: You should LIMIT saturated fat, cholesterol, sodium, and added sugars in your diet.',
+   ans:true,fb:'TRUE! Too much saturated fat, cholesterol, sodium, and added sugars can harm your heart and overall health! 🚫',
+   hint:'These can increase risk of heart disease!'},
+
+  // ── CH.5: FOOD SAFETY (3) ──
+  {ch:'ch5',chLabel:'Ch.5 · Food Safety',type:'fill',typLabel:'Fill',
+   q:'______ foods are foods that can spoil easily and must be stored in the refrigerator. (1 word)',
+   ans:'perishable',alts:['perishables'],fb:'PERISHABLE foods spoil easily — meats, dairy, fresh produce all need proper refrigeration! 🥛',
+   hint:'Think of foods that go bad quickly!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Food Safety',type:'mc',typLabel:'MC',
+   q:'How long can cooked or perishable food safely sit OUT of the refrigerator?',
+   opts:['Up to 30 minutes','Up to 2 hours','Up to 4 hours','Up to 8 hours'],
+   ans:1,fb:'Only 2 HOURS! After that, perishable food is not safe to eat — put it back in the fridge! ⏰',
+   hint:'It\'s less than you might think — just 2!'},
+
+  {ch:'ch5',chLabel:'Ch.5 · Food Safety',type:'tf',typLabel:'T/F',
+   q:'TRUE or FALSE: Frozen meats should be thawed at room temperature to save time.',
+   ans:false,fb:'FALSE! Never thaw meat at room temperature — pathogens multiply! Always thaw in the refrigerator or microwave defrost! 🥩',
+   hint:'Room temperature is dangerous for meat!'},
+];
+
+// ── VALIDATION ──
+(function(){
+  const errors=[];
+  const mcE=questions.filter(q=>q.type==='mc'&&q.opts.length!==4);
+  const ansE=questions.filter(q=>q.type==='mc'&&q.ans>=q.opts.length);
+  const blankE=questions.filter(q=>q.type==='fill'&&!q.q.includes('______'));
+  const noHint=questions.filter(q=>!q.hint);
+  const noFb=questions.filter(q=>!q.fb);
+  if(mcE.length)errors.push(`MC opts!=4: ${mcE.map(q=>q.q.slice(0,30))}`);
+  if(ansE.length)errors.push(`Ans OOB: ${ansE.map(q=>q.q.slice(0,30))}`);
+  if(blankE.length)errors.push(`No blank: ${blankE.map(q=>q.ans)}`);
+  if(noHint.length)errors.push(`No hint: ${noHint.length}`);
+  if(noFb.length)errors.push(`No fb: ${noFb.length}`);
+  const ch4=questions.filter(q=>q.ch==='ch4').length;
+  const ch5=questions.filter(q=>q.ch==='ch5').length;
+  if(errors.length)console.warn('❌ ERRORS:',errors);
+  else console.log(`✅ Validation passed: ${questions.length} questions (Ch4: ${ch4}, Ch5: ${ch5})`);
+})();
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+let shuffledQ,qIdx,correct,stars,answered;
+
+function initQuiz(){
+  shuffledQ=shuffle(questions);qIdx=0;correct=0;stars=0;answered=false;
+  updateScore();renderQ();
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('questionCard').style.display='block';
+}
+
+function updateScore(){
+  document.getElementById('starCount').textContent=stars;
+  document.getElementById('correctCount').textContent=correct;
+  document.getElementById('totalCount').textContent=`${qIdx}/40`;
+  document.getElementById('progressBar').style.width=`${(qIdx/40)*100}%`;
+}
+
+function renderQ(){
+  answered=false;
+  const q=shuffledQ[qIdx];
+  document.getElementById('qNum').textContent=`Q${qIdx+1} of 40`;
+  const badge=document.getElementById('chBadge');
+  badge.textContent=q.chLabel; badge.className='ch-badge '+q.ch;
+  document.getElementById('typeBadge').textContent=q.typLabel;
+  document.getElementById('questionText').textContent=q.q;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('nextBtn').className='next-btn';
+  const card=document.getElementById('questionCard');
+  card.style.animation='none';card.offsetHeight;card.style.animation='slideIn 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+  const area=document.getElementById('answerArea');area.innerHTML='';
+
+  if(q.type==='mc'){
+    const grid=document.createElement('div');grid.className='options-grid';
+    ['A','B','C','D'].forEach((l,i)=>{
+      const btn=document.createElement('button');btn.className='option-btn';
+      btn.innerHTML=`<span class="letter">${l}</span><span>${q.opts[i]}</span>`;
+      btn.onclick=()=>pickMC(i);grid.appendChild(btn);
+    });
+    area.appendChild(grid);
+  } else if(q.type==='tf'){
+    const wrap=document.createElement('div');wrap.className='tf-wrap';
+    const tb=document.createElement('button');tb.className='tf-btn true-btn';tb.textContent='✅ TRUE';tb.onclick=()=>pickTF(true);
+    const fb2=document.createElement('button');fb2.className='tf-btn false-btn';fb2.textContent='❌ FALSE';fb2.onclick=()=>pickTF(false);
+    wrap.appendChild(tb);wrap.appendChild(fb2);area.appendChild(wrap);
+  } else {
+    const inp=document.createElement('input');inp.type='text';inp.className='fill-input';inp.id='fillInput';
+    inp.placeholder='Type your answer...';inp.onkeydown=e=>{if(e.key==='Enter')checkFill();};
+    area.appendChild(inp);
+    const sub=document.createElement('button');sub.className='submit-btn';sub.textContent='✅ Check Answer';sub.onclick=checkFill;
+    area.appendChild(sub);
+  }
+  const hb=document.createElement('button');hb.className='hint-btn';hb.textContent='💡 Hint';
+  const ht=document.createElement('div');ht.className='hint-text';ht.textContent='💡 '+q.hint;
+  hb.onclick=()=>ht.classList.toggle('show');
+  area.appendChild(hb);area.appendChild(ht);
+  updateScore();
+}
+
+function pickMC(idx){
+  if(answered)return;answered=true;
+  const q=shuffledQ[qIdx];
+  const btns=document.querySelectorAll('.option-btn');btns.forEach(b=>b.disabled=true);
+  if(idx===q.ans){btns[idx].classList.add('correct');showFB(true,'⭐ Correct! '+q.fb);correct++;stars++;sparkle();}
+  else{btns[idx].classList.add('wrong');btns[q.ans].classList.add('correct');showFB(false,'❌ Answer: "'+q.opts[q.ans]+'". '+q.fb);}
+  document.getElementById('nextBtn').classList.add('show');updateScore();
+}
+
+function pickTF(val){
+  if(answered)return;answered=true;
+  const q=shuffledQ[qIdx];
+  const btns=document.querySelectorAll('.tf-btn');btns.forEach(b=>b.disabled=true);
+  const ok=val===q.ans;
+  btns[val?0:1].classList.add(ok?'correct':'wrong');
+  if(!ok)btns[val?1:0].classList.add('correct');
+  if(ok){showFB(true,'⭐ Correct! '+q.fb);correct++;stars++;sparkle();}
+  else{showFB(false,'❌ '+q.fb);}
+  document.getElementById('nextBtn').classList.add('show');updateScore();
+}
+
+function checkFill(){
+  if(answered)return;answered=true;
+  const q=shuffledQ[qIdx];
+  const inp=document.getElementById('fillInput');
+  const ua=inp.value.trim().toLowerCase();inp.disabled=true;
+  const ok=ua===q.ans.toLowerCase()||(q.alts||[]).map(a=>a.toLowerCase()).includes(ua);
+  inp.classList.add(ok?'correct':'wrong');
+  if(ok){showFB(true,'⭐ Correct! '+q.fb);correct++;stars++;sparkle();}
+  else{showFB(false,`❌ Answer: "${q.ans}". ${q.fb}`);}
+  document.getElementById('nextBtn').classList.add('show');updateScore();
+}
+
+function showFB(ok,txt){
+  const fb=document.getElementById('feedback');
+  fb.className='feedback show '+(ok?'correct-fb':'wrong-fb');
+  document.getElementById('feedbackIcon').textContent=ok?'🎉':'💙';
+  document.getElementById('feedbackText').textContent=txt;
+}
+
+function nextQuestion(){qIdx++;if(qIdx>=shuffledQ.length)showResult();else renderQ();}
+
+function showResult(){
+  document.getElementById('questionCard').style.display='none';
+  document.getElementById('resultScreen').classList.add('show');updateScore();
+  const pct=Math.round((correct/40)*100);
+  document.getElementById('resultScore').textContent=`${correct} / 40`;
+
+  let emoji,title,grade,msg,stars;
+  if(pct>=95){emoji='🏆';title='PERFECT!';grade='A+ 🌟';msg='You are SO ready for tomorrow\'s test, Max! Crushing it! 🔥';stars='⭐⭐⭐⭐⭐';launchConfetti();}
+  else if(pct>=85){emoji='🎉';title='Excellent!';grade='A 🎯';msg='Amazing work! You\'ve got this tomorrow! 💪';stars='⭐⭐⭐⭐⭐';}
+  else if(pct>=75){emoji='😊';title='Good Job!';grade='B 👍';msg='Great understanding! Review the wrong ones tonight! 📖';stars='⭐⭐⭐⭐';}
+  else if(pct>=65){emoji='👍';title='Keep Going!';grade='C 📚';msg='You\'re getting there! Focus on the ones you missed! 🔍';stars='⭐⭐⭐';}
+  else{emoji='💪';title='Study More!';grade='Need Review 📖';msg='Don\'t give up! Go over your notes and try again! 🌟';stars='⭐⭐';}
+
+  document.getElementById('resultEmoji').textContent=emoji;
+  document.getElementById('resultTitle').textContent=title;
+  document.getElementById('resultGrade').textContent=grade;
+  document.getElementById('resultMsg').textContent=msg;
+  document.getElementById('resultStars').textContent=stars;
+}
+
+function restartQuiz(){document.getElementById('resultScreen').classList.remove('show');initQuiz();}
+
+function sparkle(){
+  for(let i=0;i<8;i++)setTimeout(()=>{
+    const el=document.createElement('div');
+    el.textContent=['⭐','✨','💫','🌟'][Math.floor(Math.random()*4)];
+    el.style.cssText=`position:fixed;font-size:1.5rem;pointer-events:none;z-index:9999;left:${20+Math.random()*60}%;top:${20+Math.random()*50}%;animation:confettiFall 1s ease forwards;`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),1000);
+  },i*60);
+}
+
+function launchConfetti(){
+  const c=['#E9D5FF','#FFD700','#4ADE80','#F87171','#FB923C','#A855F7'];
+  for(let i=0;i<80;i++)setTimeout(()=>{
+    const el=document.createElement('div');el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}vw;background:${c[Math.floor(Math.random()*c.length)]};width:${6+Math.random()*12}px;height:${6+Math.random()*12}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*0.5}s;`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),4000);
+  },i*25);
+}
+
+initQuiz();
+</script>
+</body>
+</html>
