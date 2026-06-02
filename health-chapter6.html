@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Max's Health Quiz - Ch.6 🏃</title>
+<style>
+  /* GitHub-safe: no external font imports, inline everything */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    background-color: #0B3D2E !important;
+    background: #0B3D2E !important;
+  }
+  body {
+    font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+    font-weight: 600;
+    background-color: #0B3D2E !important;
+    background: linear-gradient(150deg, #0B3D2E 0%, #0F5040 50%, #061E17 100%) !important;
+    min-height: 100vh;
+    color: #fff;
+    padding-bottom: 40px;
+  }
+
+  .fredoka { font-family: 'Arial Rounded MT Bold', 'Arial Black', Arial, sans-serif; font-weight: 900; }
+
+  .container { max-width: 820px; margin: 0 auto; padding: 20px; }
+
+  /* HEADER */
+  .header { text-align: center; padding: 28px 0 16px; }
+  .header h1 {
+    font-family: 'Arial Rounded MT Bold','Arial Black',Arial,sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem,6vw,3.2rem);
+    color: #6EE7B7;
+    text-shadow: 3px 3px 0 #052e1c, 0 0 24px rgba(110,231,183,0.4);
+  }
+  .header p { color: #34D399; font-size: 0.95rem; font-weight: 700; margin-top: 6px; letter-spacing: 1px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .tab-btn {
+    flex: 1; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.18);
+    border-radius: 14px; padding: 12px 8px; color: rgba(255,255,255,0.55);
+    font-family: 'Arial Rounded MT Bold','Arial Black',Arial,sans-serif;
+    font-size: 0.95rem; cursor: pointer; transition: all 0.2s;
+  }
+  .tab-btn:hover { background: rgba(110,231,183,0.18); border-color: #6EE7B7; color: white; }
+  .tab-btn.active { background: #6EE7B7; border-color: #6EE7B7; color: #052e1c; box-shadow: 0 4px 14px rgba(110,231,183,0.35); }
+
+  /* SCORE BAR */
+  .score-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(0,0,0,0.35); border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 18px; padding: 12px 22px; margin-bottom: 16px;
+  }
+  .score-item { text-align: center; }
+  .score-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.45); font-weight: 700; }
+  .score-value { font-family: 'Arial Rounded MT Bold','Arial Black',Arial,sans-serif; font-size: 1.65rem; line-height: 1; margin-top: 2px; }
+  .si-stars .score-value { color: #FFD700; }
+  .si-correct .score-value { color: #86EFAC; }
+  .si-total .score-value { color: #6EE7B7; }
+
+  .progress-wrap { background: rgba(0,0,0,0.3); border-radius: 50px; height: 10px; margin-bottom: 20px; overflow: hidden; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, #6EE7B7, #34D399); border-radius: 50px; transition: width 0.5s ease; }
+
+  /* MODE SCREENS */
+  .mode-screen { display: none; }
+  .mode-screen.active { display: block; }
+
+  /* FLASHCARD */
+  .flashcard-wrap { perspective: 1000px; margin-bottom: 6px; }
+  .flashcard {
+    width: 100%; min-height: 210px; position: relative; cursor: pointer;
+    transform-style: preserve-3d; transition: transform 0.55s ease; border-radius: 22px;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .fc-front, .fc-back {
+    position: absolute; inset: 0; border-radius: 22px; backface-visibility: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 28px; text-align: center; min-height: 210px;
+  }
+  .fc-front { background: linear-gradient(135deg, #0F5040, #0B3D2E); border: 3px solid #34D399; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+  .fc-back  { background: linear-gradient(135deg, #062E1F, #041A12); border: 3px solid #6EE7B7; box-shadow: 0 8px 30px rgba(0,0,0,0.4); transform: rotateY(180deg); }
+  .fc-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 10px; }
+  .fc-front .fc-label { color: #6EE7B7; }
+  .fc-back  .fc-label { color: #34D399; }
+  .fc-section { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 3px 10px; border-radius: 50px; margin-bottom: 8px; }
+  .sec-skel { background: #93C5FD; color: #1E3A5F; }
+  .sec-musc { background: #FCA5A5; color: #7F1D1D; }
+  .sec-ex   { background: #FCD34D; color: #78350F; }
+  .fc-emoji { font-size: 2.4rem; margin-bottom: 8px; }
+  .fc-term  { font-family: 'Arial Rounded MT Bold','Arial Black',Arial,sans-serif; font-size: clamp(1.5rem,5vw,2.2rem); color: #6EE7B7; line-height: 1.2; }
+  .fc-def   { font-size: clamp(0.9rem,2.5vw,1.08rem); font-weight: 700; color: #fff; line-height: 1.6; }
+  .fc-taphint { font-size: 0.78rem; color: rgba(255,255,255,0.38); margin-top: 10px; }
+
+  .fc-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 10px; }
+  .fc-arrow {
+    background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.18);
+    border-radius: 13px; padding: 12px 20px; color: white;
+    font-family: 'Arial Rounded MT Bold','Arial Black',Arial,sans-serif;
+    font-size: 1rem; cursor: pointer; transition: all 0.2s; flex: 1;
+  }
+  .fc-arrow:hover { background: rgba(110,231,183,0.18); border-color: #6EE7B7; }
+  .fc-counter { font-family: 'Arial Rounded MT Bold','Arial Black',Arial,sans-serif; font-size: 1rem; color: rgba(255,255,255,0.45); min-width: 65px; text-align: center; }
+
+  /* QUIZ CARD */
+  .question-card {
+    background: rgba(0,0,0,0.38); border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 24px; padding: 26px; margin-bottom: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+    animation: slideIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes slideIn { from{transform:translateY(24px) scale(0.96);opacity:0;} to{transform:translateY(0) scale(1);opacity:1;} }
+
+  .q-meta { display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+  .q-num { font-size:0.7rem; color:rgba(255,255,255,0.35); letter-spacing:1px; font-weight:700; }
+  .ch-badge { font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; padding:3px 11px; border-radius:50px; }
+  .b-skel { background:#93C5FD; color:#1E3A5F; }
+  .b-musc { background:#FCA5A5; color:#7F1D1D; }
+  .b-ex   { background:#FCD34D; color:#78350F; }
+  .type-badge { font-size:0.65rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; padding:3px 9px; border-radius:50px; background:rgba(255,255,255,0.12); color:rgba(255,255,255,0.55); }
+
+  .question-text { font-size:clamp(1rem,2.8vw,1.2rem); font-weight:800; color:#fff; line-height:1.6; margin-bottom:20px; }
+
+  /* MC */
+  .options-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media(max-width:500px){.options-grid{grid-template-columns:1fr;}}
+  .option-btn {
+    background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.12);
+    border-radius:13px; padding:13px 14px; color:#fff;
+    font-family:-apple-system,'Segoe UI',Arial,sans-serif; font-size:0.9rem; font-weight:700;
+    cursor:pointer; text-align:left; transition:all 0.2s; display:flex; align-items:center; gap:10px;
+  }
+  .option-btn:hover:not(:disabled){background:rgba(110,231,183,0.13);border-color:#6EE7B7;transform:translateY(-2px);}
+  .option-btn .letter{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.9rem;flex-shrink:0;}
+  .option-btn.correct{background:rgba(74,222,128,0.2);border-color:#4ADE80;}
+  .option-btn.correct .letter{background:#4ADE80;color:#14532D;}
+  .option-btn.wrong{background:rgba(248,113,113,0.2);border-color:#F87171;animation:shake 0.4s;}
+  .option-btn.wrong .letter{background:#F87171;color:white;}
+  .option-btn:disabled{cursor:not-allowed;opacity:0.7;}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+
+  /* TF */
+  .tf-wrap{display:flex;gap:12px;}
+  .tf-btn{flex:1;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.12);border-radius:13px;padding:14px;color:white;font-weight:900;font-size:1.15rem;cursor:pointer;transition:all 0.2s;text-align:center;}
+  .tf-btn.true-btn:hover:not(:disabled){background:rgba(74,222,128,0.15);border-color:#4ADE80;}
+  .tf-btn.false-btn:hover:not(:disabled){background:rgba(248,113,113,0.15);border-color:#F87171;}
+  .tf-btn.correct{background:rgba(74,222,128,0.2);border-color:#4ADE80;}
+  .tf-btn.wrong{background:rgba(248,113,113,0.2);border-color:#F87171;animation:shake 0.4s;}
+  .tf-btn:disabled{cursor:not-allowed;opacity:0.7;}
+
+  /* FILL */
+  .fill-input{width:100%;background:rgba(255,255,255,0.07);border:2px solid rgba(255,255,255,0.18);border-radius:13px;padding:13px 17px;color:#fff;font-size:1rem;font-weight:700;outline:none;transition:all 0.2s;}
+  .fill-input:focus{border-color:#6EE7B7;background:rgba(110,231,183,0.07);}
+  .fill-input.correct{border-color:#4ADE80;background:rgba(74,222,128,0.1);}
+  .fill-input.wrong{border-color:#F87171;background:rgba(248,113,113,0.1);}
+  .fill-input::placeholder{color:rgba(255,255,255,0.28);}
+  .submit-btn{margin-top:12px;background:linear-gradient(135deg,#6EE7B7,#34D399);border:none;border-radius:13px;padding:12px 26px;color:#052e1c;font-weight:900;font-size:1.05rem;cursor:pointer;transition:all 0.2s;}
+  .submit-btn:hover{transform:translateY(-2px);}
+
+  /* FEEDBACK */
+  .feedback{margin-top:12px;padding:12px 16px;border-radius:12px;font-weight:700;font-size:0.9rem;display:none;align-items:flex-start;gap:9px;line-height:1.5;}
+  .feedback.show{display:flex;animation:fadeIn 0.3s ease;}
+  .feedback.correct-fb{background:rgba(74,222,128,0.13);border:2px solid rgba(74,222,128,0.35);color:#BBF7D0;}
+  .feedback.wrong-fb{background:rgba(248,113,113,0.13);border:2px solid rgba(248,113,113,0.35);color:#FECACA;}
+  .feedback-icon{font-size:1.3rem;flex-shrink:0;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+
+  /* HINT */
+  .hint-btn{background:none;border:2px solid rgba(255,215,0,0.35);border-radius:50px;padding:5px 13px;color:#FFD700;font-size:0.8rem;font-weight:800;cursor:pointer;transition:all 0.2s;margin-top:10px;}
+  .hint-btn:hover{background:rgba(255,215,0,0.09);}
+  .hint-text{margin-top:6px;padding:8px 12px;background:rgba(255,215,0,0.09);border-radius:9px;color:#FFD700;font-size:0.85rem;font-weight:700;display:none;}
+  .hint-text.show{display:block;animation:fadeIn 0.3s;}
+
+  /* NEXT */
+  .next-btn{display:none;width:100%;margin-top:12px;background:linear-gradient(135deg,#FFD700,#F97316);border:none;border-radius:13px;padding:14px;color:#052e1c;font-weight:900;font-size:1.15rem;cursor:pointer;transition:all 0.2s;}
+  .next-btn.show{display:block;animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+  .next-btn:hover{transform:translateY(-2px);}
+  @keyframes popIn{from{transform:scale(0.8);opacity:0;}to{transform:scale(1);opacity:1;}}
+
+  /* MATCH */
+  .match-round-label{text-align:center;font-family:'Arial Rounded MT Bold','Arial Black',Arial,sans-serif;color:#6EE7B7;font-size:1rem;margin-bottom:12px;font-weight:900;}
+  .match-container{display:flex;gap:12px;}
+  @media(max-width:540px){.match-container{flex-direction:column;}}
+  .match-col{flex:1;display:flex;flex-direction:column;gap:8px;}
+  .match-col-label{text-align:center;font-weight:800;font-size:0.78rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;}
+  .match-item{background:rgba(255,255,255,0.07);border:2px solid rgba(255,255,255,0.13);border-radius:12px;padding:10px 12px;color:#fff;font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.2s;min-height:48px;display:flex;align-items:center;line-height:1.3;user-select:none;}
+  .match-item.term{justify-content:center;text-align:center;font-family:'Arial Rounded MT Bold','Arial Black',Arial,sans-serif;font-size:0.9rem;color:#6EE7B7;}
+  .match-item:hover{border-color:#6EE7B7;background:rgba(110,231,183,0.1);transform:translateY(-1px);}
+  .match-item.selected{border-color:#FFD700;background:rgba(255,215,0,0.12);color:#FFD700;}
+  .match-item.matched-correct{border-color:#4ADE80;background:rgba(74,222,128,0.12);color:#BBF7D0;cursor:default;}
+  .match-item.matched-wrong{border-color:#F87171;background:rgba(248,113,113,0.12);animation:shake 0.4s;}
+  .match-status{text-align:center;margin-top:12px;font-weight:900;font-size:1rem;color:rgba(255,255,255,0.45);min-height:24px;}
+  .match-next-btn{display:none;width:100%;margin-top:12px;background:linear-gradient(135deg,#FFD700,#F97316);border:none;border-radius:13px;padding:14px;color:#052e1c;font-weight:900;font-size:1.15rem;cursor:pointer;transition:all 0.2s;}
+  .match-next-btn.show{display:block;animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+
+  /* RESULT */
+  .result-screen{display:none;text-align:center;padding:36px 16px;}
+  .result-screen.show{display:block;animation:slideIn 0.5s ease;}
+  .result-emoji{font-size:4.5rem;margin-bottom:16px;animation:bounce 1s infinite;}
+  @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+  .result-title{font-family:'Arial Rounded MT Bold','Arial Black',Arial,sans-serif;font-size:clamp(2rem,6vw,2.8rem);margin-bottom:8px;color:#6EE7B7;}
+  .result-score-big{font-family:'Arial Rounded MT Bold','Arial Black',Arial,sans-serif;font-size:clamp(3rem,9vw,4.5rem);line-height:1;margin:16px 0;color:#FFD700;}
+  .result-msg{font-size:1rem;font-weight:700;color:rgba(255,255,255,0.65);margin-bottom:24px;}
+  .stars-display{font-size:2.2rem;margin:6px 0 16px;}
+  .restart-btn{background:linear-gradient(135deg,#A855F7,#6D28D9);border:none;border-radius:16px;padding:16px 40px;color:white;font-weight:900;font-size:1.25rem;cursor:pointer;transition:all 0.2s;}
+  .restart-btn:hover{transform:translateY(-3px);}
+  .confetti-piece{position:fixed;pointer-events:none;animation:confettiFall linear forwards;z-index:9999;}
+  @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🏃 Health Quiz — Ch.6!</h1>
+    <p>Skeletal System · Muscular System · Exercise & Fitness</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchMode('flashcard')">🃏 Flashcards</button>
+    <button class="tab-btn" onclick="switchMode('quiz')">❓ Quiz</button>
+    <button class="tab-btn" onclick="switchMode('match')">🔗 Match It!</button>
+  </div>
+
+  <div class="score-bar" id="scoreBar" style="display:none">
+    <div class="score-item si-stars"><div class="score-label">⭐ Stars</div><div class="score-value" id="starCount">0</div></div>
+    <div class="score-item si-correct"><div class="score-label">✅ Correct</div><div class="score-value" id="correctCount">0</div></div>
+    <div class="score-item si-total"><div class="score-label">📋 Total</div><div class="score-value" id="totalCount">0/30</div></div>
+  </div>
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <div class="progress-bar" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <!-- FLASHCARD -->
+  <div class="mode-screen active" id="flashcardMode">
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="fc-front">
+          <div class="fc-label">📖 TERM</div>
+          <div class="fc-section sec-skel" id="fcSection">Skeletal System</div>
+          <div class="fc-emoji" id="fcEmoji">🦴</div>
+          <div class="fc-term" id="fcTerm">skeletal system</div>
+          <div class="fc-taphint">👆 Tap to see definition</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-label">💡 DEFINITION</div>
+          <div class="fc-def" id="fcDef">the body system of bones that makes blood cells and stores minerals</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="fc-arrow" onclick="fcPrev()">← Prev</button>
+      <div class="fc-counter" id="fcCounter">1 / 24</div>
+      <button class="fc-arrow" onclick="fcNext()">Next →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="mode-screen" id="quizMode">
+    <div class="question-card" id="questionCard">
+      <div class="q-meta">
+        <span class="q-num" id="qNum">Q1 of 30</span>
+        <span class="ch-badge b-skel" id="chBadge">6.1 · Skeletal</span>
+        <span class="type-badge" id="typeBadge">MC</span>
+      </div>
+      <div class="question-text" id="questionText"></div>
+      <div id="answerArea"></div>
+      <div class="feedback" id="feedback">
+        <span class="feedback-icon" id="feedbackIcon"></span>
+        <span id="feedbackText"></span>
+      </div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question ➡️</button>
+    </div>
+    <div class="result-screen" id="resultScreen">
+      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <div class="result-title" id="resultTitle">Quiz Complete!</div>
+      <div class="result-score-big" id="resultScore"></div>
+      <div class="stars-display" id="resultStars"></div>
+      <div class="result-msg" id="resultMsg"></div>
+      <button class="restart-btn" onclick="restartQuiz()">🔄 Play Again!</button>
+    </div>
+  </div>
+
+  <!-- MATCH -->
+  <div class="mode-screen" id="matchMode">
+    <div class="match-round-label" id="matchRoundLabel">Round 1 — Match term to definition!</div>
+    <div class="match-container">
+      <div class="match-col"><div class="match-col-label">📖 Terms</div><div id="termsList"></div></div>
+      <div class="match-col"><div class="match-col-label">💡 Definitions</div><div id="defsList"></div></div>
+    </div>
+    <div class="match-status" id="matchStatus"></div>
+    <button class="match-next-btn" id="matchNextBtn" onclick="nextMatchRound()">Next Round ➡️</button>
+  </div>
+</div>
+
+<script>
+// ── TERMS (24) ──
+const terms = [
+  // 6.1 Skeletal
+  {term:'skeletal system',    def:'body system of bones that makes blood cells and stores minerals',             emoji:'💀', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'skeleton',           def:'the body\'s framework of bones',                                              emoji:'🦴', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'cranium',            def:'the part of the skull that covers and protects the brain',                    emoji:'🧠', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'clavicle',           def:'the collarbone; connects the shoulder to the sternum',                       emoji:'🔗', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'sternum',            def:'the breastbone; flat bone in the center of the chest',                       emoji:'🦺', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'rib cage',           def:'curved bones that protect the heart and lungs',                              emoji:'🫁', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'femur',              def:'the longest bone in the body; upper leg bone',                               emoji:'🦵', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'humerus',            def:'the upper arm bone',                                                         emoji:'💪', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'patella',            def:'the kneecap',                                                               emoji:'🦿', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'joint',              def:'place where two bones meet or join together',                                emoji:'🔩', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'ligaments',          def:'strong bands of tissue that connect bones at joints',                        emoji:'🔗', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'hinge joint',        def:'joint that moves back and forth in one direction, like a door hinge (knee, elbow)', emoji:'🚪', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'pivot joint',        def:'joint that allows rotation (turning) movement, like the neck',               emoji:'🔄', sec:'Skeletal System', secClass:'sec-skel'},
+  {term:'ball-and-socket joint', def:'joint that allows the most movement in all directions, like the hip and shoulder', emoji:'🎱', sec:'Skeletal System', secClass:'sec-skel'},
+  // 6.2 Muscular
+  {term:'muscular system',    def:'body system of muscles that provides movement',                              emoji:'💪', sec:'Muscular System', secClass:'sec-musc'},
+  {term:'voluntary muscles',  def:'muscles you control — they move when you want them to',                      emoji:'🏋️', sec:'Muscular System', secClass:'sec-musc'},
+  {term:'involuntary muscles',def:'muscles that work automatically without you thinking about them',            emoji:'❤️', sec:'Muscular System', secClass:'sec-musc'},
+  {term:'cardiac muscle',     def:'involuntary muscle that makes up the heart',                                emoji:'🫀', sec:'Muscular System', secClass:'sec-musc'},
+  {term:'smooth muscle',      def:'involuntary muscle that moves food, liquids, and blood throughout the body', emoji:'🌊', sec:'Muscular System', secClass:'sec-musc'},
+  {term:'tendons',            def:'strong cords of tissue that connect muscles to bones',                       emoji:'🧵', sec:'Muscular System', secClass:'sec-musc'},
+  // 6.3 Exercise
+  {term:'physical fitness',   def:'the body\'s ability to function at its best during daily activities without tiring easily', emoji:'🏆', sec:'Exercise', secClass:'sec-ex'},
+  {term:'aerobic exercise',   def:'exercise that uses more oxygen and builds endurance — heart and lungs benefit most', emoji:'🏃', sec:'Exercise', secClass:'sec-ex'},
+  {term:'anaerobic exercise', def:'short bursts of intense exercise that do not use as much oxygen — builds strength', emoji:'🏋️', sec:'Exercise', secClass:'sec-ex'},
+  {term:'warm up',            def:'gentle activity done before exercise to prepare muscles and prevent injury',  emoji:'🌡️', sec:'Exercise', secClass:'sec-ex'},
+];
+
+const hints = {
+  'skeletal system':'Makes blood cells AND stores minerals!',
+  'skeleton':'The body\'s bony framework!',
+  'cranium':'It covers your brain!',
+  'clavicle':'Your collarbone!',
+  'sternum':'The breastbone in the center of your chest!',
+  'rib cage':'Protects heart and lungs!',
+  'femur':'Longest bone — upper leg!',
+  'humerus':'Upper ARM bone — humerus sounds like humorous!',
+  'patella':'Kneecap!',
+  'joint':'Where two bones meet!',
+  'ligaments':'Connect BONE to BONE!',
+  'hinge joint':'Like a door — only one direction!',
+  'pivot joint':'Rotation/turning — like your neck!',
+  'ball-and-socket joint':'Most movement — hip and shoulder!',
+  'muscular system':'All your muscles together!',
+  'voluntary muscles':'YOU control these!',
+  'involuntary muscles':'Automatic — you don\'t think about them!',
+  'cardiac muscle':'Heart muscle!',
+  'smooth muscle':'Moves things through the body automatically!',
+  'tendons':'Connect MUSCLE to BONE (tendons → t for to-bone)!',
+  'physical fitness':'Body at its best without tiring!',
+  'aerobic exercise':'Aero = air/oxygen — long steady exercise!',
+  'anaerobic exercise':'Short intense bursts — weightlifting!',
+  'warm up':'First step before exercising!',
+};
+
+// ── QUIZ QUESTIONS (30) ──
+const quizQ = [
+  // 6.1 SKELETAL SYSTEM
+  {sec:'b-skel',label:'6.1 · Skeletal System',type:'mc',typL:'MC',
+   q:'How many bones does an adult human body have?',
+   opts:['106','206','216','602'],ans:1,
+   fb:'206 bones! Babies have more (around 300) but many fuse together as you grow! 🦴',hint:'206 — remember two-oh-six!'},
+
+  {sec:'b-skel',label:'6.1 · Skeletal System',type:'mc',typL:'MC',
+   q:'What is the FEMUR?',
+   opts:['The kneecap','The collarbone','The longest bone in the body — the upper leg bone','The upper arm bone'],ans:2,
+   fb:'The FEMUR is the longest bone in your body — it\'s your upper leg bone! 🦵',hint:'Longest bone, upper LEG!'},
+
+  {sec:'b-skel',label:'6.1 · Skeletal System',type:'mc',typL:'MC',
+   q:'Which bones protect your HEART and LUNGS?',
+   opts:['Pelvis','Vertebrae','Skull','Rib cage'],ans:3,
+   fb:'The RIB CAGE protects your heart and lungs — like a bony shield! 🫁',hint:'Think of a cage around your chest!'},
+
+  {sec:'b-skel',label:'6.1 · Skeletal System',type:'mc',typL:'MC',
+   q:'What is your CLAVICLE?',
+   opts:['Your kneecap','Your collarbone','Your breastbone','Your shoulder blade'],ans:1,
+   fb:'CLAVICLE = collarbone! It connects your shoulder to your sternum! 🔗',hint:'Your collar-bone!'},
+
+  {sec:'b-skel',label:'6.1 · Skeletal System',type:'tf',typL:'T/F',
+   q:'TRUE or FALSE: The CRANIUM is the part of the skull that protects the brain.',
+   ans:true,fb:'TRUE! The CRANIUM is your brain\'s bony helmet — it\'s the top and back of your skull! 🧠',hint:'Cranium = brain protector!'},
+
+  {sec:'b-skel',label:'6.1 · Skeletal System',type:'mc',typL:'MC',
+   q:'What do LIGAMENTS do?',
+   opts:['Connect muscle to bone','Connect bone to bone at joints','Make blood cells','Store minerals'],ans:1,
+   fb:'LIGAMENTS connect BONE to BONE at joints! Tendons connect muscle to bone — don\'t mix them up! 🔗',hint:'Ligaments = bone to bone!'},
+
+  {sec:'b-skel',label:'6.1 · Skeletal System',type:'mc',typL:'MC',
+   q:'Which joint allows the MOST movement in all directions?',
+   opts:['Hinge joint','Pivot joint','Immovable joint','Ball-and-socket joint'],ans:3,
+   fb:'BALL-AND-SOCKET joints (hip and shoulder) allow the most movement — forward, backward, side to side, and rotation! 🎱',hint:'Hip and shoulder — most freedom!'},
+
+  {sec:'b-skel',label:'6.1 · Skeletal System',type:'mc',typL:'MC',
+   q:'The KNEE is an example of which type of joint?',
+   opts:['Ball-and-socket joint','Pivot joint','Hinge joint','Immovable joint'],ans:2,
+   fb:'The KNEE is a HINGE joint — it only bends back and forth in one direction, like a door hinge! 🚪',hint:'Like a door — one direction only!'},
+
+  {sec:'b-skel',label:'6.1 · Skeletal System',type:'mc',typL:'MC',
+   q:'Which joint allows ROTATION (turning) movement — like turning your head?',
+   opts:['Hinge joint','Ball-and-socket joint','Pivot joint','Immovable joint'],ans:2,
+   fb:'PIVOT joint allows rotation! Your neck has a pivot joint that lets you turn your head left and right! 🔄',hint:'Think turning your head!'},
+
+  {sec:'b-skel',label:'6.1 · Skeletal System',type:'fill',typL:'Fill',
+   q:'The ______ is your breastbone — the flat bone in the center of your chest. (1 word)',
+   ans:'sternum',alts:[],fb:'STERNUM = breastbone! It\'s in the center of your chest! 🦺',hint:'Sounds like "stern"!'},
+
+  // 6.2 MUSCULAR SYSTEM
+  {sec:'b-musc',label:'6.2 · Muscular System',type:'mc',typL:'MC',
+   q:'What is the difference between VOLUNTARY and INVOLUNTARY muscles?',
+   opts:['Voluntary muscles are stronger','Voluntary muscles move when you want; involuntary work automatically','Involuntary muscles only exist in arms','Voluntary muscles only work during exercise'],ans:1,
+   fb:'VOLUNTARY = you control them (like arm muscles). INVOLUNTARY = automatic (like heart)! 💪',hint:'Voluntary = your choice!'},
+
+  {sec:'b-musc',label:'6.2 · Muscular System',type:'mc',typL:'MC',
+   q:'The HEART is made of which special type of muscle?',
+   opts:['Smooth muscle','Skeletal muscle','Cardiac muscle','Voluntary muscle'],ans:2,
+   fb:'CARDIAC MUSCLE makes up the heart — it\'s involuntary and never gets tired! 🫀',hint:'Cardiac = heart!'},
+
+  {sec:'b-musc',label:'6.2 · Muscular System',type:'mc',typL:'MC',
+   q:'What does SMOOTH MUSCLE do?',
+   opts:['Controls arm movement','Makes your face expression','Moves food, liquids, and blood throughout the body','Controls voluntary movements'],ans:2,
+   fb:'SMOOTH MUSCLE moves things through your body automatically — like food through your digestive system! 🌊',hint:'Moves things through the body!'},
+
+  {sec:'b-musc',label:'6.2 · Muscular System',type:'mc',typL:'MC',
+   q:'What do TENDONS do?',
+   opts:['Connect bone to bone','Connect muscle to bone','Produce blood cells','Help joints rotate'],ans:1,
+   fb:'TENDONS connect MUSCLE to BONE! (Ligaments connect bone to bone — don\'t mix them up!) 🧵',hint:'T for Tendons = muscle To bone!'},
+
+  {sec:'b-musc',label:'6.2 · Muscular System',type:'tf',typL:'T/F',
+   q:'TRUE or FALSE: Most skeletal muscles are VOLUNTARY — you control them.',
+   ans:true,fb:'TRUE! Skeletal muscles attached to your bones are mostly voluntary — you decide when to move them! 🏋️',hint:'Can you choose to move your arm? Yes = voluntary!'},
+
+  {sec:'b-musc',label:'6.2 · Muscular System',type:'mc',typL:'MC',
+   q:'The BICEPS and TRICEPS are muscles in your:',
+   opts:['Upper leg','Lower leg','Upper arm','Shoulder'],ans:2,
+   fb:'BICEPS and TRICEPS are the pair of muscles in your UPPER ARM — they work as opposites! 💪',hint:'Upper arm — you flex these!'},
+
+  {sec:'b-musc',label:'6.2 · Muscular System',type:'mc',typL:'MC',
+   q:'The QUADRICEPS and HAMSTRINGS are the muscle pair in your:',
+   opts:['Upper arm','Abdomen','Shoulder','Upper leg'],ans:3,
+   fb:'QUADRICEPS (front) and HAMSTRINGS (back) are the upper leg muscle pair — important for running and soccer! 🦵',hint:'Think about your thigh muscles!'},
+
+  {sec:'b-musc',label:'6.2 · Muscular System',type:'tf',typL:'T/F',
+   q:'TRUE or FALSE: Muscles work in PAIRS — when one contracts (pulls), the other relaxes.',
+   ans:true,fb:'TRUE! Muscles use a PULLING motion — they can only pull, not push! They work in pairs to create movement! 💪',hint:'Muscles can only pull, not push!'},
+
+  {sec:'b-musc',label:'6.2 · Muscular System',type:'fill',typL:'Fill',
+   q:'______ connect muscles to bones. ______ connect bones to bones. (first answer only — 1 word)',
+   ans:'tendons',alts:['tendon'],fb:'TENDONS connect muscles to bones! LIGAMENTS connect bones to bones! 🧵',hint:'T for Tendons → muscle To bone!'},
+
+  {sec:'b-musc',label:'6.2 · Muscular System',type:'mc',typL:'MC',
+   q:'A nutrient needed to GROW and REPAIR muscles is:',
+   opts:['Carbohydrates','Protein','Vitamin C','Iron'],ans:1,
+   fb:'PROTEIN is essential for building and repairing muscle tissue! Eat meat, eggs, beans, and nuts! 💪',hint:'Think about building muscle!'},
+
+  // 6.3 EXERCISE
+  {sec:'b-ex',label:'6.3 · Exercise & Fitness',type:'mc',typL:'MC',
+   q:'What is PHYSICAL FITNESS?',
+   opts:['Being able to run the fastest','The body\'s ability to function at its best during daily activities without tiring easily','Only lifting heavy weights','Playing on a sports team'],ans:1,
+   fb:'PHYSICAL FITNESS = your body functioning at its best without tiring easily during daily activities! 🏆',hint:'Best performance without getting tired!'},
+
+  {sec:'b-ex',label:'6.3 · Exercise & Fitness',type:'mc',typL:'MC',
+   q:'Which body systems benefit MOST from AEROBIC exercise?',
+   opts:['Skeletal and muscular systems','Digestive and nervous systems','Heart and lungs','Skin and lymphatic systems'],ans:2,
+   fb:'AEROBIC exercise especially benefits the HEART AND LUNGS — it builds endurance! 🏃',hint:'Aero = air — think breathing and heart!'},
+
+  {sec:'b-ex',label:'6.3 · Exercise & Fitness',type:'mc',typL:'MC',
+   q:'Which is an example of AEROBIC exercise?',
+   opts:['Weightlifting','Pushups','Sprinting 100m','Jogging'],ans:3,
+   fb:'JOGGING is aerobic — it uses steady oxygen over a long time. Weightlifting and sprinting are anaerobic! 🏃',hint:'Steady, long-duration exercise!'},
+
+  {sec:'b-ex',label:'6.3 · Exercise & Fitness',type:'mc',typL:'MC',
+   q:'Which is an example of ANAEROBIC exercise?',
+   opts:['Swimming','Running a marathon','Weightlifting','Walking'],ans:2,
+   fb:'WEIGHTLIFTING is anaerobic — short intense bursts that build strength! 🏋️',hint:'Short, intense bursts of power!'},
+
+  {sec:'b-ex',label:'6.3 · Exercise & Fitness',type:'tf',typL:'T/F',
+   q:'TRUE or FALSE: The correct order for exercise is: warm up → stretch → exercise → cool down.',
+   ans:true,fb:'TRUE! Warm up first, then stretch, then exercise, then cool down! Skipping any step can cause injury! 🌡️',hint:'Think of the 4 steps in order!'},
+
+  {sec:'b-ex',label:'6.3 · Exercise & Fitness',type:'tf',typL:'T/F',
+   q:'TRUE or FALSE: Weightlifting is an AEROBIC exercise.',
+   ans:false,fb:'FALSE! Weightlifting is ANAEROBIC — it\'s short and intense, not long and steady! Aerobic = jogging, swimming, cycling! 🏋️',hint:'Is weightlifting long and steady or short and intense?'},
+
+  {sec:'b-ex',label:'6.3 · Exercise & Fitness',type:'mc',typL:'MC',
+   q:'What happens during a COOL DOWN after exercise?',
+   opts:['You eat a large meal','Heart rate, breathing, and body temperature return to normal','You immediately stop all movement','You do the hardest workout'],ans:1,
+   fb:'COOL DOWN helps your heart rate, breathing, and body temperature return to normal gradually — prevents dizziness! 🧘',hint:'Heart rate returns to normal!'},
+
+  {sec:'b-ex',label:'6.3 · Exercise & Fitness',type:'tf',typL:'T/F',
+   q:'TRUE or FALSE: Regular exercise helps with physical fitness.',
+   ans:true,fb:'TRUE! Regular exercise builds physical fitness — your body gets better at daily activities without getting tired! 🏆',hint:'Practice makes perfect — even for fitness!'},
+
+  {sec:'b-ex',label:'6.3 · Exercise & Fitness',type:'fill',typL:'Fill',
+   q:'In aerobic exercise, muscles use more ______. (1 word)',
+   ans:'oxygen',alts:[],fb:'Aerobic exercise uses more OXYGEN — that\'s why you breathe harder during running or swimming! 🫁',hint:'Aero = air — what\'s in air?'},
+
+  {sec:'b-ex',label:'6.3 · Exercise & Fitness',type:'mc',typL:'MC',
+   q:'For CORRECT POSTURE, your toes should be pointed:',
+   opts:['Inward','Outward','Straight forward','Downward'],ans:2,
+   fb:'Correct posture = toes pointed FORWARD! Good posture protects your spine and muscles! 🧍',hint:'Not inward or outward — straight ahead!'},
+
+  {sec:'b-ex',label:'6.3 · Exercise & Fitness',type:'mc',typL:'MC',
+   q:'Baseball and swimming are examples of which type of exercise?',
+   opts:['Anaerobic only','Both aerobic and anaerobic','Aerobic — they use sustained oxygen over time','Neither aerobic nor anaerobic'],ans:2,
+   fb:'Baseball and swimming are AEROBIC — they involve sustained activity using oxygen over time! 🏊',hint:'Long, steady activity using oxygen!'},
+];
+
+// ── VALIDATION ──
+(function(){
+  const e=[];
+  const tl=terms.map(t=>t.term);
+  const ql=quizQ.map(q=>q.sec);
+  quizQ.filter(q=>q.type==='mc').forEach(q=>{
+    if(q.opts.length!==4)e.push('opts!=4: '+q.q.slice(0,30));
+    if(q.ans>=q.opts.length)e.push('ans OOB: '+q.q.slice(0,30));
+  });
+  quizQ.filter(q=>q.type==='fill').forEach(q=>{
+    if(!q.q.includes('______'))e.push('no blank: '+q.ans);
+  });
+  quizQ.forEach(q=>{ if(!q.hint)e.push('no hint: '+q.q.slice(0,20)); });
+  if(e.length)console.warn('❌',e);
+  else console.log(`✅ ${terms.length} terms, ${quizQ.length} questions — all good!`);
+})();
+
+function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
+
+// FLASHCARD
+let fcList=[...terms],fcIdx=0;
+function renderFC(){
+  const t=fcList[fcIdx];
+  document.getElementById('fcSection').textContent=t.sec;
+  document.getElementById('fcSection').className='fc-section '+t.secClass;
+  document.getElementById('fcEmoji').textContent=t.emoji;
+  document.getElementById('fcTerm').textContent=t.term;
+  document.getElementById('fcDef').textContent=t.def;
+  document.getElementById('fcCounter').textContent=`${fcIdx+1} / ${fcList.length}`;
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+function flipCard(){document.getElementById('flashcard').classList.toggle('flipped');}
+function fcNext(){fcIdx=(fcIdx+1)%fcList.length;renderFC();}
+function fcPrev(){fcIdx=(fcIdx-1+fcList.length)%fcList.length;renderFC();}
+
+// QUIZ
+let shuffledQ,qIdx,correct,stars,answered;
+function initQuiz(){
+  shuffledQ=shuffle(quizQ);qIdx=0;correct=0;stars=0;answered=false;
+  updateScore();renderQ();
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('questionCard').style.display='block';
+}
+function updateScore(){
+  document.getElementById('starCount').textContent=stars;
+  document.getElementById('correctCount').textContent=correct;
+  document.getElementById('totalCount').textContent=`${qIdx}/${shuffledQ.length}`;
+  document.getElementById('progressBar').style.width=`${(qIdx/shuffledQ.length)*100}%`;
+}
+function renderQ(){
+  answered=false;
+  const q=shuffledQ[qIdx];
+  document.getElementById('qNum').textContent=`Q${qIdx+1} of ${shuffledQ.length}`;
+  const b=document.getElementById('chBadge');b.textContent=q.label;b.className='ch-badge '+q.sec;
+  document.getElementById('typeBadge').textContent=q.typL;
+  document.getElementById('questionText').textContent=q.q;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('nextBtn').className='next-btn';
+  const card=document.getElementById('questionCard');
+  card.style.animation='none';card.offsetHeight;card.style.animation='slideIn 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+  const area=document.getElementById('answerArea');area.innerHTML='';
+
+  if(q.type==='mc'){
+    const g=document.createElement('div');g.className='options-grid';
+    ['A','B','C','D'].forEach((l,i)=>{
+      const btn=document.createElement('button');btn.className='option-btn';
+      btn.innerHTML=`<span class="letter">${l}</span><span>${q.opts[i]}</span>`;
+      btn.onclick=()=>pickMC(i);g.appendChild(btn);
+    });
+    area.appendChild(g);
+  } else if(q.type==='tf'){
+    const w=document.createElement('div');w.className='tf-wrap';
+    const tb=document.createElement('button');tb.className='tf-btn true-btn';tb.textContent='✅ TRUE';tb.onclick=()=>pickTF(true);
+    const fb2=document.createElement('button');fb2.className='tf-btn false-btn';fb2.textContent='❌ FALSE';fb2.onclick=()=>pickTF(false);
+    w.appendChild(tb);w.appendChild(fb2);area.appendChild(w);
+  } else {
+    const inp=document.createElement('input');inp.type='text';inp.className='fill-input';inp.id='fillInput';
+    inp.placeholder='Type your answer...';inp.onkeydown=e=>{if(e.key==='Enter')checkFill();};
+    area.appendChild(inp);
+    const sb=document.createElement('button');sb.className='submit-btn';sb.textContent='✅ Check Answer';sb.onclick=checkFill;
+    area.appendChild(sb);
+  }
+  const hb=document.createElement('button');hb.className='hint-btn';hb.textContent='💡 Hint';
+  const ht=document.createElement('div');ht.className='hint-text';ht.textContent='💡 '+(hints[q.q]||q.hint||'Think carefully!');
+  hb.onclick=()=>ht.classList.toggle('show');
+  area.appendChild(hb);area.appendChild(ht);
+  updateScore();
+}
+
+function pickMC(idx){
+  if(answered)return;answered=true;
+  const q=shuffledQ[qIdx];
+  const btns=document.querySelectorAll('.option-btn');btns.forEach(b=>b.disabled=true);
+  if(idx===q.ans){btns[idx].classList.add('correct');showFB(true,'⭐ Correct! '+q.fb);correct++;stars++;sparkle();}
+  else{btns[idx].classList.add('wrong');btns[q.ans].classList.add('correct');showFB(false,'❌ Answer: "'+q.opts[q.ans]+'". '+q.fb);}
+  document.getElementById('nextBtn').classList.add('show');updateScore();
+}
+function pickTF(val){
+  if(answered)return;answered=true;
+  const q=shuffledQ[qIdx];
+  const btns=document.querySelectorAll('.tf-btn');btns.forEach(b=>b.disabled=true);
+  const ok=val===q.ans;
+  btns[val?0:1].classList.add(ok?'correct':'wrong');
+  if(!ok)btns[val?1:0].classList.add('correct');
+  if(ok){showFB(true,'⭐ Correct! '+q.fb);correct++;stars++;sparkle();}
+  else{showFB(false,'❌ '+q.fb);}
+  document.getElementById('nextBtn').classList.add('show');updateScore();
+}
+function checkFill(){
+  if(answered)return;answered=true;
+  const q=shuffledQ[qIdx];
+  const inp=document.getElementById('fillInput');
+  const ua=inp.value.trim().toLowerCase();inp.disabled=true;
+  const ok=ua===q.ans.toLowerCase()||(q.alts||[]).map(a=>a.toLowerCase()).includes(ua);
+  inp.classList.add(ok?'correct':'wrong');
+  if(ok){showFB(true,'⭐ Correct! '+q.fb);correct++;stars++;sparkle();}
+  else{showFB(false,`❌ Answer: "${q.ans}". ${q.fb}`);}
+  document.getElementById('nextBtn').classList.add('show');updateScore();
+}
+function showFB(ok,txt){
+  const fb=document.getElementById('feedback');
+  fb.className='feedback show '+(ok?'correct-fb':'wrong-fb');
+  document.getElementById('feedbackIcon').textContent=ok?'🎉':'💙';
+  document.getElementById('feedbackText').textContent=txt;
+}
+function nextQuestion(){qIdx++;if(qIdx>=shuffledQ.length)showResult();else renderQ();}
+function showResult(){
+  document.getElementById('questionCard').style.display='none';
+  document.getElementById('resultScreen').classList.add('show');updateScore();
+  const pct=Math.round((correct/shuffledQ.length)*100);
+  document.getElementById('resultScore').textContent=`${correct} / ${shuffledQ.length}`;
+  if(pct===100){document.getElementById('resultEmoji').textContent='🏆';document.getElementById('resultTitle').textContent='PERFECT SCORE!';document.getElementById('resultMsg').textContent='You crushed it, Max! 🌟';document.getElementById('resultStars').textContent='⭐⭐⭐⭐⭐';launchConfetti();}
+  else if(pct>=80){document.getElementById('resultEmoji').textContent='🎉';document.getElementById('resultTitle').textContent='Great Job!';document.getElementById('resultMsg').textContent='You really know Ch.6! 💪';document.getElementById('resultStars').textContent='⭐⭐⭐⭐';}
+  else if(pct>=60){document.getElementById('resultEmoji').textContent='👍';document.getElementById('resultTitle').textContent='Good Try!';document.getElementById('resultMsg').textContent='Try flashcards then quiz again! 📖';document.getElementById('resultStars').textContent='⭐⭐⭐';}
+  else{document.getElementById('resultEmoji').textContent='💪';document.getElementById('resultTitle').textContent='Keep Studying!';document.getElementById('resultMsg').textContent='Start with flashcards first! 🃏';document.getElementById('resultStars').textContent='⭐⭐';}
+}
+function restartQuiz(){document.getElementById('resultScreen').classList.remove('show');initQuiz();}
+
+// MATCH
+let matchRounds=[],mRound=0,selTerm=null,selDef=null,mCount=0;
+function buildMatchRounds(){const all=shuffle([...terms]);matchRounds=[];for(let i=0;i<all.length;i+=5)matchRounds.push(all.slice(i,i+5));}
+function initMatch(){
+  if(mRound===0)buildMatchRounds();
+  const pairs=matchRounds[mRound];
+  document.getElementById('matchRoundLabel').textContent=`Round ${mRound+1} of ${matchRounds.length} — Match term to definition!`;
+  mCount=0;selTerm=null;selDef=null;
+  document.getElementById('matchStatus').textContent='';
+  document.getElementById('matchNextBtn').className='match-next-btn';
+  const sd=shuffle([...pairs]);
+  const tl=document.getElementById('termsList');tl.innerHTML='';
+  const dl=document.getElementById('defsList');dl.innerHTML='';
+  pairs.forEach(t=>{
+    const el=document.createElement('div');el.className='match-item term';
+    el.textContent=t.term;el.dataset.term=t.term;el.onclick=()=>pickTerm(el);tl.appendChild(el);
+  });
+  sd.forEach(t=>{
+    const el=document.createElement('div');el.className='match-item';
+    el.textContent=t.def;el.dataset.term=t.term;el.onclick=()=>pickDef(el);dl.appendChild(el);
+  });
+}
+function pickTerm(el){
+  if(el.classList.contains('matched-correct'))return;
+  document.querySelectorAll('.match-item.term').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected');selTerm=el;tryMatch();
+}
+function pickDef(el){
+  if(el.classList.contains('matched-correct'))return;
+  document.querySelectorAll('#defsList .match-item').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected');selDef=el;tryMatch();
+}
+function tryMatch(){
+  if(!selTerm||!selDef)return;
+  const t=selTerm,d=selDef;selTerm=null;selDef=null;
+  if(t.dataset.term===d.dataset.term){
+    t.classList.remove('selected');d.classList.remove('selected');
+    t.classList.add('matched-correct');d.classList.add('matched-correct');
+    t.onclick=null;d.onclick=null;mCount++;sparkle();
+    const total=matchRounds[mRound].length;
+    document.getElementById('matchStatus').textContent=mCount===total?'🎉 All matched!':`✅ ${mCount}/${total} matched!`;
+    if(mCount===total){
+      const btn=document.getElementById('matchNextBtn');
+      btn.textContent=mRound<matchRounds.length-1?'Next Round ➡️':'🎉 Play Again!';
+      btn.className='match-next-btn show';
+      if(mRound===matchRounds.length-1)launchConfetti();
+    }
+  } else {
+    t.classList.add('matched-wrong');d.classList.add('matched-wrong');
+    setTimeout(()=>{t.classList.remove('matched-wrong','selected');d.classList.remove('matched-wrong','selected');},700);
+  }
+}
+function nextMatchRound(){
+  if(mRound>=matchRounds.length-1){mRound=0;buildMatchRounds();}else{mRound++;}
+  initMatch();
+}
+function switchMode(mode){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['flashcard','quiz','match'][i]===mode));
+  document.querySelectorAll('.mode-screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(mode+'Mode').classList.add('active');
+  const sq=mode==='quiz';
+  document.getElementById('scoreBar').style.display=sq?'flex':'none';
+  document.getElementById('progressWrap').style.display=sq?'block':'none';
+  if(mode==='quiz')initQuiz();
+  if(mode==='match'){mRound=0;initMatch();}
+  if(mode==='flashcard'){fcList=shuffle([...terms]);fcIdx=0;renderFC();}
+}
+function sparkle(){
+  for(let i=0;i<7;i++)setTimeout(()=>{
+    const el=document.createElement('div');
+    el.textContent=['⭐','✨','💫','🌟'][Math.floor(Math.random()*4)];
+    el.style.cssText=`position:fixed;font-size:1.4rem;pointer-events:none;z-index:9999;left:${20+Math.random()*60}%;top:${20+Math.random()*50}%;animation:confettiFall 1s ease forwards;`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),1000);
+  },i*60);
+}
+function launchConfetti(){
+  const c=['#6EE7B7','#FFD700','#4ADE80','#F87171','#A855F7','#34D399'];
+  for(let i=0;i<60;i++)setTimeout(()=>{
+    const el=document.createElement('div');el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}vw;background:${c[Math.floor(Math.random()*c.length)]};width:${6+Math.random()*10}px;height:${6+Math.random()*10}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()}s;`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),4000);
+  },i*30);
+}
+renderFC();
+</script>
+</body>
+</html>
