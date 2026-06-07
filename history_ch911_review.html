@@ -168,18 +168,32 @@
         <div class="md">Real Canada map — click & type · Provinces + Great Lakes</div>
       </div>
     </div>
-    <div class="mode-card" data-mode="terms" onclick="selectMode(this)">
-      <span class="mode-icon">📝</span>
+    <div class="mode-card" data-mode="ch9" onclick="selectMode(this)">
+      <span class="mode-icon">🏹</span>
       <div class="mode-info">
-        <div class="mc">Key Terms Flashcards</div>
-        <div class="md">Secret Railroad, War of 1812, Rebellions, Women's Rights · 5 cards</div>
+        <div class="mc">Chapter 9 Quiz</div>
+        <div class="md">War of 1812 · Rebellions · Confederation · 15 questions</div>
+      </div>
+    </div>
+    <div class="mode-card" data-mode="ch10" onclick="selectMode(this)">
+      <span class="mode-icon">🍁</span>
+      <div class="mode-info">
+        <div class="mc">Chapter 10 Quiz</div>
+        <div class="md">Northwest · Mounties · Railway · Residential Schools · 15 questions</div>
       </div>
     </div>
     <div class="mode-card" data-mode="ch11" onclick="selectMode(this)">
       <span class="mode-icon">⚔️</span>
       <div class="mode-info">
         <div class="mc">Chapter 11 Quiz</div>
-        <div class="md">WWI · Ups & Downs · WWII · MC + Short Answer · 29 questions</div>
+        <div class="md">WWI · Ups & Downs · WWII · 15 questions</div>
+      </div>
+    </div>
+    <div class="mode-card" data-mode="terms" onclick="selectMode(this)">
+      <span class="mode-icon">📝</span>
+      <div class="mode-info">
+        <div class="mc">Key Terms Flashcards</div>
+        <div class="md">Secret Railroad, War of 1812, Rebellions, Women's Rights · 5 cards</div>
       </div>
     </div>
   </div>
@@ -278,6 +292,46 @@
   <div class="result-btns">
     <button class="btn-retry" onclick="startFC()">🔄 Review Again</button>
     <button class="btn-home-result" onclick="goHome()">🏠 Home</button>
+  </div>
+</div>
+
+<!-- CH9 QUIZ -->
+<div id="ch9-screen" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="c9-counter">1 / 15</span>
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="c9-bar" style="width:0%"></div></div>
+  <div class="card">
+    <span class="section-badge" id="c9-badge" style="background:#e67e22">9.1</span>
+    <span class="section-badge" id="c9-type-badge" style="background:#ff6d00;margin-left:6px">MC</span>
+    <p class="q-text" id="c9-question"></p>
+    <div id="c9-answer-area"></div>
+    <div class="feedback" id="c9-feedback"></div>
+    <div class="nav">
+      <button class="btn-back" id="c9-back" onclick="navC9(-1)">← Back</button>
+      <button class="btn-next" id="c9-next" onclick="navC9(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CH10 QUIZ -->
+<div id="ch10-screen" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="c10-counter">1 / 15</span>
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="c10-bar" style="width:0%"></div></div>
+  <div class="card">
+    <span class="section-badge" id="c10-badge" style="background:#c0392b">10.1</span>
+    <span class="section-badge" id="c10-type-badge" style="background:#ff6d00;margin-left:6px">MC</span>
+    <p class="q-text" id="c10-question"></p>
+    <div id="c10-answer-area"></div>
+    <div class="feedback" id="c10-feedback"></div>
+    <div class="nav">
+      <button class="btn-back" id="c10-back" onclick="navC10(-1)">← Back</button>
+      <button class="btn-next" id="c10-next" onclick="navC10(1)">Next →</button>
+    </div>
   </div>
 </div>
 
@@ -410,39 +464,197 @@ function selectMode(el){
 document.getElementById('btn-start').addEventListener('click',function(){
   if(mode==='people') startPeople();
   else if(mode==='map') startMap();
+  else if(mode==='ch9') startC9();
+  else if(mode==='ch10') startC10();
   else if(mode==='ch11') startC11();
   else startFC();
 });
 
-// ── CH11 DATA ──
+// ── CH9 DATA (15 questions) ──
+var C9Q = [
+  {s:'9.1',t:'mc',q:'On what date did President Madison declare war on Britain?',o:['June 18, 1812','July 4, 1812','August 16, 1812','June 18, 1810'],a:0,e:'President Madison declared war on June 18, 1812.'},
+  {s:'9.1',t:'sa',q:'Why did the United States declare war on Britain?',a:'They wanted to control all of North America and Britain was blocking their trade with France.'},
+  {s:'9.1',t:'mc',q:'Who was the General of the British troops in the War of 1812?',o:['General Hull','Chief Tecumseh','General Isaac Brock','General Sheaffe'],a:2,e:'General Isaac Brock was the General of the British troops. He was tough, bold, and daring.'},
+  {s:'9.2',t:'mc',q:'What happened at the Battle of Fort Detroit?',o:['The British surrendered','General Hull surrendered without a fight','Tecumseh was killed','Canada was invaded'],a:1,e:'General Hull was frightened of the natives and surrendered Fort Detroit without a fight.'},
+  {s:'9.2',t:'mc',q:'What happened to General Brock at the Battle of Queenston Heights?',o:['He won and was promoted','He surrendered to the Americans','He was shot by an American sharpshooter and died','He escaped to the US'],a:2,e:'While trying to win back the Heights, General Brock was shot by an American sharpshooter and died instantly.'},
+  {s:'9.2',t:'sa',q:'What did Laura Secord do during the Battle of Beaver Dams?',a:'She ran over 30km to warn the British troops of an upcoming American attack.'},
+  {s:'9.2',t:'mc',q:'What treaty ended the War of 1812?',o:['Treaty of Paris','Treaty of Versailles','Treaty of Ghent','Treaty of Utrecht'],a:2,e:'The War officially ended on December 24, 1814 when the Treaty of Ghent was signed in Belgium.'},
+  {s:'9.3',t:'mc',q:'What was the goal of the Underground Railroad?',o:['To build railways underground','To get slaves to freedom in Canada','To help slaves escape to Mexico','To train conductors for real trains'],a:1,e:'The goal was to get slaves to the Promised Land (Canada) because Canada had already made slavery illegal in 1834.'},
+  {s:'9.3',t:'sa',q:'In Underground Railroad language, what was a "Station"?',a:'A safe place to stop or rest on the trip north.'},
+  {s:'9.4',t:'mc',q:'Who led the Lower Canada Rebellion?',o:['William Lyon Mackenzie','Louis Riel','Louis-Joseph Papineau','Gabriel Dumont'],a:2,e:'Louis-Joseph Papineau led the revolt against the government of Lower Canada. His supporters were called Patriotes.'},
+  {s:'9.4',t:'sa',q:'Who made the important decisions in Lower Canada? Who was in this group?',a:'The Chateau Clique made the decisions. It was mainly English-speaking colonists appointed by the governor.'},
+  {s:'9.5',t:'mc',q:'Who led the Upper Canada Rebellion?',o:['Papineau','Isaac Brock','Tecumseh','William Lyon Mackenzie'],a:3,e:'William Lyon Mackenzie was the leader of the Reform movement and led the Upper Canada Rebellion.'},
+  {s:'9.5',t:'mc',q:'What group ruled Upper Canada unfairly?',o:['The Chateau Clique','The Family Compact','The Patriotes','The Loyalists'],a:1,e:'The Family Compact ruled Upper Canada in favour of their own business interests.'},
+  {s:'9.5',t:'sa',q:'Where did Mackenzie flee after the rebellion failed?',a:'He fled to the United States.'},
+  {s:'9.6',t:'mc',q:'When was the Dominion of Canada officially created?',o:['July 1, 1867','July 4, 1867','July 15, 1870','January 1, 1867'],a:0,e:'The British North America Act officially joined Nova Scotia, New Brunswick, Ontario, and Quebec on July 1, 1867. Sir John A. Macdonald became Canada\'s first Prime Minister.'}
+];
+
+// ── CH10 DATA (15 questions) ──
+var C10Q = [
+  {s:'10.1',t:'mc',q:'What did Macdonald purchase from the Hudson Bay Company in 1869?',o:['Manitoba','Rupert\'s Land','British Columbia','The Northwest Company'],a:1,e:'Macdonald purchased Rupert\'s Land in 1869. It became part of Canada\'s Northwest Territories.'},
+  {s:'10.1',t:'sa',q:'What were people of both Native and European descent called?',a:'The Metis.'},
+  {s:'10.1',t:'mc',q:'Who led the Red River Rebellion?',o:['Gabriel Dumont','Chief Big Bear','Louis Riel','Chief Poundmaker'],a:2,e:'Louis Riel became the representative of the Metis who opposed the Canadian government and led the Red River Rebellion.'},
+  {s:'10.2',t:'mc',q:'What did American traders bring to trade for furs with Native people?',o:['Blankets and tools','Cheap liquor','Horses','Food and medicine'],a:1,e:'The Americans brought cheap liquor to trade for furs — this corrupted the Native people.'},
+  {s:'10.2',t:'mc',q:'In what year were the Mounties officially established?',o:['1867','1870','1873','1876'],a:2,e:'The North-West Mounted Police were officially established in 1873.'},
+  {s:'10.2',t:'sa',q:'What colour were the Mounties\' uniforms?',a:'Bright red.'},
+  {s:'10.2',t:'mc',q:'How many acres of land could a settler receive through the Dominion Lands Act?',o:['80 acres','120 acres','160 acres','200 acres'],a:2,e:'The Dominion Lands Act of 1872 gave each family or 21-year-old man 160 acres of land.'},
+  {s:'10.3',t:'mc',q:'Who convinced Louis Riel to return from the US for the Northwest Rebellion?',o:['Chief Big Bear','Chief Poundmaker','Gabriel Dumont','General Middleton'],a:2,e:'Gabriel Dumont, the Metis leader, went to the United States and convinced Louis Riel to return.'},
+  {s:'10.3',t:'sa',q:'What happened to Louis Riel after the Northwest Rebellion?',a:'He was tried for high treason and hanged in Regina on November 16, 1885.'},
+  {s:'10.4',t:'mc',q:'Who was one of Canada\'s most famous surveyors?',o:['William Van Horne','Donald Smith','Sandford Fleming','Andrew Onderdonk'],a:2,e:'Sandford Fleming was one of Canada\'s most famous surveyors. He worked on both the Intercolonial Railway and the CPR.'},
+  {s:'10.4',t:'mc',q:'When was the Last Spike driven, completing the Canadian Pacific Railway?',o:['July 6, 1876','November 7, 1885','January 1, 1881','July 15, 1870'],a:1,e:'The Last Spike was driven on November 7, 1885 at Eagle Pass by Donald Smith.'},
+  {s:'10.4',t:'sa',q:'How many Chinese labourers were brought to Canada to build the railway?',a:'6,000 workers from the Chinese province of Kwangtung.'},
+  {s:'10.5',t:'mc',q:'What was the main goal of residential schools?',o:['To teach Indigenous children academics','To make Indigenous children adopt white customs and beliefs','To preserve Indigenous languages','To train Indigenous teachers'],a:1,e:'The main goal was to make Indigenous children learn how to live according to white customs and beliefs.'},
+  {s:'10.5',t:'sa',q:'When was the last residential school closed?',a:'1996.'},
+  {s:'10.6',t:'mc',q:'Who won women the right to vote in Manitoba on January 27, 1916?',o:['Emily Stowe','Augusta Stowe','Ginny Trout','Nellie McClung'],a:3,e:'Nellie McClung was the most famous suffragist. She succeeded in forcing the politicians of Manitoba to allow women the right to vote.'}
+];
+
+var c9Pool=[], c9Idx=0, c9Score=0, c9Log=[], c9Answered=false;
+var c10Pool=[], c10Idx=0, c10Score=0, c10Log=[], c10Answered=false;
+
+function makeChapterFunctions(prefix, QData, screenId) {
+  var pool=[], idx=0, score=0, log=[], answered=false;
+  var fns = {
+    start: function(){
+      pool=shuffle(QData); idx=0; score=0; log=[]; answered=false;
+      showScreen(screenId); fns.render();
+    },
+    render: function(){
+      var q=pool[idx]; answered=false;
+      document.getElementById(prefix+'-counter').textContent=(idx+1)+' / '+pool.length;
+      document.getElementById(prefix+'-bar').style.width=(idx/pool.length*100)+'%';
+      document.getElementById(prefix+'-badge').textContent='Section '+q.s;
+      var tb=document.getElementById(prefix+'-type-badge');
+      if(q.t==='mc'){tb.textContent='Multiple Choice';tb.style.background='#ff6d00';}
+      else{tb.textContent='Short Answer';tb.style.background='#2ECC71';}
+      document.getElementById(prefix+'-question').textContent=q.q;
+      document.getElementById(prefix+'-feedback').className='feedback';
+      document.getElementById(prefix+'-next').className='btn-next';
+      document.getElementById(prefix+'-next').textContent=idx===pool.length-1?'🏁 See Results!':'Next →';
+      document.getElementById(prefix+'-back').disabled=(idx===0);
+      var area=document.getElementById(prefix+'-answer-area');
+      area.innerHTML='';
+      if(q.t==='mc'){
+        var wrap=document.createElement('div'); wrap.className='options';
+        ['A','B','C','D'].forEach(function(ltr,i){
+          var btn=document.createElement('button'); btn.className='opt';
+          btn.innerHTML='<span class="ltr">'+ltr+'</span>'+q.o[i];
+          btn.onclick=(function(i){return function(){fns.checkMC(i);};})(i);
+          wrap.appendChild(btn);
+        });
+        area.appendChild(wrap);
+      } else {
+        var wrap=document.createElement('div'); wrap.className='write-wrap';
+        var inp=document.createElement('input'); inp.type='text'; inp.className='write-input';
+        inp.id=prefix+'-input'; inp.placeholder='Type your answer...';
+        inp.addEventListener('keydown',function(e){if(e.key==='Enter')fns.submit();});
+        var sub=document.createElement('button'); sub.className='btn-submit'; sub.textContent='Check Answer ✓';
+        sub.addEventListener('click',function(){fns.submit();});
+        var sc=document.createElement('div'); sc.className='selfcheck'; sc.id=prefix+'-selfcheck';
+        var ar=document.createElement('div'); ar.className='answer-reveal'; ar.id=prefix+'-reveal';
+        var cb=document.createElement('div'); cb.className='check-btns';
+        var bg=document.createElement('button'); bg.className='btn-got-it'; bg.textContent='✅ I got it!';
+        bg.addEventListener('click',function(){fns.mark(true);});
+        var bm=document.createElement('button'); bm.className='btn-missed'; bm.textContent='❌ I missed it';
+        bm.addEventListener('click',function(){fns.mark(false);});
+        cb.appendChild(bg); cb.appendChild(bm);
+        sc.appendChild(ar); sc.appendChild(cb);
+        wrap.appendChild(inp); wrap.appendChild(sub); wrap.appendChild(sc);
+        area.appendChild(wrap);
+        setTimeout(function(){var el=document.getElementById(prefix+'-input');if(el)el.focus();},100);
+      }
+    },
+    checkMC: function(chosen){
+      if(answered)return; answered=true;
+      var q=pool[idx];
+      var btns=document.querySelectorAll('#'+prefix+'-answer-area .opt');
+      for(var i=0;i<btns.length;i++) btns[i].setAttribute('disabled','true');
+      var ok=chosen===q.a;
+      btns[chosen].classList.add(ok?'correct':'wrong');
+      if(!ok) btns[q.a].classList.add('correct');
+      fns.record(ok, ok?'🎉 Correct! '+q.e:'❌ Not quite. '+q.e);
+    },
+    submit: function(){
+      if(answered)return;
+      var inp=document.getElementById(prefix+'-input');
+      if(!inp||!inp.value.trim())return;
+      inp.disabled=true;
+      var sub=document.querySelector('#'+prefix+'-answer-area .btn-submit');
+      if(sub) sub.style.display='none';
+      document.getElementById(prefix+'-reveal').innerHTML='Answer: <span>'+pool[idx].a+'</span>';
+      document.getElementById(prefix+'-selfcheck').className='selfcheck show';
+      answered=true;
+    },
+    mark: function(ok){
+      fns.record(ok, ok?'🎉 Great job!':'📖 Review this one!');
+      var cb=document.querySelector('#'+prefix+'-selfcheck .check-btns');
+      if(cb) cb.style.display='none';
+    },
+    record: function(ok,msg){
+      if(log.length<=idx){log.push({q:pool[idx].q,ok:ok});if(ok)score++;}
+      else{var o=log[idx];if(o.ok!==ok){if(o.ok)score--;if(ok)score++;log[idx]={q:pool[idx].q,ok:ok};}}
+      document.getElementById(prefix+'-feedback').textContent=msg;
+      document.getElementById(prefix+'-feedback').className='feedback show '+(ok?'ok':'bad');
+      document.getElementById(prefix+'-next').className='btn-next show';
+    },
+    nav: function(dir){
+      if(dir===1){
+        if(!answered)return;
+        idx++; if(idx>=pool.length){fns.showResult();return;}
+      } else {
+        if(answered&&log.length>idx){var e=log.pop();if(e.ok)score--;}
+        idx--;
+        if(log.length>idx){var p=log.pop();if(p.ok)score--;}
+      }
+      fns.render();
+    },
+    showResult: function(){
+      showScreen('result');
+      var pct=score/pool.length;
+      document.getElementById('r-score').textContent=score+'/'+pool.length;
+      var emoji,title,msg;
+      if(pct===1){emoji='🏆';title='PERFECT!';msg='You know every single one! 🍁';}
+      else if(pct>=.8){emoji='🌟';title='Excellent!';msg='Almost perfect — great work!';}
+      else if(pct>=.6){emoji='👍';title='Good Job!';msg='Review the missed ones before the exam.';}
+      else if(pct>=.4){emoji='📚';title='Keep Studying!';msg='Go over the missed answers!';}
+      else{emoji='🍁';title='Study More!';msg='Review the material and try again!';}
+      document.getElementById('r-emoji').textContent=emoji;
+      document.getElementById('r-title').textContent=title;
+      document.getElementById('r-msg').textContent=msg;
+      var html='';
+      for(var i=0;i<log.length;i++){
+        html+='<div class="review-item '+(log[i].ok?'ok':'miss')+'">';
+        html+='<span>'+(log[i].ok?'✅':'❌')+'</span><span>'+log[i].q+'</span></div>';
+      }
+      document.getElementById('review').innerHTML=html;
+      document.getElementById('btn-retry').onclick=fns.start;
+    }
+  };
+  return fns;
+}
+
+var ch9 = makeChapterFunctions('c9', C9Q, 'ch9-screen');
+var ch10 = makeChapterFunctions('c10', C10Q, 'ch10-screen');
+
+function startC9(){ ch9.start(); }
+function startC10(){ ch10.start(); }
+function navC9(dir){ ch9.nav(dir); }
+function navC10(dir){ ch10.nav(dir); }
+
+// ── CH11 DATA (15 questions — trimmed) ──
 var C11Q = [
   {s:'11.1',t:'mc',q:'How did World War I begin?',o:['Germany invaded France','Archduke Franz Ferdinand was murdered by a Serbian','Britain attacked Austria','Canada declared war first'],a:1,e:'Archduke Franz Ferdinand was murdered by a Serbian, causing Austria to attack Serbia. Other countries chose sides.'},
-  {s:'11.1',t:'sa',q:'Why did Canada join World War I?',a:'Canada supported Britain\'s decision and joined as part of the Allied forces.'},
-  {s:'11.1',t:'mc',q:'How many Canadians went to fight in World War I?',o:['30,000','125,000','425,000','625,000'],a:3,e:'Between 1914 and 1918, Canada sent 625,000 men and women to fight in the war.'},
   {s:'11.1',t:'sa',q:'What is conscription?',a:'Forcing men to join the army.'},
+  {s:'11.1',t:'mc',q:'How many Canadians went to fight in World War I?',o:['30,000','125,000','425,000','625,000'],a:3,e:'Between 1914 and 1918, Canada sent 625,000 men and women to fight in the war.'},
   {s:'11.1',t:'mc',q:'Who was against conscription?',o:['Doctors and nurses','Farmers, Quakers, and Mennonites','Teachers and politicians','Businessmen'],a:1,e:'Farmers did not want their sons taken. Quakers and Mennonites believed war was evil.'},
-  {s:'11.1',t:'sa',q:'What famous poem was written after the Second Battle of Ypres, and who wrote it?',a:'In Flanders Fields, written by Lieutenant Colonel John McCrae.'},
-  {s:'11.1',t:'mc',q:'What was one of the worst battles Canadians fought in during WWI?',o:['Battle of Dieppe','Battle of Ypres','Battle of Vimy Ridge','Battle of Normandy'],a:1,e:'Battle of Ypres, April 22, 1915. Germans used poison gas and over 100 Canadians were killed.'},
   {s:'11.1',t:'sa',q:'When did WWI end?',a:'November 11, 1918.'},
   {s:'11.1',t:'mc',q:'What peacekeeping force did Canada join after WWI?',o:['The United Nations','The Imperial War Cabinet','The League of Nations','The Allied Forces'],a:2,e:'Canada was allowed to join the League of Nations, a world peacekeeping force.'},
   {s:'11.2',t:'sa',q:'What do historians call the 1920s?',a:'The Roaring Twenties.'},
-  {s:'11.2',t:'mc',q:'What caused the Great Depression?',o:['A world war broke out','The New York Stock Market Crash in October 1929','A drought across all of Canada','A banking collapse in Britain'],a:1,e:'The New York Stock Market Crash in October 1929 caused the Great Depression.'},
+  {s:'11.2',t:'mc',q:'What caused the Great Depression?',o:['A world war broke out','The New York Stock Market Crash in October 1929','A drought across Canada','A banking collapse in Britain'],a:1,e:'The New York Stock Market Crash in October 1929 caused the Great Depression.'},
   {s:'11.2',t:'sa',q:'What percent of the population did not have jobs by 1933?',a:'30%'},
-  {s:'11.2',t:'mc',q:'What did Alberta and Saskatchewan suffer from during the Depression?',o:['Floods','Severe drought and crop failure','An earthquake','A forest fire'],a:1,e:'Alberta and Saskatchewan suffered a severe drought. Farms lost about 75% of their income.'},
-  {s:'11.2',t:'sa',q:'What became the favourite pastime of housewives during the Depression?',a:'Window shopping.'},
-  {s:'11.2',t:'mc',q:'What form of entertainment became very popular during the Depression?',o:['Movies','Radio shows','Theatre','Street performances'],a:1,e:'Radio shows became very popular during the Great Depression.'},
-  {s:'11.2',t:'sa',q:'What two famous Canadian companies were started during the 1930s?',a:'CBC (Canadian Broadcasting Corporation) and Air Canada (Trans-Canada Airline).'},
-  {s:'11.3',t:'sa',q:'Who was the leader (dictator) of Italy?',a:'Benito Mussolini.'},
-  {s:'11.3',t:'mc',q:'What is a dictator?',o:['An elected president','Someone who rules with almost unlimited power','A military general','A prime minister with extra powers'],a:1,e:'A dictator is someone who rules with almost unlimited power.'},
-  {s:'11.3',t:'sa',q:'What was the purpose of the Treaty of Versailles?',a:'To prevent Germany from ever starting another war.'},
-  {s:'11.3',t:'mc',q:'Who was the leader of Germany during WWII?',o:['Joseph Stalin','Benito Mussolini','Kaiser Wilhelm','Adolf Hitler'],a:3,e:'Adolf Hitler became dictator of Germany after being elected in 1933 and disbanding the Reichstag.'},
-  {s:'11.3',t:'sa',q:'Who was part of the Rome-Berlin Axis?',a:'Germany and Italy.'},
-  {s:'11.3',t:'mc',q:'What area did Germany march soldiers into, breaking the Treaty of Versailles?',o:['Poland','Austria','The Rhineland','Czechoslovakia'],a:2,e:'In March 1936, Hitler marched into the Rhineland, violating the Treaty of Versailles.'},
-  {s:'11.3',t:'sa',q:'After Germany invaded ___, Britain and France declared war.',a:'Poland.'},
-  {s:'11.3',t:'mc',q:'When did Canada officially declare war in WWII?',o:['September 1, 1939','September 3, 1939','September 10, 1939','October 3, 1939'],a:2,e:'Canada officially declared war on September 10, 1939.'},
-  {s:'11.3',t:'sa',q:'What place did Japan bomb on December 7, 1941?',a:'Pearl Harbour.'},
+  {s:'11.2',t:'sa',q:'What two famous Canadian companies were started during the 1930s?',a:'CBC and Air Canada (Trans-Canada Airline).'},
+  {s:'11.3',t:'mc',q:'Who was the leader of Germany during WWII?',o:['Joseph Stalin','Benito Mussolini','Kaiser Wilhelm','Adolf Hitler'],a:3,e:'Adolf Hitler became dictator of Germany after being elected in 1933.'},
+  {s:'11.3',t:'sa',q:'When did Canada officially declare war in WWII?',a:'September 10, 1939.'},
   {s:'11.3',t:'mc',q:'In what battle were 907 Canadians killed, 500+ wounded, and 2,000 captured?',o:['Battle of Ypres','Battle of Vimy Ridge','Battle of Dieppe','Battle of Juno Beach'],a:2,e:'The Battle of Dieppe in August 1942 — 907 died, 500+ wounded, almost 2,000 captured.'},
-  {s:'11.3',t:'sa',q:'What was the Allied invasion to take back Europe from Germany called?',a:'Operation D-Day.'},
   {s:'11.3',t:'mc',q:'What is VE Day?',o:['The day Japan surrendered','The day Canada joined the war','Victory in Europe Day — Germany surrendered May 7, 1945','The day the atomic bomb was dropped'],a:2,e:'VE Day is Victory in Europe Day, May 7, 1945, when Germany surrendered.'},
   {s:'11.3',t:'sa',q:'What two Japanese cities were attacked with atomic bombs?',a:'Hiroshima (August 6) and Nagasaki (August 9), 1945.'}
 ];
