@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History Review · Ch.9-10 🍁</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: #1a0a2e; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .screen { display: none; width: 100%; max-width: 720px; }
+  .screen.active { display: block; }
+
+  /* START */
+  #start { background: #2a0a3e; border-radius: 28px; padding: 40px 28px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
+  .icon { font-size: 64px; display: block; margin-bottom: 12px; animation: bounce 2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  h1 { font-family:'Fredoka One',cursive; font-size:2.2rem; color:#FFF8E7; line-height:1.1; margin-bottom:6px; }
+  .subtitle { color:#ce93d8; font-weight:700; font-size:0.95rem; letter-spacing:1px; margin-bottom:28px; }
+  .mode-grid { display:grid; grid-template-columns:1fr; gap:12px; margin-bottom:24px; }
+  .mode-card { background:#3a1a5e; border:2px solid #6a3a9e; border-radius:16px; padding:18px 20px; cursor:pointer; transition:all 0.18s; text-align:left; display:flex; align-items:center; gap:16px; }
+  .mode-card:hover { background:#4a2a7e; border-color:#ce93d8; transform:translateY(-2px); }
+  .mode-card.active { background:#7c4dff; border-color:#7c4dff; }
+  .mode-icon { font-size:2rem; flex-shrink:0; }
+  .mode-info { flex:1; }
+  .mc { font-family:'Fredoka One',cursive; font-size:1.1rem; color:#e0c8ff; margin-bottom:3px; }
+  .md { font-size:0.75rem; color:#9e7acc; font-weight:600; }
+  .mode-card.active .mc,.mode-card.active .md { color:#fff; }
+  .btn-start { background:#7c4dff; color:white; border:none; padding:16px 48px; border-radius:50px; font-family:'Fredoka One',cursive; font-size:1.4rem; cursor:pointer; box-shadow:0 6px 0 #4a2a9e; transition:all 0.15s; }
+  .btn-start:hover { transform:translateY(-3px); box-shadow:0 9px 0 #4a2a9e; }
+
+  /* SHARED */
+  .top-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .q-counter { color:rgba(255,255,255,0.5); font-weight:700; font-size:0.85rem; }
+  .btn-home-top { background:#3a1a5e; color:#ce93d8; border:1.5px solid #6a3a9e; padding:6px 14px; border-radius:8px; font-family:'Nunito',sans-serif; font-weight:700; font-size:0.8rem; cursor:pointer; }
+  .btn-home-top:hover { color:#fff; border-color:#ce93d8; }
+  .progress-wrap { background:rgba(255,255,255,0.12); border-radius:8px; height:8px; margin-bottom:18px; }
+  .progress-bar { background:linear-gradient(90deg,#ce93d8,#7c4dff); height:100%; border-radius:8px; transition:width 0.4s ease; }
+  .card { background:#FFF8E7; border-radius:22px; padding:28px 24px; box-shadow:0 6px 28px rgba(0,0,0,0.4); position:relative; overflow:hidden; }
+  .card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,#7c4dff,#ce93d8); }
+  .section-badge { display:inline-block; background:#7c4dff; color:white; padding:3px 12px; border-radius:20px; font-size:0.72rem; font-weight:800; letter-spacing:1px; margin-bottom:14px; }
+  .q-text { font-size:1.05rem; font-weight:800; color:#1a1a2e; line-height:1.5; margin-bottom:20px; }
+
+  /* WRITE */
+  .write-wrap { display:flex; flex-direction:column; gap:12px; }
+  .write-input { border:2.5px solid #e0d5c0; border-radius:14px; padding:14px 18px; font-family:'Nunito',sans-serif; font-weight:700; font-size:1rem; color:#1a1a2e; outline:none; transition:all 0.15s; background:white; width:100%; }
+  .write-input:focus { border-color:#7c4dff; background:#f5f0ff; }
+  .write-input:disabled { background:#f5f5f5; color:#888; }
+  .btn-submit { background:#7c4dff; color:white; border:none; padding:14px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1.1rem; cursor:pointer; }
+  .btn-submit:hover { background:#5c2ddf; }
+  .selfcheck { display:none; flex-direction:column; gap:10px; }
+  .selfcheck.show { display:flex; animation:fadeIn 0.25s ease; }
+  .answer-reveal { background:#2a0a3e; color:#ce93d8; border-radius:12px; padding:12px 16px; font-weight:800; font-size:0.95rem; }
+  .answer-reveal span { color:#fff; font-weight:600; }
+  .check-btns { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .btn-got-it { background:#2ECC71; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; }
+  .btn-missed { background:#E74C3C; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; }
+  .feedback { margin-top:16px; padding:13px 16px; border-radius:12px; font-weight:700; font-size:0.9rem; line-height:1.5; display:none; }
+  .feedback.show { display:block; animation:fadeIn 0.25s ease; }
+  .feedback.ok { background:#d4f5e2; color:#1a6b38; border:2px solid #2ECC71; }
+  .feedback.bad { background:#fde8e8; color:#8B0000; border:2px solid #E74C3C; }
+  .nav { display:flex; gap:10px; margin-top:14px; }
+  .btn-back { background:#3a1a5e; color:white; border:none; padding:13px 20px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; flex-shrink:0; }
+  .btn-back:disabled { opacity:0.3; cursor:default; }
+  .btn-next { flex:1; background:#3a1a5e; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1.1rem; cursor:pointer; display:none; }
+  .btn-next.show { display:block; animation:fadeIn 0.25s ease; }
+  .btn-next:hover, .btn-back:hover { background:#7c4dff; }
+
+  /* FLASHCARD */
+  .fc-card { background:#FFF8E7; border-radius:22px; padding:28px 24px; box-shadow:0 6px 28px rgba(0,0,0,0.4); position:relative; min-height:180px; }
+  .fc-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,#7c4dff,#ce93d8); border-radius:22px 22px 0 0; }
+  .fc-badge { display:inline-block; background:#7c4dff; color:white; padding:3px 12px; border-radius:20px; font-size:0.72rem; font-weight:800; letter-spacing:1px; margin-bottom:14px; }
+  .fc-q { font-size:1.05rem; font-weight:800; color:#1a1a2e; line-height:1.5; margin-bottom:20px; }
+  .fc-answer { background:#2a0a3e; border-radius:14px; padding:16px 18px; display:none; }
+  .fc-answer.show { display:block; animation:fadeIn 0.3s ease; }
+  .fc-answer ul { padding-left:18px; }
+  .fc-answer li { color:#FFF8E7; font-weight:600; font-size:0.88rem; margin-bottom:6px; line-height:1.5; }
+  .btn-reveal { width:100%; background:#7c4dff; color:white; border:none; padding:14px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1.1rem; cursor:pointer; margin-top:16px; }
+  .btn-reveal:hover { background:#5c2ddf; }
+  .fc-nav { display:flex; gap:10px; margin-top:12px; }
+  .btn-fc-back,.btn-fc-next { background:#3a1a5e; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; }
+  .btn-fc-back { flex-shrink:0; padding:13px 20px; }
+  .btn-fc-next { flex:1; }
+  .btn-fc-back:disabled { opacity:0.3; cursor:default; }
+  .btn-fc-back:hover,.btn-fc-next:hover { background:#7c4dff; }
+
+  /* MAP SCREEN */
+  #map-screen { padding:0; max-width:720px; }
+  .map-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .map-tabs { display:flex; gap:8px; margin-bottom:10px; }
+  .map-tab { flex:1; padding:9px; border-radius:12px; border:2px solid #6a3a9e; background:#3a1a5e; color:#ce93d8; font-family:'Fredoka One',cursive; font-size:0.85rem; cursor:pointer; text-align:center; }
+  .map-tab.active { background:#7c4dff; border-color:#7c4dff; color:white; }
+  .score-bar { display:flex; justify-content:space-between; align-items:center; background:#2a0a3e; border-radius:12px; padding:8px 14px; margin-bottom:10px; }
+  .score-txt { color:#ce93d8; font-weight:800; font-size:0.85rem; }
+  .score-num { color:#FFD700; font-family:'Fredoka One',cursive; font-size:1.1rem; }
+  .btn-sm { padding:5px 12px; border-radius:8px; border:none; font-family:'Fredoka One',cursive; font-size:0.8rem; cursor:pointer; background:#7c4dff; color:white; }
+  .map-wrap { background:#0d1b3e; border-radius:18px; padding:10px; box-shadow:0 6px 28px rgba(0,0,0,0.6); margin-bottom:12px; }
+  .map-label { color:#ce93d8; font-weight:800; font-size:0.75rem; text-align:center; margin-bottom:6px; letter-spacing:1px; }
+  #map-svg { width:100%; }
+  .province { cursor:pointer; stroke:#1a0a2e; stroke-width:0.8; fill:#4a2a7e; transition:fill 0.15s; }
+  .province:hover { fill:#7c4dff; }
+  .province.selected { fill:#FFD700; stroke:#fff; stroke-width:1.5; }
+  .province.correct { fill:#2ECC71; cursor:default; }
+  .province.wrong { fill:#E74C3C; cursor:default; }
+  .lake { cursor:pointer; stroke:#0d1b3e; stroke-width:0.5; fill:#4488dd; opacity:0.85; transition:all 0.15s; }
+  .lake:hover { opacity:1; fill:#66aaff; }
+  .lake.selected { fill:#FFD700; stroke:#fff; stroke-width:1.5; opacity:1; }
+  .lake.correct { fill:#2ECC71; cursor:default; opacity:1; }
+  .lake.wrong { fill:#E74C3C; cursor:default; opacity:1; }
+  .gl { cursor:pointer; stroke:#0d1b3e; stroke-width:1; transition:all 0.15s; }
+  .gl.unanswered { fill:#4488dd; opacity:0.85; }
+  .gl.unanswered:hover { opacity:1; fill:#66aaff; }
+  .gl.selected { fill:#FFD700 !important; stroke:#fff; stroke-width:2; opacity:1; }
+  .gl.correct { fill:#2ECC71 !important; cursor:default; opacity:1; }
+  .gl.wrong { fill:#E74C3C !important; cursor:default; opacity:1; }
+  .ocean-dot { cursor:pointer; }
+  .ocean-dot circle { fill:#4488dd; opacity:0.9; stroke:#fff; stroke-width:2; transition:all 0.15s; }
+  .ocean-dot:hover circle { fill:#66aaff; r:20; }
+  .ocean-dot.selected circle { fill:#FFD700; }
+  .ocean-dot.correct circle { fill:#2ECC71; cursor:default; }
+  .ocean-dot.wrong circle { fill:#E74C3C; cursor:default; }
+  .map-input-panel { background:#FFF8E7; border-radius:18px; padding:18px 20px; }
+  .map-hint-txt { color:#888; font-size:0.85rem; font-weight:700; text-align:center; padding:8px; }
+  .map-form { display:none; }
+  .map-q-txt { font-size:1rem; font-weight:800; color:#1a1a2e; margin-bottom:4px; }
+  .map-sub-txt { font-size:0.8rem; color:#888; font-weight:600; margin-bottom:12px; }
+  .map-input-row { display:flex; gap:10px; }
+  .map-ans-input { flex:1; border:2.5px solid #e0d5c0; border-radius:12px; padding:12px 16px; font-family:'Nunito',sans-serif; font-weight:700; font-size:1rem; color:#1a1a2e; outline:none; }
+  .map-ans-input:focus { border-color:#7c4dff; background:#f5f0ff; }
+  .map-ans-input:disabled { background:#f5f5f5; }
+  .btn-map-check { background:#7c4dff; color:white; border:none; padding:12px 20px; border-radius:12px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; }
+  .map-result { margin-top:12px; padding:10px 14px; border-radius:10px; font-weight:800; font-size:0.9rem; display:none; }
+  .map-result.ok { background:#d4f5e2; color:#1a6b38; border:2px solid #2ECC71; display:block; }
+  .map-result.bad { background:#fde8e8; color:#8B0000; border:2px solid #E74C3C; display:block; }
+  .legend { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:8px; }
+  .legend-item { display:flex; align-items:center; gap:4px; font-size:0.72rem; font-weight:700; color:#888; }
+  .ldot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+
+  /* RESULT */
+  #result { background:#FFF8E7; border-radius:24px; padding:36px 28px; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+  .result-emoji { font-size:3rem; display:block; margin-bottom:16px; }
+  .score-ring { width:130px; height:130px; border-radius:50%; background:#2a0a3e; border:6px solid #ce93d8; margin:0 auto 20px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .score-ring-num { font-family:'Fredoka One',cursive; font-size:2.2rem; color:#ce93d8; line-height:1; }
+  .score-ring-lbl { color:rgba(255,255,255,0.5); font-size:0.75rem; font-weight:700; }
+  .result-title { font-family:'Fredoka One',cursive; font-size:1.8rem; color:#1a1a2e; margin-bottom:6px; }
+  .result-msg { color:#666; font-weight:600; font-size:0.95rem; margin-bottom:24px; }
+  .result-btns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
+  .btn-retry { background:#7c4dff; color:white; border:none; padding:13px 24px; border-radius:50px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; box-shadow:0 4px 0 #4a2a9e; }
+  .btn-home-result { background:#3a1a5e; color:white; border:none; padding:13px 24px; border-radius:50px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; }
+  .review { text-align:left; display:flex; flex-direction:column; gap:7px; }
+  .review-item { padding:10px 14px; border-radius:10px; font-size:0.85rem; font-weight:600; display:flex; align-items:flex-start; gap:8px; }
+  .review-item.ok { background:#d4f5e2; color:#1a6b38; }
+  .review-item.miss { background:#fde8e8; color:#8B0000; }
+
+  #fcdone { background:#2a0a3e; border-radius:24px; padding:36px 28px; text-align:center; }
+  #fcdone h2 { font-family:'Fredoka One',cursive; font-size:1.8rem; color:#ce93d8; margin-bottom:12px; }
+  #fcdone p { color:#ccc; font-weight:600; margin-bottom:24px; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<!-- START -->
+<div id="start" class="screen active">
+  <span class="icon">🍁</span>
+  <h1>History Review</h1>
+  <p class="subtitle">Chapter 9-10-11 · Exam Prep</p>
+  <div class="mode-grid">
+    <div class="mode-card active" data-mode="people" onclick="selectMode(this)">
+      <span class="mode-icon">👤</span>
+      <div class="mode-info">
+        <div class="mc">Important People & Terms</div>
+        <div class="md">Crossword clues — type the answer · 28 questions</div>
+      </div>
+    </div>
+    <div class="mode-card" data-mode="map" onclick="selectMode(this)">
+      <span class="mode-icon">🗺️</span>
+      <div class="mode-info">
+        <div class="mc">Map Quiz</div>
+        <div class="md">Real Canada map — click & type · Provinces + Great Lakes</div>
+      </div>
+    </div>
+    <div class="mode-card" data-mode="terms" onclick="selectMode(this)">
+      <span class="mode-icon">📝</span>
+      <div class="mode-info">
+        <div class="mc">Key Terms Flashcards</div>
+        <div class="md">Secret Railroad, War of 1812, Rebellions, Women's Rights · 5 cards</div>
+      </div>
+    </div>
+    <div style="text-align:center;color:#6a3a9e;font-family:'Fredoka One',cursive;font-size:0.8rem;letter-spacing:2px;padding:4px 0;border-top:1px solid #3a1a5e;margin-top:4px;">── CHAPTER QUIZZES ──</div>
+    <div class="mode-card" data-mode="ch9" onclick="selectMode(this)">
+      <span class="mode-icon">🏹</span>
+      <div class="mode-info">
+        <div class="mc">Chapter 9 Quiz</div>
+        <div class="md">War of 1812 · Rebellions · Confederation · 15 questions</div>
+      </div>
+    </div>
+    <div class="mode-card" data-mode="ch10" onclick="selectMode(this)">
+      <span class="mode-icon">🍁</span>
+      <div class="mode-info">
+        <div class="mc">Chapter 10 Quiz</div>
+        <div class="md">Northwest · Mounties · Railway · Residential Schools · 15 questions</div>
+      </div>
+    </div>
+    <div class="mode-card" data-mode="ch11" onclick="selectMode(this)">
+      <span class="mode-icon">⚔️</span>
+      <div class="mode-info">
+        <div class="mc">Chapter 11 Quiz</div>
+        <div class="md">WWI · Ups & Downs · WWII · 15 questions</div>
+      </div>
+    </div>
+  </div>
+  <button class="btn-start" id="btn-start">▶ Start!</button>
+</div>
+
+<!-- PEOPLE QUIZ -->
+<div id="people-screen" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="p-counter">1 / 28</span>
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="p-bar" style="width:0%"></div></div>
+  <div class="card">
+    <span class="section-badge" id="p-badge">Across</span>
+    <p class="q-text" id="p-question"></p>
+    <div class="write-wrap">
+      <input type="text" class="write-input" id="p-input" placeholder="Type your answer...">
+      <button class="btn-submit" id="p-submit">Check Answer ✓</button>
+      <div class="selfcheck" id="p-selfcheck">
+        <div class="answer-reveal" id="p-reveal"></div>
+        <div class="check-btns">
+          <button class="btn-got-it" onclick="markP(true)">✅ I got it!</button>
+          <button class="btn-missed" onclick="markP(false)">❌ I missed it</button>
+        </div>
+      </div>
+    </div>
+    <div class="feedback" id="p-feedback"></div>
+    <div class="nav">
+      <button class="btn-back" id="p-back" onclick="navP(-1)">← Back</button>
+      <button class="btn-next" id="p-next" onclick="navP(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAP SCREEN -->
+<div id="map-screen" class="screen">
+  <div class="map-top">
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+    <div class="score-bar" style="flex:1;margin:0 10px">
+      <span class="score-txt">✅ <span id="map-correct">0</span> correct / <span id="map-total">0</span> answered</span>
+      <button class="btn-sm" onclick="resetMap()">🔄 Reset</button>
+    </div>
+  </div>
+  <div class="map-tabs">
+    <button class="map-tab active" onclick="switchMapTab('provinces')">🗺️ Provinces</button>
+    <button class="map-tab" onclick="switchMapTab('oceans')">🌊 Oceans</button>
+    <button class="map-tab" onclick="switchMapTab('lakes')">💧 Great Lakes</button>
+  </div>
+
+  <!-- Provinces + Oceans share same Canada map SVG -->
+  <div class="map-wrap" id="canada-map-wrap">
+    <div class="map-label" id="map-label">CANADA — PROVINCES & TERRITORIES</div>
+    <svg id="map-svg" viewBox="0 0 960 600">
+      <!-- Ocean clickable points rendered by JS -->
+    </svg>
+    <div class="legend" id="map-legend">
+      <div class="legend-item"><div class="ldot" style="background:#4a2a7e"></div>Not yet</div>
+      <div class="legend-item"><div class="ldot" style="background:#FFD700"></div>Selected</div>
+      <div class="legend-item"><div class="ldot" style="background:#2ECC71"></div>Correct</div>
+      <div class="legend-item"><div class="ldot" style="background:#E74C3C"></div>Wrong</div>
+    </div>
+  </div>
+
+  <!-- Great Lakes separate SVG -->
+  <div class="map-wrap" id="lakes-map-wrap" style="display:none">
+    <div class="map-label">GREAT LAKES — Click each lake!</div>
+    <svg id="lakes-svg" viewBox="0 0 1000 800" style="width:100%;background:#0d1b3e;border-radius:10px">
+      <!-- Background image -->
+      <image href="data:image/jpeg;base64,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" x="0" y="0" width="1000" height="800" preserveAspectRatio="xMidYMid meet" opacity="0.9"/>
+
+      <!-- Lake Superior - top left large blob -->
+      <ellipse class="gl-hit" id="gl-superior" cx="230" cy="200" rx="210" ry="130"
+        onclick="selectLake('superior')" fill="rgba(255,255,255,0.08)" stroke="#FFD700" stroke-width="2.5" stroke-dasharray="8,5" style="cursor:pointer"/>
+      <text x="230" y="200" text-anchor="middle" dominant-baseline="middle" font-family="Fredoka One,cursive" font-size="28" fill="#FFD700" opacity="0.9" pointer-events="none">A</text>
+
+      <!-- Lake Michigan - tall narrow left side -->
+      <ellipse class="gl-hit" id="gl-michigan" cx="310" cy="520" rx="80" ry="180"
+        onclick="selectLake('michigan')" fill="rgba(255,255,255,0.08)" stroke="#FFD700" stroke-width="2.5" stroke-dasharray="8,5" style="cursor:pointer"/>
+      <text x="310" y="520" text-anchor="middle" dominant-baseline="middle" font-family="Fredoka One,cursive" font-size="28" fill="#FFD700" opacity="0.9" pointer-events="none">B</text>
+
+      <!-- Lake Huron - large center -->
+      <ellipse class="gl-hit" id="gl-huron" cx="560" cy="390" rx="170" ry="200"
+        onclick="selectLake('huron')" fill="rgba(255,255,255,0.08)" stroke="#FFD700" stroke-width="2.5" stroke-dasharray="8,5" style="cursor:pointer"/>
+      <text x="560" y="390" text-anchor="middle" dominant-baseline="middle" font-family="Fredoka One,cursive" font-size="28" fill="#FFD700" opacity="0.9" pointer-events="none">C</text>
+
+      <!-- Lake Erie - bottom right horizontal -->
+      <ellipse class="gl-hit" id="gl-erie" cx="640" cy="670" rx="170" ry="60"
+        onclick="selectLake('erie')" fill="rgba(255,255,255,0.08)" stroke="#FFD700" stroke-width="2.5" stroke-dasharray="8,5" style="cursor:pointer"/>
+      <text x="640" y="670" text-anchor="middle" dominant-baseline="middle" font-family="Fredoka One,cursive" font-size="28" fill="#FFD700" opacity="0.9" pointer-events="none">D</text>
+
+      <!-- Lake Ontario - far right small -->
+      <ellipse class="gl-hit" id="gl-ontario" cx="870" cy="590" rx="120" ry="55"
+        onclick="selectLake('ontario')" fill="rgba(255,255,255,0.08)" stroke="#FFD700" stroke-width="2.5" stroke-dasharray="8,5" style="cursor:pointer"/>
+      <text x="870" y="590" text-anchor="middle" dominant-baseline="middle" font-family="Fredoka One,cursive" font-size="28" fill="#FFD700" opacity="0.9" pointer-events="none">E</text>
+
+      <!-- Labels shown after answer -->
+      <text id="lbl-superior" x="220" y="200" text-anchor="middle" dominant-baseline="middle" font-family="Fredoka One,cursive" font-size="22" fill="white" opacity="0" pointer-events="none">Lake Superior</text>
+      <text id="lbl-michigan" x="310" y="520" text-anchor="middle" dominant-baseline="middle" font-family="Fredoka One,cursive" font-size="18" fill="white" opacity="0" pointer-events="none">Lake Michigan</text>
+      <text id="lbl-huron" x="560" y="390" text-anchor="middle" dominant-baseline="middle" font-family="Fredoka One,cursive" font-size="22" fill="white" opacity="0" pointer-events="none">Lake Huron</text>
+      <text id="lbl-erie" x="640" y="670" text-anchor="middle" dominant-baseline="middle" font-family="Fredoka One,cursive" font-size="18" fill="white" opacity="0" pointer-events="none">Lake Erie</text>
+      <text id="lbl-ontario" x="870" y="590" text-anchor="middle" dominant-baseline="middle" font-family="Fredoka One,cursive" font-size="16" fill="white" opacity="0" pointer-events="none">Lake Ontario</text>
+
+      <!-- Selected highlight overlay -->
+      <ellipse id="hl-superior" cx="230" cy="200" rx="210" ry="130" fill="#FFD700" opacity="0" pointer-events="none"/>
+      <ellipse id="hl-michigan" cx="310" cy="520" rx="80" ry="180" fill="#FFD700" opacity="0" pointer-events="none"/>
+      <ellipse id="hl-huron" cx="560" cy="390" rx="170" ry="200" fill="#FFD700" opacity="0" pointer-events="none"/>
+      <ellipse id="hl-erie" cx="640" cy="670" rx="170" ry="60" fill="#FFD700" opacity="0" pointer-events="none"/>
+      <ellipse id="hl-ontario" cx="870" cy="590" rx="120" ry="55" fill="#FFD700" opacity="0" pointer-events="none"/>
+    </svg>
+    <div class="legend">
+      <div class="legend-item"><div class="ldot" style="background:#4488dd"></div>Not yet (click!)</div>
+      <div class="legend-item"><div class="ldot" style="background:#FFD700"></div>Selected</div>
+      <div class="legend-item"><div class="ldot" style="background:#2ECC71"></div>Correct</div>
+      <div class="legend-item"><div class="ldot" style="background:#E74C3C"></div>Wrong</div>
+    </div>
+  </div>
+
+  <div class="map-input-panel">
+    <p class="map-hint-txt" id="map-hint-txt">👆 Click a region on the map to start!</p>
+    <div class="map-form" id="map-form">
+      <p class="map-q-txt" id="map-q-txt"></p>
+      <p class="map-sub-txt" id="map-sub-txt"></p>
+      <div class="map-input-row">
+        <input type="text" class="map-ans-input" id="map-ans-input" placeholder="Type the name...">
+        <button class="btn-map-check" onclick="checkMapAnswer()">Check ✓</button>
+      </div>
+      <div class="map-result" id="map-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FLASHCARDS -->
+<div id="fc-screen" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="fc-counter">1 / 5</span>
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="fc-card">
+    <span class="fc-badge">📝 KEY TERMS</span>
+    <p class="fc-q" id="fc-question"></p>
+    <div class="fc-answer" id="fc-answer"></div>
+    <button class="btn-reveal" id="fc-reveal" onclick="revealFC()">👁 Show Answer</button>
+  </div>
+  <div class="fc-nav">
+    <button class="btn-fc-back" id="fc-back" onclick="navFC(-1)">← Back</button>
+    <button class="btn-fc-next" id="fc-next" onclick="navFC(1)">Next →</button>
+  </div>
+</div>
+
+<!-- FC DONE -->
+<div id="fcdone" class="screen">
+  <span style="font-size:3rem;display:block;margin-bottom:16px">📝</span>
+  <h2>All Done!</h2>
+  <p>You reviewed all 5 key terms. Good luck on the exam!</p>
+  <div class="result-btns">
+    <button class="btn-retry" onclick="startFC()">🔄 Review Again</button>
+    <button class="btn-home-result" onclick="goHome()">🏠 Home</button>
+  </div>
+</div>
+
+<!-- CH9 QUIZ -->
+<div id="ch9-screen" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="c9-counter">1 / 15</span>
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="c9-bar" style="width:0%"></div></div>
+  <div class="card">
+    <span class="section-badge" id="c9-badge" style="background:#e67e22">9.1</span>
+    <span class="section-badge" id="c9-type-badge" style="background:#ff6d00;margin-left:6px">MC</span>
+    <p class="q-text" id="c9-question"></p>
+    <div id="c9-answer-area"></div>
+    <div class="feedback" id="c9-feedback"></div>
+    <div class="nav">
+      <button class="btn-back" id="c9-back" onclick="navC9(-1)">← Back</button>
+      <button class="btn-next" id="c9-next" onclick="navC9(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CH10 QUIZ -->
+<div id="ch10-screen" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="c10-counter">1 / 15</span>
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="c10-bar" style="width:0%"></div></div>
+  <div class="card">
+    <span class="section-badge" id="c10-badge" style="background:#c0392b">10.1</span>
+    <span class="section-badge" id="c10-type-badge" style="background:#ff6d00;margin-left:6px">MC</span>
+    <p class="q-text" id="c10-question"></p>
+    <div id="c10-answer-area"></div>
+    <div class="feedback" id="c10-feedback"></div>
+    <div class="nav">
+      <button class="btn-back" id="c10-back" onclick="navC10(-1)">← Back</button>
+      <button class="btn-next" id="c10-next" onclick="navC10(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CH11 QUIZ -->
+<div id="ch11-screen" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="c11-counter">1 / 29</span>
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="c11-bar" style="width:0%"></div></div>
+  <div class="card">
+    <span class="section-badge" id="c11-badge">11.1</span>
+    <span class="section-badge" id="c11-type-badge" style="background:#ff6d00;margin-left:6px">MC</span>
+    <p class="q-text" id="c11-question"></p>
+    <div id="c11-answer-area"></div>
+    <div class="feedback" id="c11-feedback"></div>
+    <div class="nav">
+      <button class="btn-back" id="c11-back" onclick="navC11(-1)">← Back</button>
+      <button class="btn-next" id="c11-next" onclick="navC11(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="screen">
+  <span class="result-emoji" id="r-emoji">🏆</span>
+  <div class="score-ring">
+    <span class="score-ring-num" id="r-score">0/0</span>
+    <span class="score-ring-lbl">SCORE</span>
+  </div>
+  <h2 class="result-title" id="r-title">Amazing!</h2>
+  <p class="result-msg" id="r-msg"></p>
+  <div class="result-btns">
+    <button class="btn-retry" id="btn-retry">🔄 Try Again</button>
+    <button class="btn-home-result" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="review" id="review"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+// ── DATA ──
+var PEOPLE = [
+  {d:'Across',q:'He led the Upper Canada Rebellion.',a:'Papineau'},
+  {d:'Across',q:'A leader in the women\'s suffrage movement. Got her Canadian doctor\'s license in 1880.',a:'Emily Stowe'},
+  {d:'Across',q:'He went to the US to convince Louis Riel to come back and help fight to save their lands.',a:'Gabriel Dumont'},
+  {d:'Across',q:'The group that ruled Upper Canada.',a:'Family Compact'},
+  {d:'Across',q:'First Prime Minister of Canada.',a:'Sir John A MacDonald'},
+  {d:'Across',q:'First woman to graduate from a Canadian medical college.',a:'Augusta Stowe'},
+  {d:'Across',q:'He led the Red River Rebellion and the Northwest Rebellion.',a:'Louis Riel'},
+  {d:'Across',q:'Powerful Shawnee chief who fought in the War of 1812.',a:'Tecumseh'},
+  {d:'Across',q:'The wildest and most infamous whiskey trading fort.',a:'Fort Whoop-Up'},
+  {d:'Across',q:'Founder of the Salvation Army.',a:'William Booth'},
+  {d:'Across',q:'The President who declared war on Britain, starting the War of 1812.',a:'President Madison'},
+  {d:'Across',q:'One of the Native chiefs who joined the Metis Rebellion.',a:'Chief Poundmaker'},
+  {d:'Across',q:'The first mayor of Toronto.',a:'MacKenzie'},
+  {d:'Across',q:'People of native and European descent.',a:'Metis'},
+  {d:'Down',q:'The native tribe living in the Northwest.',a:'Blackfoot'},
+  {d:'Down',q:'One of Canada\'s most famous surveyors.',a:'Sandford Fleming'},
+  {d:'Down',q:'She succeeded in forcing Manitoba to allow women the right to vote and run for political office.',a:'Nellie McClung'},
+  {d:'Down',q:'A person who hated slavery and wanted it to be made illegal.',a:'Abolitionist'},
+  {d:'Down',q:'Trained to discover the shortest and safest way to construct railways.',a:'Surveyors'},
+  {d:'Down',q:'Hudson\'s Bay Company\'s fur trading rival.',a:'Northwest Companies'},
+  {d:'Down',q:'The hero of Upper Canada. Died in the Battle of Queenston Heights.',a:'Isaac Brock'},
+  {d:'Down',q:'People who object to, question or defy the law or existing authority.',a:'Rebel'},
+  {d:'Down',q:'She ran over 30km to warn the British of an American attack.',a:'Laura Secord'},
+  {d:'Down',q:'People who made the important decisions in Lower Canada.',a:'Chateau Clique'},
+  {d:'Down',q:'Canada\'s first recognized female doctor.',a:'Ginny Trout'},
+  {d:'Down',q:'American whiskey traders who killed a group of natives in the west.',a:'Hardwick Gang'},
+  {d:'Down',q:'The general who surrendered Fort Detroit without a fight during the War of 1812.',a:'Hull'},
+  {d:'Down',q:'The official police force of the Canadian Prairies.',a:'Mounties'}
+];
+
+var PROVINCE_DATA = {
+  'Alberta':                  {hint:'Province with Calgary & Edmonton, the Rockies',alt:['ab','alta']},
+  'Saskatchewan':             {hint:'Prairie province, potash & wheat capital',alt:['sask']},
+  'Manitoba':                 {hint:'Prairie province, Winnipeg is the capital',alt:['mb']},
+  'Newfoundland  & Labrador': {hint:'Easternmost province, includes Labrador',alt:['newfoundland','newfoundland and labrador','nl','nfld']},
+  'Prince Edward Island':     {hint:'Smallest province, island in the Atlantic',alt:['pei','p.e.i.','prince edward']},
+  'Nova Scotia':              {hint:'Atlantic province, Halifax is capital',alt:['ns']},
+  'Northwest Territories':    {hint:'Large northern territory, Yellowknife is capital',alt:['nwt','northwest territory']},
+  'Nunavut':                  {hint:'Newest & largest territory, mostly Arctic',alt:['nu']},
+  'Ontario':                  {hint:'Most populous province, Ottawa & Toronto',alt:['on']},
+  'New Brunswick':            {hint:'Atlantic province, Fredericton is capital',alt:['nb']},
+  'Yukon Territory':          {hint:'Far northwest territory, borders Alaska',alt:['yukon','yt']},
+  'British Columbia':         {hint:'Pacific coast province, Vancouver is here',alt:['bc','b.c.']},
+  'Quebec':                   {hint:'French-speaking province, Montreal & Quebec City',alt:['qc','québec']}
+};
+
+var LAKE_DATA = {
+  superior: {name:'Lake Superior', hint:'Largest of all the Great Lakes'},
+  michigan:  {name:'Lake Michigan',  hint:'Only lake entirely in the USA'},
+  huron:     {name:'Lake Huron',     hint:'Second largest Great Lake'},
+  erie:      {name:'Lake Erie',      hint:'Shallowest lake, near Niagara Falls'},
+  ontario:   {name:'Lake Ontario',   hint:'Smallest Great Lake, near Toronto'}
+};
+
+var OCEAN_DATA = {
+  pacific:   {name:'Pacific Ocean',  hint:'West coast of Canada',          cx:60,  cy:490, alt:['pacific','pacific ocean']},
+  arctic:    {name:'Arctic Ocean',   hint:'North of Canada',                cx:423, cy:80,  alt:['arctic','arctic ocean']},
+  atlantic:  {name:'Atlantic Ocean', hint:'East coast of Canada',           cx:870, cy:530, alt:['atlantic','atlantic ocean']},
+  hudson:    {name:'Hudson Bay',     hint:'Large bay in central Canada',    cx:571, cy:370, alt:['hudson','hudson bay']}
+};
+
+var FC = [
+  {q:'What is the Underground Railroad / Secret Railroad Language?',
+   a:'<ul><li>The <strong>Underground Railroad</strong> was a secret network helping enslaved people escape to Canada</li><li><strong>Station</strong> = safe house &nbsp;|&nbsp; <strong>Conductor</strong> = guide</li><li><strong>Passenger/Cargo</strong> = escaped slave &nbsp;|&nbsp; <strong>Tracks</strong> = escape routes</li><li>Canada was called the <strong>Promised Land</strong></li><li><strong>Abolitionists</strong> helped — they believed slavery was wrong and wanted it made illegal</li></ul>'},
+  {q:'What happened in each battle of the War of 1812?',
+   a:'<ul><li><strong>Battle of Detroit (1812)</strong> — General Hull surrendered Fort Detroit to Brock without a fight. American defeat.</li><li><strong>Battle of Queenston Heights (1812)</strong> — Canadians won but General Isaac Brock was killed. He became a hero of Upper Canada.</li><li><strong>Battle of Beaver Dams (1813)</strong> — Laura Secord walked 30km to warn the British. Canadians ambushed and defeated the Americans.</li><li><strong>Battle of Fort York (1813)</strong> — Americans captured and burned York (Toronto). Canadians later burned Washington.</li></ul>'},
+  {q:'What happened in the Lower & Upper Canada Rebellions? Who led them?',
+   a:'<ul><li><strong>Upper Canada Rebellion (1837)</strong> — Led by <strong>William Lyon MacKenzie</strong> (also first mayor of Toronto). Fought against the Family Compact who controlled Upper Canada unfairly.</li><li><strong>Lower Canada Rebellion (1837)</strong> — Led by <strong>Louis-Joseph Papineau</strong>. Fought against the Chateau Clique who controlled Lower Canada.</li><li>Both failed, but led to the Act of Union (1841) joining both Canadas.</li></ul>'},
+  {q:'What happened in the Red River & Northwest Rebellions? Who were the key people?',
+   a:'<ul><li><strong>Louis Riel</strong> — Led both rebellions. Metis leader fighting for land rights. Hanged for treason in 1885.</li><li><strong>Gabriel Dumont</strong> — Metis military leader. Brought Riel back from the US. Commander of Metis forces.</li><li><strong>Thomas Scott</strong> — English settler executed by Riel\'s government in 1870. Caused Ontario to send army.</li><li><strong>Chief Big Bear & Chief Poundmaker</strong> — Cree leaders who joined the Northwest Rebellion. Both sentenced to prison.</li><li>They fought because the government ignored Metis land rights and broke Treaty promises.</li></ul>'},
+  {q:'What were the key events in Women\'s Rights in Canada?',
+   a:'<ul><li><strong>Emily Stowe</strong> — Had to study medicine in the USA because Canada didn\'t allow women in medical school.</li><li><strong>Ginny Trout</strong> — Canada\'s first recognized female doctor.</li><li><strong>Augusta Stowe</strong> — Emily\'s daughter. First woman to graduate from a Canadian medical college (1883).</li><li><strong>Nellie McClung</strong> — Won women the right to vote in Manitoba on January 27, 1916.</li><li><strong>Quebec</strong> was the last province — women could vote on April 25, 1940.</li><li>In the 1800s, women had no legal rights. When married, everything became husband\'s property.</li></ul>'}
+];
+
+// ── STATE ──
+var mode='people';
+var pPool=[], pIdx=0, pScore=0, pLog=[], pAnswered=false;
+var fcIdx=0;
+var mapSelectedId=null, mapAnswered={}, mapCorrect=0, mapTotal=0;
+var mapCurrentTab='provinces';
+var mapLoaded=false;
+var gProvinces, gLakes;
+
+function shuffle(arr){var a=arr.slice(),i,j,t;for(i=a.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');}
+function goHome(){showScreen('start');}
+
+function selectMode(el){
+  document.querySelectorAll('.mode-card').forEach(function(c){c.classList.remove('active');});
+  el.classList.add('active');
+  mode=el.dataset.mode;
+}
+
+document.getElementById('btn-start').addEventListener('click',function(){
+  if(mode==='people') startPeople();
+  else if(mode==='map') startMap();
+  else if(mode==='ch9') startC9();
+  else if(mode==='ch10') startC10();
+  else if(mode==='ch11') startC11();
+  else startFC();
+});
+
+// ── CH9 DATA (15 questions) ──
+var C9Q = [
+  {s:'9.1',t:'mc',q:'On what date did President Madison declare war on Britain?',o:['June 18, 1812','July 4, 1812','August 16, 1812','June 18, 1810'],a:0,e:'President Madison declared war on June 18, 1812.'},
+  {s:'9.1',t:'sa',q:'Why did the United States declare war on Britain?',a:'They wanted to control all of North America and Britain was blocking their trade with France.'},
+  {s:'9.1',t:'mc',q:'Who was the General of the British troops in the War of 1812?',o:['General Hull','Chief Tecumseh','General Isaac Brock','General Sheaffe'],a:2,e:'General Isaac Brock was the General of the British troops. He was tough, bold, and daring.'},
+  {s:'9.2',t:'mc',q:'What happened at the Battle of Fort Detroit?',o:['The British surrendered','General Hull surrendered without a fight','Tecumseh was killed','Canada was invaded'],a:1,e:'General Hull was frightened of the natives and surrendered Fort Detroit without a fight.'},
+  {s:'9.2',t:'mc',q:'What happened to General Brock at the Battle of Queenston Heights?',o:['He won and was promoted','He surrendered to the Americans','He was shot by an American sharpshooter and died','He escaped to the US'],a:2,e:'While trying to win back the Heights, General Brock was shot by an American sharpshooter and died instantly.'},
+  {s:'9.2',t:'sa',q:'What did Laura Secord do during the Battle of Beaver Dams?',a:'She ran over 30km to warn the British troops of an upcoming American attack.'},
+  {s:'9.2',t:'mc',q:'What treaty ended the War of 1812?',o:['Treaty of Paris','Treaty of Versailles','Treaty of Ghent','Treaty of Utrecht'],a:2,e:'The War officially ended on December 24, 1814 when the Treaty of Ghent was signed in Belgium.'},
+  {s:'9.3',t:'mc',q:'What was the goal of the Underground Railroad?',o:['To build railways underground','To get slaves to freedom in Canada','To help slaves escape to Mexico','To train conductors for real trains'],a:1,e:'The goal was to get slaves to the Promised Land (Canada) because Canada had already made slavery illegal in 1834.'},
+  {s:'9.3',t:'sa',q:'In Underground Railroad language, what was a "Station"?',a:'A safe place to stop or rest on the trip north.'},
+  {s:'9.4',t:'mc',q:'Who led the Lower Canada Rebellion?',o:['William Lyon Mackenzie','Louis Riel','Louis-Joseph Papineau','Gabriel Dumont'],a:2,e:'Louis-Joseph Papineau led the revolt against the government of Lower Canada. His supporters were called Patriotes.'},
+  {s:'9.4',t:'sa',q:'Who made the important decisions in Lower Canada? Who was in this group?',a:'The Chateau Clique made the decisions. It was mainly English-speaking colonists appointed by the governor.'},
+  {s:'9.5',t:'mc',q:'Who led the Upper Canada Rebellion?',o:['Papineau','Isaac Brock','Tecumseh','William Lyon Mackenzie'],a:3,e:'William Lyon Mackenzie was the leader of the Reform movement and led the Upper Canada Rebellion.'},
+  {s:'9.5',t:'mc',q:'What group ruled Upper Canada unfairly?',o:['The Chateau Clique','The Family Compact','The Patriotes','The Loyalists'],a:1,e:'The Family Compact ruled Upper Canada in favour of their own business interests.'},
+  {s:'9.5',t:'sa',q:'Where did Mackenzie flee after the rebellion failed?',a:'He fled to the United States.'},
+  {s:'9.6',t:'mc',q:'When was the Dominion of Canada officially created?',o:['July 1, 1867','July 4, 1867','July 15, 1870','January 1, 1867'],a:0,e:'The British North America Act officially joined Nova Scotia, New Brunswick, Ontario, and Quebec on July 1, 1867. Sir John A. Macdonald became Canada\'s first Prime Minister.'}
+];
+
+// ── CH10 DATA (15 questions) ──
+var C10Q = [
+  {s:'10.1',t:'mc',q:'What did Macdonald purchase from the Hudson Bay Company in 1869?',o:['Manitoba','Rupert\'s Land','British Columbia','The Northwest Company'],a:1,e:'Macdonald purchased Rupert\'s Land in 1869. It became part of Canada\'s Northwest Territories.'},
+  {s:'10.1',t:'sa',q:'What were people of both Native and European descent called?',a:'The Metis.'},
+  {s:'10.1',t:'mc',q:'Who led the Red River Rebellion?',o:['Gabriel Dumont','Chief Big Bear','Louis Riel','Chief Poundmaker'],a:2,e:'Louis Riel became the representative of the Metis who opposed the Canadian government and led the Red River Rebellion.'},
+  {s:'10.2',t:'mc',q:'What did American traders bring to trade for furs with Native people?',o:['Blankets and tools','Cheap liquor','Horses','Food and medicine'],a:1,e:'The Americans brought cheap liquor to trade for furs — this corrupted the Native people.'},
+  {s:'10.2',t:'mc',q:'In what year were the Mounties officially established?',o:['1867','1870','1873','1876'],a:2,e:'The North-West Mounted Police were officially established in 1873.'},
+  {s:'10.2',t:'sa',q:'What colour were the Mounties\' uniforms?',a:'Bright red.'},
+  {s:'10.2',t:'mc',q:'How many acres of land could a settler receive through the Dominion Lands Act?',o:['80 acres','120 acres','160 acres','200 acres'],a:2,e:'The Dominion Lands Act of 1872 gave each family or 21-year-old man 160 acres of land.'},
+  {s:'10.3',t:'mc',q:'Who convinced Louis Riel to return from the US for the Northwest Rebellion?',o:['Chief Big Bear','Chief Poundmaker','Gabriel Dumont','General Middleton'],a:2,e:'Gabriel Dumont, the Metis leader, went to the United States and convinced Louis Riel to return.'},
+  {s:'10.3',t:'sa',q:'What happened to Louis Riel after the Northwest Rebellion?',a:'He was tried for high treason and hanged in Regina on November 16, 1885.'},
+  {s:'10.4',t:'mc',q:'Who was one of Canada\'s most famous surveyors?',o:['William Van Horne','Donald Smith','Sandford Fleming','Andrew Onderdonk'],a:2,e:'Sandford Fleming was one of Canada\'s most famous surveyors. He worked on both the Intercolonial Railway and the CPR.'},
+  {s:'10.4',t:'mc',q:'When was the Last Spike driven, completing the Canadian Pacific Railway?',o:['July 6, 1876','November 7, 1885','January 1, 1881','July 15, 1870'],a:1,e:'The Last Spike was driven on November 7, 1885 at Eagle Pass by Donald Smith.'},
+  {s:'10.4',t:'sa',q:'How many Chinese labourers were brought to Canada to build the railway?',a:'6,000 workers from the Chinese province of Kwangtung.'},
+  {s:'10.5',t:'mc',q:'What was the main goal of residential schools?',o:['To teach Indigenous children academics','To make Indigenous children adopt white customs and beliefs','To preserve Indigenous languages','To train Indigenous teachers'],a:1,e:'The main goal was to make Indigenous children learn how to live according to white customs and beliefs.'},
+  {s:'10.5',t:'sa',q:'When was the last residential school closed?',a:'1996.'},
+  {s:'10.6',t:'mc',q:'Who won women the right to vote in Manitoba on January 27, 1916?',o:['Emily Stowe','Augusta Stowe','Ginny Trout','Nellie McClung'],a:3,e:'Nellie McClung was the most famous suffragist. She succeeded in forcing the politicians of Manitoba to allow women the right to vote.'}
+];
+
+var c9Pool=[], c9Idx=0, c9Score=0, c9Log=[], c9Answered=false;
+var c10Pool=[], c10Idx=0, c10Score=0, c10Log=[], c10Answered=false;
+
+function makeChapterFunctions(prefix, QData, screenId) {
+  var pool=[], idx=0, score=0, log=[], answered=false;
+  var fns = {
+    start: function(){
+      pool=shuffle(QData); idx=0; score=0; log=[]; answered=false;
+      showScreen(screenId); fns.render();
+    },
+    render: function(){
+      var q=pool[idx]; answered=false;
+      document.getElementById(prefix+'-counter').textContent=(idx+1)+' / '+pool.length;
+      document.getElementById(prefix+'-bar').style.width=(idx/pool.length*100)+'%';
+      document.getElementById(prefix+'-badge').textContent='Section '+q.s;
+      var tb=document.getElementById(prefix+'-type-badge');
+      if(q.t==='mc'){tb.textContent='Multiple Choice';tb.style.background='#ff6d00';}
+      else{tb.textContent='Short Answer';tb.style.background='#2ECC71';}
+      document.getElementById(prefix+'-question').textContent=q.q;
+      document.getElementById(prefix+'-feedback').className='feedback';
+      document.getElementById(prefix+'-next').className='btn-next';
+      document.getElementById(prefix+'-next').textContent=idx===pool.length-1?'🏁 See Results!':'Next →';
+      document.getElementById(prefix+'-back').disabled=(idx===0);
+      var area=document.getElementById(prefix+'-answer-area');
+      area.innerHTML='';
+      if(q.t==='mc'){
+        var wrap=document.createElement('div'); wrap.className='options';
+        ['A','B','C','D'].forEach(function(ltr,i){
+          var btn=document.createElement('button'); btn.className='opt';
+          btn.innerHTML='<span class="ltr">'+ltr+'</span>'+q.o[i];
+          btn.onclick=(function(i){return function(){fns.checkMC(i);};})(i);
+          wrap.appendChild(btn);
+        });
+        area.appendChild(wrap);
+      } else {
+        var wrap=document.createElement('div'); wrap.className='write-wrap';
+        var inp=document.createElement('input'); inp.type='text'; inp.className='write-input';
+        inp.id=prefix+'-input'; inp.placeholder='Type your answer...';
+        inp.addEventListener('keydown',function(e){if(e.key==='Enter')fns.submit();});
+        var sub=document.createElement('button'); sub.className='btn-submit'; sub.textContent='Check Answer ✓';
+        sub.addEventListener('click',function(){fns.submit();});
+        var sc=document.createElement('div'); sc.className='selfcheck'; sc.id=prefix+'-selfcheck';
+        var ar=document.createElement('div'); ar.className='answer-reveal'; ar.id=prefix+'-reveal';
+        var cb=document.createElement('div'); cb.className='check-btns';
+        var bg=document.createElement('button'); bg.className='btn-got-it'; bg.textContent='✅ I got it!';
+        bg.addEventListener('click',function(){fns.mark(true);});
+        var bm=document.createElement('button'); bm.className='btn-missed'; bm.textContent='❌ I missed it';
+        bm.addEventListener('click',function(){fns.mark(false);});
+        cb.appendChild(bg); cb.appendChild(bm);
+        sc.appendChild(ar); sc.appendChild(cb);
+        wrap.appendChild(inp); wrap.appendChild(sub); wrap.appendChild(sc);
+        area.appendChild(wrap);
+        setTimeout(function(){var el=document.getElementById(prefix+'-input');if(el)el.focus();},100);
+      }
+    },
+    checkMC: function(chosen){
+      if(answered)return; answered=true;
+      var q=pool[idx];
+      var btns=document.querySelectorAll('#'+prefix+'-answer-area .opt');
+      for(var i=0;i<btns.length;i++) btns[i].setAttribute('disabled','true');
+      var ok=chosen===q.a;
+      btns[chosen].classList.add(ok?'correct':'wrong');
+      if(!ok) btns[q.a].classList.add('correct');
+      fns.record(ok, ok?'🎉 Correct! '+q.e:'❌ Not quite. '+q.e);
+    },
+    submit: function(){
+      if(answered)return;
+      var inp=document.getElementById(prefix+'-input');
+      if(!inp||!inp.value.trim())return;
+      inp.disabled=true;
+      var sub=document.querySelector('#'+prefix+'-answer-area .btn-submit');
+      if(sub) sub.style.display='none';
+      document.getElementById(prefix+'-reveal').innerHTML='Answer: <span>'+pool[idx].a+'</span>';
+      document.getElementById(prefix+'-selfcheck').className='selfcheck show';
+      answered=true;
+    },
+    mark: function(ok){
+      fns.record(ok, ok?'🎉 Great job!':'📖 Review this one!');
+      var cb=document.querySelector('#'+prefix+'-selfcheck .check-btns');
+      if(cb) cb.style.display='none';
+    },
+    record: function(ok,msg){
+      if(log.length<=idx){log.push({q:pool[idx].q,ok:ok});if(ok)score++;}
+      else{var o=log[idx];if(o.ok!==ok){if(o.ok)score--;if(ok)score++;log[idx]={q:pool[idx].q,ok:ok};}}
+      document.getElementById(prefix+'-feedback').textContent=msg;
+      document.getElementById(prefix+'-feedback').className='feedback show '+(ok?'ok':'bad');
+      document.getElementById(prefix+'-next').className='btn-next show';
+    },
+    nav: function(dir){
+      if(dir===1){
+        if(!answered)return;
+        idx++; if(idx>=pool.length){fns.showResult();return;}
+      } else {
+        if(answered&&log.length>idx){var e=log.pop();if(e.ok)score--;}
+        idx--;
+        if(log.length>idx){var p=log.pop();if(p.ok)score--;}
+      }
+      fns.render();
+    },
+    showResult: function(){
+      showScreen('result');
+      var pct=score/pool.length;
+      document.getElementById('r-score').textContent=score+'/'+pool.length;
+      var emoji,title,msg;
+      if(pct===1){emoji='🏆';title='PERFECT!';msg='You know every single one! 🍁';}
+      else if(pct>=.8){emoji='🌟';title='Excellent!';msg='Almost perfect — great work!';}
+      else if(pct>=.6){emoji='👍';title='Good Job!';msg='Review the missed ones before the exam.';}
+      else if(pct>=.4){emoji='📚';title='Keep Studying!';msg='Go over the missed answers!';}
+      else{emoji='🍁';title='Study More!';msg='Review the material and try again!';}
+      document.getElementById('r-emoji').textContent=emoji;
+      document.getElementById('r-title').textContent=title;
+      document.getElementById('r-msg').textContent=msg;
+      var html='';
+      for(var i=0;i<log.length;i++){
+        html+='<div class="review-item '+(log[i].ok?'ok':'miss')+'">';
+        html+='<span>'+(log[i].ok?'✅':'❌')+'</span><span>'+log[i].q+'</span></div>';
+      }
+      document.getElementById('review').innerHTML=html;
+      document.getElementById('btn-retry').onclick=fns.start;
+    }
+  };
+  return fns;
+}
+
+var ch9 = makeChapterFunctions('c9', C9Q, 'ch9-screen');
+var ch10 = makeChapterFunctions('c10', C10Q, 'ch10-screen');
+
+function startC9(){ ch9.start(); }
+function startC10(){ ch10.start(); }
+function navC9(dir){ ch9.nav(dir); }
+function navC10(dir){ ch10.nav(dir); }
+
+// ── CH11 DATA (15 questions — trimmed) ──
+var C11Q = [
+  {s:'11.1',t:'mc',q:'How did World War I begin?',o:['Germany invaded France','Archduke Franz Ferdinand was murdered by a Serbian','Britain attacked Austria','Canada declared war first'],a:1,e:'Archduke Franz Ferdinand was murdered by a Serbian, causing Austria to attack Serbia. Other countries chose sides.'},
+  {s:'11.1',t:'sa',q:'What is conscription?',a:'Forcing men to join the army.'},
+  {s:'11.1',t:'mc',q:'How many Canadians went to fight in World War I?',o:['30,000','125,000','425,000','625,000'],a:3,e:'Between 1914 and 1918, Canada sent 625,000 men and women to fight in the war.'},
+  {s:'11.1',t:'mc',q:'Who was against conscription?',o:['Doctors and nurses','Farmers, Quakers, and Mennonites','Teachers and politicians','Businessmen'],a:1,e:'Farmers did not want their sons taken. Quakers and Mennonites believed war was evil.'},
+  {s:'11.1',t:'sa',q:'When did WWI end?',a:'November 11, 1918.'},
+  {s:'11.1',t:'mc',q:'What peacekeeping force did Canada join after WWI?',o:['The United Nations','The Imperial War Cabinet','The League of Nations','The Allied Forces'],a:2,e:'Canada was allowed to join the League of Nations, a world peacekeeping force.'},
+  {s:'11.2',t:'sa',q:'What do historians call the 1920s?',a:'The Roaring Twenties.'},
+  {s:'11.2',t:'mc',q:'What caused the Great Depression?',o:['A world war broke out','The New York Stock Market Crash in October 1929','A drought across Canada','A banking collapse in Britain'],a:1,e:'The New York Stock Market Crash in October 1929 caused the Great Depression.'},
+  {s:'11.2',t:'sa',q:'What percent of the population did not have jobs by 1933?',a:'30%'},
+  {s:'11.2',t:'sa',q:'What two famous Canadian companies were started during the 1930s?',a:'CBC and Air Canada (Trans-Canada Airline).'},
+  {s:'11.3',t:'mc',q:'Who was the leader of Germany during WWII?',o:['Joseph Stalin','Benito Mussolini','Kaiser Wilhelm','Adolf Hitler'],a:3,e:'Adolf Hitler became dictator of Germany after being elected in 1933.'},
+  {s:'11.3',t:'sa',q:'When did Canada officially declare war in WWII?',a:'September 10, 1939.'},
+  {s:'11.3',t:'mc',q:'In what battle were 907 Canadians killed, 500+ wounded, and 2,000 captured?',o:['Battle of Ypres','Battle of Vimy Ridge','Battle of Dieppe','Battle of Juno Beach'],a:2,e:'The Battle of Dieppe in August 1942 — 907 died, 500+ wounded, almost 2,000 captured.'},
+  {s:'11.3',t:'mc',q:'What is VE Day?',o:['The day Japan surrendered','The day Canada joined the war','Victory in Europe Day — Germany surrendered May 7, 1945','The day the atomic bomb was dropped'],a:2,e:'VE Day is Victory in Europe Day, May 7, 1945, when Germany surrendered.'},
+  {s:'11.3',t:'sa',q:'What two Japanese cities were attacked with atomic bombs?',a:'Hiroshima (August 6) and Nagasaki (August 9), 1945.'}
+];
+
+var c11Pool=[], c11Idx=0, c11Score=0, c11Log=[], c11Answered=false;
+
+function startC11(){
+  c11Pool=shuffle(C11Q); c11Idx=0; c11Score=0; c11Log=[]; c11Answered=false;
+  showScreen('ch11-screen'); renderC11();
+}
+function renderC11(){
+  var q=c11Pool[c11Idx];
+  c11Answered=false;
+  document.getElementById('c11-counter').textContent=(c11Idx+1)+' / '+c11Pool.length;
+  document.getElementById('c11-bar').style.width=(c11Idx/c11Pool.length*100)+'%';
+  document.getElementById('c11-badge').textContent='Section '+q.s;
+  var tb=document.getElementById('c11-type-badge');
+  if(q.t==='mc'){tb.textContent='Multiple Choice';tb.style.background='#ff6d00';}
+  else{tb.textContent='Short Answer';tb.style.background='#2ECC71';}
+  document.getElementById('c11-question').textContent=q.q;
+  document.getElementById('c11-feedback').className='feedback';
+  document.getElementById('c11-next').className='btn-next';
+  document.getElementById('c11-next').textContent=c11Idx===c11Pool.length-1?'🏁 See Results!':'Next →';
+  document.getElementById('c11-back').disabled=(c11Idx===0);
+  var area=document.getElementById('c11-answer-area');
+  area.innerHTML='';
+  if(q.t==='mc'){
+    var wrap=document.createElement('div'); wrap.className='options';
+    ['A','B','C','D'].forEach(function(ltr,i){
+      var btn=document.createElement('button'); btn.className='opt';
+      btn.innerHTML='<span class="ltr">'+ltr+'</span>'+q.o[i];
+      btn.onclick=(function(i){return function(){checkC11MC(i);};})(i);
+      wrap.appendChild(btn);
+    });
+    area.appendChild(wrap);
+  } else {
+    var wrap=document.createElement('div'); wrap.className='write-wrap';
+    var inp=document.createElement('input'); inp.type='text'; inp.className='write-input'; inp.id='c11-input'; inp.placeholder='Type your answer...';
+    inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitC11();});
+    var sub=document.createElement('button'); sub.className='btn-submit'; sub.textContent='Check Answer ✓';
+    sub.addEventListener('click',submitC11);
+    var sc=document.createElement('div'); sc.className='selfcheck'; sc.id='c11-selfcheck';
+    var ar=document.createElement('div'); ar.className='answer-reveal'; ar.id='c11-reveal';
+    var cb=document.createElement('div'); cb.className='check-btns';
+    var bg=document.createElement('button'); bg.className='btn-got-it'; bg.textContent='✅ I got it!';
+    bg.addEventListener('click',function(){markC11(true);});
+    var bm=document.createElement('button'); bm.className='btn-missed'; bm.textContent='❌ I missed it';
+    bm.addEventListener('click',function(){markC11(false);});
+    cb.appendChild(bg); cb.appendChild(bm);
+    sc.appendChild(ar); sc.appendChild(cb);
+    wrap.appendChild(inp); wrap.appendChild(sub); wrap.appendChild(sc);
+    area.appendChild(wrap);
+    setTimeout(function(){var el=document.getElementById('c11-input');if(el)el.focus();},100);
+  }
+}
+function checkC11MC(chosen){
+  if(c11Answered)return; c11Answered=true;
+  var q=c11Pool[c11Idx];
+  var btns=document.querySelectorAll('#c11-answer-area .opt');
+  for(var i=0;i<btns.length;i++) btns[i].setAttribute('disabled','true');
+  var ok=chosen===q.a;
+  btns[chosen].classList.add(ok?'correct':'wrong');
+  if(!ok) btns[q.a].classList.add('correct');
+  recordC11(ok, ok?'🎉 Correct! '+q.e:'❌ Not quite. '+q.e);
+}
+function submitC11(){
+  if(c11Answered)return;
+  var inp=document.getElementById('c11-input');
+  if(!inp||!inp.value.trim())return;
+  inp.disabled=true;
+  var sub=document.querySelector('#c11-answer-area .btn-submit');
+  if(sub) sub.style.display='none';
+  document.getElementById('c11-reveal').innerHTML='Answer: <span>'+c11Pool[c11Idx].a+'</span>';
+  document.getElementById('c11-selfcheck').className='selfcheck show';
+  c11Answered=true;
+}
+function markC11(ok){
+  recordC11(ok, ok?'🎉 Great job!':'📖 Review this one!');
+  var cb=document.querySelector('#c11-selfcheck .check-btns');
+  if(cb) cb.style.display='none';
+}
+function recordC11(ok,msg){
+  if(c11Log.length<=c11Idx){c11Log.push({q:c11Pool[c11Idx].q,ok:ok});if(ok)c11Score++;}
+  else{var o=c11Log[c11Idx];if(o.ok!==ok){if(o.ok)c11Score--;if(ok)c11Score++;c11Log[c11Idx]={q:c11Pool[c11Idx].q,ok:ok};}}
+  document.getElementById('c11-feedback').textContent=msg;
+  document.getElementById('c11-feedback').className='feedback show '+(ok?'ok':'bad');
+  document.getElementById('c11-next').className='btn-next show';
+}
+function navC11(dir){
+  if(dir===1){
+    if(!c11Answered)return;
+    c11Idx++; if(c11Idx>=c11Pool.length){showC11Result();return;}
+  } else {
+    if(c11Answered&&c11Log.length>c11Idx){var e=c11Log.pop();if(e.ok)c11Score--;}
+    c11Idx--;
+    if(c11Log.length>c11Idx){var p=c11Log.pop();if(p.ok)c11Score--;}
+  }
+  renderC11();
+}
+function showC11Result(){
+  showScreen('result');
+  var pct=c11Score/c11Pool.length;
+  document.getElementById('r-score').textContent=c11Score+'/'+c11Pool.length;
+  var emoji,title,msg;
+  if(pct===1){emoji='🏆';title='PERFECT SCORE!';msg='You crushed it! 🍁';}
+  else if(pct>=.8){emoji='🌟';title='Excellent!';msg='Almost perfect!';}
+  else if(pct>=.6){emoji='👍';title='Good Job!';msg='Review the missed ones.';}
+  else if(pct>=.4){emoji='📚';title='Keep Studying!';msg='Read the chapter again!';}
+  else{emoji='⚔️';title='Study More!';msg='Don\'t give up!';}
+  document.getElementById('r-emoji').textContent=emoji;
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-msg').textContent=msg;
+  var html='';
+  for(var i=0;i<c11Log.length;i++){
+    html+='<div class="review-item '+(c11Log[i].ok?'ok':'miss')+'">';
+    html+='<span>'+(c11Log[i].ok?'✅':'❌')+'</span><span>'+c11Log[i].q+'</span></div>';
+  }
+  document.getElementById('review').innerHTML=html;
+  document.getElementById('btn-retry').onclick=startC11;
+}
+
+// ── PEOPLE ──
+function startPeople(){
+  pPool=shuffle(PEOPLE);pIdx=0;pScore=0;pLog=[];pAnswered=false;
+  showScreen('people-screen');renderP();
+}
+function renderP(){
+  var q=pPool[pIdx];pAnswered=false;
+  document.getElementById('p-counter').textContent=(pIdx+1)+' / '+pPool.length;
+  document.getElementById('p-bar').style.width=(pIdx/pPool.length*100)+'%';
+  document.getElementById('p-badge').textContent=q.d;
+  document.getElementById('p-question').textContent=q.q;
+  var inp=document.getElementById('p-input');
+  inp.value='';inp.disabled=false;inp.className='write-input';
+  document.getElementById('p-submit').style.display='block';
+  document.getElementById('p-selfcheck').className='selfcheck';
+  document.getElementById('p-feedback').className='feedback';
+  document.getElementById('p-next').className='btn-next';
+  document.getElementById('p-next').textContent=pIdx===pPool.length-1?'🏁 See Results!':'Next →';
+  document.getElementById('p-back').disabled=(pIdx===0);
+  var cb=document.querySelector('#p-selfcheck .check-btns');
+  if(cb) cb.style.display='';
+  setTimeout(function(){document.getElementById('p-input').focus();},100);
+}
+document.getElementById('p-input').addEventListener('keydown',function(e){if(e.key==='Enter')submitP();});
+document.getElementById('p-submit').addEventListener('click',submitP);
+function submitP(){
+  if(pAnswered)return;
+  var inp=document.getElementById('p-input');
+  if(!inp.value.trim())return;
+  inp.disabled=true;
+  document.getElementById('p-submit').style.display='none';
+  document.getElementById('p-reveal').innerHTML='Answer: <span>'+pPool[pIdx].a+'</span>';
+  document.getElementById('p-selfcheck').className='selfcheck show';
+  pAnswered=true;
+}
+function markP(ok){
+  if(pLog.length<=pIdx){pLog.push({q:pPool[pIdx].q,ok:ok});if(ok)pScore++;}
+  else{var o=pLog[pIdx];if(o.ok!==ok){if(o.ok)pScore--;if(ok)pScore++;pLog[pIdx]={q:pPool[pIdx].q,ok:ok};}}
+  var fb=document.getElementById('p-feedback');
+  fb.textContent=ok?'🎉 Great job!':'📖 Review this one!';
+  fb.className='feedback show '+(ok?'ok':'bad');
+  document.querySelector('#p-selfcheck .check-btns').style.display='none';
+  document.getElementById('p-next').className='btn-next show';
+}
+function navP(dir){
+  if(dir===1){if(!pAnswered)return;pIdx++;if(pIdx>=pPool.length){showPResult();return;}}
+  else{if(pAnswered&&pLog.length>pIdx){var e=pLog.pop();if(e.ok)pScore--;}pIdx--;if(pLog.length>pIdx){var p=pLog.pop();if(p.ok)pScore--;}}
+  var cb=document.querySelector('#p-selfcheck .check-btns');
+  if(cb) cb.style.display='';
+  renderP();
+}
+function showPResult(){
+  showScreen('result');
+  var pct=pScore/pPool.length;
+  document.getElementById('r-score').textContent=pScore+'/'+pPool.length;
+  var emoji,title,msg;
+  if(pct===1){emoji='🏆';title='PERFECT!';msg='You know every single one! 🍁';}
+  else if(pct>=.8){emoji='🌟';title='Excellent!';msg='Almost perfect — great work!';}
+  else if(pct>=.6){emoji='👍';title='Good Job!';msg='Review the missed ones before the exam.';}
+  else if(pct>=.4){emoji='📚';title='Keep Studying!';msg='Go over the missed answers!';}
+  else{emoji='🍁';title='Study More!';msg='Review the material and try again!';}
+  document.getElementById('r-emoji').textContent=emoji;
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-msg').textContent=msg;
+  var html='';
+  for(var i=0;i<pLog.length;i++){
+    html+='<div class="review-item '+(pLog[i].ok?'ok':'miss')+'">';
+    html+='<span>'+(pLog[i].ok?'✅':'❌')+'</span><span>'+pLog[i].q+'</span></div>';
+  }
+  document.getElementById('review').innerHTML=html;
+  document.getElementById('btn-retry').onclick=startPeople;
+}
+
+// ── MAP ──
+function startMap(){
+  showScreen('map-screen');
+  if(!mapLoaded) loadMap();
+}
+function loadMap(){
+  mapLoaded=true;
+  var projection=d3.geoMercator().center([-95,62]).scale(650).translate([480,300]);
+  var pathGen=d3.geoPath().projection(projection);
+  var svg=d3.select('#map-svg');
+  gProvinces=svg.append('g').attr('id','g-provinces');
+  var gOceans=svg.append('g').attr('id','g-oceans').style('display','none');
+
+  d3.json('https://raw.githubusercontent.com/wisdomtheif/Canadian_GeoJSON/master/canada_provinces.geojson').then(function(data){
+    gProvinces.selectAll('path')
+      .data(data.features)
+      .enter().append('path')
+      .attr('class','province')
+      .attr('id',function(d){return 'p-'+sanitize(d.properties.NAME);})
+      .attr('d',pathGen)
+      .on('click',function(event,d){
+        var name=d.properties.NAME;
+        if(mapAnswered['p-'+sanitize(name)]) return;
+        if(mapCurrentTab!=='provinces') return;
+        mapSelectProvince(name);
+      });
+  });
+
+  // Draw ocean/hudson bay dots — visible with label
+  Object.keys(OCEAN_DATA).forEach(function(key){
+    var o=OCEAN_DATA[key];
+    var g=gOceans.append('g').attr('class','ocean-dot').attr('id','o-'+key)
+      .on('click',function(){
+        if(mapAnswered['o-'+key]||mapCurrentTab!=='oceans') return;
+        selectOcean(key);
+      });
+    // background pill
+    var words=o.name.split(' ');
+    var labelW=words.reduce(function(a,w){return Math.max(a,w.length);},0)*9+24;
+    g.append('rect').attr('x',o.cx-labelW/2).attr('y',o.cy-28).attr('width',labelW).attr('height',56)
+      .attr('rx',14).attr('fill','#4488dd').attr('stroke','#FFD700').attr('stroke-width',2.5)
+      .attr('stroke-dasharray','7,4');
+    // "?" text top
+    g.append('text').attr('x',o.cx).attr('y',o.cy-8).attr('text-anchor','middle')
+      .attr('dominant-baseline','middle').attr('font-family','Fredoka One,cursive')
+      .attr('font-size','20').attr('fill','#FFD700').attr('pointer-events','none')
+      .text('?');
+    // hint text bottom
+    var shortName=o.name==='Hudson Bay'?'Hudson Bay':o.name.replace(' Ocean','');
+    g.append('text').attr('x',o.cx).attr('y',o.cy+14).attr('text-anchor','middle')
+      .attr('dominant-baseline','middle').attr('font-family','Fredoka One,cursive')
+      .attr('font-size','10').attr('fill','white').attr('opacity','0.7').attr('pointer-events','none')
+      .text('click me!');
+  });
+}
+function sanitize(name){return name.replace(/[\s&]/g,'_');}
+function switchMapTab(tab){
+  mapCurrentTab=tab;
+  mapSelectedId=null;
+  document.querySelectorAll('.map-tab').forEach(function(t){t.classList.remove('active');});
+  var idx=tab==='provinces'?0:tab==='oceans'?1:2;
+  document.querySelectorAll('.map-tab')[idx].classList.add('active');
+  // show/hide map wraps
+  document.getElementById('canada-map-wrap').style.display=(tab==='lakes')?'none':'block';
+  document.getElementById('lakes-map-wrap').style.display=(tab==='lakes')?'block':'none';
+  // show/hide layers on canada svg
+  if(gProvinces) gProvinces.style('display',tab==='provinces'||tab==='oceans'?null:'none');
+  var gOceans=d3.select('#g-oceans');
+  if(!gOceans.empty()) gOceans.style('display',tab==='oceans'?null:'none');
+  // update label
+  var labels={provinces:'CANADA — PROVINCES & TERRITORIES',oceans:'OCEANS & HUDSON BAY',lakes:'THE GREAT LAKES'};
+  document.getElementById('map-label').textContent=labels[tab];
+  resetMapForm();
+}
+function resetMapForm(){
+  document.getElementById('map-hint-txt').style.display='block';
+  document.getElementById('map-form').style.display='none';
+  document.getElementById('map-result').className='map-result';
+}
+function mapSelectProvince(name){
+  mapSelectedId='p-'+sanitize(name);
+  d3.selectAll('.province.selected').classed('selected',false);
+  d3.select('#p-'+sanitize(name)).classed('selected',true);
+  var data=PROVINCE_DATA[name]||{hint:''};
+  showMapForm('What province or territory is this?','💡 Hint: '+data.hint);
+}
+function selectOcean(key){
+  mapSelectedId='o-'+key;
+  d3.selectAll('.ocean-dot').classed('selected',false);
+  d3.select('#o-'+key).classed('selected',true);
+  showMapForm('What body of water is this?','💡 Hint: '+OCEAN_DATA[key].hint);
+}
+function selectLake(key){
+  if(mapAnswered['gl-'+key]) return;
+  mapSelectedId='gl-'+key;
+  // clear all highlights
+  ['superior','michigan','huron','erie','ontario'].forEach(function(k){
+    var hl=document.getElementById('hl-'+k);
+    if(hl&&!mapAnswered['gl-'+k]){hl.setAttribute('opacity','0');hl.setAttribute('fill','#FFD700');}
+  });
+  // show selected highlight
+  var hl=document.getElementById('hl-'+key);
+  if(hl){hl.setAttribute('fill','#FFD700');hl.setAttribute('opacity','0.35');}
+  showMapForm('What Great Lake is this?','💡 Hint: '+LAKE_DATA[key].hint);
+}
+function showMapForm(q,sub){
+  document.getElementById('map-hint-txt').style.display='none';
+  document.getElementById('map-form').style.display='block';
+  document.getElementById('map-q-txt').textContent=q;
+  document.getElementById('map-sub-txt').textContent=sub;
+  var inp=document.getElementById('map-ans-input');
+  inp.value='';inp.disabled=false;
+  document.getElementById('map-result').className='map-result';
+  setTimeout(function(){inp.focus();},100);
+}
+document.getElementById('map-ans-input').addEventListener('keydown',function(e){if(e.key==='Enter')checkMapAnswer();});
+function checkMapAnswer(){
+  if(!mapSelectedId)return;
+  var val=document.getElementById('map-ans-input').value.trim().toLowerCase();
+  if(!val)return;
+  var isOcean=mapSelectedId.indexOf('o-')===0;
+  var isLake=mapSelectedId.indexOf('gl-')===0;
+  var key=mapSelectedId.replace(/^(o-|gl-|p-)/,'');
+  var data,correctName;
+
+  if(isOcean){
+    data=OCEAN_DATA[key]; correctName=data.name;
+  } else if(isLake){
+    data=LAKE_DATA[key]; correctName=data.name;
+  } else {
+    var matchKey=Object.keys(PROVINCE_DATA).find(function(k){return sanitize(k)===key;});
+    data=matchKey?PROVINCE_DATA[matchKey]:{alt:[]};
+    correctName=matchKey||key.replace(/_/g,' ');
+  }
+
+  var correct=correctName.toLowerCase();
+  var alts=data.alt||[];
+  var ok=val===correct||alts.indexOf(val)>=0||
+         correct.split(' ').some(function(w){return w.length>3&&val===w;})||
+         (correct.indexOf(val)>=0&&val.length>=5);
+
+  mapAnswered[mapSelectedId]=ok;
+  mapTotal++;if(ok)mapCorrect++;
+  document.getElementById('map-correct').textContent=mapCorrect;
+  document.getElementById('map-total').textContent=mapTotal;
+  document.getElementById('map-ans-input').disabled=true;
+
+  if(isOcean){
+    var g=d3.select('#o-'+key);
+    g.classed('selected',false).classed(ok?'correct':'wrong',true);
+    // update the ? to show name
+    g.selectAll('text').remove();
+    g.append('text').attr('x',OCEAN_DATA[key].cx).attr('y',OCEAN_DATA[key].cy)
+      .attr('text-anchor','middle').attr('dominant-baseline','middle')
+      .attr('font-family','Fredoka One,cursive').attr('font-size','11')
+      .attr('fill','white').attr('pointer-events','none')
+      .text(OCEAN_DATA[key].name);
+  } else if(isLake){
+    var hl=document.getElementById('hl-'+key);
+    var lbl=document.getElementById('lbl-'+key);
+    if(hl){hl.setAttribute('fill',ok?'#2ECC71':'#E74C3C');hl.setAttribute('opacity','0.45');}
+    if(lbl){lbl.setAttribute('opacity','1');}
+  } else {
+    d3.select('#p-'+key).classed('selected',false).classed(ok?'correct':'wrong',true);
+  }
+  var r=document.getElementById('map-result');
+  r.textContent=ok?'🎉 Correct! '+correctName:'❌ The answer is: '+correctName;
+  r.className='map-result '+(ok?'ok':'bad');
+  mapSelectedId=null;
+  setTimeout(resetMapForm,2200);
+}
+function resetMap(){
+  mapAnswered={};mapCorrect=0;mapTotal=0;
+  document.getElementById('map-correct').textContent='0';
+  document.getElementById('map-total').textContent='0';
+  if(gProvinces) d3.selectAll('.province').classed('correct',false).classed('wrong',false).classed('selected',false);
+  d3.selectAll('.ocean-dot').classed('correct',false).classed('wrong',false).classed('selected',false);
+  // reset great lakes overlays
+  ['superior','michigan','huron','erie','ontario'].forEach(function(k){
+    var hl=document.getElementById('hl-'+k);
+    var lbl=document.getElementById('lbl-'+k);
+    if(hl){hl.setAttribute('opacity','0');hl.setAttribute('fill','#FFD700');}
+    if(lbl) lbl.setAttribute('opacity','0');
+  });
+  resetMapForm();
+}
+
+// ── FLASHCARDS ──
+function startFC(){fcIdx=0;showScreen('fc-screen');renderFC();}
+function renderFC(){
+  var fc=FC[fcIdx];
+  document.getElementById('fc-counter').textContent=(fcIdx+1)+' / '+FC.length;
+  document.getElementById('fc-question').textContent=fc.q;
+  var ans=document.getElementById('fc-answer');
+  ans.innerHTML=fc.a;ans.className='fc-answer';
+  document.getElementById('fc-reveal').style.display='block';
+  document.getElementById('fc-back').disabled=(fcIdx===0);
+  document.getElementById('fc-next').textContent=fcIdx===FC.length-1?'🏁 Done!':'Next →';
+}
+function revealFC(){
+  document.getElementById('fc-answer').className='fc-answer show';
+  document.getElementById('fc-reveal').style.display='none';
+}
+function navFC(dir){
+  if(dir===1){fcIdx++;if(fcIdx>=FC.length){showScreen('fcdone');return;}}
+  else{if(fcIdx<=0)return;fcIdx--;}
+  renderFC();
+}
+</script>
+</body>
+</html>
