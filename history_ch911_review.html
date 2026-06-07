@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History Review · Ch.9-10 🍁</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: #1a0a2e; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .screen { display: none; width: 100%; max-width: 720px; }
+  .screen.active { display: block; }
+
+  /* START */
+  #start { background: #2a0a3e; border-radius: 28px; padding: 40px 28px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
+  .icon { font-size: 64px; display: block; margin-bottom: 12px; animation: bounce 2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  h1 { font-family:'Fredoka One',cursive; font-size:2.2rem; color:#FFF8E7; line-height:1.1; margin-bottom:6px; }
+  .subtitle { color:#ce93d8; font-weight:700; font-size:0.95rem; letter-spacing:1px; margin-bottom:28px; }
+  .mode-grid { display:grid; grid-template-columns:1fr; gap:12px; margin-bottom:24px; }
+  .mode-card { background:#3a1a5e; border:2px solid #6a3a9e; border-radius:16px; padding:18px 20px; cursor:pointer; transition:all 0.18s; text-align:left; display:flex; align-items:center; gap:16px; }
+  .mode-card:hover { background:#4a2a7e; border-color:#ce93d8; transform:translateY(-2px); }
+  .mode-card.active { background:#7c4dff; border-color:#7c4dff; }
+  .mode-icon { font-size:2rem; flex-shrink:0; }
+  .mode-info { flex:1; }
+  .mc { font-family:'Fredoka One',cursive; font-size:1.1rem; color:#e0c8ff; margin-bottom:3px; }
+  .md { font-size:0.75rem; color:#9e7acc; font-weight:600; }
+  .mode-card.active .mc,.mode-card.active .md { color:#fff; }
+  .btn-start { background:#7c4dff; color:white; border:none; padding:16px 48px; border-radius:50px; font-family:'Fredoka One',cursive; font-size:1.4rem; cursor:pointer; box-shadow:0 6px 0 #4a2a9e; transition:all 0.15s; }
+  .btn-start:hover { transform:translateY(-3px); box-shadow:0 9px 0 #4a2a9e; }
+
+  /* SHARED */
+  .top-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .q-counter { color:rgba(255,255,255,0.5); font-weight:700; font-size:0.85rem; }
+  .btn-home-top { background:#3a1a5e; color:#ce93d8; border:1.5px solid #6a3a9e; padding:6px 14px; border-radius:8px; font-family:'Nunito',sans-serif; font-weight:700; font-size:0.8rem; cursor:pointer; }
+  .btn-home-top:hover { color:#fff; border-color:#ce93d8; }
+  .progress-wrap { background:rgba(255,255,255,0.12); border-radius:8px; height:8px; margin-bottom:18px; }
+  .progress-bar { background:linear-gradient(90deg,#ce93d8,#7c4dff); height:100%; border-radius:8px; transition:width 0.4s ease; }
+  .card { background:#FFF8E7; border-radius:22px; padding:28px 24px; box-shadow:0 6px 28px rgba(0,0,0,0.4); position:relative; overflow:hidden; }
+  .card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,#7c4dff,#ce93d8); }
+  .section-badge { display:inline-block; background:#7c4dff; color:white; padding:3px 12px; border-radius:20px; font-size:0.72rem; font-weight:800; letter-spacing:1px; margin-bottom:14px; }
+  .q-text { font-size:1.05rem; font-weight:800; color:#1a1a2e; line-height:1.5; margin-bottom:20px; }
+
+  /* WRITE */
+  .write-wrap { display:flex; flex-direction:column; gap:12px; }
+  .write-input { border:2.5px solid #e0d5c0; border-radius:14px; padding:14px 18px; font-family:'Nunito',sans-serif; font-weight:700; font-size:1rem; color:#1a1a2e; outline:none; transition:all 0.15s; background:white; width:100%; }
+  .write-input:focus { border-color:#7c4dff; background:#f5f0ff; }
+  .write-input:disabled { background:#f5f5f5; color:#888; }
+  .btn-submit { background:#7c4dff; color:white; border:none; padding:14px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1.1rem; cursor:pointer; }
+  .btn-submit:hover { background:#5c2ddf; }
+  .selfcheck { display:none; flex-direction:column; gap:10px; }
+  .selfcheck.show { display:flex; animation:fadeIn 0.25s ease; }
+  .answer-reveal { background:#2a0a3e; color:#ce93d8; border-radius:12px; padding:12px 16px; font-weight:800; font-size:0.95rem; }
+  .answer-reveal span { color:#fff; font-weight:600; }
+  .check-btns { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .btn-got-it { background:#2ECC71; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; }
+  .btn-missed { background:#E74C3C; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; }
+  .feedback { margin-top:16px; padding:13px 16px; border-radius:12px; font-weight:700; font-size:0.9rem; line-height:1.5; display:none; }
+  .feedback.show { display:block; animation:fadeIn 0.25s ease; }
+  .feedback.ok { background:#d4f5e2; color:#1a6b38; border:2px solid #2ECC71; }
+  .feedback.bad { background:#fde8e8; color:#8B0000; border:2px solid #E74C3C; }
+  .nav { display:flex; gap:10px; margin-top:14px; }
+  .btn-back { background:#3a1a5e; color:white; border:none; padding:13px 20px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; flex-shrink:0; }
+  .btn-back:disabled { opacity:0.3; cursor:default; }
+  .btn-next { flex:1; background:#3a1a5e; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1.1rem; cursor:pointer; display:none; }
+  .btn-next.show { display:block; animation:fadeIn 0.25s ease; }
+  .btn-next:hover, .btn-back:hover { background:#7c4dff; }
+
+  /* FLASHCARD */
+  .fc-card { background:#FFF8E7; border-radius:22px; padding:28px 24px; box-shadow:0 6px 28px rgba(0,0,0,0.4); position:relative; min-height:180px; }
+  .fc-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,#7c4dff,#ce93d8); border-radius:22px 22px 0 0; }
+  .fc-badge { display:inline-block; background:#7c4dff; color:white; padding:3px 12px; border-radius:20px; font-size:0.72rem; font-weight:800; letter-spacing:1px; margin-bottom:14px; }
+  .fc-q { font-size:1.05rem; font-weight:800; color:#1a1a2e; line-height:1.5; margin-bottom:20px; }
+  .fc-answer { background:#2a0a3e; border-radius:14px; padding:16px 18px; display:none; }
+  .fc-answer.show { display:block; animation:fadeIn 0.3s ease; }
+  .fc-answer ul { padding-left:18px; }
+  .fc-answer li { color:#FFF8E7; font-weight:600; font-size:0.88rem; margin-bottom:6px; line-height:1.5; }
+  .btn-reveal { width:100%; background:#7c4dff; color:white; border:none; padding:14px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1.1rem; cursor:pointer; margin-top:16px; }
+  .btn-reveal:hover { background:#5c2ddf; }
+  .fc-nav { display:flex; gap:10px; margin-top:12px; }
+  .btn-fc-back,.btn-fc-next { background:#3a1a5e; color:white; border:none; padding:13px; border-radius:14px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; }
+  .btn-fc-back { flex-shrink:0; padding:13px 20px; }
+  .btn-fc-next { flex:1; }
+  .btn-fc-back:disabled { opacity:0.3; cursor:default; }
+  .btn-fc-back:hover,.btn-fc-next:hover { background:#7c4dff; }
+
+  /* MAP SCREEN */
+  #map-screen { padding:0; max-width:720px; }
+  .map-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .map-tabs { display:flex; gap:8px; margin-bottom:10px; }
+  .map-tab { flex:1; padding:9px; border-radius:12px; border:2px solid #6a3a9e; background:#3a1a5e; color:#ce93d8; font-family:'Fredoka One',cursive; font-size:0.85rem; cursor:pointer; text-align:center; }
+  .map-tab.active { background:#7c4dff; border-color:#7c4dff; color:white; }
+  .score-bar { display:flex; justify-content:space-between; align-items:center; background:#2a0a3e; border-radius:12px; padding:8px 14px; margin-bottom:10px; }
+  .score-txt { color:#ce93d8; font-weight:800; font-size:0.85rem; }
+  .score-num { color:#FFD700; font-family:'Fredoka One',cursive; font-size:1.1rem; }
+  .btn-sm { padding:5px 12px; border-radius:8px; border:none; font-family:'Fredoka One',cursive; font-size:0.8rem; cursor:pointer; background:#7c4dff; color:white; }
+  .map-wrap { background:#0d1b3e; border-radius:18px; padding:10px; box-shadow:0 6px 28px rgba(0,0,0,0.6); margin-bottom:12px; }
+  .map-label { color:#ce93d8; font-weight:800; font-size:0.75rem; text-align:center; margin-bottom:6px; letter-spacing:1px; }
+  #map-svg { width:100%; }
+  .province { cursor:pointer; stroke:#1a0a2e; stroke-width:0.8; fill:#4a2a7e; transition:fill 0.15s; }
+  .province:hover { fill:#7c4dff; }
+  .province.selected { fill:#FFD700; stroke:#fff; stroke-width:1.5; }
+  .province.correct { fill:#2ECC71; cursor:default; }
+  .province.wrong { fill:#E74C3C; cursor:default; }
+  .lake { cursor:pointer; stroke:#0d1b3e; stroke-width:0.5; fill:#4488dd; opacity:0.85; transition:all 0.15s; }
+  .lake:hover { opacity:1; fill:#66aaff; }
+  .lake.selected { fill:#FFD700; stroke:#fff; stroke-width:1.5; opacity:1; }
+  .lake.correct { fill:#2ECC71; cursor:default; opacity:1; }
+  .lake.wrong { fill:#E74C3C; cursor:default; opacity:1; }
+  .map-input-panel { background:#FFF8E7; border-radius:18px; padding:18px 20px; }
+  .map-hint-txt { color:#888; font-size:0.85rem; font-weight:700; text-align:center; padding:8px; }
+  .map-form { display:none; }
+  .map-q-txt { font-size:1rem; font-weight:800; color:#1a1a2e; margin-bottom:4px; }
+  .map-sub-txt { font-size:0.8rem; color:#888; font-weight:600; margin-bottom:12px; }
+  .map-input-row { display:flex; gap:10px; }
+  .map-ans-input { flex:1; border:2.5px solid #e0d5c0; border-radius:12px; padding:12px 16px; font-family:'Nunito',sans-serif; font-weight:700; font-size:1rem; color:#1a1a2e; outline:none; }
+  .map-ans-input:focus { border-color:#7c4dff; background:#f5f0ff; }
+  .map-ans-input:disabled { background:#f5f5f5; }
+  .btn-map-check { background:#7c4dff; color:white; border:none; padding:12px 20px; border-radius:12px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; }
+  .map-result { margin-top:12px; padding:10px 14px; border-radius:10px; font-weight:800; font-size:0.9rem; display:none; }
+  .map-result.ok { background:#d4f5e2; color:#1a6b38; border:2px solid #2ECC71; display:block; }
+  .map-result.bad { background:#fde8e8; color:#8B0000; border:2px solid #E74C3C; display:block; }
+  .legend { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:8px; }
+  .legend-item { display:flex; align-items:center; gap:4px; font-size:0.72rem; font-weight:700; color:#888; }
+  .ldot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+
+  /* RESULT */
+  #result { background:#FFF8E7; border-radius:24px; padding:36px 28px; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+  .result-emoji { font-size:3rem; display:block; margin-bottom:16px; }
+  .score-ring { width:130px; height:130px; border-radius:50%; background:#2a0a3e; border:6px solid #ce93d8; margin:0 auto 20px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .score-ring-num { font-family:'Fredoka One',cursive; font-size:2.2rem; color:#ce93d8; line-height:1; }
+  .score-ring-lbl { color:rgba(255,255,255,0.5); font-size:0.75rem; font-weight:700; }
+  .result-title { font-family:'Fredoka One',cursive; font-size:1.8rem; color:#1a1a2e; margin-bottom:6px; }
+  .result-msg { color:#666; font-weight:600; font-size:0.95rem; margin-bottom:24px; }
+  .result-btns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
+  .btn-retry { background:#7c4dff; color:white; border:none; padding:13px 24px; border-radius:50px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; box-shadow:0 4px 0 #4a2a9e; }
+  .btn-home-result { background:#3a1a5e; color:white; border:none; padding:13px 24px; border-radius:50px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; }
+  .review { text-align:left; display:flex; flex-direction:column; gap:7px; }
+  .review-item { padding:10px 14px; border-radius:10px; font-size:0.85rem; font-weight:600; display:flex; align-items:flex-start; gap:8px; }
+  .review-item.ok { background:#d4f5e2; color:#1a6b38; }
+  .review-item.miss { background:#fde8e8; color:#8B0000; }
+
+  #fcdone { background:#2a0a3e; border-radius:24px; padding:36px 28px; text-align:center; }
+  #fcdone h2 { font-family:'Fredoka One',cursive; font-size:1.8rem; color:#ce93d8; margin-bottom:12px; }
+  #fcdone p { color:#ccc; font-weight:600; margin-bottom:24px; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<!-- START -->
+<div id="start" class="screen active">
+  <span class="icon">🍁</span>
+  <h1>History Review</h1>
+  <p class="subtitle">Chapter 9-10-11 · Exam Prep</p>
+  <div class="mode-grid">
+    <div class="mode-card active" data-mode="people" onclick="selectMode(this)">
+      <span class="mode-icon">👤</span>
+      <div class="mode-info">
+        <div class="mc">Important People & Terms</div>
+        <div class="md">Crossword clues — type the answer · 28 questions</div>
+      </div>
+    </div>
+    <div class="mode-card" data-mode="map" onclick="selectMode(this)">
+      <span class="mode-icon">🗺️</span>
+      <div class="mode-info">
+        <div class="mc">Map Quiz</div>
+        <div class="md">Real Canada map — click & type · Provinces + Great Lakes</div>
+      </div>
+    </div>
+    <div class="mode-card" data-mode="terms" onclick="selectMode(this)">
+      <span class="mode-icon">📝</span>
+      <div class="mode-info">
+        <div class="mc">Key Terms Flashcards</div>
+        <div class="md">Secret Railroad, War of 1812, Rebellions, Women's Rights · 5 cards</div>
+      </div>
+    </div>
+    <div class="mode-card" data-mode="ch11" onclick="selectMode(this)">
+      <span class="mode-icon">⚔️</span>
+      <div class="mode-info">
+        <div class="mc">Chapter 11 Quiz</div>
+        <div class="md">WWI · Ups & Downs · WWII · MC + Short Answer · 29 questions</div>
+      </div>
+    </div>
+  </div>
+  <button class="btn-start" id="btn-start">▶ Start!</button>
+</div>
+
+<!-- PEOPLE QUIZ -->
+<div id="people-screen" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="p-counter">1 / 28</span>
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="p-bar" style="width:0%"></div></div>
+  <div class="card">
+    <span class="section-badge" id="p-badge">Across</span>
+    <p class="q-text" id="p-question"></p>
+    <div class="write-wrap">
+      <input type="text" class="write-input" id="p-input" placeholder="Type your answer...">
+      <button class="btn-submit" id="p-submit">Check Answer ✓</button>
+      <div class="selfcheck" id="p-selfcheck">
+        <div class="answer-reveal" id="p-reveal"></div>
+        <div class="check-btns">
+          <button class="btn-got-it" onclick="markP(true)">✅ I got it!</button>
+          <button class="btn-missed" onclick="markP(false)">❌ I missed it</button>
+        </div>
+      </div>
+    </div>
+    <div class="feedback" id="p-feedback"></div>
+    <div class="nav">
+      <button class="btn-back" id="p-back" onclick="navP(-1)">← Back</button>
+      <button class="btn-next" id="p-next" onclick="navP(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAP SCREEN -->
+<div id="map-screen" class="screen">
+  <div class="map-top">
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+    <div class="score-bar" style="flex:1;margin:0 10px">
+      <span class="score-txt">✅ <span id="map-correct">0</span> correct / <span id="map-total">0</span> answered</span>
+      <button class="btn-sm" onclick="resetMap()">🔄 Reset</button>
+    </div>
+  </div>
+  <div class="map-tabs">
+    <button class="map-tab active" onclick="switchMapTab('provinces')">🗺️ Provinces & Territories</button>
+    <button class="map-tab" onclick="switchMapTab('lakes')">💧 Great Lakes</button>
+  </div>
+  <div class="map-wrap">
+    <div class="map-label" id="map-label">CANADA — PROVINCES & TERRITORIES</div>
+    <svg id="map-svg" viewBox="0 0 960 600"></svg>
+    <div class="legend">
+      <div class="legend-item"><div class="ldot" style="background:#4a2a7e"></div>Not yet</div>
+      <div class="legend-item"><div class="ldot" style="background:#FFD700"></div>Selected</div>
+      <div class="legend-item"><div class="ldot" style="background:#2ECC71"></div>Correct</div>
+      <div class="legend-item"><div class="ldot" style="background:#E74C3C"></div>Wrong</div>
+    </div>
+  </div>
+  <div class="map-input-panel">
+    <p class="map-hint-txt" id="map-hint-txt">👆 Click a region on the map to start!</p>
+    <div class="map-form" id="map-form">
+      <p class="map-q-txt" id="map-q-txt"></p>
+      <p class="map-sub-txt" id="map-sub-txt"></p>
+      <div class="map-input-row">
+        <input type="text" class="map-ans-input" id="map-ans-input" placeholder="Type the name...">
+        <button class="btn-map-check" onclick="checkMapAnswer()">Check ✓</button>
+      </div>
+      <div class="map-result" id="map-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FLASHCARDS -->
+<div id="fc-screen" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="fc-counter">1 / 5</span>
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="fc-card">
+    <span class="fc-badge">📝 KEY TERMS</span>
+    <p class="fc-q" id="fc-question"></p>
+    <div class="fc-answer" id="fc-answer"></div>
+    <button class="btn-reveal" id="fc-reveal" onclick="revealFC()">👁 Show Answer</button>
+  </div>
+  <div class="fc-nav">
+    <button class="btn-fc-back" id="fc-back" onclick="navFC(-1)">← Back</button>
+    <button class="btn-fc-next" id="fc-next" onclick="navFC(1)">Next →</button>
+  </div>
+</div>
+
+<!-- FC DONE -->
+<div id="fcdone" class="screen">
+  <span style="font-size:3rem;display:block;margin-bottom:16px">📝</span>
+  <h2>All Done!</h2>
+  <p>You reviewed all 5 key terms. Good luck on the exam!</p>
+  <div class="result-btns">
+    <button class="btn-retry" onclick="startFC()">🔄 Review Again</button>
+    <button class="btn-home-result" onclick="goHome()">🏠 Home</button>
+  </div>
+</div>
+
+<!-- CH11 QUIZ -->
+<div id="ch11-screen" class="screen">
+  <div class="top-bar">
+    <span class="q-counter" id="c11-counter">1 / 29</span>
+    <button class="btn-home-top" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="c11-bar" style="width:0%"></div></div>
+  <div class="card">
+    <span class="section-badge" id="c11-badge">11.1</span>
+    <span class="section-badge" id="c11-type-badge" style="background:#ff6d00;margin-left:6px">MC</span>
+    <p class="q-text" id="c11-question"></p>
+    <div id="c11-answer-area"></div>
+    <div class="feedback" id="c11-feedback"></div>
+    <div class="nav">
+      <button class="btn-back" id="c11-back" onclick="navC11(-1)">← Back</button>
+      <button class="btn-next" id="c11-next" onclick="navC11(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="screen">
+  <span class="result-emoji" id="r-emoji">🏆</span>
+  <div class="score-ring">
+    <span class="score-ring-num" id="r-score">0/0</span>
+    <span class="score-ring-lbl">SCORE</span>
+  </div>
+  <h2 class="result-title" id="r-title">Amazing!</h2>
+  <p class="result-msg" id="r-msg"></p>
+  <div class="result-btns">
+    <button class="btn-retry" id="btn-retry">🔄 Try Again</button>
+    <button class="btn-home-result" onclick="goHome()">🏠 Home</button>
+  </div>
+  <div class="review" id="review"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+// ── DATA ──
+var PEOPLE = [
+  {d:'Across',q:'He led the Upper Canada Rebellion.',a:'Papineau'},
+  {d:'Across',q:'A leader in the women\'s suffrage movement. Got her Canadian doctor\'s license in 1880.',a:'Emily Stowe'},
+  {d:'Across',q:'He went to the US to convince Louis Riel to come back and help fight to save their lands.',a:'Gabriel Dumont'},
+  {d:'Across',q:'The group that ruled Upper Canada.',a:'Family Compact'},
+  {d:'Across',q:'First Prime Minister of Canada.',a:'Sir John A MacDonald'},
+  {d:'Across',q:'First woman to graduate from a Canadian medical college.',a:'Augusta Stowe'},
+  {d:'Across',q:'He led the Red River Rebellion and the Northwest Rebellion.',a:'Louis Riel'},
+  {d:'Across',q:'Powerful Shawnee chief who fought in the War of 1812.',a:'Tecumseh'},
+  {d:'Across',q:'The wildest and most infamous whiskey trading fort.',a:'Fort Whoop-Up'},
+  {d:'Across',q:'Founder of the Salvation Army.',a:'William Booth'},
+  {d:'Across',q:'The President who declared war on Britain, starting the War of 1812.',a:'President Madison'},
+  {d:'Across',q:'One of the Native chiefs who joined the Metis Rebellion.',a:'Chief Poundmaker'},
+  {d:'Across',q:'The first mayor of Toronto.',a:'MacKenzie'},
+  {d:'Across',q:'People of native and European descent.',a:'Metis'},
+  {d:'Down',q:'The native tribe living in the Northwest.',a:'Blackfoot'},
+  {d:'Down',q:'One of Canada\'s most famous surveyors.',a:'Sandford Fleming'},
+  {d:'Down',q:'She succeeded in forcing Manitoba to allow women the right to vote and run for political office.',a:'Nellie McClung'},
+  {d:'Down',q:'A person who hated slavery and wanted it to be made illegal.',a:'Abolitionist'},
+  {d:'Down',q:'Trained to discover the shortest and safest way to construct railways.',a:'Surveyors'},
+  {d:'Down',q:'Hudson\'s Bay Company\'s fur trading rival.',a:'Northwest Companies'},
+  {d:'Down',q:'The hero of Upper Canada. Died in the Battle of Queenston Heights.',a:'Isaac Brock'},
+  {d:'Down',q:'People who object to, question or defy the law or existing authority.',a:'Rebel'},
+  {d:'Down',q:'She ran over 30km to warn the British of an American attack.',a:'Laura Secord'},
+  {d:'Down',q:'People who made the important decisions in Lower Canada.',a:'Chateau Clique'},
+  {d:'Down',q:'Canada\'s first recognized female doctor.',a:'Ginny Trout'},
+  {d:'Down',q:'American whiskey traders who killed a group of natives in the west.',a:'Hardwick Gang'},
+  {d:'Down',q:'The general who surrendered Fort Detroit without a fight during the War of 1812.',a:'Hull'},
+  {d:'Down',q:'The official police force of the Canadian Prairies.',a:'Mounties'}
+];
+
+var PROVINCE_DATA = {
+  'Alberta':                  {hint:'Province with Calgary & Edmonton, the Rockies',alt:['ab','alta']},
+  'Saskatchewan':             {hint:'Prairie province, potash & wheat capital',alt:['sask']},
+  'Manitoba':                 {hint:'Prairie province, Winnipeg is the capital',alt:['mb']},
+  'Newfoundland  & Labrador': {hint:'Easternmost province, includes Labrador',alt:['newfoundland','newfoundland and labrador','nl','nfld']},
+  'Prince Edward Island':     {hint:'Smallest province, island in the Atlantic',alt:['pei','p.e.i.','prince edward']},
+  'Nova Scotia':              {hint:'Atlantic province, Halifax is capital',alt:['ns']},
+  'Northwest Territories':    {hint:'Large northern territory, Yellowknife is capital',alt:['nwt','northwest territory']},
+  'Nunavut':                  {hint:'Newest & largest territory, mostly Arctic',alt:['nu']},
+  'Ontario':                  {hint:'Most populous province, Ottawa & Toronto',alt:['on']},
+  'New Brunswick':            {hint:'Atlantic province, Fredericton is capital',alt:['nb']},
+  'Yukon Territory':          {hint:'Far northwest territory, borders Alaska',alt:['yukon','yt']},
+  'British Columbia':         {hint:'Pacific coast province, Vancouver is here',alt:['bc','b.c.']},
+  'Quebec':                   {hint:'French-speaking province, Montreal & Quebec City',alt:['qc','québec']}
+};
+
+var LAKE_DATA = {
+  superior:{name:'Lake Superior',hint:'Largest of all the Great Lakes (A)',alt:['superior'],path:[[440,140],[500,130],[540,155],[555,185],[540,210],[510,220],[470,215],[440,195],[425,170],[430,150]]},
+  michigan: {name:'Lake Michigan',hint:'Only lake entirely in the USA (B)',alt:['michigan'],path:[[480,215],[490,225],[495,270],[488,310],[475,320],[462,305],[458,265],[462,225]]},
+  huron:    {name:'Lake Huron',hint:'Second largest Great Lake (C)',alt:['huron'],path:[[540,210],[590,200],[620,215],[630,245],[615,270],[590,280],[560,275],[535,255],[525,230],[530,215]]},
+  erie:     {name:'Lake Erie',hint:'Shallowest lake, near Niagara Falls (D)',alt:['erie'],path:[[555,295],[625,280],[660,285],[665,305],[645,320],[570,320],[550,310]]},
+  ontario:  {name:'Lake Ontario',hint:'Smallest Great Lake, near Toronto (E)',alt:['ontario'],path:[[630,260],[680,255],[710,265],[715,285],[695,295],[650,290],[625,278]]}
+};
+
+var FC = [
+  {q:'What is the Underground Railroad / Secret Railroad Language?',
+   a:'<ul><li>The <strong>Underground Railroad</strong> was a secret network helping enslaved people escape to Canada</li><li><strong>Station</strong> = safe house &nbsp;|&nbsp; <strong>Conductor</strong> = guide</li><li><strong>Passenger/Cargo</strong> = escaped slave &nbsp;|&nbsp; <strong>Tracks</strong> = escape routes</li><li>Canada was called the <strong>Promised Land</strong></li><li><strong>Abolitionists</strong> helped — they believed slavery was wrong and wanted it made illegal</li></ul>'},
+  {q:'What happened in each battle of the War of 1812?',
+   a:'<ul><li><strong>Battle of Detroit (1812)</strong> — General Hull surrendered Fort Detroit to Brock without a fight. American defeat.</li><li><strong>Battle of Queenston Heights (1812)</strong> — Canadians won but General Isaac Brock was killed. He became a hero of Upper Canada.</li><li><strong>Battle of Beaver Dams (1813)</strong> — Laura Secord walked 30km to warn the British. Canadians ambushed and defeated the Americans.</li><li><strong>Battle of Fort York (1813)</strong> — Americans captured and burned York (Toronto). Canadians later burned Washington.</li></ul>'},
+  {q:'What happened in the Lower & Upper Canada Rebellions? Who led them?',
+   a:'<ul><li><strong>Upper Canada Rebellion (1837)</strong> — Led by <strong>William Lyon MacKenzie</strong> (also first mayor of Toronto). Fought against the Family Compact who controlled Upper Canada unfairly.</li><li><strong>Lower Canada Rebellion (1837)</strong> — Led by <strong>Louis-Joseph Papineau</strong>. Fought against the Chateau Clique who controlled Lower Canada.</li><li>Both failed, but led to the Act of Union (1841) joining both Canadas.</li></ul>'},
+  {q:'What happened in the Red River & Northwest Rebellions? Who were the key people?',
+   a:'<ul><li><strong>Louis Riel</strong> — Led both rebellions. Metis leader fighting for land rights. Hanged for treason in 1885.</li><li><strong>Gabriel Dumont</strong> — Metis military leader. Brought Riel back from the US. Commander of Metis forces.</li><li><strong>Thomas Scott</strong> — English settler executed by Riel\'s government in 1870. Caused Ontario to send army.</li><li><strong>Chief Big Bear & Chief Poundmaker</strong> — Cree leaders who joined the Northwest Rebellion. Both sentenced to prison.</li><li>They fought because the government ignored Metis land rights and broke Treaty promises.</li></ul>'},
+  {q:'What were the key events in Women\'s Rights in Canada?',
+   a:'<ul><li><strong>Emily Stowe</strong> — Had to study medicine in the USA because Canada didn\'t allow women in medical school.</li><li><strong>Ginny Trout</strong> — Canada\'s first recognized female doctor.</li><li><strong>Augusta Stowe</strong> — Emily\'s daughter. First woman to graduate from a Canadian medical college (1883).</li><li><strong>Nellie McClung</strong> — Won women the right to vote in Manitoba on January 27, 1916.</li><li><strong>Quebec</strong> was the last province — women could vote on April 25, 1940.</li><li>In the 1800s, women had no legal rights. When married, everything became husband\'s property.</li></ul>'}
+];
+
+// ── STATE ──
+var mode='people';
+var pPool=[], pIdx=0, pScore=0, pLog=[], pAnswered=false;
+var fcIdx=0;
+var mapSelectedId=null, mapAnswered={}, mapCorrect=0, mapTotal=0;
+var mapCurrentTab='provinces';
+var mapLoaded=false;
+var gProvinces, gLakes;
+
+function shuffle(arr){var a=arr.slice(),i,j,t;for(i=a.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');}
+function goHome(){showScreen('start');}
+
+function selectMode(el){
+  document.querySelectorAll('.mode-card').forEach(function(c){c.classList.remove('active');});
+  el.classList.add('active');
+  mode=el.dataset.mode;
+}
+
+document.getElementById('btn-start').addEventListener('click',function(){
+  if(mode==='people') startPeople();
+  else if(mode==='map') startMap();
+  else if(mode==='ch11') startC11();
+  else startFC();
+});
+
+// ── CH11 DATA ──
+var C11Q = [
+  {s:'11.1',t:'mc',q:'How did World War I begin?',o:['Germany invaded France','Archduke Franz Ferdinand was murdered by a Serbian','Britain attacked Austria','Canada declared war first'],a:1,e:'Archduke Franz Ferdinand was murdered by a Serbian, causing Austria to attack Serbia. Other countries chose sides.'},
+  {s:'11.1',t:'sa',q:'Why did Canada join World War I?',a:'Canada supported Britain\'s decision and joined as part of the Allied forces.'},
+  {s:'11.1',t:'mc',q:'How many Canadians went to fight in World War I?',o:['30,000','125,000','425,000','625,000'],a:3,e:'Between 1914 and 1918, Canada sent 625,000 men and women to fight in the war.'},
+  {s:'11.1',t:'sa',q:'What is conscription?',a:'Forcing men to join the army.'},
+  {s:'11.1',t:'mc',q:'Who was against conscription?',o:['Doctors and nurses','Farmers, Quakers, and Mennonites','Teachers and politicians','Businessmen'],a:1,e:'Farmers did not want their sons taken. Quakers and Mennonites believed war was evil.'},
+  {s:'11.1',t:'sa',q:'What famous poem was written after the Second Battle of Ypres, and who wrote it?',a:'In Flanders Fields, written by Lieutenant Colonel John McCrae.'},
+  {s:'11.1',t:'mc',q:'What was one of the worst battles Canadians fought in during WWI?',o:['Battle of Dieppe','Battle of Ypres','Battle of Vimy Ridge','Battle of Normandy'],a:1,e:'Battle of Ypres, April 22, 1915. Germans used poison gas and over 100 Canadians were killed.'},
+  {s:'11.1',t:'sa',q:'When did WWI end?',a:'November 11, 1918.'},
+  {s:'11.1',t:'mc',q:'What peacekeeping force did Canada join after WWI?',o:['The United Nations','The Imperial War Cabinet','The League of Nations','The Allied Forces'],a:2,e:'Canada was allowed to join the League of Nations, a world peacekeeping force.'},
+  {s:'11.2',t:'sa',q:'What do historians call the 1920s?',a:'The Roaring Twenties.'},
+  {s:'11.2',t:'mc',q:'What caused the Great Depression?',o:['A world war broke out','The New York Stock Market Crash in October 1929','A drought across all of Canada','A banking collapse in Britain'],a:1,e:'The New York Stock Market Crash in October 1929 caused the Great Depression.'},
+  {s:'11.2',t:'sa',q:'What percent of the population did not have jobs by 1933?',a:'30%'},
+  {s:'11.2',t:'mc',q:'What did Alberta and Saskatchewan suffer from during the Depression?',o:['Floods','Severe drought and crop failure','An earthquake','A forest fire'],a:1,e:'Alberta and Saskatchewan suffered a severe drought. Farms lost about 75% of their income.'},
+  {s:'11.2',t:'sa',q:'What became the favourite pastime of housewives during the Depression?',a:'Window shopping.'},
+  {s:'11.2',t:'mc',q:'What form of entertainment became very popular during the Depression?',o:['Movies','Radio shows','Theatre','Street performances'],a:1,e:'Radio shows became very popular during the Great Depression.'},
+  {s:'11.2',t:'sa',q:'What two famous Canadian companies were started during the 1930s?',a:'CBC (Canadian Broadcasting Corporation) and Air Canada (Trans-Canada Airline).'},
+  {s:'11.3',t:'sa',q:'Who was the leader (dictator) of Italy?',a:'Benito Mussolini.'},
+  {s:'11.3',t:'mc',q:'What is a dictator?',o:['An elected president','Someone who rules with almost unlimited power','A military general','A prime minister with extra powers'],a:1,e:'A dictator is someone who rules with almost unlimited power.'},
+  {s:'11.3',t:'sa',q:'What was the purpose of the Treaty of Versailles?',a:'To prevent Germany from ever starting another war.'},
+  {s:'11.3',t:'mc',q:'Who was the leader of Germany during WWII?',o:['Joseph Stalin','Benito Mussolini','Kaiser Wilhelm','Adolf Hitler'],a:3,e:'Adolf Hitler became dictator of Germany after being elected in 1933 and disbanding the Reichstag.'},
+  {s:'11.3',t:'sa',q:'Who was part of the Rome-Berlin Axis?',a:'Germany and Italy.'},
+  {s:'11.3',t:'mc',q:'What area did Germany march soldiers into, breaking the Treaty of Versailles?',o:['Poland','Austria','The Rhineland','Czechoslovakia'],a:2,e:'In March 1936, Hitler marched into the Rhineland, violating the Treaty of Versailles.'},
+  {s:'11.3',t:'sa',q:'After Germany invaded ___, Britain and France declared war.',a:'Poland.'},
+  {s:'11.3',t:'mc',q:'When did Canada officially declare war in WWII?',o:['September 1, 1939','September 3, 1939','September 10, 1939','October 3, 1939'],a:2,e:'Canada officially declared war on September 10, 1939.'},
+  {s:'11.3',t:'sa',q:'What place did Japan bomb on December 7, 1941?',a:'Pearl Harbour.'},
+  {s:'11.3',t:'mc',q:'In what battle were 907 Canadians killed, 500+ wounded, and 2,000 captured?',o:['Battle of Ypres','Battle of Vimy Ridge','Battle of Dieppe','Battle of Juno Beach'],a:2,e:'The Battle of Dieppe in August 1942 — 907 died, 500+ wounded, almost 2,000 captured.'},
+  {s:'11.3',t:'sa',q:'What was the Allied invasion to take back Europe from Germany called?',a:'Operation D-Day.'},
+  {s:'11.3',t:'mc',q:'What is VE Day?',o:['The day Japan surrendered','The day Canada joined the war','Victory in Europe Day — Germany surrendered May 7, 1945','The day the atomic bomb was dropped'],a:2,e:'VE Day is Victory in Europe Day, May 7, 1945, when Germany surrendered.'},
+  {s:'11.3',t:'sa',q:'What two Japanese cities were attacked with atomic bombs?',a:'Hiroshima (August 6) and Nagasaki (August 9), 1945.'}
+];
+
+var c11Pool=[], c11Idx=0, c11Score=0, c11Log=[], c11Answered=false;
+
+function startC11(){
+  c11Pool=shuffle(C11Q); c11Idx=0; c11Score=0; c11Log=[]; c11Answered=false;
+  showScreen('ch11-screen'); renderC11();
+}
+function renderC11(){
+  var q=c11Pool[c11Idx];
+  c11Answered=false;
+  document.getElementById('c11-counter').textContent=(c11Idx+1)+' / '+c11Pool.length;
+  document.getElementById('c11-bar').style.width=(c11Idx/c11Pool.length*100)+'%';
+  document.getElementById('c11-badge').textContent='Section '+q.s;
+  var tb=document.getElementById('c11-type-badge');
+  if(q.t==='mc'){tb.textContent='Multiple Choice';tb.style.background='#ff6d00';}
+  else{tb.textContent='Short Answer';tb.style.background='#2ECC71';}
+  document.getElementById('c11-question').textContent=q.q;
+  document.getElementById('c11-feedback').className='feedback';
+  document.getElementById('c11-next').className='btn-next';
+  document.getElementById('c11-next').textContent=c11Idx===c11Pool.length-1?'🏁 See Results!':'Next →';
+  document.getElementById('c11-back').disabled=(c11Idx===0);
+  var area=document.getElementById('c11-answer-area');
+  area.innerHTML='';
+  if(q.t==='mc'){
+    var wrap=document.createElement('div'); wrap.className='options';
+    ['A','B','C','D'].forEach(function(ltr,i){
+      var btn=document.createElement('button'); btn.className='opt';
+      btn.innerHTML='<span class="ltr">'+ltr+'</span>'+q.o[i];
+      btn.onclick=(function(i){return function(){checkC11MC(i);};})(i);
+      wrap.appendChild(btn);
+    });
+    area.appendChild(wrap);
+  } else {
+    var wrap=document.createElement('div'); wrap.className='write-wrap';
+    var inp=document.createElement('input'); inp.type='text'; inp.className='write-input'; inp.id='c11-input'; inp.placeholder='Type your answer...';
+    inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitC11();});
+    var sub=document.createElement('button'); sub.className='btn-submit'; sub.textContent='Check Answer ✓';
+    sub.addEventListener('click',submitC11);
+    var sc=document.createElement('div'); sc.className='selfcheck'; sc.id='c11-selfcheck';
+    var ar=document.createElement('div'); ar.className='answer-reveal'; ar.id='c11-reveal';
+    var cb=document.createElement('div'); cb.className='check-btns';
+    var bg=document.createElement('button'); bg.className='btn-got-it'; bg.textContent='✅ I got it!';
+    bg.addEventListener('click',function(){markC11(true);});
+    var bm=document.createElement('button'); bm.className='btn-missed'; bm.textContent='❌ I missed it';
+    bm.addEventListener('click',function(){markC11(false);});
+    cb.appendChild(bg); cb.appendChild(bm);
+    sc.appendChild(ar); sc.appendChild(cb);
+    wrap.appendChild(inp); wrap.appendChild(sub); wrap.appendChild(sc);
+    area.appendChild(wrap);
+    setTimeout(function(){var el=document.getElementById('c11-input');if(el)el.focus();},100);
+  }
+}
+function checkC11MC(chosen){
+  if(c11Answered)return; c11Answered=true;
+  var q=c11Pool[c11Idx];
+  var btns=document.querySelectorAll('#c11-answer-area .opt');
+  for(var i=0;i<btns.length;i++) btns[i].setAttribute('disabled','true');
+  var ok=chosen===q.a;
+  btns[chosen].classList.add(ok?'correct':'wrong');
+  if(!ok) btns[q.a].classList.add('correct');
+  recordC11(ok, ok?'🎉 Correct! '+q.e:'❌ Not quite. '+q.e);
+}
+function submitC11(){
+  if(c11Answered)return;
+  var inp=document.getElementById('c11-input');
+  if(!inp||!inp.value.trim())return;
+  inp.disabled=true;
+  var sub=document.querySelector('#c11-answer-area .btn-submit');
+  if(sub) sub.style.display='none';
+  document.getElementById('c11-reveal').innerHTML='Answer: <span>'+c11Pool[c11Idx].a+'</span>';
+  document.getElementById('c11-selfcheck').className='selfcheck show';
+  c11Answered=true;
+}
+function markC11(ok){
+  recordC11(ok, ok?'🎉 Great job!':'📖 Review this one!');
+  var cb=document.querySelector('#c11-selfcheck .check-btns');
+  if(cb) cb.style.display='none';
+}
+function recordC11(ok,msg){
+  if(c11Log.length<=c11Idx){c11Log.push({q:c11Pool[c11Idx].q,ok:ok});if(ok)c11Score++;}
+  else{var o=c11Log[c11Idx];if(o.ok!==ok){if(o.ok)c11Score--;if(ok)c11Score++;c11Log[c11Idx]={q:c11Pool[c11Idx].q,ok:ok};}}
+  document.getElementById('c11-feedback').textContent=msg;
+  document.getElementById('c11-feedback').className='feedback show '+(ok?'ok':'bad');
+  document.getElementById('c11-next').className='btn-next show';
+}
+function navC11(dir){
+  if(dir===1){
+    if(!c11Answered)return;
+    c11Idx++; if(c11Idx>=c11Pool.length){showC11Result();return;}
+  } else {
+    if(c11Answered&&c11Log.length>c11Idx){var e=c11Log.pop();if(e.ok)c11Score--;}
+    c11Idx--;
+    if(c11Log.length>c11Idx){var p=c11Log.pop();if(p.ok)c11Score--;}
+  }
+  renderC11();
+}
+function showC11Result(){
+  showScreen('result');
+  var pct=c11Score/c11Pool.length;
+  document.getElementById('r-score').textContent=c11Score+'/'+c11Pool.length;
+  var emoji,title,msg;
+  if(pct===1){emoji='🏆';title='PERFECT SCORE!';msg='You crushed it! 🍁';}
+  else if(pct>=.8){emoji='🌟';title='Excellent!';msg='Almost perfect!';}
+  else if(pct>=.6){emoji='👍';title='Good Job!';msg='Review the missed ones.';}
+  else if(pct>=.4){emoji='📚';title='Keep Studying!';msg='Read the chapter again!';}
+  else{emoji='⚔️';title='Study More!';msg:'Don\'t give up!';}
+  document.getElementById('r-emoji').textContent=emoji;
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-msg').textContent=msg;
+  var html='';
+  for(var i=0;i<c11Log.length;i++){
+    html+='<div class="review-item '+(c11Log[i].ok?'ok':'miss')+'">';
+    html+='<span>'+(c11Log[i].ok?'✅':'❌')+'</span><span>'+c11Log[i].q+'</span></div>';
+  }
+  document.getElementById('review').innerHTML=html;
+  document.getElementById('btn-retry').onclick=startC11;
+}
+
+// ── PEOPLE ──
+function startPeople(){
+  pPool=shuffle(PEOPLE);pIdx=0;pScore=0;pLog=[];pAnswered=false;
+  showScreen('people-screen');renderP();
+}
+function renderP(){
+  var q=pPool[pIdx];pAnswered=false;
+  document.getElementById('p-counter').textContent=(pIdx+1)+' / '+pPool.length;
+  document.getElementById('p-bar').style.width=(pIdx/pPool.length*100)+'%';
+  document.getElementById('p-badge').textContent=q.d;
+  document.getElementById('p-question').textContent=q.q;
+  var inp=document.getElementById('p-input');
+  inp.value='';inp.disabled=false;inp.className='write-input';
+  document.getElementById('p-submit').style.display='block';
+  document.getElementById('p-selfcheck').className='selfcheck';
+  document.getElementById('p-feedback').className='feedback';
+  document.getElementById('p-next').className='btn-next';
+  document.getElementById('p-next').textContent=pIdx===pPool.length-1?'🏁 See Results!':'Next →';
+  document.getElementById('p-back').disabled=(pIdx===0);
+  var cb=document.querySelector('#p-selfcheck .check-btns');
+  if(cb) cb.style.display='';
+  setTimeout(function(){document.getElementById('p-input').focus();},100);
+}
+document.getElementById('p-input').addEventListener('keydown',function(e){if(e.key==='Enter')submitP();});
+document.getElementById('p-submit').addEventListener('click',submitP);
+function submitP(){
+  if(pAnswered)return;
+  var inp=document.getElementById('p-input');
+  if(!inp.value.trim())return;
+  inp.disabled=true;
+  document.getElementById('p-submit').style.display='none';
+  document.getElementById('p-reveal').innerHTML='Answer: <span>'+pPool[pIdx].a+'</span>';
+  document.getElementById('p-selfcheck').className='selfcheck show';
+  pAnswered=true;
+}
+function markP(ok){
+  if(pLog.length<=pIdx){pLog.push({q:pPool[pIdx].q,ok:ok});if(ok)pScore++;}
+  else{var o=pLog[pIdx];if(o.ok!==ok){if(o.ok)pScore--;if(ok)pScore++;pLog[pIdx]={q:pPool[pIdx].q,ok:ok};}}
+  var fb=document.getElementById('p-feedback');
+  fb.textContent=ok?'🎉 Great job!':'📖 Review this one!';
+  fb.className='feedback show '+(ok?'ok':'bad');
+  document.querySelector('#p-selfcheck .check-btns').style.display='none';
+  document.getElementById('p-next').className='btn-next show';
+}
+function navP(dir){
+  if(dir===1){if(!pAnswered)return;pIdx++;if(pIdx>=pPool.length){showPResult();return;}}
+  else{if(pAnswered&&pLog.length>pIdx){var e=pLog.pop();if(e.ok)pScore--;}pIdx--;if(pLog.length>pIdx){var p=pLog.pop();if(p.ok)pScore--;}}
+  var cb=document.querySelector('#p-selfcheck .check-btns');
+  if(cb) cb.style.display='';
+  renderP();
+}
+function showPResult(){
+  showScreen('result');
+  var pct=pScore/pPool.length;
+  document.getElementById('r-score').textContent=pScore+'/'+pPool.length;
+  var emoji,title,msg;
+  if(pct===1){emoji='🏆';title='PERFECT!';msg='You know every single one! 🍁';}
+  else if(pct>=.8){emoji='🌟';title='Excellent!';msg='Almost perfect — great work!';}
+  else if(pct>=.6){emoji='👍';title='Good Job!';msg='Review the missed ones before the exam.';}
+  else if(pct>=.4){emoji='📚';title='Keep Studying!';msg='Go over the missed answers!';}
+  else{emoji='🍁';title='Study More!';msg='Review the material and try again!';}
+  document.getElementById('r-emoji').textContent=emoji;
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-msg').textContent=msg;
+  var html='';
+  for(var i=0;i<pLog.length;i++){
+    html+='<div class="review-item '+(pLog[i].ok?'ok':'miss')+'">';
+    html+='<span>'+(pLog[i].ok?'✅':'❌')+'</span><span>'+pLog[i].q+'</span></div>';
+  }
+  document.getElementById('review').innerHTML=html;
+  document.getElementById('btn-retry').onclick=startPeople;
+}
+
+// ── MAP ──
+function startMap(){
+  showScreen('map-screen');
+  if(!mapLoaded) loadMap();
+}
+function loadMap(){
+  mapLoaded=true;
+  var projection=d3.geoMercator().center([-95,62]).scale(650).translate([480,300]);
+  var pathGen=d3.geoPath().projection(projection);
+  var svg=d3.select('#map-svg');
+  gProvinces=svg.append('g').attr('id','g-provinces');
+  gLakes=svg.append('g').attr('id','g-lakes').style('display','none');
+
+  d3.json('https://raw.githubusercontent.com/wisdomtheif/Canadian_GeoJSON/master/canada_provinces.geojson').then(function(data){
+    gProvinces.selectAll('path')
+      .data(data.features)
+      .enter().append('path')
+      .attr('class','province')
+      .attr('id',function(d){return 'p-'+sanitize(d.properties.NAME);})
+      .attr('d',pathGen)
+      .on('click',function(event,d){
+        var name=d.properties.NAME;
+        if(mapAnswered['p-'+sanitize(name)]) return;
+        if(mapCurrentTab!=='provinces') return;
+        mapSelectProvince(name);
+      });
+  });
+
+  Object.keys(LAKE_DATA).forEach(function(key){
+    var lake=LAKE_DATA[key];
+    var pts=lake.path.map(function(p){return p[0]+','+p[1];}).join(' ');
+    gLakes.append('polygon')
+      .attr('class','lake')
+      .attr('id','l-'+key)
+      .attr('points',pts)
+      .on('click',function(){if(!mapAnswered['l-'+key]&&mapCurrentTab==='lakes') mapSelectLake(key);});
+  });
+}
+function sanitize(name){return name.replace(/[\s&]/g,'_');}
+function switchMapTab(tab){
+  mapCurrentTab=tab;
+  mapSelectedId=null;
+  document.querySelectorAll('.map-tab').forEach(function(t,i){t.classList.remove('active');});
+  document.querySelectorAll('.map-tab')[tab==='provinces'?0:1].classList.add('active');
+  document.getElementById('map-label').textContent=tab==='provinces'?'CANADA — PROVINCES & TERRITORIES':'THE GREAT LAKES';
+  if(gProvinces) gProvinces.style('display',tab==='provinces'?null:'none');
+  if(gLakes) gLakes.style('display',tab==='lakes'?null:'none');
+  resetMapForm();
+}
+function resetMapForm(){
+  document.getElementById('map-hint-txt').style.display='block';
+  document.getElementById('map-form').style.display='none';
+  document.getElementById('map-result').className='map-result';
+}
+function mapSelectProvince(name){
+  mapSelectedId='p-'+sanitize(name);
+  d3.selectAll('.province.selected').classed('selected',false);
+  d3.select('#p-'+sanitize(name)).classed('selected',true);
+  var data=PROVINCE_DATA[name]||{hint:''};
+  showMapForm('What province or territory is this?','💡 Hint: '+data.hint);
+}
+function mapSelectLake(key){
+  mapSelectedId='l-'+key;
+  d3.selectAll('.lake.selected').classed('selected',false);
+  d3.select('#l-'+key).classed('selected',true);
+  showMapForm('What Great Lake is this?','💡 Hint: '+LAKE_DATA[key].hint);
+}
+function showMapForm(q,sub){
+  document.getElementById('map-hint-txt').style.display='none';
+  document.getElementById('map-form').style.display='block';
+  document.getElementById('map-q-txt').textContent=q;
+  document.getElementById('map-sub-txt').textContent=sub;
+  var inp=document.getElementById('map-ans-input');
+  inp.value='';inp.disabled=false;
+  document.getElementById('map-result').className='map-result';
+  setTimeout(function(){inp.focus();},100);
+}
+document.getElementById('map-ans-input').addEventListener('keydown',function(e){if(e.key==='Enter')checkMapAnswer();});
+function checkMapAnswer(){
+  if(!mapSelectedId)return;
+  var val=document.getElementById('map-ans-input').value.trim().toLowerCase();
+  if(!val)return;
+  var isLake=mapSelectedId.indexOf('l-')===0;
+  var key=mapSelectedId.replace(/^[pl]-/,'');
+  var data,correctName;
+  if(isLake){
+    data=LAKE_DATA[key];correctName=data.name;
+  } else {
+    var pName=key.replace(/_/g,' ');
+    var matchKey=Object.keys(PROVINCE_DATA).find(function(k){return sanitize(k)===key;});
+    data=matchKey?PROVINCE_DATA[matchKey]:{alt:[]};
+    correctName=matchKey||pName;
+  }
+  var correct=correctName.toLowerCase();
+  var alts=data.alt||[];
+  var ok=val===correct||alts.indexOf(val)>=0||(correct.split(' ').some(function(w){return w.length>3&&val===w;}))||(correct.indexOf(val)>=0&&val.length>=5);
+  mapAnswered[mapSelectedId]=ok;
+  mapTotal++;if(ok)mapCorrect++;
+  document.getElementById('map-correct').textContent=mapCorrect;
+  document.getElementById('map-total').textContent=mapTotal;
+  document.getElementById('map-ans-input').disabled=true;
+  if(isLake){
+    d3.select('#l-'+key).classed('selected',false).classed(ok?'correct':'wrong',true);
+  } else {
+    d3.select('#p-'+key).classed('selected',false).classed(ok?'correct':'wrong',true);
+  }
+  var r=document.getElementById('map-result');
+  r.textContent=ok?'🎉 Correct! '+correctName:'❌ The answer is: '+correctName;
+  r.className='map-result '+(ok?'ok':'bad');
+  mapSelectedId=null;
+  setTimeout(resetMapForm,2200);
+}
+function resetMap(){
+  mapAnswered={};mapCorrect=0;mapTotal=0;
+  document.getElementById('map-correct').textContent='0';
+  document.getElementById('map-total').textContent='0';
+  if(gProvinces) d3.selectAll('.province').classed('correct',false).classed('wrong',false).classed('selected',false);
+  if(gLakes) d3.selectAll('.lake').classed('correct',false).classed('wrong',false).classed('selected',false);
+  resetMapForm();
+}
+
+// ── FLASHCARDS ──
+function startFC(){fcIdx=0;showScreen('fc-screen');renderFC();}
+function renderFC(){
+  var fc=FC[fcIdx];
+  document.getElementById('fc-counter').textContent=(fcIdx+1)+' / '+FC.length;
+  document.getElementById('fc-question').textContent=fc.q;
+  var ans=document.getElementById('fc-answer');
+  ans.innerHTML=fc.a;ans.className='fc-answer';
+  document.getElementById('fc-reveal').style.display='block';
+  document.getElementById('fc-back').disabled=(fcIdx===0);
+  document.getElementById('fc-next').textContent=fcIdx===FC.length-1?'🏁 Done!':'Next →';
+}
+function revealFC(){
+  document.getElementById('fc-answer').className='fc-answer show';
+  document.getElementById('fc-reveal').style.display='none';
+}
+function navFC(dir){
+  if(dir===1){fcIdx++;if(fcIdx>=FC.length){showScreen('fcdone');return;}}
+  else{if(fcIdx<=0)return;fcIdx--;}
+  renderFC();
+}
+</script>
+</body>
+</html>

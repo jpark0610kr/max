@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 4 Spelling Quiz - Test 34</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky:#4fc3f7; --sun:#ffd54f; --grass:#66bb6a;
+    --purple:#ab47bc; --navy:#1a237e; --coral:#ff7043;
+    --correct:#43a047; --wrong:#e53935;
+    --shadow:0 4px 24px rgba(26,35,126,0.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient(160deg,#e3f2fd 0%,#f3e5f5 50%,#e8f5e9 100%);display:flex;flex-direction:column;align-items:center;}
+
+  nav{width:100%;background:var(--navy);padding:14px 28px;display:flex;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.18);}
+  nav .logo{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--sun);}
+  .nav-btn{margin-left:auto;background:var(--sun);color:var(--navy);border:none;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:800;padding:7px 18px;border-radius:20px;cursor:pointer;}
+  .nav-btn:hover{background:#ffe082;}
+
+  .screen{display:none;width:100%;max-width:720px;padding:28px 18px 60px;animation:fadeIn 0.3s ease;}
+  .screen.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+  .home-hero{text-align:center;padding:20px 0 26px;}
+  .home-hero .emoji{font-size:3.5rem;display:block;margin-bottom:10px;}
+  .home-hero h1{font-family:'Fredoka One',cursive;font-size:2.3rem;color:var(--navy);margin-bottom:6px;}
+  .home-hero .badge{display:inline-block;background:var(--navy);color:var(--sun);font-family:'Fredoka One',cursive;font-size:1rem;padding:4px 16px;border-radius:20px;margin-bottom:8px;}
+  .home-hero p{color:#5c6bc0;font-size:0.95rem;font-weight:600;}
+
+  .quiz-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px;}
+  @media(max-width:500px){.quiz-cards{grid-template-columns:1fr;}}
+
+  .quiz-card{background:white;border-radius:22px;padding:24px 16px;text-align:center;cursor:pointer;box-shadow:var(--shadow);transition:all 0.2s;position:relative;overflow:hidden;}
+  .quiz-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;}
+  .quiz-card.c1::before{background:linear-gradient(90deg,#4fc3f7,#ab47bc);}
+  .quiz-card.c2::before{background:linear-gradient(90deg,#66bb6a,#ffd54f);}
+  .quiz-card.c3::before{background:linear-gradient(90deg,#ff7043,#ffd54f);}
+  .quiz-card.c4::before{background:linear-gradient(90deg,#ab47bc,#4fc3f7);}
+  .quiz-card.c5::before{background:linear-gradient(90deg,#26c6da,#66bb6a);}
+  .quiz-card:hover{transform:translateY(-5px);box-shadow:0 10px 32px rgba(26,35,126,0.16);}
+  .quiz-card .ce{font-size:2rem;margin-bottom:7px;}
+  .quiz-card h2{font-family:'Fredoka One',cursive;font-size:1.15rem;color:var(--navy);margin-bottom:4px;}
+  .quiz-card p{font-size:0.8rem;color:#78909c;font-weight:600;}
+  .card-badge{display:inline-block;color:#fff;font-size:0.7rem;font-weight:800;padding:3px 10px;border-radius:12px;margin-top:8px;}
+  .c1 .card-badge{background:var(--sky);}
+  .c2 .card-badge{background:var(--grass);}
+  .c3 .card-badge{background:#ff7043;}
+  .c4 .card-badge{background:var(--purple);}
+  .c5 .card-badge{background:#26c6da;}
+
+  .section-header{margin-bottom:16px;}
+  .section-header h2{font-family:'Fredoka One',cursive;font-size:1.55rem;color:var(--navy);margin-bottom:4px;}
+  .section-header p{color:#5c6bc0;font-size:0.88rem;font-weight:600;}
+
+  .prog-wrap{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .prog-label{font-size:0.85rem;font-weight:800;color:var(--navy);white-space:nowrap;}
+  .progress-bar-wrap{flex:1;background:#e0e0e0;border-radius:10px;height:10px;overflow:hidden;}
+  .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--sky),var(--purple));border-radius:10px;transition:width 0.4s;}
+
+  .q-card{background:white;border-radius:20px;padding:24px 20px;box-shadow:var(--shadow);margin-bottom:14px;border:2px solid #e8eaf6;}
+  .q-label{font-family:'Fredoka One',cursive;font-size:0.8rem;color:#9fa8da;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;}
+  .q-text{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:14px;line-height:1.6;}
+
+  .listen-btn{background:var(--navy);color:#fff;border:none;border-radius:50px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:0 3px 10px rgba(26,35,126,0.2);transition:all 0.18s;}
+  .listen-btn:hover{background:#283593;}
+  .listen-btn.speaking{background:var(--purple);}
+  .ex-box{font-size:0.88rem;color:#546e7a;font-style:italic;font-weight:600;background:#f5f5f5;border-left:4px solid var(--sky);padding:9px 12px;border-radius:0 10px 10px 0;flex:1;min-width:160px;}
+
+  .vocab-def-box{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:14px;padding:11px 14px;background:#f3e5f5;border-radius:12px;border-left:4px solid var(--purple);line-height:1.5;}
+  .clue-box{font-size:1rem;font-weight:700;color:var(--navy);background:#e8f5e9;border-left:4px solid var(--grass);padding:11px 14px;border-radius:0 12px 12px 0;margin-bottom:14px;line-height:1.6;}
+  .sun-box{font-size:1rem;font-weight:700;color:var(--navy);background:#fff8e1;border-left:4px solid var(--sun);padding:11px 14px;border-radius:0 12px 12px 0;margin-bottom:14px;line-height:1.6;}
+
+  /* Multiple choice */
+  .mc-options{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+  .mc-btn{background:#f5f5f5;border:3px solid #e0e0e0;border-radius:14px;padding:12px 16px;font-family:'Nunito',sans-serif;font-size:0.97rem;font-weight:700;color:var(--navy);cursor:pointer;text-align:left;transition:all 0.18s;}
+  .mc-btn:hover:not(:disabled){background:#e8eaf6;border-color:#9fa8da;}
+  .mc-btn.selected-correct{background:#e8f5e9;border-color:var(--correct);color:var(--correct);}
+  .mc-btn.selected-wrong{background:#ffebee;border-color:var(--wrong);color:var(--wrong);}
+  .mc-btn.reveal-correct{background:#e8f5e9;border-color:var(--correct);color:var(--correct);}
+  .mc-btn:disabled{cursor:not-allowed;}
+
+  .spell-input{width:100%;border:3px solid #e0e0e0;border-radius:14px;padding:12px 16px;font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);outline:none;transition:border 0.2s;background:#fafafa;letter-spacing:1px;}
+  .spell-input:focus{border-color:var(--sky);background:white;}
+  .spell-input.correct-input{border-color:var(--correct);background:#f1f8e9;}
+  .spell-input.wrong-input{border-color:var(--wrong);background:#ffebee;}
+
+  .feedback{margin-top:10px;font-size:0.93rem;font-weight:800;border-radius:10px;padding:9px 14px;display:none;}
+  .feedback.correct{display:block;background:#e8f5e9;color:var(--correct);}
+  .feedback.wrong{display:block;background:#ffebee;color:var(--wrong);}
+
+  .btn-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+  .btn{border:none;border-radius:50px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:0.93rem;font-weight:800;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:6px;}
+  .btn-primary{background:var(--navy);color:#fff;box-shadow:0 3px 10px rgba(26,35,126,0.2);}
+  .btn-primary:hover{background:#283593;transform:translateY(-2px);}
+  .btn-secondary{background:#e8eaf6;color:var(--navy);}
+  .btn-secondary:hover{background:#c5cae9;}
+  .btn-next{background:linear-gradient(90deg,var(--sky),var(--purple));color:#fff;}
+  .btn-next:hover{opacity:0.9;transform:translateY(-2px);}
+  .btn:disabled{opacity:0.4;cursor:not-allowed;transform:none!important;}
+
+  .result-card{background:white;border-radius:28px;padding:34px 26px;text-align:center;box-shadow:var(--shadow);}
+  .result-emoji{font-size:3.5rem;display:block;margin-bottom:10px;}
+  .result-card h2{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--navy);margin-bottom:8px;}
+  .score-big{font-size:3rem;font-weight:800;color:var(--navy);}
+  .score-big span{color:var(--purple);}
+  .score-grade{font-size:1rem;font-weight:700;color:#78909c;margin-top:4px;margin-bottom:20px;}
+  .review-list{text-align:left;margin-top:16px;}
+  .review-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:0.85rem;}
+  .ri-num{font-weight:800;color:#90a4ae;min-width:24px;}
+  .ri-word{font-weight:800;color:var(--navy);min-width:120px;}
+  .ri-user{flex:1;color:#546e7a;}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">✏️ Spelling Bee</span>
+  <button class="nav-btn" onclick="goHome()">🏠 Home</button>
+</nav>
+
+<!-- HOME -->
+<div class="screen active" id="homeScreen">
+  <div class="home-hero">
+    <span class="emoji">📝</span>
+    <div class="badge">Spelling List 34</div>
+    <h1>Grade 4 Spelling Quiz</h1>
+    <p>Choose a section to practice!</p>
+  </div>
+  <div class="quiz-cards">
+    <div class="quiz-card c1" onclick="startSection('spell')">
+      <div class="ce">🔊</div>
+      <h2>Part 1<br>Spelling Words</h2>
+      <p>Listen and type the correct spelling</p>
+      <div class="card-badge">Words 1–20</div>
+    </div>
+    <div class="quiz-card c2" onclick="startSection('vocab')">
+      <div class="ce">📖</div>
+      <h2>Part 2<br>Vocabulary Words</h2>
+      <p>Read definition, write the word</p>
+      <div class="card-badge">Words 21–30</div>
+    </div>
+    <div class="quiz-card c3" onclick="startSection('stretches')">
+      <div class="ce">🔍</div>
+      <h2>Spelling Stretches</h2>
+      <p>Pick the correct meaning of the bold word</p>
+      <div class="card-badge">2 questions</div>
+    </div>
+    <div class="quiz-card c4" onclick="startSection('analogies')">
+      <div class="ce">🧩</div>
+      <h2>Fun with Analogies</h2>
+      <p>Complete each analogy with the right word</p>
+      <div class="card-badge">3 questions</div>
+    </div>
+    <div class="quiz-card c5" onclick="startSection('vocabbuilder')">
+      <div class="ce">✍️</div>
+      <h2>Vocabulary Builder</h2>
+      <p>Complete each sentence with the right word</p>
+      <div class="card-badge">10 questions</div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="quizScreen">
+  <div class="section-header">
+    <h2 id="sectionTitle"></h2>
+    <p id="sectionDesc"></p>
+  </div>
+  <div class="prog-wrap">
+    <span class="prog-label" id="progLabel">1 / 1</span>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:10%"></div></div>
+  </div>
+  <div class="q-card">
+    <div class="q-label" id="qLabel">Question 1</div>
+
+    <!-- Part 1 Spelling -->
+    <div id="spellUI" style="display:none">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px">
+        <button class="listen-btn" id="listenBtn" onclick="speakWord()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          Listen
+        </button>
+        <div class="ex-box" id="exSentence">Press Listen to hear the word!</div>
+      </div>
+    </div>
+
+    <!-- Part 2 Vocab -->
+    <div id="vocabUI" style="display:none">
+      <div class="vocab-def-box" id="vocabDef"></div>
+    </div>
+
+    <!-- Spelling Stretches MC -->
+    <div id="stretchesUI" style="display:none">
+      <div class="clue-box" id="stretchPrompt"></div>
+      <div class="mc-options" id="stretchOptions"></div>
+    </div>
+
+    <!-- Analogies -->
+    <div id="analogiesUI" style="display:none">
+      <div class="sun-box" id="analogyPrompt"></div>
+    </div>
+
+    <!-- Vocab Builder -->
+    <div id="vocabBuilderUI" style="display:none">
+      <div class="clue-box" id="vbSentence"></div>
+    </div>
+
+    <!-- shared input -->
+    <input type="text" class="spell-input" id="answerInput"
+      placeholder="Type your answer..."
+      onkeydown="handleKey(event)"
+      autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+    <div class="feedback" id="feedback"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()">← Prev</button>
+      <button class="btn btn-primary" id="checkBtn" onclick="checkAnswer()">✅ Check</button>
+      <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()" style="display:none">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="resultScreen">
+  <div class="result-card">
+    <span class="result-emoji" id="resultEmoji">🎉</span>
+    <h2 id="resultTitle">Done!</h2>
+    <div class="score-big" id="scoreBig"></div>
+    <div class="score-grade" id="scoreGrade"></div>
+    <div class="btn-row" style="justify-content:center;margin-bottom:20px">
+      <button class="btn btn-primary" onclick="retryQuiz()">🔄 Try Again</button>
+      <button class="btn btn-secondary" onclick="goHome()">🏠 Home</button>
+    </div>
+    <div class="review-list" id="reviewList"></div>
+  </div>
+</div>
+
+<script>
+const data = {
+  spell: [
+    {word:"favorable",    example:"The weather was _____ for our picnic."},
+    {word:"texture",      example:"The _____ of the velvet fabric was very smooth."},
+    {word:"ingredient",   example:"Sugar is an important _____ in cookies."},
+    {word:"fatigue",      example:"After running a mile, _____ set in quickly."},
+    {word:"anxious",      example:"Max was _____ about his big spelling test."},
+    {word:"determine",    example:"We need to _____ which path leads to the campsite."},
+    {word:"jewelry",      example:"She wore a beautiful piece of _____ to the party."},
+    {word:"buffet",       example:"At the _____, you can choose whatever food you like."},
+    {word:"disaster",     example:"The hurricane was a terrible _____ for the town."},
+    {word:"continue",     example:"Please _____ reading from the top of the page."},
+    {word:"ambitious",    example:"She was very _____ and wanted to be the class president."},
+    {word:"behavior",     example:"Good _____ in class helps everyone learn better."},
+    {word:"colonel",      example:"The _____ gave orders to the soldiers before the battle."},
+    {word:"combination",  example:"The lock opened with the right _____ of numbers."},
+    {word:"international",example:"The _____ airport welcomes visitors from all over the world."},
+    {word:"license",      example:"You need a driver's _____ to operate a car legally."},
+    {word:"medicine",     example:"The doctor prescribed _____ to help her feel better."},
+    {word:"occurrence",   example:"Seeing a shooting star is a rare _____."},
+    {word:"strength",     example:"It takes great _____ to carry those heavy boxes."},
+    {word:"surface",      example:"The _____ of the lake was calm and still."},
+  ],
+  vocab: [
+    {word:"admonish",    definition:"To scold gently; to advise"},
+    {word:"collide",     definition:"To crash together"},
+    {word:"edible",      definition:"Fit to eat"},
+    {word:"illustrate",  definition:"To make clear by examples or pictures"},
+    {word:"legible",     definition:"Clearly written; readable"},
+    {word:"omnipresent", definition:"Being in all places at all times"},
+    {word:"possession",  definition:"Ownership; property"},
+    {word:"proverb",     definition:"A short, wise saying"},
+    {word:"unique",      definition:"One of a kind"},
+    {word:"vicinity",    definition:"The region near a place"},
+  ],
+  stretches: [
+    {
+      prompt: 'Jake is an ambitious boy who works hard in school every day.\nWhat does "ambitious" mean?',
+      options: ["slothful and lazy","misunderstood","determined and motivated","careless and forgetful"],
+      answer:  "determined and motivated"
+    },
+    {
+      prompt: 'The buffet at the restaurant included soups, salads, main courses, and desserts.\nWhat does "buffet" mean?',
+      options: ["wide variety of fish choices","wide variety of food choices","wide variety of desserts","a single main course"],
+      answer:  "wide variety of food choices"
+    },
+  ],
+  analogies: [
+    {prompt:"Truth is to fact as conduct is to _____",   answer:"behavior"},
+    {prompt:"Short is to tall as weakness is to _____",  answer:"strength"},
+    {prompt:"Jacket is to clothing as ring is to _____", answer:"jewelry"},
+  ],
+  vocabbuilder: [
+    {sentence:"Only God is omniscient, omnipotent, and _____.",                                   answer:"omnipresent"},
+    {sentence:"Stephen's cursive writing is attractive and _____.",                               answer:"legible"},
+    {sentence:"Jesus spoke in parables to _____ spiritual truths.",                              answer:"illustrate"},
+    {sentence:"Some raccoons think garbage is _____.",                                            answer:"edible"},
+    {sentence:"No two people are exactly alike; everyone is _____.",                             answer:"unique"},
+    {sentence:"Mom and Dad had to _____ me to study for my final exams.",                        answer:"admonish"},
+    {sentence:"The graduate was excited to have his diploma in his _____.",                      answer:"possession"},
+    {sentence:"A famous _____ says, 'If at first you don't succeed, try, try again.'",           answer:"proverb"},
+    {sentence:"Ontario, Canada, is in the _____ of the Great Lakes.",                            answer:"vicinity"},
+    {sentence:"My family went to the demolition derby to watch the cars _____.",                  answer:"collide"},
+  ],
+};
+
+let currentSection='', currentQ=0, questions=[], results=[], answered=false;
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goHome(){
+  stopSpeech();
+  if(document.querySelector('.screen.active').id==='homeScreen') return;
+  if(confirm('Go to Home? Progress will be lost.')) showScreen('homeScreen');
+}
+
+function startSection(sec){
+  currentSection=sec; currentQ=0; results=[]; answered=false;
+  const titles={
+    spell:        ['Part 1: Spelling Words',    'Listen to the word and type it correctly'],
+    vocab:        ['Part 2: Vocabulary Words',  'Read the definition and write the word'],
+    stretches:    ['Spelling Stretches',        'Choose the correct meaning of the bold word'],
+    analogies:    ['Fun with Analogies',        'Write the spelling word that completes each analogy'],
+    vocabbuilder: ['Vocabulary Builder',        'Complete each sentence with the correct vocabulary word'],
+  };
+  document.getElementById('sectionTitle').textContent = titles[sec][0];
+  document.getElementById('sectionDesc').textContent  = titles[sec][1];
+
+  if(sec==='spell')        questions = data.spell;
+  else if(sec==='vocab')   questions = data.vocab;
+  else if(sec==='stretches')    questions = data.stretches;
+  else if(sec==='analogies')    questions = data.analogies;
+  else if(sec==='vocabbuilder') questions = data.vocabbuilder;
+
+  renderQuestion();
+  showScreen('quizScreen');
+}
+
+function renderQuestion(){
+  answered=false; stopSpeech();
+  const q=questions[currentQ], total=questions.length, num=currentQ+1;
+
+  document.getElementById('qLabel').textContent    = `Question ${num} of ${total}`;
+  document.getElementById('progLabel').textContent = `${num} / ${total}`;
+  document.getElementById('progressBar').style.width = `${(num/total)*100}%`;
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('prevBtn').disabled = (currentQ===0);
+  document.getElementById('checkBtn').style.display = '';
+
+  ['spellUI','vocabUI','stretchesUI','analogiesUI','vocabBuilderUI'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
+
+  const inp = document.getElementById('answerInput');
+  inp.style.display=''; inp.value=''; inp.className='spell-input'; inp.disabled=false;
+
+  if(currentSection==='spell'){
+    document.getElementById('spellUI').style.display='';
+    document.getElementById('exSentence').textContent='Press Listen to hear the word!';
+    document.getElementById('listenBtn').className='listen-btn';
+    inp.placeholder='Type the spelling word...'; inp.focus();
+
+  } else if(currentSection==='vocab'){
+    document.getElementById('vocabUI').style.display='';
+    document.getElementById('vocabDef').textContent=q.definition;
+    inp.placeholder='Type the vocabulary word...'; inp.focus();
+
+  } else if(currentSection==='stretches'){
+    document.getElementById('stretchesUI').style.display='';
+    inp.style.display='none';
+    document.getElementById('checkBtn').style.display='none';
+    document.getElementById('stretchPrompt').style.whiteSpace='pre-line';
+    document.getElementById('stretchPrompt').textContent=q.prompt;
+    const opts=document.getElementById('stretchOptions');
+    opts.innerHTML='';
+    q.options.forEach(opt=>{
+      const btn=document.createElement('button');
+      btn.className='mc-btn'; btn.textContent=opt;
+      btn.onclick=()=>checkMC(opt,btn);
+      opts.appendChild(btn);
+    });
+
+  } else if(currentSection==='analogies'){
+    document.getElementById('analogiesUI').style.display='';
+    document.getElementById('analogyPrompt').textContent=q.prompt;
+    inp.placeholder='Type the missing word...'; inp.focus();
+
+  } else if(currentSection==='vocabbuilder'){
+    document.getElementById('vocabBuilderUI').style.display='';
+    document.getElementById('vbSentence').innerHTML=
+      q.sentence.replace('_____','<span style="background:#e8eaf6;padding:1px 8px;border-radius:6px">_____</span>');
+    inp.placeholder='Type the vocabulary word...'; inp.focus();
+  }
+}
+
+// ── SPEECH ──
+function stopSpeech(){
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+}
+function getBestVoice(){
+  const voices=window.speechSynthesis.getVoices();
+  const preferred=['Samantha','Karen','Moira','Tessa','Google US English','Google UK English Female','Microsoft Aria','Microsoft Jenny','Microsoft Zira'];
+  for(const name of preferred){
+    const v=voices.find(v=>v.name.includes(name));
+    if(v) return v;
+  }
+  return voices.find(v=>v.lang==='en-US' && v.name.toLowerCase().includes('female'))
+      || voices.find(v=>v.lang==='en-US')
+      || voices.find(v=>v.lang.startsWith('en'))
+      || null;
+}
+function speakWord(){
+  if(!window.speechSynthesis || answered) return;
+  const q=questions[currentQ];
+  stopSpeech();
+  document.getElementById('listenBtn').className='listen-btn speaking';
+
+  // spoken uses actual word; screen shows _____
+  const spokenExample = q.example.replace('_____', q.word);
+  document.getElementById('exSentence').textContent = q.example;
+
+  const say=(text,rate,cb)=>{
+    const u=new SpeechSynthesisUtterance(text);
+    const voice=getBestVoice();
+    if(voice) u.voice=voice;
+    u.rate=rate; u.lang='en-US';
+    if(cb) u.onend=cb;
+    window.speechSynthesis.speak(u);
+  };
+  say(q.word, 0.85, ()=>
+    say(spokenExample, 0.92, ()=>
+      say(q.word, 0.8, ()=>{
+        document.getElementById('listenBtn').className='listen-btn';
+      })
+    )
+  );
+}
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+}
+
+// ── CHECK ──
+function normWord(s){ return s.trim().toLowerCase().replace(/[^a-z]/g,''); }
+
+function checkMC(selected, btn){
+  if(answered) return;
+  answered=true;
+  const q=questions[currentQ];
+  const correct=(selected===q.answer);
+  document.querySelectorAll('.mc-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===q.answer) b.classList.add('reveal-correct');
+  });
+  if(!correct) btn.classList.add('selected-wrong');
+  else { btn.classList.remove('reveal-correct'); btn.classList.add('selected-correct'); }
+
+  const fb=document.getElementById('feedback');
+  fb.className='feedback '+(correct?'correct':'wrong');
+  fb.textContent=correct?'✅ Correct! Great job!':'❌ Correct answer: '+q.answer;
+
+  results.push({label:q.answer, userAnswer:selected, correctAnswer:q.answer, correct});
+  document.getElementById('nextBtn').style.display='';
+  document.getElementById('nextBtn').focus();
+}
+
+function checkAnswer(){
+  if(answered){ nextQuestion(); return; }
+  if(currentSection==='stretches') return;
+
+  const inp=document.getElementById('answerInput');
+  const userVal=inp.value;
+  const q=questions[currentQ];
+  const correctWord=q.answer||q.word;
+  const correct=normWord(userVal)===normWord(correctWord);
+
+  inp.disabled=true;
+  inp.className='spell-input '+(correct?'correct-input':'wrong-input');
+  answered=true; stopSpeech();
+
+  const fb=document.getElementById('feedback');
+  fb.className='feedback '+(correct?'correct':'wrong');
+  if(correct){
+    fb.textContent='✅ Correct! Great job!';
+  } else {
+    fb.innerHTML=`❌ Answer: <b>${correctWord}</b>`;
+  }
+
+  // reveal example after spelling check
+  if(currentSection==='spell'){
+    document.getElementById('exSentence').innerHTML=
+      q.example.replace('_____',`<b style="color:var(--correct)">${q.word}</b>`);
+  }
+
+  results.push({label:getLabel(), userAnswer:userVal, correctAnswer:correctWord, correct});
+  document.getElementById('nextBtn').style.display='';
+  document.getElementById('nextBtn').focus();
+}
+
+function getLabel(){
+  if(currentSection==='spell')        return `#${currentQ+1} ${questions[currentQ].word}`;
+  if(currentSection==='vocab')        return `#${currentQ+21} ${questions[currentQ].word}`;
+  if(currentSection==='stretches')    return questions[currentQ].answer;
+  if(currentSection==='analogies')    return questions[currentQ].answer;
+  if(currentSection==='vocabbuilder') return questions[currentQ].answer;
+  return '';
+}
+
+function handleKey(e){
+  if(e.key==='Enter'){ if(!answered) checkAnswer(); else nextQuestion(); }
+}
+function prevQuestion(){
+  if(currentQ===0) return;
+  currentQ--;
+  if(results.length>currentQ) results.splice(currentQ);
+  answered=false; renderQuestion();
+}
+function nextQuestion(){
+  currentQ++;
+  if(currentQ>=questions.length) showResults();
+  else renderQuestion();
+}
+function retryQuiz(){ startSection(currentSection); }
+
+function showResults(){
+  stopSpeech();
+  const correct=results.filter(r=>r.correct).length, total=results.length;
+  const pct=Math.round((correct/total)*100);
+  let emoji='😊', grade='';
+  if(pct===100){emoji='🏆';grade='Perfect Score! Outstanding!';}
+  else if(pct>=90){emoji='🌟';grade='Excellent work!';}
+  else if(pct>=80){emoji='😄';grade='Great job!';}
+  else if(pct>=70){emoji='👍';grade='Good effort!';}
+  else if(pct>=60){emoji='📚';grade='Keep studying!';}
+  else            {emoji='💪';grade="Let's practice more!";}
+
+  document.getElementById('resultEmoji').textContent=emoji;
+  document.getElementById('resultTitle').textContent='Quiz Complete!';
+  document.getElementById('scoreBig').innerHTML=
+    `<span>${correct}</span> / ${total} <small style="font-size:1rem;color:#90a4ae">(${pct}%)</small>`;
+  document.getElementById('scoreGrade').textContent=grade;
+  document.getElementById('reviewList').innerHTML=results.map((r,i)=>`
+    <div class="review-item">
+      <span class="ri-num">${i+1}.</span>
+      <span class="ri-word">${r.label}</span>
+      <span class="ri-user">You: <b>${r.userAnswer||'(blank)'}</b></span>
+      <span>${r.correct?'✅':'❌'}</span>
+    </div>`).join('');
+  showScreen('resultScreen');
+}
+
+showScreen('homeScreen');
+</script>
+</body>
+</html>
