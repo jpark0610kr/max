@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Chapter 7 Quiz</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 6px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+  }
+  .subtitle { text-align: center; color: #e0d7ff; margin-bottom: 20px; font-size: 1rem; }
+
+  /* TAB NAV */
+  .tab-nav {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center; margin-bottom: 22px;
+  }
+  .tab-btn {
+    padding: 10px 18px; border: none; border-radius: 25px;
+    font-size: 0.88rem; font-weight: 700; cursor: pointer;
+    transition: all 0.25s; background: rgba(255,255,255,0.25); color: #fff;
+  }
+  .tab-btn:hover { background: rgba(255,255,255,0.45); transform: translateY(-2px); }
+  .tab-btn.active { background: #fff; color: #764ba2; box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
+
+  /* SECTION */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARD */
+  .card {
+    background: #fff; border-radius: 18px; padding: 28px 30px;
+    max-width: 820px; margin: 0 auto 20px; box-shadow: 0 6px 28px rgba(0,0,0,0.15);
+  }
+  .card h2 { color: #5a1fa0; font-size: 1.3rem; margin-bottom: 18px; }
+
+  /* FLASHCARD */
+  .flashcard-area { perspective: 800px; }
+  .flashcard {
+    width: 100%; height: 170px; cursor: pointer;
+    position: relative; transform-style: preserve-3d;
+    transition: transform 0.55s ease;
+    margin-bottom: 14px;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .flashcard .face {
+    position: absolute; width: 100%; height: 100%;
+    border-radius: 14px; backface-visibility: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 700; padding: 20px;
+    text-align: center;
+  }
+  .flashcard .front { background: linear-gradient(135deg, #f093fb, #f5576c); color: #fff; }
+  .flashcard .back  { background: linear-gradient(135deg, #4facfe, #00f2fe); color: #1a1a2e; transform: rotateY(180deg); }
+  .fc-nav { display: flex; align-items: center; justify-content: space-between; }
+  .fc-nav button {
+    padding: 9px 20px; border: none; border-radius: 20px;
+    background: #764ba2; color: #fff; font-weight: 700; cursor: pointer;
+    transition: 0.2s;
+  }
+  .fc-nav button:hover { background: #5a1fa0; }
+  .fc-counter { color: #888; font-size: 0.9rem; }
+
+  /* QUIZ */
+  .q-block { margin-bottom: 22px; }
+  .q-text { font-size: 1rem; color: #2d2d2d; margin-bottom: 10px; font-weight: 600; }
+  .q-num { color: #764ba2; }
+  .options label {
+    display: block; padding: 9px 14px; border-radius: 10px; margin-bottom: 6px;
+    cursor: pointer; background: #f5f0ff; border: 2px solid transparent;
+    transition: 0.2s; font-size: 0.93rem;
+  }
+  .options label:hover { border-color: #b39ddb; background: #ede7f6; }
+  .options label.selected { border-color: #764ba2; background: #ede7f6; }
+  .options label.correct { border-color: #43a047 !important; background: #e8f5e9 !important; }
+  .options label.wrong   { border-color: #e53935 !important; background: #ffebee !important; }
+  .options input[type=radio] { margin-right: 8px; }
+
+  /* TF */
+  .tf-row {
+    display: flex; gap: 12px; margin-top: 8px;
+  }
+  .tf-btn {
+    flex: 1; padding: 10px; border: 2px solid transparent; border-radius: 10px;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: 0.2s;
+    background: #f5f0ff; color: #764ba2;
+  }
+  .tf-btn:hover { border-color: #b39ddb; }
+  .tf-btn.selected { border-color: #764ba2; background: #ede7f6; }
+  .tf-btn.correct  { border-color: #43a047 !important; background: #e8f5e9 !important; color: #2e7d32 !important; }
+  .tf-btn.wrong    { border-color: #e53935 !important; background: #ffebee !important; color: #c62828 !important; }
+
+  /* FILL-IN / SHORT ANS */
+  .fill-input {
+    width: 100%; padding: 9px 12px; border: 2px solid #ddd; border-radius: 10px;
+    font-size: 0.95rem; outline: none; transition: 0.2s; margin-top: 6px;
+  }
+  .fill-input:focus { border-color: #764ba2; }
+  .fill-input.correct { border-color: #43a047; background: #e8f5e9; }
+  .fill-input.wrong   { border-color: #e53935; background: #ffebee; }
+
+  .feedback {
+    font-size: 0.85rem; margin-top: 5px; font-weight: 600; min-height: 18px;
+  }
+  .feedback.ok  { color: #43a047; }
+  .feedback.bad { color: #e53935; }
+
+  /* BUTTONS */
+  .submit-btn {
+    display: block; margin: 20px auto 0;
+    padding: 12px 40px; background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: #fff; border: none; border-radius: 30px; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: 0.25s; box-shadow: 0 4px 14px rgba(240,147,251,0.4);
+  }
+  .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(240,147,251,0.5); }
+
+  /* SCORE */
+  .score-box {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff; border-radius: 16px; padding: 22px 28px;
+    text-align: center; margin-top: 24px; display: none;
+  }
+  .score-box .score-num { font-size: 3rem; font-weight: 900; }
+  .score-box .score-msg { font-size: 1rem; margin-top: 6px; }
+  .score-box .retry-btn {
+    margin-top: 14px; padding: 10px 30px;
+    background: #fff; color: #764ba2; border: none; border-radius: 25px;
+    font-weight: 700; font-size: 0.95rem; cursor: pointer;
+  }
+
+  /* CONFETTI */
+  .confetti-piece {
+    position: fixed; width: 10px; height: 10px; border-radius: 2px;
+    animation: fall 3s ease-in forwards; pointer-events: none; z-index: 9999;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+  @keyframes sparkle {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.08); background: linear-gradient(135deg,#ffe066,#ff9f00); }
+  }
+  .q-block.correct-anim { animation: sparkle 0.5s; }
+  .section-label {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: #b39ddb; margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
+
+<h1>🏥 Health Chapter 7 Quiz</h1>
+<p class="subtitle">Sections 7.2 · 7.3 · 7.4 · 7.5 &nbsp;|&nbsp; Grade 4</p>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('flashcards')">🃏 Flashcards</button>
+  <button class="tab-btn" onclick="showTab('mc')">📝 Multiple Choice</button>
+  <button class="tab-btn" onclick="showTab('tf')">✅ True / False</button>
+  <button class="tab-btn" onclick="showTab('fill')">✏️ Fill in the Blank</button>
+  <button class="tab-btn" onclick="showTab('short')">💬 Short Answer</button>
+</div>
+
+<!-- ===================== FLASHCARDS ===================== -->
+<div id="sec-flashcards" class="section active">
+  <div class="card">
+    <h2>📚 Vocabulary Flashcards</h2>
+    <p style="font-size:0.85rem;color:#888;margin-bottom:14px;">Click the card to reveal the definition!</p>
+    <div class="flashcard-area">
+      <div class="flashcard" id="fc" onclick="this.classList.toggle('flipped')">
+        <div class="face front" id="fc-front">Loading...</div>
+        <div class="face back"  id="fc-back">Loading...</div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button onclick="fcMove(-1)">← Prev</button>
+      <span class="fc-counter" id="fc-counter">1 / 1</span>
+      <button onclick="fcMove(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MC ===================== -->
+<div id="sec-mc" class="section">
+  <div class="card">
+    <h2>📝 Multiple Choice (30 Questions)</h2>
+    <div id="mc-questions"></div>
+    <button class="submit-btn" onclick="gradeSection('mc')">Submit Answers</button>
+    <div class="score-box" id="mc-score">
+      <div class="score-num" id="mc-score-num"></div>
+      <div class="score-msg" id="mc-score-msg"></div>
+      <button class="retry-btn" onclick="resetSection('mc')">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TF ===================== -->
+<div id="sec-tf" class="section">
+  <div class="card">
+    <h2>✅ True or False (20 Questions)</h2>
+    <div id="tf-questions"></div>
+    <button class="submit-btn" onclick="gradeSection('tf')">Submit Answers</button>
+    <div class="score-box" id="tf-score">
+      <div class="score-num" id="tf-score-num"></div>
+      <div class="score-msg" id="tf-score-msg"></div>
+      <button class="retry-btn" onclick="resetSection('tf')">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== FILL ===================== -->
+<div id="sec-fill" class="section">
+  <div class="card">
+    <h2>✏️ Fill in the Blank (15 Questions)</h2>
+    <div id="fill-questions"></div>
+    <button class="submit-btn" onclick="gradeSection('fill')">Submit Answers</button>
+    <div class="score-box" id="fill-score">
+      <div class="score-num" id="fill-score-num"></div>
+      <div class="score-msg" id="fill-score-msg"></div>
+      <button class="retry-btn" onclick="resetSection('fill')">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SHORT ANSWER ===================== -->
+<div id="sec-short" class="section">
+  <div class="card">
+    <h2>💬 Short Answer (15 Questions)</h2>
+    <p style="font-size:0.85rem;color:#888;margin-bottom:14px;">Type your answer, then click Submit to see the expected answer.</p>
+    <div id="short-questions"></div>
+    <button class="submit-btn" onclick="gradeSection('short')">Reveal Answers</button>
+    <div class="score-box" id="short-score" style="display:none;">
+      <div class="score-msg">Check your answers above! ✨</div>
+      <button class="retry-btn" onclick="resetSection('short')">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  DATA
+// ============================================================
+
+const flashcards = [
+  // 7.2
+  {term:"Aware",def:"Knowing what is happening around you and paying attention to your surroundings."},
+  {term:"Alert",def:"Being ready and watching carefully for any danger or unusual activity."},
+  {term:"Boundaries",def:"Personal limits about what is okay and not okay for someone to do to your body."},
+  {term:"Trusted Adult",def:"A safe adult who looks out for your best interest, does not ask children to keep secrets from parents, and asks other adults—not children—for help."},
+  // 7.3
+  {term:"First Aid",def:"Emergency care given to a sick or injured person before trained medical help arrives."},
+  {term:"Medical Emergency",def:"An illness or injury that requires immediate medical care."},
+  {term:"Strain",def:"An injury where a muscle or tendon is pulled or stretched."},
+  {term:"Sprain",def:"An injury where a ligament is stretched or torn, often around a joint."},
+  {term:"Trachea",def:"The airway (windpipe) that carries air to the lungs; can be blocked during choking."},
+  {term:"Heimlich Maneuver",def:"A first-aid technique using abdominal thrusts to clear a blocked airway in a choking person."},
+  {term:"Poison",def:"Any substance that can cause illness, harm, or death if it enters the body."},
+  {term:"Shock",def:"A dangerous condition caused by a sudden loss of blood flow; skin may become cold or pale."},
+  {term:"Epidermis",def:"The outer layer of skin; affected in a first-degree burn."},
+  {term:"Dermis",def:"The second layer of skin below the epidermis; affected in a second-degree burn."},
+  {term:"Hypodermis",def:"The deepest layer of skin; affected in a third-degree burn, which is a medical emergency."},
+  // 7.4
+  {term:"Adolescence",def:"The transition period between childhood and adulthood, when puberty occurs."},
+  {term:"Puberty",def:"The physical and emotional changes that happen during adolescence, caused by hormones."},
+  {term:"Hormones",def:"Chemical messengers in the body that control growth and physical changes during puberty."},
+  {term:"Hygiene",def:"Cleanliness habits that help prevent disease, such as washing your face and brushing teeth."},
+  {term:"Perspiration",def:"Sweat produced by sweat glands in the skin."},
+  {term:"Acne",def:"Pimples that occur when oil, bacteria, and dead skin cells clog pores in the skin."},
+  {term:"Follicles",def:"Small structures in the skin that produce and hold hair."},
+  {term:"Enamel",def:"The hard outer layer of a tooth; the hardest substance in the human body."},
+  {term:"Dentin",def:"The layer beneath the enamel in a tooth."},
+  {term:"Pulp",def:"The soft tissue in the center of a tooth containing nerves and blood vessels."},
+  {term:"Plaque",def:"A harmful film of bacteria that forms on teeth and can damage enamel."},
+  {term:"Dental Caries",def:"The medical term for cavities — damage to teeth caused by plaque and acid."},
+  {term:"Athlete's Foot",def:"A fungal infection of the feet prevented by keeping feet clean and dry."},
+  // 7.5
+  {term:"Addiction",def:"A controlling habit that changes brain function and makes it very hard to stop using a substance."},
+  {term:"Substance Abuse",def:"The uncontrolled use of addictive or harmful substances (also called drug abuse)."},
+  {term:"Limbic System",def:"The area of the brain that controls emotions and physical needs; affected by drugs."},
+  {term:"Peer Pressure",def:"Feeling pressure to act like others around you in order to fit in or be accepted."},
+  {term:"Nicotine",def:"An addictive substance found in tobacco products such as cigarettes."},
+  {term:"Second-hand Smoke",def:"Harmful smoke that comes from cigarettes and is breathed in by people nearby."},
+  {term:"Support System",def:"Family and friends who encourage you to make good choices and help you stay strong."},
+];
+
+const mcQuestions = [
+  // 7.2 – 10 questions
+  {sec:"7.2",q:"What should you do if you get lost in a store?",opts:["Leave the store immediately","Stay in the store and ask a store employee or police officer","Call a friend","Walk home alone"],ans:1},
+  {sec:"7.2",q:"If a stranger tells you that your parents already gave permission to go with them, you should:",opts:["Believe the stranger","Go with the stranger if they seem nice","Not believe them and find a trusted adult","Say yes and tell your parents later"],ans:2},
+  {sec:"7.2",q:"What should you do if someone tries to take you?",opts:["Stay calm and be quiet","Scream, kick, fight, and yell 'This is not my mom/dad!'","Do nothing and wait for help","Go with them to stay safe"],ans:1},
+  {sec:"7.2",q:"Which of these is something a SAFE adult would do?",opts:["Ask a child to keep a secret from parents","Ask children to help with adult problems","Ask other adults for help, not children","Tell a child not to tell their parents"],ans:2},
+  {sec:"7.2",q:"What should you do if you find a gun?",opts:["Pick it up carefully and put it away","Show it to your friends","Leave the area immediately and tell an adult","Take it home for safety"],ans:2},
+  {sec:"7.2",q:"What personal information should you NEVER share online?",opts:["Your favourite colour","Your phone number, address, or age","Your favourite sports team","Your opinion on a movie"],ans:1},
+  {sec:"7.2",q:"If someone online makes you feel uncomfortable, you should:",opts:["Keep using the computer","Tell a trusted adult right away","Block the person and forget about it","Share your phone number so they stop"],ans:1},
+  {sec:"7.2",q:"If someone touches you in a way that makes you uncomfortable, you should:",opts:["Stay quiet and do nothing","Yell, run away, and tell a trusted adult","Tell only your best friend","Wait and see if it happens again"],ans:1},
+  {sec:"7.2",q:"Why is it important to memorize important phone numbers?",opts:["So you can talk to friends","In case of an emergency when you need to reach a trusted adult","So you can call stores","To show your teacher"],ans:1},
+  {sec:"7.2",q:"You should never go anywhere without:",opts:["Your backpack","Your parents' permission","A phone","A friend"],ans:1},
+  // 7.3 – 10 questions
+  {sec:"7.3",q:"What is first aid?",opts:["Surgery performed in a hospital","Emergency care given before trained medical help arrives","A type of doctor","A way to prevent illness"],ans:1},
+  {sec:"7.3",q:"What is the RICE treatment used for?",opts:["Burns and choking","Poisoning and shock","Sprains and strains","Bleeding and seizures"],ans:2},
+  {sec:"7.3",q:"What does RICE stand for?",opts:["Run, Ice, Cover, Elevate","Rest, Ice, Compression, Elevation","Relax, Inject, Cool, Elevate","Rest, Inflate, Compress, Extend"],ans:1},
+  {sec:"7.3",q:"A first-degree burn affects which layer of skin?",opts:["Dermis only","Hypodermis","Epidermis only","All three layers"],ans:2},
+  {sec:"7.3",q:"What is the universal sign for choking?",opts:["Waving both arms","Pointing to the mouth","Hands placed at the neck","Falling to the ground"],ans:2},
+  {sec:"7.3",q:"Which type of burn is a medical emergency requiring 9-1-1?",opts:["First-degree burn","Second-degree burn","Third-degree burn","Sunburn"],ans:2},
+  {sec:"7.3",q:"How should you control bleeding?",opts:["Pour cold water on the wound","Apply direct pressure using a clean cloth or gauze","Tie a rope tightly above the wound","Leave it alone and wait"],ans:1},
+  {sec:"7.3",q:"What should you do if a person is choking and CAN still cough?",opts:["Use the Heimlich maneuver right away","Give back blows immediately","Encourage them to keep coughing","Call 9-1-1 immediately"],ans:2},
+  {sec:"7.3",q:"What should you do if you suspect someone has been poisoned?",opts:["Give them water and rest","Call 9-1-1 or Poison Control and save the container","Wait to see if they get better","Give them food to absorb the poison"],ans:1},
+  {sec:"7.3",q:"What is a symptom of shock?",opts:["Fever and sweating","Skin becoming cold or pale","Redness and blisters","A blocked airway"],ans:1},
+  // 7.4 – 5 questions
+  {sec:"7.4",q:"What causes acne?",opts:["Not drinking enough water","Oil, bacteria, and dead skin cells clogging pores","Eating too much sugar","Not getting enough sleep"],ans:1},
+  {sec:"7.4",q:"If a permanent tooth falls out, where should you put it while going to the dentist?",opts:["In water","In juice","In milk","In a dry container"],ans:2},
+  {sec:"7.4",q:"How does plaque damage teeth?",opts:["By making teeth yellow","Plaque and sugar create acid that damages enamel","By blocking the root","By spreading from person to person"],ans:1},
+  {sec:"7.4",q:"How is athlete's foot prevented?",opts:["Sharing towels and socks","Taking antibiotics","Keeping feet clean and dry","Washing feet only once a week"],ans:2},
+  {sec:"7.4",q:"How do lice spread?",opts:["Through the air","By sharing combs, brushes, hats, or pillows","Through water","By touching hands"],ans:1},
+  // 7.5 – 5 questions
+  {sec:"7.5",q:"What is the limbic system?",opts:["The part of the heart that pumps blood","The area of the brain that controls emotions and physical needs","The outer layer of skin","The windpipe"],ans:1},
+  {sec:"7.5",q:"What substance found in tobacco makes it addictive?",opts:["Carbon monoxide","Tar","Nicotine","Alcohol"],ans:2},
+  {sec:"7.5",q:"What is peer pressure?",opts:["Pressure from teachers to study more","Feeling pressure to act like others to be accepted","Physical pressure on the body","Pressure from parents to eat healthy"],ans:1},
+  {sec:"7.5",q:"How does addiction start?",opts:["Suddenly, with no warning","By trying a harmful substance","Only in adults","Through watching others"],ans:1},
+  {sec:"7.5",q:"Which of the following is NOT a way to say no to drugs?",opts:["Pray","Choose good friends","Walk away","Try it just once to seem cool"],ans:3},
+];
+
+const tfQuestions = [
+  {sec:"7.2",q:"If you are lost in a store, you should leave and look for your parents outside.",ans:false},
+  {sec:"7.2",q:"A trusted adult will ask children to keep secrets from their parents.",ans:false},
+  {sec:"7.2",q:"It is okay to ride with someone who has been drinking alcohol.",ans:false},
+  {sec:"7.2",q:"You should never touch a firearm if you find one — leave and tell an adult.",ans:true},
+  {sec:"7.2",q:"Safe adults ask other adults for help, not children.",ans:true},
+  {sec:"7.3",q:"A sprain is an injury to a muscle or tendon.",ans:false},
+  {sec:"7.3",q:"Third-degree burns are medical emergencies that require calling 9-1-1.",ans:true},
+  {sec:"7.3",q:"You should move someone with a neck or spine injury as quickly as possible.",ans:false},
+  {sec:"7.3",q:"When calling 9-1-1, you should give your name, address, and explain the emergency.",ans:true},
+  {sec:"7.3",q:"A second-degree burn only affects the epidermis.",ans:false},
+  {sec:"7.3",q:"If a person is choking and can still cough, you should encourage them to keep coughing.",ans:true},
+  {sec:"7.4",q:"Enamel is the hardest substance in the human body.",ans:true},
+  {sec:"7.4",q:"You should hold a knocked-out permanent tooth by its root when picking it up.",ans:false},
+  {sec:"7.4",q:"Acne is caused by oil, bacteria, and dead skin cells clogging pores.",ans:true},
+  {sec:"7.4",q:"You should brush your teeth once a week to keep them healthy.",ans:false},
+  {sec:"7.4",q:"Athlete's foot is caused by a virus.",ans:false},
+  {sec:"7.5",q:"Alcohol is considered a drug.",ans:true},
+  {sec:"7.5",q:"Smoking can cause cancer.",ans:true},
+  {sec:"7.5",q:"Second-hand smoke is harmless to people nearby.",ans:false},
+  {sec:"7.5",q:"Addiction often requires professional help to overcome.",ans:true},
+];
+
+const fillQuestions = [
+  {sec:"7.2",q:"If a stranger makes you feel uncomfortable, you should leave and tell a ___________.",ans:"trusted adult"},
+  {sec:"7.2",q:"If you cannot move away from danger, you should ___________, stay quiet, and follow adult instructions.",ans:"hide"},
+  {sec:"7.3",q:"The Heimlich maneuver uses ___________ thrusts to help a choking person.",ans:"abdominal"},
+  {sec:"7.3",q:"The ___________ is the airway that carries air to the lungs.",ans:"trachea"},
+  {sec:"7.3",q:"To help someone in shock, you should cover them with a ___________ while waiting for help.",ans:"blanket"},
+  {sec:"7.3",q:"The four steps of the RICE treatment are Rest, Ice, ___________, and Elevation.",ans:"compression"},
+  {sec:"7.3",q:"A ___________ burn affects the epidermis and dermis and causes blisters.",ans:"second-degree"},
+  {sec:"7.4",q:"___________ is the transition period between childhood and adulthood.",ans:"adolescence"},
+  {sec:"7.4",q:"Sweat produced by sweat glands in the skin is called ___________.",ans:"perspiration"},
+  {sec:"7.4",q:"The medical term for cavities is dental ___________.",ans:"caries"},
+  {sec:"7.4",q:"Hair grows from structures in the skin called ___________.",ans:"follicles"},
+  {sec:"7.4",q:"If a permanent tooth falls out, it should be placed in ___________ until you can see a dentist.",ans:"milk"},
+  {sec:"7.5",q:"___________ is an addictive substance found in tobacco.",ans:"nicotine"},
+  {sec:"7.5",q:"The area of the brain that controls emotions and physical needs is called the ___________ system.",ans:"limbic"},
+  {sec:"7.5",q:"Family and friends who encourage you to make good choices are called your ___________ system.",ans:"support"},
+];
+
+const shortQuestions = [
+  {sec:"7.2",q:"What are two things you should do if someone tries to abduct you?",ans:"Scream, kick, fight, and yell 'This is not my mom!' or 'This is not my dad!' to alert people nearby."},
+  {sec:"7.2",q:"Name two things a SAFE adult will NOT do.",ans:"A safe adult will not ask children to keep secrets from their parents, and will not ask children for help with adult problems."},
+  {sec:"7.3",q:"What are three examples of medical emergencies?",ans:"Any three of: severe bleeding, choking, poisoning, trouble breathing, seizures, unconsciousness, severe injuries, third-degree burns."},
+  {sec:"7.3",q:"Describe what to do when calling 9-1-1.",ans:"Give your name and address, explain the emergency clearly, and stay on the phone."},
+  {sec:"7.3",q:"What is the difference between a strain and a sprain?",ans:"A strain is a pulled or stretched muscle or tendon. A sprain is a stretched or torn ligament, usually around a joint."},
+  {sec:"7.3",q:"What should you do if you find a container of poison?",ans:"Call 9-1-1 or Poison Control, save the container, and follow the warning label instructions."},
+  {sec:"7.4",q:"What causes acne and how can you help prevent it?",ans:"Acne is caused by oil, bacteria, and dead skin cells clogging pores. Prevent it by washing your face twice daily."},
+  {sec:"7.4",q:"What are the three layers of a tooth, from outside to inside?",ans:"Enamel (outer), dentin (middle), and pulp (inner soft tissue with nerves and blood vessels)."},
+  {sec:"7.4",q:"Describe what to do if a permanent tooth is knocked out.",ans:"Hold it by the crown (not the root), rinse gently, place it in milk, and see a dentist within 30 minutes."},
+  {sec:"7.4",q:"How does plaque damage teeth?",ans:"Plaque combines with sugar to create acid, which damages the enamel and leads to cavities (dental caries)."},
+  {sec:"7.5",q:"What is addiction and why is it hard to overcome?",ans:"Addiction is a controlling habit that changes brain function, making it very difficult to stop using the substance. It often requires professional help."},
+  {sec:"7.5",q:"Why is second-hand smoke harmful?",ans:"Second-hand smoke comes from cigarettes and is breathed in by people nearby. It contains the same harmful chemicals as smoking and can cause health problems."},
+  {sec:"7.5",q:"Name three ways to say no to drugs or peer pressure.",ans:"Any three of: recognize temptation, pray, walk away, tell a trusted adult, choose good friends."},
+  {sec:"7.5",q:"What is the difference between a drug and a medicine?",ans:"A medicine is a drug that helps the body heal or feel better when used properly. Illegal drugs are harmful substances used in ways that damage the body and brain."},
+  {sec:"7.5",q:"What is peer pressure and how can having a support system help?",ans:"Peer pressure is feeling forced to act like others to be accepted. A support system of family and friends who encourage good choices helps you stay strong and resist pressure."},
+];
+
+// ============================================================
+//  FLASHCARDS
+// ============================================================
+let fcIndex = 0;
+function renderFC() {
+  document.getElementById('fc').classList.remove('flipped');
+  document.getElementById('fc-front').textContent = flashcards[fcIndex].term;
+  document.getElementById('fc-back').textContent  = flashcards[fcIndex].def;
+  document.getElementById('fc-counter').textContent = (fcIndex+1)+' / '+flashcards.length;
+}
+function fcMove(d) {
+  fcIndex = (fcIndex + d + flashcards.length) % flashcards.length;
+  renderFC();
+}
+renderFC();
+
+// ============================================================
+//  BUILD QUESTIONS
+// ============================================================
+function buildMC() {
+  const el = document.getElementById('mc-questions');
+  el.innerHTML = '';
+  mcQuestions.forEach((q,i) => {
+    const div = document.createElement('div');
+    div.className = 'q-block';
+    div.dataset.index = i;
+    let opts = '';
+    q.opts.forEach((o,j) => {
+      opts += `<label id="mc-opt-${i}-${j}"><input type="radio" name="mc-${i}" value="${j}"> ${o}</label>`;
+    });
+    div.innerHTML = `<div class="section-label">Section ${q.sec}</div>
+      <div class="q-text"><span class="q-num">${i+1}.</span> ${q.q}</div>
+      <div class="options" id="mc-opts-${i}">${opts}</div>
+      <div class="feedback" id="mc-fb-${i}"></div>`;
+    el.appendChild(div);
+    // listen for selection styling
+    div.querySelectorAll('input[type=radio]').forEach(inp => {
+      inp.addEventListener('change', () => {
+        div.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+        inp.parentElement.classList.add('selected');
+      });
+    });
+  });
+}
+
+function buildTF() {
+  const el = document.getElementById('tf-questions');
+  el.innerHTML = '';
+  tfQuestions.forEach((q,i) => {
+    const div = document.createElement('div');
+    div.className = 'q-block';
+    div.dataset.index = i;
+    div.innerHTML = `<div class="section-label">Section ${q.sec}</div>
+      <div class="q-text"><span class="q-num">${i+1}.</span> ${q.q}</div>
+      <div class="tf-row">
+        <button class="tf-btn" id="tf-t-${i}" onclick="selectTF(${i},'true')">✅ True</button>
+        <button class="tf-btn" id="tf-f-${i}" onclick="selectTF(${i},'false')">❌ False</button>
+      </div>
+      <div class="feedback" id="tf-fb-${i}"></div>`;
+    el.appendChild(div);
+  });
+}
+
+function selectTF(i, val) {
+  document.getElementById(`tf-t-${i}`).classList.toggle('selected', val==='true');
+  document.getElementById(`tf-f-${i}`).classList.toggle('selected', val==='false');
+  document.getElementById(`tf-t-${i}`).dataset.selected = val==='true'?'true':'';
+  document.getElementById(`tf-f-${i}`).dataset.selected = val==='false'?'true':'';
+}
+
+function buildFill() {
+  const el = document.getElementById('fill-questions');
+  el.innerHTML = '';
+  fillQuestions.forEach((q,i) => {
+    const div = document.createElement('div');
+    div.className = 'q-block';
+    div.innerHTML = `<div class="section-label">Section ${q.sec}</div>
+      <div class="q-text"><span class="q-num">${i+1}.</span> ${q.q}</div>
+      <input class="fill-input" id="fill-inp-${i}" type="text" placeholder="Type your answer here...">
+      <div class="feedback" id="fill-fb-${i}"></div>`;
+    el.appendChild(div);
+  });
+}
+
+function buildShort() {
+  const el = document.getElementById('short-questions');
+  el.innerHTML = '';
+  shortQuestions.forEach((q,i) => {
+    const div = document.createElement('div');
+    div.className = 'q-block';
+    div.innerHTML = `<div class="section-label">Section ${q.sec}</div>
+      <div class="q-text"><span class="q-num">${i+1}.</span> ${q.q}</div>
+      <textarea class="fill-input" id="short-inp-${i}" rows="3" placeholder="Write your answer here..."></textarea>
+      <div class="feedback" id="short-fb-${i}"></div>`;
+    el.appendChild(div);
+  });
+}
+
+buildMC(); buildTF(); buildFill(); buildShort();
+
+// ============================================================
+//  GRADING
+// ============================================================
+function gradeSection(type) {
+  let correct = 0, total = 0;
+  if (type === 'mc') {
+    mcQuestions.forEach((q,i) => {
+      const sel = document.querySelector(`input[name="mc-${i}"]:checked`);
+      const opts = document.getElementById(`mc-opts-${i}`);
+      const fb = document.getElementById(`mc-fb-${i}`);
+      total++;
+      opts.querySelectorAll('label').forEach(l => { l.classList.remove('correct','wrong'); });
+      opts.querySelectorAll('label')[q.ans].classList.add('correct');
+      if (sel && parseInt(sel.value) === q.ans) {
+        correct++;
+        fb.textContent = '✅ Correct!'; fb.className = 'feedback ok';
+        document.querySelector(`.q-block[data-index="${i}"]`).classList.add('correct-anim');
+      } else {
+        fb.textContent = sel ? '❌ Not quite!' : '❌ Not answered';
+        fb.className = 'feedback bad';
+        if (sel) opts.querySelectorAll('label')[parseInt(sel.value)].classList.add('wrong');
+      }
+    });
+    showScore('mc', correct, total);
+  }
+  if (type === 'tf') {
+    tfQuestions.forEach((q,i) => {
+      const tBtn = document.getElementById(`tf-t-${i}`);
+      const fBtn = document.getElementById(`tf-f-${i}`);
+      const fb = document.getElementById(`tf-fb-${i}`);
+      const userAns = tBtn.classList.contains('selected') ? true : fBtn.classList.contains('selected') ? false : null;
+      total++;
+      if (userAns === null) {
+        fb.textContent = '❌ Not answered'; fb.className = 'feedback bad';
+        return;
+      }
+      const correctBtn = q.ans ? tBtn : fBtn;
+      const wrongBtn   = q.ans ? fBtn : tBtn;
+      correctBtn.classList.add('correct'); wrongBtn.classList.remove('selected');
+      if (userAns === q.ans) {
+        correct++;
+        fb.textContent = '✅ Correct!'; fb.className = 'feedback ok';
+      } else {
+        wrongBtn.classList.add('wrong');
+        fb.textContent = `❌ The answer is ${q.ans ? 'True' : 'False'}.`;
+        fb.className = 'feedback bad';
+      }
+    });
+    showScore('tf', correct, total);
+  }
+  if (type === 'fill') {
+    fillQuestions.forEach((q,i) => {
+      const inp = document.getElementById(`fill-inp-${i}`);
+      const fb  = document.getElementById(`fill-fb-${i}`);
+      const user = inp.value.trim().toLowerCase();
+      const ans  = q.ans.toLowerCase();
+      total++;
+      if (!user) {
+        fb.textContent = '❌ Not answered. Answer: ' + q.ans;
+        fb.className = 'feedback bad'; inp.classList.add('wrong'); return;
+      }
+      if (user === ans || ans.includes(user) && user.length > 3 || user.includes(ans)) {
+        correct++;
+        inp.classList.add('correct'); inp.classList.remove('wrong');
+        fb.textContent = '✅ Correct!'; fb.className = 'feedback ok';
+      } else {
+        inp.classList.add('wrong'); inp.classList.remove('correct');
+        fb.textContent = '❌ Expected: ' + q.ans; fb.className = 'feedback bad';
+      }
+    });
+    showScore('fill', correct, total);
+  }
+  if (type === 'short') {
+    shortQuestions.forEach((q,i) => {
+      const fb = document.getElementById(`short-fb-${i}`);
+      fb.innerHTML = `<strong>📋 Sample Answer:</strong> ${q.ans}`;
+      fb.className = 'feedback ok';
+    });
+    document.getElementById('short-score').style.display = 'block';
+  }
+}
+
+function showScore(type, correct, total) {
+  const box = document.getElementById(`${type}-score`);
+  const pct = Math.round(correct/total*100);
+  box.style.display = 'block';
+  box.querySelector('.score-num').textContent = `${correct} / ${total}`;
+  const msgs = ['Keep studying! You can do it! 💪','Good effort! Review the sections again 📚','Almost there! Nice work 🌟','Great job! You know your stuff! 🎉','PERFECT SCORE! Amazing! 🏆✨'];
+  const mi = pct===100?4:pct>=80?3:pct>=60?2:pct>=40?1:0;
+  box.querySelector('.score-msg').textContent = msgs[mi];
+  if (pct >= 80) confetti();
+  box.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function resetSection(type) {
+  if (type==='mc') buildMC();
+  if (type==='tf') buildTF();
+  if (type==='fill') buildFill();
+  if (type==='short') buildShort();
+  document.getElementById(`${type}-score`).style.display = 'none';
+}
+
+// ============================================================
+//  TABS
+// ============================================================
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ============================================================
+//  CONFETTI
+// ============================================================
+function confetti() {
+  const colours = ['#f093fb','#f5576c','#4facfe','#00f2fe','#43e97b','#ffe066','#ff9f00','#a18cd1'];
+  for (let i=0;i<80;i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.cssText = `left:${Math.random()*100}vw;background:${colours[Math.floor(Math.random()*colours.length)]};
+      animation-delay:${Math.random()*1.5}s;animation-duration:${2+Math.random()*2}s;
+      transform:rotate(${Math.random()*360}deg);border-radius:${Math.random()>0.5?'50%':'2px'}`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 5000);
+  }
+}
+</script>
+</body>
+</html>
