@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Chapter 7 Quiz</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh; padding: 20px;
+}
+
+/* HOME */
+#home-screen { max-width: 600px; margin: 0 auto; text-align: center; padding-top: 30px; }
+#home-screen h1 { color: #fff; font-size: 2.2rem; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); margin-bottom: 8px; }
+#home-screen .subtitle { color: #e0d7ff; margin-bottom: 36px; font-size: 1rem; }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.mode-card {
+  background: rgba(255,255,255,0.18); border: 2px solid rgba(255,255,255,0.35);
+  border-radius: 18px; padding: 26px 14px; cursor: pointer;
+  transition: all 0.25s; color: #fff;
+}
+.mode-card:hover { background: rgba(255,255,255,0.35); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.mode-card .icon { font-size: 2.2rem; margin-bottom: 8px; }
+.mode-card .title { font-size: 1rem; font-weight: 700; }
+.mode-card .desc { font-size: 0.78rem; opacity: 0.85; margin-top: 3px; }
+
+/* FC SCREEN */
+#fc-screen { display: none; max-width: 560px; margin: 0 auto; }
+.top-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.home-btn {
+  background: rgba(255,255,255,0.25); border: none; border-radius: 20px;
+  color: #fff; font-size: 0.88rem; font-weight: 700;
+  padding: 8px 16px; cursor: pointer; transition: 0.2s;
+}
+.home-btn:hover { background: rgba(255,255,255,0.42); }
+.screen-title { color: #fff; font-size: 1.2rem; font-weight: 700; flex: 1; text-align: center; }
+
+.fc-wrap { perspective: 900px; margin-bottom: 18px; }
+.fc-card {
+  width: 100%; height: 195px; position: relative;
+  transform-style: preserve-3d; transition: transform 0.55s ease; cursor: pointer;
+}
+.fc-card.flipped { transform: rotateY(180deg); }
+.fc-face {
+  position: absolute; width: 100%; height: 100%; border-radius: 18px;
+  backface-visibility: hidden; display: flex; align-items: center;
+  justify-content: center; padding: 24px; text-align: center;
+}
+.fc-front { background: linear-gradient(135deg, #f093fb, #f5576c); color: #fff; font-size: 1.2rem; font-weight: 700; flex-direction: column; gap: 8px; }
+.fc-front small { font-size: 0.75rem; opacity: 0.8; font-weight: 400; }
+.fc-back  { background: linear-gradient(135deg, #4facfe, #00f2fe); color: #1a1a2e; transform: rotateY(180deg); font-size: 0.97rem; line-height: 1.55; }
+.fc-nav { display: flex; align-items: center; justify-content: space-between; }
+.fc-nav button {
+  padding: 10px 22px; border: none; border-radius: 20px;
+  background: rgba(255,255,255,0.25); color: #fff;
+  font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.2s;
+}
+.fc-nav button:hover { background: rgba(255,255,255,0.42); }
+.fc-counter { color: #e0d7ff; font-size: 0.9rem; }
+
+/* QUIZ SCREEN */
+#quiz-screen { display: none; max-width: 660px; margin: 0 auto; }
+.quiz-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.prog-wrap { flex: 1; margin: 0 14px; }
+.prog-label { color: #e0d7ff; font-size: 0.78rem; text-align: center; margin-bottom: 4px; }
+.prog-bg { background: rgba(255,255,255,0.25); border-radius: 10px; height: 10px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, #43e97b, #38f9d7); border-radius: 10px; transition: width 0.4s; }
+.score-pill { background: rgba(255,255,255,0.25); border-radius: 20px; padding: 8px 16px; color: #fff; font-weight: 700; font-size: 0.88rem; white-space: nowrap; }
+
+.q-card {
+  background: #fff; border-radius: 20px; padding: 30px 28px 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18); min-height: 300px;
+  display: flex; flex-direction: column;
+}
+.q-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.q-badge {
+  background: #f0e6ff; color: #764ba2; border-radius: 20px;
+  padding: 4px 12px; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.5px;
+}
+.q-num { color: #bbb; font-size: 0.8rem; }
+.q-text { font-size: 1.08rem; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; line-height: 1.5; flex: 1; }
+
+/* MC */
+.options { display: flex; flex-direction: column; gap: 9px; }
+.opt-btn {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 15px; border: 2px solid #e8e0f5; border-radius: 12px;
+  background: #faf8ff; cursor: pointer; font-size: 0.93rem; font-weight: 500;
+  color: #2d2d2d; text-align: left; transition: all 0.2s;
+}
+.opt-btn:hover:not(:disabled) { border-color: #b39ddb; background: #f0e6ff; transform: translateX(3px); }
+.opt-btn .let {
+  min-width: 27px; height: 27px; background: #e8e0f5; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.82rem; color: #764ba2; flex-shrink: 0;
+}
+.opt-btn.correct { border-color: #43a047 !important; background: #e8f5e9 !important; color: #1b5e20; }
+.opt-btn.correct .let { background: #43a047; color: #fff; }
+.opt-btn.wrong   { border-color: #e53935 !important; background: #ffebee !important; color: #b71c1c; }
+.opt-btn.wrong .let { background: #e53935; color: #fff; }
+.opt-btn:disabled { cursor: default; }
+
+/* TF */
+.tf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+.tf-btn {
+  padding: 17px; border: 2px solid #e8e0f5; border-radius: 13px;
+  background: #faf8ff; font-size: 1rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s; color: #2d2d2d;
+}
+.tf-btn:hover:not(:disabled) { border-color: #b39ddb; background: #f0e6ff; transform: scale(1.03); }
+.tf-btn.correct { border-color: #43a047 !important; background: #e8f5e9 !important; color: #1b5e20 !important; }
+.tf-btn.wrong   { border-color: #e53935 !important; background: #ffebee !important; color: #b71c1c !important; }
+.tf-btn:disabled { cursor: default; }
+
+/* FILL */
+.fill-wrap { display: flex; flex-direction: column; gap: 10px; }
+.fill-inp {
+  padding: 11px 15px; border: 2px solid #e8e0f5; border-radius: 12px;
+  font-size: 0.97rem; outline: none; background: #faf8ff; transition: 0.2s;
+}
+.fill-inp:focus { border-color: #764ba2; }
+.fill-inp.correct { border-color: #43a047; background: #e8f5e9; }
+.fill-inp.wrong   { border-color: #e53935; background: #ffebee; }
+.check-btn {
+  padding: 11px; background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff; border: none; border-radius: 12px;
+  font-size: 0.93rem; font-weight: 700; cursor: pointer; transition: 0.2s;
+}
+.check-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-2px); }
+.check-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+/* SHORT */
+.short-wrap { display: flex; flex-direction: column; gap: 10px; }
+.short-ta {
+  padding: 11px 15px; border: 2px solid #e8e0f5; border-radius: 12px;
+  font-size: 0.93rem; outline: none; background: #faf8ff;
+  resize: vertical; min-height: 85px; font-family: inherit; transition: 0.2s;
+}
+.short-ta:focus { border-color: #764ba2; }
+.sample-box {
+  padding: 13px 15px; background: #fff8e1; border: 2px solid #ffcc02;
+  border-radius: 12px; font-size: 0.88rem; color: #5d4037; display: none; line-height: 1.5;
+}
+.sample-box strong { color: #764ba2; }
+
+/* FEEDBACK */
+.fb-strip {
+  margin-top: 14px; padding: 11px 15px; border-radius: 11px;
+  font-size: 0.9rem; font-weight: 600; display: none;
+}
+.fb-strip.ok  { background: #e8f5e9; color: #2e7d32; display: block; }
+.fb-strip.bad { background: #ffebee; color: #c62828; display: block; }
+
+/* NAV */
+.nav-row { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; gap: 10px; }
+.prev-btn {
+  padding: 11px 22px; border: none; border-radius: 25px;
+  background: rgba(255,255,255,0.25); color: #fff;
+  font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: 0.2s;
+}
+.prev-btn:hover { background: rgba(255,255,255,0.42); }
+.next-btn {
+  padding: 11px 26px; border: none; border-radius: 25px;
+  background: linear-gradient(135deg, #f093fb, #f5576c); color: #fff;
+  font-size: 0.9rem; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(240,147,251,0.4); transition: 0.2s;
+}
+.next-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.next-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+/* RESULT */
+#result-screen { display: none; max-width: 540px; margin: 0 auto; text-align: center; }
+.res-card { background: #fff; border-radius: 22px; padding: 40px 28px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+.res-score { font-size: 4.5rem; font-weight: 900; color: #764ba2; }
+.res-outof { font-size: 1rem; color: #888; margin-bottom: 8px; }
+.res-msg   { font-size: 1.15rem; font-weight: 700; color: #1a1a2e; margin-bottom: 24px; }
+.res-btns  { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.res-btns button {
+  padding: 12px 26px; border: none; border-radius: 25px;
+  font-size: 0.93rem; font-weight: 700; cursor: pointer; transition: 0.2s;
+}
+.btn-retry { background: linear-gradient(135deg, #f093fb, #f5576c); color: #fff; }
+.btn-home  { background: #f0e6ff; color: #764ba2; }
+
+/* CONFETTI */
+.cp { position: fixed; width: 10px; height: 10px; border-radius: 2px; pointer-events: none; z-index: 9999; animation: cfall 3.5s ease-in forwards; }
+@keyframes cfall { 0% { transform: translateY(-30px) rotate(0); opacity: 1; } 100% { transform: translateY(105vh) rotate(720deg); opacity: 0; } }
+@keyframes sparkle { 0%,100%{box-shadow:none} 50%{box-shadow:0 0 0 6px rgba(240,147,251,0.35),0 0 0 12px rgba(240,147,251,0.15)} }
+.sparkle { animation: sparkle 0.5s ease; }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home-screen">
+  <h1>🏥 Health Chapter 7</h1>
+  <p class="subtitle">Sections 7.2 · 7.3 · 7.4 · 7.5 &nbsp;|&nbsp; Grade 4</p>
+  <div class="mode-grid">
+    <div class="mode-card" onclick="startMode('fc')">
+      <div class="icon">🃏</div>
+      <div class="title">Flashcards</div>
+      <div class="desc">35 vocab terms</div>
+    </div>
+    <div class="mode-card" onclick="startMode('mc')">
+      <div class="icon">📝</div>
+      <div class="title">Multiple Choice</div>
+      <div class="desc">30 questions</div>
+    </div>
+    <div class="mode-card" onclick="startMode('tf')">
+      <div class="icon">✅</div>
+      <div class="title">True or False</div>
+      <div class="desc">20 questions</div>
+    </div>
+    <div class="mode-card" onclick="startMode('fill')">
+      <div class="icon">✏️</div>
+      <div class="title">Fill in the Blank</div>
+      <div class="desc">15 questions</div>
+    </div>
+  </div>
+  <div class="mode-grid" style="grid-template-columns:1fr;">
+    <div class="mode-card" onclick="startMode('short')">
+      <div class="icon">💬</div>
+      <div class="title">Short Answer</div>
+      <div class="desc">15 questions · see sample answers</div>
+    </div>
+  </div>
+</div>
+
+<!-- FLASHCARDS -->
+<div id="fc-screen">
+  <div class="top-row">
+    <button class="home-btn" onclick="goHome()">🏠 Home</button>
+    <span class="screen-title">🃏 Flashcards</span>
+  </div>
+  <div class="fc-wrap">
+    <div class="fc-card" id="fc-card" onclick="flipFC()">
+      <div class="fc-face fc-front"><span id="fc-term"></span><small>tap to flip</small></div>
+      <div class="fc-face fc-back"  id="fc-back"></div>
+    </div>
+  </div>
+  <div class="fc-nav">
+    <button onclick="moveFC(-1)">← Prev</button>
+    <span class="fc-counter" id="fc-counter"></span>
+    <button onclick="moveFC(1)">Next →</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz-screen">
+  <div class="quiz-topbar">
+    <button class="home-btn" onclick="goHome()">🏠 Home</button>
+    <div class="prog-wrap">
+      <div class="prog-label" id="prog-label"></div>
+      <div class="prog-bg"><div class="prog-fill" id="prog-fill"></div></div>
+    </div>
+    <div class="score-pill" id="score-pill">⭐ 0</div>
+  </div>
+  <div class="q-card">
+    <div class="q-meta">
+      <span class="q-badge" id="q-badge"></span>
+      <span class="q-num" id="q-num"></span>
+    </div>
+    <div class="q-text" id="q-text"></div>
+    <div id="answer-area"></div>
+    <div class="fb-strip" id="fb-strip"></div>
+  </div>
+  <div class="nav-row">
+    <button class="prev-btn" onclick="prevQ()">← Prev</button>
+    <button class="next-btn" id="next-btn" onclick="nextQ()" disabled>Next →</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result-screen">
+  <div class="res-card">
+    <div class="res-score" id="res-score"></div>
+    <div class="res-outof" id="res-outof"></div>
+    <div class="res-msg"   id="res-msg"></div>
+    <div class="res-btns">
+      <button class="btn-retry" onclick="retryMode()">🔄 Try Again</button>
+      <button class="btn-home"  onclick="goHome()">🏠 Home</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────
+
+const FC = [
+  {t:"Aware",        d:"Knowing what is happening around you and paying attention to your surroundings."},
+  {t:"Alert",        d:"Being ready and watching carefully for any danger or unusual activity."},
+  {t:"Boundaries",   d:"Personal limits about what is okay and not okay for someone to do to your body."},
+  {t:"Trusted Adult",d:"A safe adult who looks out for your best interest, does not ask children to keep secrets, and asks other adults—not children—for help."},
+  {t:"First Aid",    d:"Emergency care given to a sick or injured person before trained medical help arrives."},
+  {t:"Medical Emergency",d:"An illness or injury that requires immediate medical care."},
+  {t:"Strain",       d:"An injury where a muscle or tendon is pulled or stretched."},
+  {t:"Sprain",       d:"An injury where a ligament is stretched or torn, often around a joint."},
+  {t:"Trachea",      d:"The airway (windpipe) that carries air to the lungs; can be blocked during choking."},
+  {t:"Heimlich Maneuver",d:"A first-aid technique using abdominal thrusts to clear a blocked airway in a choking person."},
+  {t:"Poison",       d:"Any substance that can cause illness, harm, or death if it enters the body."},
+  {t:"Shock",        d:"A dangerous condition from a sudden loss of blood flow; skin may become cold or pale."},
+  {t:"Epidermis",    d:"The outer layer of skin; affected in a first-degree burn."},
+  {t:"Dermis",       d:"The second layer of skin beneath the epidermis; affected in a second-degree burn."},
+  {t:"Hypodermis",   d:"The deepest layer of skin; affected in a third-degree burn (a medical emergency)."},
+  {t:"Adolescence",  d:"The transition period between childhood and adulthood, when puberty occurs."},
+  {t:"Puberty",      d:"The physical and emotional changes that happen during adolescence, caused by hormones."},
+  {t:"Hormones",     d:"Chemical messengers in the body that control growth and physical changes during puberty."},
+  {t:"Hygiene",      d:"Cleanliness habits that help prevent disease, such as washing your face and brushing teeth."},
+  {t:"Perspiration", d:"Sweat produced by sweat glands in the skin."},
+  {t:"Acne",         d:"Pimples that occur when oil, bacteria, and dead skin cells clog pores in the skin."},
+  {t:"Follicles",    d:"Small structures in the skin that produce and hold hair."},
+  {t:"Enamel",       d:"The hard outer layer of a tooth; the hardest substance in the human body."},
+  {t:"Dentin",       d:"The layer beneath the enamel in a tooth."},
+  {t:"Pulp",         d:"The soft tissue in the center of a tooth containing nerves and blood vessels."},
+  {t:"Plaque",       d:"A harmful film of bacteria that forms on teeth and can damage enamel."},
+  {t:"Dental Caries",d:"The medical term for cavities — damage to teeth caused by plaque and acid."},
+  {t:"Athlete's Foot",d:"A fungal infection of the feet prevented by keeping feet clean and dry."},
+  {t:"Addiction",    d:"A controlling habit that changes brain function and makes it very hard to stop using a substance."},
+  {t:"Substance Abuse",d:"The uncontrolled use of addictive or harmful substances (also called drug abuse)."},
+  {t:"Limbic System",d:"The area of the brain that controls emotions and physical needs; affected by drugs."},
+  {t:"Peer Pressure",d:"Feeling pressure to act like others around you in order to fit in or be accepted."},
+  {t:"Nicotine",     d:"An addictive substance found in tobacco products such as cigarettes."},
+  {t:"Second-hand Smoke",d:"Harmful smoke from cigarettes breathed in by people nearby."},
+  {t:"Support System",d:"Family and friends who encourage you to make good choices and stay strong."},
+];
+
+const MC = [
+  {s:"7.2",q:"What should you do if you get lost in a store?",o:["Leave the store immediately","Stay and ask a store employee or police officer","Call a friend","Walk home alone"],a:1},
+  {s:"7.2",q:"If a stranger tells you that your parents already gave permission to go with them, you should:",o:["Believe the stranger","Go if they seem nice","Not believe them and find a trusted adult","Say yes and tell your parents later"],a:2},
+  {s:"7.2",q:"What should you do if someone tries to take you?",o:["Stay calm and be quiet","Scream, kick, fight, and yell 'This is not my mom/dad!'","Do nothing and wait","Go with them to stay safe"],a:1},
+  {s:"7.2",q:"Which of these is something a SAFE adult would do?",o:["Ask a child to keep a secret from parents","Ask children to help with adult problems","Ask other adults for help, not children","Tell a child not to tell their parents"],a:2},
+  {s:"7.2",q:"What should you do if you find a gun?",o:["Pick it up carefully","Show it to friends","Leave the area and tell an adult immediately","Take it home for safety"],a:2},
+  {s:"7.2",q:"What personal information should you NEVER share online?",o:["Your favourite colour","Your phone number, address, or age","Your favourite sports team","Your opinion on a movie"],a:1},
+  {s:"7.2",q:"If someone online makes you feel uncomfortable, you should:",o:["Keep using the computer","Tell a trusted adult right away","Just block the person","Share your phone number so they stop"],a:1},
+  {s:"7.2",q:"If someone touches you in a way that makes you uncomfortable, you should:",o:["Stay quiet and do nothing","Yell, run away, and tell a trusted adult","Tell only your best friend","Wait and see if it happens again"],a:1},
+  {s:"7.2",q:"Why is it important to memorize important phone numbers?",o:["To talk to friends","In case of an emergency when you need to reach a trusted adult","To call stores","To show your teacher"],a:1},
+  {s:"7.2",q:"You should never go anywhere without:",o:["Your backpack","Your parents' permission","A phone","A friend"],a:1},
+  {s:"7.3",q:"What is first aid?",o:["Surgery in a hospital","Emergency care given before trained help arrives","A type of doctor","A way to prevent illness"],a:1},
+  {s:"7.3",q:"What does RICE stand for?",o:["Run, Ice, Cover, Elevate","Rest, Ice, Compression, Elevation","Relax, Inject, Cool, Elevate","Rest, Inflate, Compress, Extend"],a:1},
+  {s:"7.3",q:"A first-degree burn affects which layer of skin?",o:["Dermis only","Hypodermis","Epidermis only","All three layers"],a:2},
+  {s:"7.3",q:"What is the universal sign for choking?",o:["Waving both arms","Pointing to the mouth","Hands placed at the neck","Falling to the ground"],a:2},
+  {s:"7.3",q:"Which type of burn is a medical emergency requiring 9-1-1?",o:["First-degree","Second-degree","Third-degree","Sunburn"],a:2},
+  {s:"7.3",q:"How should you control bleeding?",o:["Pour cold water on it","Apply direct pressure with a clean cloth or gauze","Tie a rope tightly above it","Leave it alone"],a:1},
+  {s:"7.3",q:"What should you do if a choking person CAN still cough?",o:["Use Heimlich right away","Give back blows immediately","Encourage them to keep coughing","Call 9-1-1 immediately"],a:2},
+  {s:"7.3",q:"What should you do if you suspect someone has been poisoned?",o:["Give them water and rest","Call 9-1-1 or Poison Control and save the container","Wait to see if they get better","Give them food"],a:1},
+  {s:"7.3",q:"What is a symptom of shock?",o:["Fever and sweating","Skin becoming cold or pale","Redness and blisters","A blocked airway"],a:1},
+  {s:"7.3",q:"Which injury type is ALWAYS a medical emergency?",o:["A strain","A sprain","A first-degree burn","A neck or spine injury"],a:3},
+  {s:"7.4",q:"What causes acne?",o:["Not drinking enough water","Oil, bacteria, and dead skin clogging pores","Eating too much sugar","Not enough sleep"],a:1},
+  {s:"7.4",q:"If a permanent tooth falls out, where should you put it?",o:["In water","In juice","In milk","In a dry container"],a:2},
+  {s:"7.4",q:"How does plaque damage teeth?",o:["By making teeth yellow","Plaque and sugar create acid that damages enamel","By blocking the root","By spreading person to person"],a:1},
+  {s:"7.4",q:"How is athlete's foot prevented?",o:["Sharing towels and socks","Taking antibiotics","Keeping feet clean and dry","Washing feet once a week"],a:2},
+  {s:"7.4",q:"How do lice spread?",o:["Through the air","By sharing combs, brushes, hats, or pillows","Through water","By touching hands"],a:1},
+  {s:"7.5",q:"What is the limbic system?",o:["Part of the heart","The area of the brain controlling emotions and physical needs","The outer layer of skin","The windpipe"],a:1},
+  {s:"7.5",q:"What substance in tobacco makes it addictive?",o:["Carbon monoxide","Tar","Nicotine","Alcohol"],a:2},
+  {s:"7.5",q:"What is peer pressure?",o:["Pressure from teachers","Feeling pressure to act like others to be accepted","Physical pressure on the body","Pressure from parents"],a:1},
+  {s:"7.5",q:"How does addiction start?",o:["Suddenly with no warning","By trying a harmful substance","Only in adults","Through watching others"],a:1},
+  {s:"7.5",q:"Which of the following is NOT a way to say no to drugs?",o:["Pray","Choose good friends","Walk away","Try it just once to seem cool"],a:3},
+];
+
+const TF = [
+  {s:"7.2",q:"If you are lost in a store, you should leave and look for your parents outside.",a:false},
+  {s:"7.2",q:"A trusted adult will ask children to keep secrets from their parents.",a:false},
+  {s:"7.2",q:"It is okay to ride with someone who has been drinking alcohol.",a:false},
+  {s:"7.2",q:"You should never touch a firearm — leave the area and tell an adult.",a:true},
+  {s:"7.2",q:"Safe adults ask other adults for help, not children.",a:true},
+  {s:"7.3",q:"A sprain is an injury to a muscle or tendon.",a:false},
+  {s:"7.3",q:"Third-degree burns are medical emergencies that require calling 9-1-1.",a:true},
+  {s:"7.3",q:"You should move someone with a neck or spine injury as quickly as possible.",a:false},
+  {s:"7.3",q:"When calling 9-1-1, you should give your name, address, and explain the emergency.",a:true},
+  {s:"7.3",q:"A second-degree burn only affects the epidermis.",a:false},
+  {s:"7.3",q:"If a choking person can still cough, you should encourage them to keep coughing.",a:true},
+  {s:"7.4",q:"Enamel is the hardest substance in the human body.",a:true},
+  {s:"7.4",q:"You should hold a knocked-out tooth by its root when picking it up.",a:false},
+  {s:"7.4",q:"Acne is caused by oil, bacteria, and dead skin cells clogging pores.",a:true},
+  {s:"7.4",q:"You should brush your teeth once a week to keep them healthy.",a:false},
+  {s:"7.4",q:"Athlete's foot is caused by a virus.",a:false},
+  {s:"7.5",q:"Alcohol is considered a drug.",a:true},
+  {s:"7.5",q:"Smoking can cause cancer.",a:true},
+  {s:"7.5",q:"Second-hand smoke is harmless to people nearby.",a:false},
+  {s:"7.5",q:"Addiction often requires professional help to overcome.",a:true},
+];
+
+const FILL = [
+  {s:"7.2",q:"If a stranger makes you feel uncomfortable, leave and tell a ___________.",a:"trusted adult"},
+  {s:"7.2",q:"If you cannot move away from danger, you should ___________, stay quiet, and follow adult instructions.",a:"hide"},
+  {s:"7.3",q:"The Heimlich maneuver uses ___________ thrusts to help a choking person.",a:"abdominal"},
+  {s:"7.3",q:"The ___________ is the airway that carries air to the lungs.",a:"trachea"},
+  {s:"7.3",q:"To help someone in shock, cover them with a ___________ while waiting for help.",a:"blanket"},
+  {s:"7.3",q:"The four steps of RICE are Rest, Ice, ___________, and Elevation.",a:"compression"},
+  {s:"7.3",q:"A ___________ burn affects the epidermis and dermis and causes blisters.",a:"second-degree"},
+  {s:"7.4",q:"___________ is the transition period between childhood and adulthood.",a:"adolescence"},
+  {s:"7.4",q:"Sweat produced by sweat glands in the skin is called ___________.",a:"perspiration"},
+  {s:"7.4",q:"The medical term for cavities is dental ___________.",a:"caries"},
+  {s:"7.4",q:"Hair grows from structures in the skin called ___________.",a:"follicles"},
+  {s:"7.4",q:"A knocked-out permanent tooth should be placed in ___________ until you see a dentist.",a:"milk"},
+  {s:"7.5",q:"___________ is an addictive substance found in tobacco.",a:"nicotine"},
+  {s:"7.5",q:"The area of the brain that controls emotions and physical needs is the ___________ system.",a:"limbic"},
+  {s:"7.5",q:"Family and friends who encourage good choices are called your ___________ system.",a:"support"},
+];
+
+const SHORT = [
+  {s:"7.2",q:"What are two things you should do if someone tries to abduct you?",a:"Scream, kick, fight, and yell 'This is not my mom!' or 'This is not my dad!' to alert people nearby."},
+  {s:"7.2",q:"Name two things a SAFE adult will NOT do.",a:"A safe adult will not ask children to keep secrets from parents, and will not ask children for help with adult problems."},
+  {s:"7.3",q:"What are three examples of medical emergencies?",a:"Any three of: severe bleeding, choking, poisoning, trouble breathing, seizures, unconsciousness, severe injuries, third-degree burns."},
+  {s:"7.3",q:"Describe what to do when calling 9-1-1.",a:"Give your name and address, explain the emergency clearly, and stay on the phone."},
+  {s:"7.3",q:"What is the difference between a strain and a sprain?",a:"A strain is a pulled or stretched muscle or tendon. A sprain is a stretched or torn ligament, usually around a joint."},
+  {s:"7.3",q:"What should you do if you find a container of poison?",a:"Call 9-1-1 or Poison Control, save the container, and follow the warning label instructions."},
+  {s:"7.4",q:"What causes acne and how can you help prevent it?",a:"Acne is caused by oil, bacteria, and dead skin cells clogging pores. Prevent it by washing your face twice daily."},
+  {s:"7.4",q:"What are the three layers of a tooth, from outside to inside?",a:"Enamel (outer), dentin (middle), and pulp (inner soft tissue with nerves and blood vessels)."},
+  {s:"7.4",q:"Describe what to do if a permanent tooth is knocked out.",a:"Hold it by the crown (not the root), rinse gently, place it in milk, and see a dentist within 30 minutes."},
+  {s:"7.4",q:"How does plaque damage teeth?",a:"Plaque combines with sugar to create acid, which damages the enamel and leads to cavities (dental caries)."},
+  {s:"7.5",q:"What is addiction and why is it hard to overcome?",a:"Addiction is a controlling habit that changes brain function, making it very difficult to stop. It often requires professional help."},
+  {s:"7.5",q:"Why is second-hand smoke harmful?",a:"Second-hand smoke is breathed in by people nearby and contains the same harmful chemicals as smoking directly."},
+  {s:"7.5",q:"Name three ways to say no to drugs or peer pressure.",a:"Any three of: recognize temptation, pray, walk away, tell a trusted adult, choose good friends."},
+  {s:"7.5",q:"What is the difference between a drug and a medicine?",a:"A medicine is a drug that helps the body heal when used properly. Illegal drugs are harmful substances that damage the body and brain."},
+  {s:"7.5",q:"What is peer pressure and how can a support system help?",a:"Peer pressure is feeling forced to act like others to be accepted. A support system of family and friends who encourage good choices helps you stay strong."},
+];
+
+// ── STATE ─────────────────────────────────────────────────────
+let mode = '', qs = [], qi = 0, score = 0, answered = [];
+
+// ── SHOW/HIDE ─────────────────────────────────────────────────
+const SCREENS = ['home-screen','fc-screen','quiz-screen','result-screen'];
+function show(id) { SCREENS.forEach(s => document.getElementById(s).style.display = s===id?'block':'none'); }
+function goHome() { show('home-screen'); }
+
+// ── FLASHCARDS ────────────────────────────────────────────────
+let fci = 0;
+function renderFC() {
+  document.getElementById('fc-card').classList.remove('flipped');
+  document.getElementById('fc-term').textContent = FC[fci].t;
+  document.getElementById('fc-back').textContent  = FC[fci].d;
+  document.getElementById('fc-counter').textContent = (fci+1)+' / '+FC.length;
+}
+function flipFC() { document.getElementById('fc-card').classList.toggle('flipped'); }
+function moveFC(d) { fci=(fci+d+FC.length)%FC.length; renderFC(); }
+
+// ── START MODE ────────────────────────────────────────────────
+function startMode(m) {
+  mode = m;
+  if (m==='fc') { fci=0; renderFC(); show('fc-screen'); return; }
+  qs = m==='mc'?MC : m==='tf'?TF : m==='fill'?FILL : SHORT;
+  qi=0; score=0; answered=new Array(qs.length).fill(null);
+  show('quiz-screen');
+  renderQ();
+}
+function retryMode() { startMode(mode); }
+
+// ── RENDER Q ─────────────────────────────────────────────────
+function renderQ() {
+  const q = qs[qi];
+  // progress
+  document.getElementById('prog-label').textContent = 'Question '+(qi+1)+' of '+qs.length;
+  document.getElementById('prog-fill').style.width  = ((qi+1)/qs.length*100)+'%';
+  document.getElementById('score-pill').textContent = '⭐ '+score+' / '+qs.length;
+  // meta
+  document.getElementById('q-badge').textContent = 'Section '+q.s;
+  document.getElementById('q-num').textContent   = (qi+1)+' / '+qs.length;
+  document.getElementById('q-text').textContent  = q.q;
+  // feedback
+  const fb = document.getElementById('fb-strip');
+  fb.className='fb-strip'; fb.textContent='';
+  // next btn
+  const nb = document.getElementById('next-btn');
+  nb.textContent = qi===qs.length-1 ? 'See Results 🏁' : 'Next →';
+  nb.disabled = answered[qi]===null;
+  // rebuild answer area
+  const old = document.getElementById('answer-area');
+  const fresh = document.createElement('div'); fresh.id='answer-area';
+  old.parentNode.replaceChild(fresh, old);
+  if (mode==='mc')    buildMC(q, fresh);
+  if (mode==='tf')    buildTF(q, fresh);
+  if (mode==='fill')  buildFill(q, fresh);
+  if (mode==='short') buildShort(q, fresh);
+  if (answered[qi]!==null) restoreState(q, fresh);
+}
+
+// ── BUILD MC ──────────────────────────────────────────────────
+function buildMC(q, area) {
+  const wrap = document.createElement('div'); wrap.className='options';
+  q.o.forEach((opt,i) => {
+    const b = document.createElement('button');
+    b.className='opt-btn';
+    b.innerHTML=`<span class="let">${'ABCD'[i]}</span>${opt}`;
+    b.onclick=()=>checkMC(i,q);
+    wrap.appendChild(b);
+  });
+  area.appendChild(wrap);
+}
+function checkMC(chosen, q) {
+  if (answered[qi]!==null) return;
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach(b=>b.disabled=true);
+  btns[q.a].classList.add('correct');
+  if (chosen===q.a) {
+    answered[qi]='correct'; score++;
+    showFB(true,'✅ Correct! Great job!');
+    btns[chosen].classList.add('sparkle');
+  } else {
+    answered[qi]='wrong';
+    btns[chosen].classList.add('wrong');
+    showFB(false,'❌ Not quite. The correct answer is highlighted in green.');
+  }
+  updateScore();
+  document.getElementById('next-btn').disabled=false;
+}
+
+// ── BUILD TF ──────────────────────────────────────────────────
+function buildTF(q, area) {
+  const wrap=document.createElement('div'); wrap.className='tf-row';
+  ['✅ TRUE','❌ FALSE'].forEach((lbl,i)=>{
+    const b=document.createElement('button'); b.className='tf-btn';
+    b.textContent=lbl; b.onclick=()=>checkTF(i===0,q);
+    wrap.appendChild(b);
+  });
+  area.appendChild(wrap);
+}
+function checkTF(chosen, q) {
+  if (answered[qi]!==null) return;
+  const btns=document.querySelectorAll('.tf-btn');
+  btns.forEach(b=>b.disabled=true);
+  const ci=q.a?0:1;
+  btns[ci].classList.add('correct');
+  if (chosen===q.a) {
+    answered[qi]='correct'; score++;
+    showFB(true,'✅ Correct!');
+    btns[ci].classList.add('sparkle');
+  } else {
+    answered[qi]='wrong';
+    btns[chosen?0:1].classList.add('wrong');
+    showFB(false,'❌ The answer is '+(q.a?'TRUE':'FALSE')+'.');
+  }
+  updateScore();
+  document.getElementById('next-btn').disabled=false;
+}
+
+// ── BUILD FILL ────────────────────────────────────────────────
+function buildFill(q, area) {
+  const wrap=document.createElement('div'); wrap.className='fill-wrap';
+  const inp=document.createElement('input');
+  inp.type='text'; inp.className='fill-inp'; inp.id='fill-inp';
+  inp.placeholder='Type your answer here...';
+  const btn=document.createElement('button');
+  btn.className='check-btn'; btn.textContent='Check Answer ✓';
+  btn.onclick=()=>checkFill(q,inp,btn);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')checkFill(q,inp,btn);});
+  wrap.appendChild(inp); wrap.appendChild(btn);
+  area.appendChild(wrap);
+  setTimeout(()=>inp.focus(),50);
+}
+function checkFill(q, inp, btn) {
+  if (answered[qi]!==null) return;
+  const user=inp.value.trim().toLowerCase(), ans=q.a.toLowerCase();
+  inp.disabled=true; btn.disabled=true;
+  if (user && (user===ans || (ans.includes(user)&&user.length>3) || user.includes(ans))) {
+    answered[qi]='correct'; score++;
+    inp.classList.add('correct');
+    showFB(true,'✅ Correct!');
+  } else {
+    answered[qi]='wrong';
+    inp.classList.add('wrong');
+    showFB(false,'❌ The answer is: '+q.a);
+  }
+  updateScore();
+  document.getElementById('next-btn').disabled=false;
+}
+
+// ── BUILD SHORT ───────────────────────────────────────────────
+function buildShort(q, area) {
+  const wrap=document.createElement('div'); wrap.className='short-wrap';
+  const ta=document.createElement('textarea');
+  ta.className='short-ta'; ta.id='short-ta';
+  ta.placeholder='Write your answer here...';
+  const btn=document.createElement('button');
+  btn.className='check-btn'; btn.textContent='Show Sample Answer 👁';
+  const box=document.createElement('div');
+  box.className='sample-box';
+  box.innerHTML='<strong>📋 Sample Answer:</strong> '+q.a;
+  btn.onclick=()=>{
+    if(answered[qi]!==null)return;
+    answered[qi]='shown'; box.style.display='block';
+    btn.disabled=true;
+    document.getElementById('next-btn').disabled=false;
+  };
+  wrap.appendChild(ta); wrap.appendChild(btn); wrap.appendChild(box);
+  area.appendChild(wrap);
+}
+
+// ── RESTORE ───────────────────────────────────────────────────
+function restoreState(q, area) {
+  const fb=document.getElementById('fb-strip');
+  if (mode==='mc') {
+    const btns=area.querySelectorAll('.opt-btn');
+    btns.forEach(b=>b.disabled=true);
+    btns[q.a].classList.add('correct');
+    if (answered[qi]==='wrong') { btns[q.a].classList.add('correct'); fb.className='fb-strip bad'; fb.textContent='❌ You had this wrong. Correct answer is highlighted.'; }
+    else { fb.className='fb-strip ok'; fb.textContent='✅ You got this one correct!'; }
+  }
+  if (mode==='tf') {
+    const btns=area.querySelectorAll('.tf-btn');
+    btns.forEach(b=>b.disabled=true);
+    btns[q.a?0:1].classList.add('correct');
+    if (answered[qi]==='wrong') { fb.className='fb-strip bad'; fb.textContent='❌ Answer: '+(q.a?'TRUE':'FALSE'); }
+    else { fb.className='fb-strip ok'; fb.textContent='✅ Correct!'; }
+  }
+  if (mode==='fill') {
+    const inp=document.getElementById('fill-inp');
+    if(inp){inp.disabled=true; inp.classList.add(answered[qi]==='correct'?'correct':'wrong'); area.querySelector('.check-btn').disabled=true;}
+    if (answered[qi]==='wrong') { fb.className='fb-strip bad'; fb.textContent='❌ Answer: '+q.a; }
+    else { fb.className='fb-strip ok'; fb.textContent='✅ Correct!'; }
+  }
+  if (mode==='short') {
+    const box=area.querySelector('.sample-box'); if(box)box.style.display='block';
+    const btn=area.querySelector('.check-btn'); if(btn)btn.disabled=true;
+  }
+}
+
+function showFB(ok, msg) {
+  const fb=document.getElementById('fb-strip');
+  fb.className='fb-strip '+(ok?'ok':'bad'); fb.textContent=msg;
+}
+function updateScore() {
+  document.getElementById('score-pill').textContent='⭐ '+score+' / '+qs.length;
+}
+
+// ── PREV / NEXT ───────────────────────────────────────────────
+function prevQ() { if(qi>0){qi--;renderQ();} }
+function nextQ() { if(qi<qs.length-1){qi++;renderQ();}else{showResult();} }
+
+// ── RESULT ────────────────────────────────────────────────────
+function showResult() {
+  show('result-screen');
+  const total=qs.length, pct=Math.round(score/total*100);
+  document.getElementById('res-score').textContent=score;
+  document.getElementById('res-outof').textContent='out of '+total+' ('+pct+'%)';
+  const msgs=['Keep studying — you can do it! 💪','Good effort! Review the sections 📚','Almost there! Nice work 🌟','Great job! 🎉','🏆 PERFECT SCORE! Amazing! ✨'];
+  document.getElementById('res-msg').textContent=msgs[pct===100?4:pct>=80?3:pct>=60?2:pct>=40?1:0];
+  if(pct>=80)confetti();
+}
+
+// ── CONFETTI ──────────────────────────────────────────────────
+function confetti() {
+  const c=['#f093fb','#f5576c','#4facfe','#00f2fe','#43e97b','#ffe066','#ff9f00','#a18cd1'];
+  for(let i=0;i<90;i++){
+    const p=document.createElement('div'); p.className='cp';
+    p.style.cssText=`left:${Math.random()*100}vw;background:${c[Math.floor(Math.random()*c.length)]};animation-delay:${Math.random()*1.5}s;animation-duration:${2+Math.random()*2}s;border-radius:${Math.random()>.5?'50%':'2px'}`;
+    document.body.appendChild(p); setTimeout(()=>p.remove(),5500);
+  }
+}
+</script>
+</body>
+</html>
