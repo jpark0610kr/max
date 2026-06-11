@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Max's Language Quiz · L157–161</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#1a237e; --blue:#1565c0; --sky:#4fc3f7;
+  --yellow:#ffd600; --orange:#ff6d00;
+  --green:#00c853; --red:#f44336;
+  --purple:#7c4dff; --teal:#00bcd4;
+  --pink:#e91e63;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:linear-gradient(160deg,#0d1b6e 0%,#1a237e 50%,#1565c0 100%);
+  min-height:100vh; padding:16px;
+}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:18px;}
+.header h1{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(1.8rem,5vw,3rem);
+  color:var(--yellow);
+  text-shadow:3px 3px 0 rgba(0,0,0,.3);
+  margin-bottom:4px;
+}
+.header p{color:rgba(255,255,255,.8);font-weight:700;font-size:.92rem;}
+
+/* SCORE BAR */
+.score-bar{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-bottom:16px;}
+.chip{
+  background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);
+  border-radius:50px;padding:6px 16px;
+  color:#fff;font-weight:800;font-size:.88rem;
+  display:flex;align-items:center;gap:6px;
+}
+
+/* TABS */
+.tab-wrap{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:14px;}
+.tab{
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.78rem;
+  padding:7px 14px;border-radius:50px;
+  border:2px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);
+  cursor:pointer;transition:all .2s;
+}
+.tab:hover,.tab.active{background:var(--yellow);color:var(--navy);border-color:var(--yellow);transform:translateY(-2px);}
+
+/* PROGRESS */
+.prog-wrap{max-width:700px;margin:0 auto 12px;background:rgba(255,255,255,.15);border-radius:50px;height:9px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--yellow),var(--orange));border-radius:50px;transition:width .5s ease;}
+
+/* CARD */
+.quiz-card{
+  max-width:700px;margin:0 auto 14px;
+  background:#fff;border-radius:22px;padding:26px;
+  box-shadow:0 12px 40px rgba(0,0,0,.3);
+  animation:slideUp .35s ease;
+}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.q-num{font-weight:800;color:#9e9e9e;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;}
+.badges{display:flex;gap:6px;flex-wrap:wrap;}
+.badge{font-size:.68rem;font-weight:800;padding:3px 10px;border-radius:50px;}
+.badge-lesson{background:#e3f2fd;color:var(--navy);}
+.badge-mc{background:var(--purple);color:#fff;}
+.badge-tf{background:var(--orange);color:#fff;}
+.badge-fill{background:var(--teal);color:#fff;}
+.badge-match{background:var(--green);color:#fff;}
+
+.question{font-size:1.08rem;font-weight:700;color:var(--navy);line-height:1.55;margin-bottom:15px;}
+.hint-box{background:#fff8e1;border-left:4px solid var(--yellow);border-radius:8px;padding:9px 13px;margin-bottom:13px;font-size:.84rem;color:#5d4037;font-weight:600;}
+
+/* OPTIONS */
+.options{display:flex;flex-direction:column;gap:9px;}
+.opt{
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:.96rem;
+  padding:12px 16px;border-radius:13px;border:2.5px solid #e0e0e0;
+  background:#fff;cursor:pointer;text-align:left;
+  transition:all .18s;color:#333;
+  display:flex;align-items:center;gap:11px;
+}
+.opt-letter{
+  width:27px;height:27px;border-radius:50%;
+  background:#f5f5f5;display:flex;align-items:center;justify-content:center;
+  font-size:.76rem;font-weight:800;color:#757575;flex-shrink:0;transition:all .18s;
+}
+.opt:hover:not(:disabled){border-color:var(--sky);background:#e3f2fd;transform:translateX(4px);}
+.opt:hover:not(:disabled) .opt-letter{background:var(--sky);color:#fff;}
+.opt.correct{border-color:var(--green);background:#e8f5e9;color:#1b5e20;}
+.opt.correct .opt-letter{background:var(--green);color:#fff;}
+.opt.wrong{border-color:var(--red);background:#ffebee;color:#b71c1c;}
+.opt.wrong .opt-letter{background:var(--red);color:#fff;}
+.opt.reveal{border-color:var(--green);background:#e8f5e9;color:#1b5e20;animation:pulse .4s;}
+.opt.reveal .opt-letter{background:var(--green);color:#fff;}
+.opt:disabled{cursor:default;}
+
+/* T/F */
+.tf-row{display:flex;gap:12px;}
+.tf-btn{
+  flex:1;font-family:'Nunito',sans-serif;font-weight:800;font-size:1.05rem;
+  padding:14px;border-radius:13px;border:2.5px solid #e0e0e0;
+  background:#fff;cursor:pointer;transition:all .18s;color:#333;
+}
+.tf-btn:hover:not(:disabled){transform:translateY(-3px);}
+.tf-btn.true-btn:hover:not(:disabled){border-color:var(--green);background:#e8f5e9;color:#1b5e20;}
+.tf-btn.false-btn:hover:not(:disabled){border-color:var(--red);background:#ffebee;color:#b71c1c;}
+.tf-btn.correct{border-color:var(--green);background:#e8f5e9;color:#1b5e20;}
+.tf-btn.wrong{border-color:var(--red);background:#ffebee;color:#b71c1c;}
+.tf-btn:disabled{cursor:default;}
+
+/* FILL */
+.fill-wrap{display:flex;flex-direction:column;gap:8px;}
+.fill-input{
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;
+  padding:12px 15px;border:2.5px solid #e0e0e0;border-radius:13px;
+  outline:none;color:var(--navy);transition:border-color .2s;
+}
+.fill-input:focus{border-color:var(--sky);}
+.fill-input.correct{border-color:var(--green);background:#e8f5e9;}
+.fill-input.wrong{border-color:var(--red);background:#ffebee;}
+
+/* MATCH */
+.match-container{display:flex;gap:14px;flex-wrap:wrap;}
+.match-col{flex:1;min-width:180px;display:flex;flex-direction:column;gap:7px;}
+.match-col-title{font-size:.72rem;font-weight:800;color:#9e9e9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+.match-item{
+  padding:10px 13px;border-radius:11px;border:2.5px solid #e0e0e0;
+  font-weight:700;font-size:.88rem;cursor:pointer;transition:all .18s;
+  background:#fff;color:#333;
+}
+.match-item.selected{border-color:var(--purple);background:#ede7f6;color:#4a148c;}
+.match-item.matched-correct{border-color:var(--green);background:#e8f5e9;color:#1b5e20;cursor:default;}
+.match-item.matched-wrong{border-color:var(--red);background:#ffebee;color:#b71c1c;}
+
+/* FEEDBACK */
+.feedback{
+  margin-top:12px;padding:11px 14px;border-radius:11px;
+  font-weight:700;font-size:.9rem;display:none;
+  align-items:flex-start;gap:8px;line-height:1.4;
+}
+.feedback.show{display:flex;}
+.feedback.correct{background:#e8f5e9;color:#2e7d32;}
+.feedback.wrong{background:#ffebee;color:#c62828;}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:9px;margin-top:15px;flex-wrap:wrap;}
+.btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:.93rem;padding:11px 22px;border-radius:50px;border:none;cursor:pointer;transition:all .2s;}
+.btn-primary{background:var(--navy);color:#fff;flex:1;}
+.btn-primary:hover{background:#283593;transform:translateY(-2px);}
+.btn-primary:disabled{background:#bdbdbd;cursor:default;transform:none;}
+.btn-skip{background:#f5f5f5;color:#757575;}
+.btn-skip:hover{background:#eee;}
+
+/* RESULT */
+.result-card{
+  max-width:700px;margin:0 auto;background:#fff;border-radius:22px;
+  padding:38px 26px;text-align:center;
+  box-shadow:0 12px 40px rgba(0,0,0,.3);
+  display:none;animation:bounceIn .5s ease;
+}
+.result-card.show{display:block;}
+.result-emoji{font-size:4.5rem;margin-bottom:10px;}
+.result-title{font-family:'Fredoka One',cursive;font-size:2.3rem;color:var(--navy);margin-bottom:6px;}
+.result-score{font-size:1.05rem;color:#555;font-weight:700;margin-bottom:20px;}
+.result-chips{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;}
+.rchip{padding:8px 18px;border-radius:50px;font-weight:800;font-size:.86rem;}
+.rchip-c{background:#e8f5e9;color:#2e7d32;}
+.rchip-w{background:#ffebee;color:#c62828;}
+.btn-again{background:var(--yellow);color:var(--navy);padding:13px 38px;font-size:1.02rem;}
+.btn-again:hover{transform:scale(1.05);}
+
+/* REVIEW */
+.review-wrap{max-width:700px;margin:0 auto 20px;display:none;}
+.review-wrap.show{display:block;}
+.review-title{font-family:'Fredoka One',cursive;color:var(--yellow);font-size:1.35rem;text-align:center;margin-bottom:11px;}
+.review-item{background:#fff;border-radius:13px;padding:13px 17px;margin-bottom:8px;border-left:5px solid var(--red);}
+.ri-q{font-weight:700;color:var(--navy);font-size:.88rem;margin-bottom:4px;}
+.ri-you{color:var(--red);font-size:.8rem;margin-bottom:2px;}
+.ri-ans{color:#2e7d32;font-size:.8rem;font-weight:800;}
+
+@keyframes slideUp{from{transform:translateY(18px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+@keyframes bounceIn{0%{transform:scale(.8);opacity:0;}70%{transform:scale(1.05);}100%{transform:scale(1);opacity:1;}}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.02);}}
+
+@media(max-width:480px){
+  body{padding:10px;}
+  .quiz-card{padding:18px;}
+  .question{font-size:.98rem;}
+  .tf-row{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>✏️ Language Review</h1>
+  <p>Lessons 157–161 · Language 4</p>
+</div>
+
+<div class="score-bar">
+  <div class="chip">✅ <span id="c-count">0</span> Correct</div>
+  <div class="chip">❌ <span id="w-count">0</span> Wrong</div>
+  <div class="chip">🏆 <span id="pct">0</span>%</div>
+  <div class="chip">📊 <span id="prog-txt">0/0</span></div>
+</div>
+
+<div class="tab-wrap" id="tabs"></div>
+<div class="prog-wrap"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+
+<div class="quiz-card" id="quiz-card">
+  <div class="q-meta">
+    <span class="q-num" id="q-num">Q 1</span>
+    <div class="badges">
+      <span class="badge badge-lesson" id="badge-lesson">L157</span>
+      <span class="badge" id="badge-type">MC</span>
+    </div>
+  </div>
+  <div class="question" id="question"></div>
+  <div class="hint-box" id="hint-box" style="display:none"></div>
+  <div id="answer-area"></div>
+  <div class="feedback" id="feedback"></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" id="check-btn" onclick="checkAnswer()" disabled>Check ✓</button>
+    <button class="btn btn-skip" onclick="skipQ()">Skip →</button>
+  </div>
+</div>
+
+<div class="result-card" id="result-card">
+  <div class="result-emoji" id="r-emoji">🎉</div>
+  <div class="result-title" id="r-title">Amazing!</div>
+  <div class="result-score" id="r-score"></div>
+  <div class="result-chips">
+    <div class="rchip rchip-c" id="r-c"></div>
+    <div class="rchip rchip-w" id="r-w"></div>
+  </div>
+  <button class="btn btn-again" onclick="restart()">🔄 Play Again</button>
+</div>
+
+<div class="review-wrap" id="review-wrap">
+  <div class="review-title">📝 Review Wrong Answers</div>
+  <div id="review-list"></div>
+</div>
+
+<script>
+/* ══════════════════════════════════
+   QUESTION BANK
+══════════════════════════════════ */
+const bank = [
+
+  /* ── L157 Interjections ── */
+  { l:157, type:"mc",
+    q:"What is an INTERJECTION?",
+    opts:["A word that describes a verb","A word that shows emotion, usually at the beginning of a sentence","A word that joins two sentences","A word that describes a noun"],
+    ans:1 },
+  { l:157, type:"mc",
+    q:"A MILD interjection is followed by a ___.",
+    opts:["period","exclamation point","comma","question mark"],
+    ans:2,
+    hint:"Oh, this salsa is spicy. ← mild" },
+  { l:157, type:"mc",
+    q:"A STRONG interjection is followed by a ___.",
+    opts:["comma","period","question mark","exclamation point"],
+    ans:3,
+    hint:"Ouch! My mouth is burning! ← strong" },
+  { l:157, type:"tf",
+    q:"TRUE or FALSE: An interjection is usually found at the END of a sentence.",
+    ans:false,
+    hint:"Interjections usually come at the BEGINNING." },
+  { l:157, type:"mc",
+    q:"Which word is the interjection in: 'Wow! Mt. Rushmore's sculpture took fourteen years to complete!'",
+    opts:["Mt.","Rushmore's","Wow","sculpture"],
+    ans:2 },
+  { l:157, type:"mc",
+    q:"'Ouch___ the stove is still hot.' What punctuation follows the interjection?",
+    opts:["comma ,","exclamation point !","period .","question mark ?"],
+    ans:0,
+    hint:"Is this mild or strong emotion?" },
+  { l:157, type:"mc",
+    q:"'Wow___ did you see that long home run?' What punctuation follows the interjection?",
+    opts:["comma ,","period .","exclamation point !","nothing"],
+    ans:2,
+    hint:"Exclamation about a home run = strong emotion!" },
+  { l:157, type:"fill",
+    q:"'___, the mountain was named for a young lawyer from New York City.' What is the interjection? (one word)",
+    ans:"well",
+    hint:"It shows mild surprise/thoughtfulness." },
+  { l:157, type:"tf",
+    q:"TRUE or FALSE: In 'Oh, the mountains are beautiful!', the word 'Oh' is an interjection.",
+    ans:true },
+  { l:157, type:"mc",
+    q:"Which abbreviation is used for interjection when marking a sentence?",
+    opts:["Int.","Inj.","IT","I"],
+    ans:0 },
+  { l:157, type:"mc",
+    q:"In 'Visit the Black Hills of South Dakota and see Mt. Rushmore.', what is the bold word 'Visit'?",
+    opts:["Noun","Adjective","Verb","Interjection"],
+    ans:2,
+    hint:"'Visit' is telling you to do something — what part of speech is that?" },
+  { l:157, type:"tf",
+    q:"TRUE or FALSE: 'through' in 'You will travel through the Badlands' is a preposition.",
+    ans:true,
+    hint:"'Through' shows the relationship between 'travel' and 'the Badlands'." },
+  { l:157, type:"mc",
+    q:"In 'Aren't you thankful for the creativity of God?', what is 'thankful'?",
+    opts:["Verb","Noun","Adverb","Adjective"],
+    ans:3,
+    hint:"'thankful' describes the subject 'you' — what kind of word is that?" },
+  { l:157, type:"match",
+    q:"Match each interjection to its emotion strength + punctuation.",
+    pairs:[
+      { left:"Oh,",   right:"mild — comma" },
+      { left:"Ouch!", right:"strong — exclamation point" },
+      { left:"Wow!",  right:"strong — exclamation point" },
+      { left:"Well,", right:"mild — comma" },
+    ]
+  },
+
+  /* ── L158 Prepositional Phrases / General Review ── */
+  { l:158, type:"mc",
+    q:"What is a PREPOSITIONAL PHRASE?",
+    opts:[
+      "A group of words starting with a preposition and ending with its object",
+      "A group of words that contains a subject and verb",
+      "A word that shows emotion",
+      "A verb that links the subject to a predicate"
+    ],
+    ans:0,
+    hint:"Example: (in the United States) — starts with 'in', ends with 'States'" },
+  { l:158, type:"mc",
+    q:"In 'In some state fair competitions in the United States, artists create sculptures from butter.', how many prepositional phrases are there?",
+    opts:["1","2","3","4"],
+    ans:2,
+    hint:"(In some state fair competitions) (in the United States) (from butter)" },
+  { l:158, type:"tf",
+    q:"TRUE or FALSE: The OBJECT of the preposition is the noun or pronoun that follows the preposition.",
+    ans:true,
+    hint:"'in the barn' → 'barn' is the object of the preposition 'in'" },
+  { l:158, type:"fill",
+    q:"Complete: 'A butter sculpture must be made ___ very cold butter.' (preposition)",
+    ans:"of",
+    hint:"made ___ butter — what preposition fits?" },
+  { l:158, type:"mc",
+    q:"In 'Many artists dip their hands in icy water.', the prepositional phrase is:",
+    opts:["Many artists","dip their hands","in icy water","icy water"],
+    ans:2 },
+  { l:158, type:"mc",
+    q:"In 'Lillian did not forget her homework at home.', which words are the prepositional phrase?",
+    opts:["Lillian did not","forget her homework","at home","not forget"],
+    ans:2 },
+  { l:158, type:"tf",
+    q:"TRUE or FALSE: Prepositional phrases are included when diagramming the main sentence parts.",
+    ans:false,
+    hint:"In diagramming, you set aside prepositional phrases and diagram the rest." },
+  { l:158, type:"mc",
+    q:"In 'The man in the blue suit is Carlos's dad.', what is the subject?",
+    opts:["blue suit","man","Carlos's","dad"],
+    ans:1,
+    hint:"'in the blue suit' is a prepositional phrase — remove it, then find the subject." },
+  { l:158, type:"match",
+    q:"Match each preposition to a sample phrase.",
+    pairs:[
+      { left:"in",   right:"in the barn" },
+      { left:"from", right:"from butter" },
+      { left:"of",   right:"of cold butter" },
+      { left:"at",   right:"at home" },
+    ]
+  },
+
+  /* ── L159 Sentence Types + Prepositional Phrases ── */
+  { l:159, type:"mc",
+    q:"What abbreviation is used for a DECLARATIVE sentence?",
+    opts:["Imp.","Int.","Exc.","Dec."],
+    ans:3,
+    hint:"It makes a statement." },
+  { l:159, type:"mc",
+    q:"What abbreviation is used for an INTERROGATIVE sentence?",
+    opts:["Dec.","Int.","Exc.","Imp."],
+    ans:1,
+    hint:"It asks a question." },
+  { l:159, type:"mc",
+    q:"What abbreviation is used for an EXCLAMATORY sentence?",
+    opts:["Int.","Exc.","Dec.","Imp."],
+    ans:1,
+    hint:"It shows strong emotion." },
+  { l:159, type:"mc",
+    q:"What abbreviation is used for an IMPERATIVE sentence?",
+    opts:["Exc.","Dec.","Imp.","Int."],
+    ans:2,
+    hint:"It gives a command or request." },
+  { l:159, type:"mc",
+    q:"'Would you like to make clay sculpture flowers?' — what type of sentence is this?",
+    opts:["Declarative","Exclamatory","Imperative","Interrogative"],
+    ans:3 },
+  { l:159, type:"mc",
+    q:"'Gather modeling clay and a small bowl of water.' — what type of sentence?",
+    opts:["Interrogative","Declarative","Imperative","Exclamatory"],
+    ans:2,
+    hint:"It gives a command — the subject 'you' is understood." },
+  { l:159, type:"mc",
+    q:"'You won't believe how easy it is to make clay flowers!' — what type of sentence?",
+    opts:["Interrogative","Declarative","Imperative","Exclamatory"],
+    ans:3 },
+  { l:159, type:"tf",
+    q:"TRUE or FALSE: An imperative sentence has an understood subject 'you'.",
+    ans:true,
+    hint:"'Gather modeling clay' → (You) gather modeling clay." },
+  { l:159, type:"mc",
+    q:"'Your sculpture will be nearly dry in twenty-four hours.' — the prepositional phrase is:",
+    opts:["Your sculpture","will be","nearly dry","in twenty-four hours"],
+    ans:3 },
+  { l:159, type:"fill",
+    q:"'One by one, wrap the flattened pieces around the ___.' — what is the object of the preposition 'around'?",
+    ans:"ball",
+    hint:"around the ___ " },
+  { l:159, type:"mc",
+    q:"The correct verb: 'The first responders in our town (___ ) always ready to help.'",
+    opts:["is","are","was","were"],
+    ans:1,
+    hint:"'responders' is plural → use plural verb" },
+  { l:159, type:"mc",
+    q:"The correct verb: 'A plate of cookies (___ ) ready for the firefighters.'",
+    opts:["are","were","is","have"],
+    ans:2,
+    hint:"Subject is 'plate' (singular) — not 'cookies'" },
+  { l:159, type:"tf",
+    q:"TRUE or FALSE: 'Katie and Sam (drew, drawn) pictures.' — 'drew' is the correct choice.",
+    ans:true,
+    hint:"'drew' is simple past. 'drawn' needs a helping verb: have drawn." },
+  { l:159, type:"match",
+    q:"Match each sentence type to its description.",
+    pairs:[
+      { left:"Declarative",   right:"Makes a statement" },
+      { left:"Interrogative", right:"Asks a question" },
+      { left:"Exclamatory",   right:"Shows strong emotion" },
+      { left:"Imperative",    right:"Gives a command" },
+    ]
+  },
+
+  /* ── L160 Verb Types + Irregular Verbs + Tense ── */
+  { l:160, type:"mc",
+    q:"What does AV stand for in sentence marking?",
+    opts:["Adverb","Action Verb","Adjective Verb","Auxiliary Verb"],
+    ans:1 },
+  { l:160, type:"mc",
+    q:"What does LV stand for?",
+    opts:["Long Verb","Linking Verb","Loud Verb","Later Verb"],
+    ans:1 },
+  { l:160, type:"mc",
+    q:"What does BV stand for?",
+    opts:["Base Verb","Being Verb","Both Verbs","Bold Verb"],
+    ans:1,
+    hint:"am, is, are, was, were, be, been, being" },
+  { l:160, type:"mc",
+    q:"'Johann Wyss wrote The Swiss Family Robinson in 1827.' — the verb type is:",
+    opts:["Linking Verb (LV)","State of Being (BV)","Action Verb (AV)","Helping Verb"],
+    ans:2,
+    hint:"'wrote' shows action." },
+  { l:160, type:"mc",
+    q:"'The Robinsons were alone on an island after a shipwreck.' — the verb type is:",
+    opts:["Action Verb (AV)","Linking Verb (LV)","State of Being (BV)","None"],
+    ans:2,
+    hint:"'were' is a form of 'to be' — no action, no predicate adjective linking." },
+  { l:160, type:"mc",
+    q:"'The island was in the East Indies.' — the verb 'was' is a:",
+    opts:["Action Verb","Linking Verb","State of Being Verb","Direct Object"],
+    ans:2,
+    hint:"'was' here doesn't link to an adjective or rename the subject." },
+  { l:160, type:"mc",
+    q:"'The family was very resourceful and happy on the island.' — 'was' is a ___ because 'resourceful' and 'happy' describe the subject.",
+    opts:["Action Verb (AV)","State of Being Verb (BV)","Linking Verb (LV)","Helping Verb"],
+    ans:2,
+    hint:"When 'was/is/are' links the subject to a describing word → Linking Verb!" },
+  { l:160, type:"fill",
+    q:"Correct the irregular verb: 'The Robinson family's boat nearly (_sank_ / sunk) after striking a rock.' — the correct answer is:",
+    ans:"sank",
+    hint:"Simple past without a helping verb → sank (not sunk)" },
+  { l:160, type:"mc",
+    q:"'On Sundays, Father (teached / taught) the family lessons.' — correct verb?",
+    opts:["teached","taught","had teached","were taught"],
+    ans:1,
+    hint:"'teached' is NOT a word! The past tense of teach = taught." },
+  { l:160, type:"mc",
+    q:"'Later, the family (builded / built) homes around the island.' — correct verb?",
+    opts:["builded","builts","built","have builded"],
+    ans:2,
+    hint:"'builded' is NOT a word! Past tense of build = built." },
+  { l:160, type:"mc",
+    q:"'Mrs. Perkins told our class about Elementary Kite Day.' — what verb tense?",
+    opts:["Present","Future","Past","Present Perfect"],
+    ans:2,
+    hint:"'told' = past tense of 'tell'" },
+  { l:160, type:"mc",
+    q:"'Many students will bring their kites from home.' — what verb tense?",
+    opts:["Past","Present","Future","Past Perfect"],
+    ans:2,
+    hint:"'will bring' → future tense" },
+  { l:160, type:"mc",
+    q:"'Parents and grandparents bring snacks and drinks.' — what verb tense?",
+    opts:["Past","Present","Future","Future Perfect"],
+    ans:1,
+    hint:"'bring' (no helping verb, no -ed) → present tense" },
+  { l:160, type:"tf",
+    q:"TRUE or FALSE: 'I lost my kite, but I found it in the basement.' — both verbs are in the PAST tense.",
+    ans:true,
+    hint:"'lost' and 'found' are both simple past tense." },
+  { l:160, type:"match",
+    q:"Match each verb to its type (AV / LV / BV).",
+    pairs:[
+      { left:"wrote",    right:"Action Verb (AV)" },
+      { left:"is happy", right:"Linking Verb (LV)" },
+      { left:"were",     right:"State of Being (BV)" },
+      { left:"caught",   right:"Action Verb (AV)" },
+    ]
+  },
+  { l:160, type:"mc",
+    q:"'What valuable skills would you have (learned / taught) if you had been stranded?' — correct verb?",
+    opts:["learned","taught","have learned","were taught"],
+    ans:0,
+    hint:"You would have LEARNED skills yourself, not taught them to others." },
+
+  /* ── L161 General Review ── */
+  { l:161, type:"mc",
+    q:"'They even caught an ostrich and rode it like a horse!' — how many verbs are in this sentence?",
+    opts:["1","2","3","4"],
+    ans:1,
+    hint:"caught… and rode…" },
+  { l:161, type:"tf",
+    q:"TRUE or FALSE: A sentence can have more than one verb.",
+    ans:true,
+    hint:"Example: 'They caught an ostrich AND rode it like a horse.'" },
+  { l:161, type:"mc",
+    q:"Which sentence has a SUBJECT-VERB-DIRECT OBJECT pattern?",
+    opts:[
+      "The island was beautiful.",
+      "Father taught the family.",
+      "They were alone.",
+      "The family was happy."
+    ],
+    ans:1,
+    hint:"S + AV + DO: Father(S) taught(AV) the family(DO)" },
+  { l:161, type:"fill",
+    q:"'We (has/have) written thank-you notes.' — correct verb: ___",
+    ans:"have",
+    hint:"'We' is plural → 'have', not 'has'" },
+  { l:161, type:"mc",
+    q:"What is the antonym (opposite) of 'discourage'?",
+    opts:["ignore","encourage","prevent","defeat"],
+    ans:1 },
+  { l:161, type:"mc",
+    q:"What is the synonym of 'genuine'?",
+    opts:["fake","broken","authentic","careless"],
+    ans:2 },
+  { l:161, type:"tf",
+    q:"TRUE or FALSE: A declarative sentence ends with a question mark.",
+    ans:false,
+    hint:"Declarative = statement → ends with a period." },
+  { l:161, type:"mc",
+    q:"'Gennie liked her fish with coleslaw, but Zach liked his with hushpuppies.' — what conjunction is used?",
+    opts:["and","or","but","yet"],
+    ans:2 },
+  { l:161, type:"mc",
+    q:"Which sentence is correctly punctuated (series with conjunction)?",
+    opts:[
+      "Mr. Hawkins Gennie and Zach went fishing.",
+      "Mr. Hawkins, Gennie and Zach, went fishing.",
+      "Mr. Hawkins, Gennie, and Zach went fishing.",
+      "Mr. Hawkins; Gennie; and Zach went fishing."
+    ],
+    ans:2,
+    hint:"3 items in a series → comma after each item before the conjunction" },
+  { l:161, type:"tf",
+    q:"TRUE or FALSE: 'To read her Bible.' is a complete sentence.",
+    ans:false,
+    hint:"It has no subject! It's a sentence fragment." },
+  { l:161, type:"mc",
+    q:"In 'The whole family wants to visit that lake in South Carolina again soon.', the prepositional phrase is:",
+    opts:["The whole family","wants to visit","in South Carolina","again soon"],
+    ans:2 },
+  { l:161, type:"fill",
+    q:"The four types of sentences are Declarative, Interrogative, Exclamatory, and ___.",
+    ans:"imperative",
+    hint:"The one that gives commands." },
+  { l:161, type:"match",
+    q:"Match each verb form to the correct sentence.",
+    pairs:[
+      { left:"sank",   right:"The boat sank after striking a rock." },
+      { left:"taught", right:"Father taught the family on Sundays." },
+      { left:"built",  right:"The family built homes on the island." },
+      { left:"caught", right:"They caught an ostrich." },
+    ]
+  },
+  { l:161, type:"mc",
+    q:"'Will you bring your kite to Elementary Kite Day?' — what TYPE of sentence is this?",
+    opts:["Declarative","Imperative","Exclamatory","Interrogative"],
+    ans:3 },
+  { l:161, type:"tf",
+    q:"TRUE or FALSE: Past tense verbs tell about things that already happened.",
+    ans:true },
+];
+
+/* ══════════════════════════════════
+   STATE
+══════════════════════════════════ */
+let questions=[], cur=0, correct=0, wrong=0;
+let answered=false, selAnswer=null, wrongLog=[];
+let activeTopic="all";
+let matchSel={side:null,idx:null,id:null,el:null};
+let matchPairs=[], matchDone=0, matchCorrect=0;
+
+const topics=[
+  {id:"all", label:"📚 All"},
+  {id:157,   label:"157 Interjections"},
+  {id:158,   label:"158 Prep. Phrases"},
+  {id:159,   label:"159 Sentence Types"},
+  {id:160,   label:"160 Verb Types"},
+  {id:161,   label:"161 Review"},
+];
+const typeColor={mc:"badge-mc",tf:"badge-tf",fill:"badge-fill",match:"badge-match"};
+const typeName={mc:"MC",tf:"T/F",fill:"Fill",match:"Match"};
+const praise=["Correct! 🎉","Nailed it! ✨","You got it! 🌟","Perfect! 💪","Excellent! 🏆"];
+
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+
+function buildTabs(){
+  const w=document.getElementById('tabs');
+  w.innerHTML='';
+  topics.forEach(t=>{
+    const b=document.createElement('button');
+    b.className='tab'+(activeTopic===t.id?' active':'');
+    b.textContent=t.label;
+    b.onclick=()=>setTopic(t.id);
+    w.appendChild(b);
+  });
+}
+
+function setTopic(id){
+  activeTopic=id;
+  buildTabs();
+  const src=id==='all'?bank:bank.filter(q=>q.l===id);
+  questions=shuffle(src);
+  cur=0;correct=0;wrong=0;
+  answered=false;selAnswer=null;wrongLog=[];
+  updateBar();
+  document.getElementById('result-card').classList.remove('show');
+  document.getElementById('review-wrap').classList.remove('show');
+  document.getElementById('quiz-card').style.display='block';
+  showQ();
+}
+
+/* ── SHOW QUESTION ── */
+function showQ(){
+  if(cur>=questions.length){showResult();return;}
+  answered=false;selAnswer=null;
+  const q=questions[cur];
+
+  document.getElementById('q-num').textContent=`Q ${cur+1} / ${questions.length}`;
+  document.getElementById('badge-lesson').textContent=`L${q.l}`;
+  const bt=document.getElementById('badge-type');
+  bt.textContent=typeName[q.type];
+  bt.className='badge '+typeColor[q.type];
+  document.getElementById('question').textContent=q.q;
+
+  const hb=document.getElementById('hint-box');
+  if(q.hint){hb.style.display='block';hb.textContent='💡 '+q.hint;}
+  else{hb.style.display='none';}
+
+  document.getElementById('feedback').className='feedback';
+  const area=document.getElementById('answer-area');
+  area.innerHTML='';
+
+  if(q.type==='mc')    renderMC(q,area);
+  else if(q.type==='tf')   renderTF(q,area);
+  else if(q.type==='fill') renderFill(q,area);
+  else if(q.type==='match') renderMatch(q,area);
+
+  document.getElementById('check-btn').textContent='Check ✓';
+  document.getElementById('check-btn').onclick=checkAnswer;
+  document.getElementById('check-btn').disabled=(q.type!=='match');
+  document.getElementById('prog').style.width=(cur/questions.length*100)+'%';
+  updateBar();
+
+  const c=document.getElementById('quiz-card');
+  c.style.animation='none';
+  setTimeout(()=>c.style.animation='slideUp .35s ease',10);
+}
+
+/* ── RENDER FUNCTIONS ── */
+function renderMC(q,area){
+  const div=document.createElement('div');
+  div.className='options';
+  ['A','B','C','D'].forEach((L,i)=>{
+    if(i>=q.opts.length)return;
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn.innerHTML=`<span class="opt-letter">${L}</span>${q.opts[i]}`;
+    btn.onclick=()=>{
+      if(answered)return;
+      selAnswer=i;
+      document.querySelectorAll('.opt').forEach(b=>{
+        b.style.cssText='';
+        b.querySelector('.opt-letter').style.cssText='';
+      });
+      btn.style.borderColor='#4fc3f7';btn.style.background='#e3f2fd';
+      btn.querySelector('.opt-letter').style.background='#4fc3f7';
+      btn.querySelector('.opt-letter').style.color='#fff';
+      document.getElementById('check-btn').disabled=false;
+    };
+    div.appendChild(btn);
+  });
+  area.appendChild(div);
+}
+
+function renderTF(q,area){
+  const row=document.createElement('div');
+  row.className='tf-row';
+  ['✅ True','❌ False'].forEach((lbl,i)=>{
+    const btn=document.createElement('button');
+    btn.className='tf-btn '+(i===0?'true-btn':'false-btn');
+    btn.textContent=lbl;
+    btn.onclick=()=>{
+      if(answered)return;
+      selAnswer=(i===0);
+      document.querySelectorAll('.tf-btn').forEach(b=>{b.style.cssText='';b.style.color='#333';});
+      btn.style.borderColor=i===0?'#00c853':'#f44336';
+      btn.style.background=i===0?'#e8f5e9':'#ffebee';
+      btn.style.color=i===0?'#1b5e20':'#b71c1c';
+      document.getElementById('check-btn').disabled=false;
+    };
+    row.appendChild(btn);
+  });
+  area.appendChild(row);
+}
+
+function renderFill(q,area){
+  const wrap=document.createElement('div');
+  wrap.className='fill-wrap';
+  const inp=document.createElement('input');
+  inp.className='fill-input';inp.type='text';inp.placeholder='Type your answer…';
+  inp.oninput=()=>{
+    selAnswer=inp.value.trim();
+    document.getElementById('check-btn').disabled=selAnswer.length===0;
+  };
+  inp.onkeydown=e=>{if(e.key==='Enter'&&!document.getElementById('check-btn').disabled)checkAnswer();};
+  wrap.appendChild(inp);area.appendChild(wrap);
+  setTimeout(()=>inp.focus(),100);
+}
+
+function renderMatch(q,area){
+  matchPairs=shuffle(q.pairs.map((p,i)=>({...p,id:i})));
+  const rightItems=shuffle(matchPairs.map(p=>({text:p.right,id:p.id})));
+  matchSel={side:null,idx:null,id:null,el:null};
+  matchDone=0;matchCorrect=0;
+
+  const container=document.createElement('div');
+  container.className='match-container';
+  const lc=document.createElement('div');lc.className='match-col';
+  lc.innerHTML='<div class="match-col-title">Column A</div>';
+  const rc=document.createElement('div');rc.className='match-col';
+  rc.innerHTML='<div class="match-col-title">Column B</div>';
+
+  matchPairs.forEach((pair,i)=>{
+    const li=document.createElement('div');
+    li.className='match-item';li.textContent=pair.left;
+    li.onclick=()=>handleMatch(li,'left',i,pair.id);
+    lc.appendChild(li);
+  });
+  rightItems.forEach((item,i)=>{
+    const ri=document.createElement('div');
+    ri.className='match-item';ri.textContent=item.text;
+    ri.onclick=()=>handleMatch(ri,'right',i,item.id);
+    rc.appendChild(ri);
+  });
+  container.appendChild(lc);container.appendChild(rc);
+  area.appendChild(container);
+  document.getElementById('check-btn').disabled=true;
+}
+
+function handleMatch(el,side,idx,pairId){
+  if(el.classList.contains('matched-correct')||el.classList.contains('matched-wrong'))return;
+  if(matchSel.side===null){
+    matchSel={side,idx,id:pairId,el};
+    document.querySelectorAll('.match-item:not(.matched-correct):not(.matched-wrong)').forEach(e=>e.classList.remove('selected'));
+    el.classList.add('selected');
+  } else {
+    if(matchSel.side===side){
+      document.querySelectorAll('.match-item').forEach(e=>e.classList.remove('selected'));
+      matchSel={side,idx,id:pairId,el};el.classList.add('selected');return;
+    }
+    const ok=(matchSel.id===pairId);
+    const cls=ok?'matched-correct':'matched-wrong';
+    matchSel.el.classList.remove('selected');
+    matchSel.el.classList.add(cls);
+    el.classList.add(cls);
+    if(ok)matchCorrect++;
+    matchDone++;
+    matchSel={side:null,idx:null,id:null,el:null};
+    document.querySelectorAll('.match-item').forEach(e=>e.classList.remove('selected'));
+    if(matchDone===matchPairs.length){
+      selAnswer=matchCorrect;
+      document.getElementById('check-btn').disabled=false;
+    }
+  }
+}
+
+/* ── CHECK ── */
+function checkAnswer(){
+  if(answered){nextQ();return;}
+  answered=true;
+  const q=questions[cur];
+  const fb=document.getElementById('feedback');
+  let ok=false;
+
+  if(q.type==='mc'){
+    const btns=document.querySelectorAll('.opt');
+    btns.forEach(b=>b.disabled=true);
+    if(selAnswer===q.ans){btns[selAnswer].className='opt correct';ok=true;}
+    else{
+      if(selAnswer!=null)btns[selAnswer].className='opt wrong';
+      btns[q.ans].className='opt reveal';
+    }
+  } else if(q.type==='tf'){
+    const btns=document.querySelectorAll('.tf-btn');
+    btns.forEach(b=>b.disabled=true);
+    if(selAnswer===q.ans){btns[selAnswer===true?0:1].className='tf-btn correct';ok=true;}
+    else{
+      if(selAnswer!=null)btns[selAnswer===true?0:1].className='tf-btn wrong';
+      btns[q.ans===true?0:1].className='tf-btn correct';
+    }
+  } else if(q.type==='fill'){
+    const inp=document.querySelector('.fill-input');
+    if(inp){
+      inp.disabled=true;
+      const u=(selAnswer||'').toLowerCase().trim().replace(/[^a-z0-9' ]/g,'');
+      const c=q.ans.toLowerCase().trim().replace(/[^a-z0-9' ]/g,'');
+      ok=u===c||(c.includes(u)&&u.length>=c.length-3&&u.length>0);
+      inp.className='fill-input '+(ok?'correct':'wrong');
+      if(!ok){
+        const d=document.createElement('div');
+        d.style.cssText='margin-top:8px;font-size:.84rem;font-weight:700;color:#2e7d32;';
+        d.textContent='✅ Correct answer: '+q.ans;
+        inp.parentElement.appendChild(d);
+      }
+    }
+  } else if(q.type==='match'){
+    ok=matchCorrect===matchPairs.length;
+  }
+
+  if(ok){
+    correct++;
+    fb.className='feedback correct show';
+    fb.innerHTML='🎉 '+praise[Math.floor(Math.random()*praise.length)];
+  } else {
+    wrong++;
+    const cTxt=q.type==='mc'?q.opts[q.ans]
+      :q.type==='tf'?(q.ans?'True':'False')
+      :q.type==='fill'?q.ans
+      :`${matchCorrect}/${matchPairs.length} correct pairs`;
+    fb.className='feedback wrong show';
+    fb.innerHTML=`❌ Not quite. Correct answer: <strong>${cTxt}</strong>`;
+    wrongLog.push({
+      q:q.q,
+      yours:q.type==='mc'?(selAnswer!=null?q.opts[selAnswer]:'(skipped)')
+           :q.type==='tf'?(selAnswer!=null?(selAnswer?'True':'False'):'(skipped)')
+           :q.type==='fill'?(selAnswer||'(blank)')
+           :`${matchCorrect}/${matchPairs.length} pairs`,
+      correct:cTxt
+    });
+  }
+  updateBar();
+  document.getElementById('check-btn').textContent='Next →';
+  document.getElementById('check-btn').onclick=nextQ;
+  document.getElementById('check-btn').disabled=false;
+}
+
+function nextQ(){
+  cur++;
+  document.getElementById('check-btn').textContent='Check ✓';
+  document.getElementById('check-btn').onclick=checkAnswer;
+  showQ();
+}
+
+function skipQ(){
+  if(!answered){wrong++;wrongLog.push({q:questions[cur].q,yours:'(skipped)',correct:'?'});updateBar();}
+  cur++;
+  document.getElementById('check-btn').textContent='Check ✓';
+  document.getElementById('check-btn').onclick=checkAnswer;
+  showQ();
+}
+
+function updateBar(){
+  document.getElementById('c-count').textContent=correct;
+  document.getElementById('w-count').textContent=wrong;
+  const tot=correct+wrong;
+  document.getElementById('pct').textContent=tot>0?Math.round(correct/tot*100):0;
+  document.getElementById('prog-txt').textContent=`${cur}/${questions.length}`;
+}
+
+function showResult(){
+  document.getElementById('quiz-card').style.display='none';
+  document.getElementById('prog').style.width='100%';
+  const tot=questions.length;
+  const p=Math.round(correct/tot*100);
+  let emoji,title;
+  if(p>=95){emoji='🏆';title='PERFECT, MAX!';}
+  else if(p>=85){emoji='🌟';title='Excellent!';}
+  else if(p>=70){emoji='👍';title='Good Job!';}
+  else if(p>=55){emoji='💪';title='Keep Going!';}
+  else{emoji='📖';title='Study More!';}
+  document.getElementById('r-emoji').textContent=emoji;
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-score').textContent=`${correct} out of ${tot} correct (${p}%)`;
+  document.getElementById('r-c').textContent=`✅ ${correct} Correct`;
+  document.getElementById('r-w').textContent=`❌ ${wrong} Wrong`;
+  document.getElementById('result-card').classList.add('show');
+
+  if(wrongLog.length>0){
+    const rw=document.getElementById('review-wrap');
+    const rl=document.getElementById('review-list');
+    rl.innerHTML='';
+    wrongLog.forEach(w=>{
+      const d=document.createElement('div');d.className='review-item';
+      d.innerHTML=`<div class="ri-q">Q: ${w.q}</div>
+        <div class="ri-you">Your answer: ${w.yours}</div>
+        <div class="ri-ans">✅ Correct: ${w.correct}</div>`;
+      rl.appendChild(d);
+    });
+    rw.classList.add('show');
+  }
+}
+
+function restart(){
+  document.getElementById('result-card').classList.remove('show');
+  document.getElementById('review-wrap').classList.remove('show');
+  document.getElementById('quiz-card').style.display='block';
+  setTopic(activeTopic);
+}
+
+buildTabs();
+setTopic('all');
+</script>
+</body>
+</html>
