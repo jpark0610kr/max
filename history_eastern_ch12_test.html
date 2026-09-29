@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Eastern Hemisphere History – Ch 1–2 Test</title>
+<style>
+html,body{background:#f4efe6!important;margin:0;font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;color:#2b2b2b}
+#app{max-width:680px;margin:0 auto;padding:16px}
+h1{font-size:22px;text-align:center;color:#1f5e4a;margin:12px 0}
+.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 10px #0002;margin-bottom:14px}
+button{font:inherit;border:2px solid #1f5e4a;background:#fff;color:#1f5e4a;border-radius:10px;padding:10px 14px;margin:4px 0;cursor:pointer}
+button.pri{background:#1f5e4a;color:#fff}button:disabled{opacity:.4;cursor:default}
+.opt{display:block;width:100%;text-align:left}.ok{background:#c8f0d0!important;border-color:#2e9e4a!important;color:#124d20!important}
+.bad{background:#fbd0d0!important;border-color:#c33!important;color:#7a1414!important}.sel{background:#ffe9a8!important}
+.bar{height:8px;background:#ddd;border-radius:4px}.bar i{display:block;height:100%;background:#1f5e4a;border-radius:4px}
+.meta{font-size:13px;color:#666;margin:6px 0 12px}.q{font-size:18px;line-height:1.4;margin-bottom:12px}
+.nav{display:flex;justify-content:space-between;margin-top:12px}.fb{margin-top:10px;font-weight:600}
+input,textarea{width:100%;box-sizing:border-box;font:inherit;padding:10px;border:2px solid #bbb;border-radius:10px}
+.fc{min-height:120px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:22px;cursor:pointer;background:#e9f5ef;border-radius:12px;padding:16px}
+.mt{display:grid;grid-template-columns:1fr 1.6fr;gap:8px}.mt button{font-size:14px;text-align:left;margin:0}
+.cf{position:fixed;top:-10px;width:9px;height:14px;animation:fall 2.5s linear forwards;z-index:9}@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+.rv{border-top:1px solid #ddd;padding:8px 0;font-size:14px}
+</style></head><body><div id="app"></div><script>
+const T=`1|history|written record of what man has done with the time God has given him
+1|geography|study of the earth's surface, climate, countries, people, and cultures
+1|B.C.|before Christ
+1|A.D.|anno Domini; in the year of our Lord
+1|archaeology|study of ancient people by recovering, preserving, and evaluating remains from the past
+1|artifact|object from the past with historical interest
+1|archaeologist|scientist who studies the past through excavations and artifacts
+1|dig|excavation site
+1|primary source|document, account, or object that recalls firsthand an event in history
+1|secondary source|document that retells a firsthand account
+1|tertiary source|document that uses a secondary source to retell or summarize information
+1|biblical worldview|viewing the past, present, and future through the truths of Scripture
+1|language|ability to communicate thoughts with God and with others
+1|progress|ability to learn and to develop new skills
+1|culture|way of life
+1|government|system of authority to govern people and punish evil
+1|nation|large group of people who think of themselves as one and are united under the same ruler and same general laws
+1|country|land on which a nation dwells
+1|tribal government|government ruled by a chief
+1|absolute monarchy|government whose leader is often born into office, makes and enforces the law, and rules until death
+1|dictatorship|government ruled by a military leader who often comes to power by force and takes away individual freedoms
+1|theocracy|government ruled by religious authority
+1|constitutional monarchy|government with a king or queen whose most powerful leaders are usually the prime minister, premier, cabinet, or members of parliament
+1|democracy|government whose laws are decided by the voting majority
+1|republic|government run by representatives of the people
+2|Fertile Crescent|long, curved strip of land in western Asia known for its rich soil and historic past; the Cradle of Civilization
+2|Mesopotamia|area of the Fertile Crescent between the Tigris and Euphrates Rivers; means "between the rivers"
+2|Tigris|river of the Fertile Crescent whose name means "arrow"
+2|Euphrates|river of the Fertile Crescent whose name means "that which makes fruitful"
+2|civilization|group of people who share a culture
+2|Bedouins|Arab nomads who wander from place to place with their herds and belongings
+2|Sumer|ancient civilization along the Tigris and Euphrates Rivers
+2|irrigation|supplying land with water
+2|Sumerians|first known civilization to develop and use writing
+2|pictograph|picture of what the writer was trying to represent
+2|cuneiform|wedge-shaped writing of Sumer
+2|seal|instrument used to stamp an article or document
+2|cylinder seal|most common type of seal in Sumer
+2|superstition|belief based on fear and ignorance rather than truth
+2|ziggurat|tall Sumerian temple
+2|Ur|most important and best-preserved ancient city in Mesopotamia
+2|Abraham|citizen of Ur; father of the Jewish nation
+2|Sir Leonard Woolley|British archaeologist who excavated Ur
+2|Chaldea|southern part of Sumer
+2|Ur-Nammu|powerful ruler of Ur
+2|Canaan|part of modern-day Israel
+2|Middle East|crossroads of the ancient world, where Africa, Asia, and Europe meet
+2|Asia Minor|large peninsula surrounded by the Mediterranean, Black, and Aegean Seas
+2|peninsula|body of land that is surrounded by water on three sides
+2|Hittites|some of the earliest-known occupants of Asia Minor
+2|empire|group of nations, countries, or kingdoms under the control of a single ruler
+2|emperor|powerful male ruler who controls an empire
+2|Phoenicians|people whose ships connected the civilizations of the Middle East; first great sea traders
+2|Carthage|Phoenician trading post in North Africa; one of the greatest cities of ancient times
+2|Byblos|early seaport and shipbuilding center of Phoenicia
+2|papyrus|plant used for making a paper-like material
+2|Tyre and Sidon|Phoenician cities famous for purple dye and blown glass
+2|murex|sea snail from which purple dye was made
+2|Lydia|small, rich nation on the western coast of Asia Minor
+2|caravans|people traveling in groups with their pack animals
+2|barter|to trade or exchange goods without the use of money
+2|Croesus|last king of Lydia`.split('\n').map(l=>{const p=l.split('|');return{c:+p[0],t:p[1],d:p[2]}});
+const F=`1|Human history began with God's creation of Adam and Eve.|1|
+1|Primary sources include speeches, journal entries, and artifacts from digs.|1|
+1|A newspaper is a tertiary source.|0|A newspaper is a secondary source.
+1|The Bible is the only perfect and accurate historical source.|1|
+1|An evolutionary worldview says God made everything in six literal days.|0|That is the biblical worldview.
+1|After the Flood, Noah's descendants spread over the earth right away.|0|They stayed in Shinar and built the Tower of Babel.
+1|A dictator is often a military leader who rules until death.|1|
+1|A republic is ruled by a chief.|0|A tribal government is ruled by a chief.
+2|The Tigris and Euphrates Rivers empty into the Persian Gulf.|1|
+2|In Sumer, usually only boys from wealthy families attended school.|1|
+2|The main occupation in Sumer was trading.|0|Farming was the main occupation.
+2|Sumerians baked their clay tablets until hard to keep permanent records.|1|
+2|Sumerians worshiped the true God of the Bible.|0|They worshiped false gods.
+2|Sir Leonard Woolley began excavating Ur in 1922.|1|
+2|Asia Minor is a large island.|0|It is a peninsula.
+2|Ziggurats were built for the purpose of education.|0|They were built for worship of false gods.
+2|The most valuable Phoenician contribution was the alphabet.|1|
+2|Lydia minted some of the world's first coins around 700 B.C.|1|`.split('\n').map(l=>{const p=l.split('|');return{c:+p[0],q:p[1],a:p[2]=='1',e:p[3]}});
+const S=`1|Why is it important to study history along with the Bible?|The Bible is the only perfect, accurate source, so we compare other sources to it to see which are correct.
+1|Explain the difference between a biblical worldview and an evolutionary worldview.|Biblical: trusts God made the world and studies through Scripture. Evolutionary: believes the universe came about naturally and changes over time.
+1|Why do people need government?|To govern people and punish evil; to keep order and safety.
+1|Why is a newspaper a secondary source?|It retells firsthand accounts instead of being an eyewitness account itself.
+2|Why can't archaeologists find the Garden of Eden?|Noah's Flood changed the earth; the rivers today are not the same rivers as in Genesis.
+2|How do you know Sumer was an advanced civilization?|Writing, schools, the wheel, irrigation, seals, crafts, and organized business records.
+2|How did Woolley's excavation of Ur prove the Bible's accuracy?|Many historians doubted Ur existed. He uncovered it, matching the Bible's account of Abraham's city.
+2|Why was Phoenicia important to other Middle East countries?|Its ships connected civilizations through trade (purple dye, glass, papyrus) and it shared the alphabet.
+2|Why was the alphabet Phoenicia's most important contribution?|Greeks built their alphabet from it, spreading written language, and the New Testament was first written in Greek.`.split('\n').map(l=>{const p=l.split('|');return{c:+p[0],q:p[1],m:p[2]}});
+let ch=0,mode,L,i;const $=s=>document.getElementById(s),A=$('app');
+const sh=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+const norm=s=>s.toLowerCase().replace(/[^a-z0-9]/g,''),by=a=>a.filter(x=>!ch||x.c==ch);
+const MODES=[['fc','🃏 Flashcards'],['mc','✅ Multiple Choice'],['tf','⭕ True / False'],['fill','✏️ Fill in the Blank'],['mt','🔗 Matching'],['sa','📝 Short Answer']];
+function menu(){A.innerHTML=`<h1>Eastern Hemisphere History<br>Chapters 1–2 Test</h1><div class=card><b>Chapter</b><br>${[[0,'All'],[1,'Ch 1'],[2,'Ch 2']].map(([v,n])=>`<button class="${ch==v?'pri':''}" onclick="ch=${v};menu()">${n}</button>`).join(' ')}</div><div class=card>${MODES.map(([k,n])=>`<button class="opt" onclick="start('${k}')">${n}</button>`).join('')}</div>`}
+function start(m){mode=m;i=0;const P=by(T);
+if(m=='fc')L=sh(P).map(x=>({ty:m,...x}));
+if(m=='mc')L=sh(P).map(x=>({ty:m,q:x.d,a:x.t,o:sh([x,...sh(P.filter(y=>y!=x)).slice(0,3)]).map(y=>y.t)}));
+if(m=='fill')L=sh(P).map(x=>({ty:m,q:x.d,a:x.t}));
+if(m=='tf')L=sh(by(F)).map(x=>({ty:m,...x}));
+if(m=='sa')L=sh(by(S)).map(x=>({ty:m,...x}));
+if(m=='mt'){L=[];const s=sh(P);for(let k=0;k+1<s.length;k+=5){let c=s.slice(k,k+5);if(c.length<3)c=s.slice(-5);L.push({ty:m,ps:c,rd:sh(c.map((_,j)=>j)),m:[],miss:0,sel:-1})}}
+show()}
+function show(){const it=L[i],n=L.length,sc=L.filter(x=>x.ok).length;let b='',lock=it.done;
+if(it.ty=='fc'){lock=1;b=`<div class=fc onclick="it_f=!it_f;show()">${window.it_f?it.d:it.t}</div><div class=meta>Tap the card to flip</div>`}
+if(it.ty=='mc')b=`<div class=q>${it.q}</div>`+it.o.map((o,k)=>`<button class="opt ${it.done?(o==it.a?'ok':o==it.res?'bad':''):''}" ${it.done?'disabled':''} onclick="ans(L[i].o[${k}])">${o}</button>`).join('');
+if(it.ty=='tf')b=`<div class=q>${it.q}</div>`+[true,false].map(v=>`<button class="opt ${it.done?(v==it.a?'ok':v==it.res?'bad':''):''}" ${it.done?'disabled':''} onclick="ans(${v})">${v?'True':'False'}</button>`).join('')+(it.done&&it.e?`<div class=fb>${it.e}</div>`:'');
+if(it.ty=='fill')b=`<div class=q>What term is this? <br><i>${it.q}</i></div><input id=in ${it.done?'disabled':''} value="${it.done?it.res:''}" onkeydown="if(event.key=='Enter')chk()" autocomplete=off>${it.done?'':'<button class=pri onclick="chk()">Check</button>'}`;
+if(it.ty=='sa'){lock=it.done;b=`<div class=q>${it.q}</div><textarea rows=4 placeholder="Write your answer first..."></textarea>`+(it.rev?`<div class=fb>Model answer: ${it.m}</div>`+(it.done?`<div class=fb>${it.ok?'⭕ Marked correct':'❌ Marked wrong'}</div>`:`<button onclick="mark(1)">⭕ I got it</button> <button onclick="mark(0)">❌ Not yet</button>`):`<br><button class=pri onclick="L[i].rev=1;show()">Reveal</button>`)}
+if(it.ty=='mt')b=`<div class=q>Match each term with its meaning (${it.ps.length} pairs)</div><div class=mt><div>${it.ps.map((p,j)=>`<button style="width:100%;margin-bottom:6px" class="${it.m.includes(j)?'ok':it.sel==j?'sel':''}" ${it.m.includes(j)?'disabled':''} onclick="pl(${j})">${p.t}</button>`).join('')}</div><div>${it.rd.map(j=>`<button style="width:100%;margin-bottom:6px" class="${it.m.includes(j)?'ok':''}" ${it.m.includes(j)?'disabled':''} onclick="pr(${j})">${it.ps[j].d}</button>`).join('')}</div></div>`+(it.done?`<div class=fb>Round done! Mistakes: ${it.miss}</div>`:'');
+if(it.ty!='fc'&&it.ty!='sa'&&it.ty!='mt'&&it.done)b+=`<div class=fb>${it.ok?'🎉 Correct!':'Answer: '+(it.ty=='tf'?(it.a?'True':'False'):it.a)}</div>`;
+A.innerHTML=`<div class=card><div class=bar><i style="width:${i/n*100}%"></i></div><div class=meta>${i+1} / ${n}${it.ty!='fc'?' · Score '+sc:''}</div>${b}<div class=nav><button ${i?'':'disabled'} onclick="go(-1)">← Prev</button><button class=pri ${lock?'':'disabled'} onclick="go(1)">${i==n-1?'Finish':'Next →'}</button></div></div><button onclick="menu()">☰ Menu</button>`;window.it_f=window.it_f&&it.ty=='fc'}
+function go(d){window.it_f=0;i+=d;if(i>=L.length){if(mode=='fc')return menu();return fin()}show()}
+function ans(v){const it=L[i];it.res=v;it.ok=v===it.a;it.done=1;show()}
+function chk(){const it=L[i],v=$('in').value;if(!v.trim())return;it.res=v;it.ok=norm(v)==norm(it.a);it.done=1;show()}
+function mark(o){const it=L[i];it.ok=!!o;it.done=1;show()}
+function pl(j){L[i].sel=j;show()}
+function pr(j){const it=L[i];if(it.sel<0)return;if(it.sel==j){it.m.push(j);if(it.m.length==it.ps.length){it.done=1;it.ok=!it.miss}}else it.miss++;it.sel=-1;show()}
+function fin(){const n=L.length,s=L.filter(x=>x.ok).length,p=Math.round(s/n*100),w=L.filter(x=>!x.ok);
+A.innerHTML=`<div class=card style="text-align:center"><h1>${p>=80?'🎉 Great job!':p>=60?'👍 Good effort!':'💪 Keep practicing!'}</h1><div style="font-size:40px">${s} / ${n} (${p}%)</div></div>${w.length?`<div class=card><b>Review</b>${w.map(x=>`<div class=rv>${x.ty=='mt'?'Matching round:<br>'+x.ps.map(p=>p.t+' — '+p.d).join('<br>'):x.q+'<br><b>'+(x.ty=='tf'?(x.a?'True':'False')+(x.e?'. '+x.e:''):x.ty=='sa'?x.m:x.a)+'</b>'}</div>`).join('')}</div>`:''}<button class=pri onclick="start(mode)">🔁 Try again</button> <button onclick="menu()">☰ Menu</button>`;
+if(p>=80)for(let k=0;k<70;k++){const d=document.createElement('b');d.className='cf';d.style.cssText=`left:${Math.random()*100}vw;background:hsl(${Math.random()*360},80%,60%);animation-delay:${Math.random()*1.5}s`;document.body.appendChild(d);setTimeout(()=>d.remove(),4500)}}
+menu();
+</script></body></html>
