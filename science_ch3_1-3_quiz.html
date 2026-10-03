@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Science Ch.3 (3.1–3.3) Quiz</title>
+<style>
+html,body{background:#eef4ff!important;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#1d2b4f}
+.wrap{max-width:680px;margin:0 auto;padding:14px}
+h1{font-size:20px;text-align:center;margin:8px 0 2px}
+.sub{text-align:center;font-size:13px;color:#5a6a92;margin-bottom:10px}
+.nav{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px}
+.nav button{border:2px solid #3b6fd8;background:#fff;color:#3b6fd8;border-radius:20px;padding:7px 12px;font-size:14px;font-weight:600;cursor:pointer}
+.nav button.on{background:#3b6fd8;color:#fff}
+.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 3px 12px rgba(30,60,120,.12)}
+.bar{height:8px;background:#dde6fa;border-radius:6px;overflow:hidden;margin-bottom:6px}
+.bar i{display:block;height:100%;background:#3bb273;width:0;transition:width .3s}
+.top{display:flex;justify-content:space-between;font-size:13px;color:#5a6a92;margin-bottom:12px}
+.q{font-size:18px;font-weight:600;line-height:1.4;margin-bottom:14px}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px;border:2px solid #cdd9f5;background:#f8faff;border-radius:12px;font-size:16px;cursor:pointer;color:#1d2b4f}
+.opt:disabled{cursor:default}
+.opt.ok{background:#d9f5e3;border-color:#3bb273}
+.opt.no{background:#fde0e0;border-color:#e05555}
+input.fb{width:100%;box-sizing:border-box;padding:12px;font-size:17px;border:2px solid #cdd9f5;border-radius:12px}
+.fbk{margin-top:12px;padding:10px;border-radius:10px;font-size:15px;line-height:1.4}
+.fbk.ok{background:#d9f5e3}.fbk.no{background:#fde0e0}
+.row{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+.btn{border:none;background:#3b6fd8;color:#fff;font-size:16px;font-weight:600;padding:11px 18px;border-radius:12px;cursor:pointer}
+.btn.gray{background:#aab6d6}.btn:disabled{opacity:.4;cursor:default}
+.flash{min-height:150px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:20px;font-weight:600;padding:18px;border-radius:14px;background:#fff7dc;border:2px dashed #e0b83c;cursor:pointer;line-height:1.4}
+.flash.back{background:#dff3ff;border-color:#4aa3d8;font-weight:500;font-size:18px}
+.hint{text-align:center;font-size:12px;color:#8a97b8;margin-top:6px}
+.mt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mt button{padding:10px;border:2px solid #cdd9f5;background:#f8faff;border-radius:10px;font-size:14px;cursor:pointer;color:#1d2b4f;text-align:left}
+.mt button.sel{border-color:#3b6fd8;background:#e3ecff}
+.mt button.done{background:#d9f5e3;border-color:#3bb273;opacity:.7}
+.mt button.bad{background:#fde0e0;border-color:#e05555}
+.big{font-size:44px;text-align:center;font-weight:800;color:#3b6fd8}
+.rev{font-size:14px;border-top:1px solid #e1e8fa;padding:8px 0;line-height:1.4}
+.conf{position:fixed;top:-30px;font-size:24px;animation:fall 2.6s linear forwards;pointer-events:none;z-index:9}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+</style></head><body><div class="wrap">
+<h1>🌍 Science Ch.3 Quiz</h1>
+<div class="sub">3.1 Geosphere · 3.2 Structure · 3.3 Minerals, Soil &amp; Rocks</div>
+<div class="nav" id="nav"></div>
+<div class="card" id="card"></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const TERMS=[
+["geology","the study of the earth"],
+["geosphere","the solid parts of the earth, such as rocks and minerals"],
+["uniformitarianism","the idea that present observations can explain all the geological features of the earth (developed by Charles Lyell)"],
+["crust","the earth's outer layer of solid rock"],
+["mantle","the layer of the earth beneath the crust, made of mostly solid rock"],
+["magma","molten rock beneath the earth's crust in the mantle"],
+["core","the innermost part of the earth"],
+["plate tectonics","theory that crustal plate activity can cause geological events and processes"],
+["magma chamber","reservoir at the bottom of a volcano's vent filled with magma"],
+["hypocenter (focus)","where an earthquake begins, below the earth's surface"],
+["epicenter","where earthquake damage is most severe; located above the hypocenter"],
+["volcanic mountain","mountain formed by a volcanic eruption"],
+["domed mountain","mountain formed when magma thrusts the crust upward but does not erupt as lava"],
+["fault-block mountain","mountain formed when one side of the crustal plate was thrust upward while the other side fell downward"],
+["folded mountain","mountain formed when hardening sedimentary rock folded up as tectonic plates moved below"],
+["mineral","substance with a crystal structure found naturally in the earth"],
+["humus","organic material in soil"],
+["soil horizons","layers of soil: organic matter, topsoil, subsoil, substratum, and bedrock"],
+["igneous rock","rock formed from magma or lava"],
+["sedimentary rock","rock formed from hardened sediments during a cementing process"],
+["strata","rock layers"],
+["metamorphic rock","igneous or sedimentary rock changed in form by heat and pressure"]];
+const mcRaw=[
+["The study of the earth is called ___.","geology",["geosphere","biosphere","topography"]],
+["Who developed uniformitarianism?","Charles Lyell",["Charles Darwin","Inge Lehmann","Noah"]],
+["The solid parts of the earth, such as rocks and minerals, make up the ___.","geosphere",["atmosphere","hydrosphere","biosphere"]],
+["Molten rock beneath the earth's crust is called ___.","magma",["core","epicenter","mantle"]],
+["An earthquake begins at its ___.","hypocenter",["epicenter","fault","tremor"]],
+["Which mountain forms when magma thrusts the crust upward without erupting?","domed",["folded","fault-block","volcanic"]],
+["Mount Everest is a ___ mountain.","folded",["domed","fault-block","volcanic"]],
+["Which layer is just below the earth's crust?","mantle",["core","magma","atmosphere"]],
+["Which of these is NOT caused by plate tectonics?","hardening of sediments",["domed mountain formation","fault-block mountain formation","volcanic eruptions"]],
+["Igneous rock is formed from ___.","magma or lava",["hardened sediments","heat and pressure only","seashells"]],
+["A mineral always has a ___ structure.","crystal",["liquid","glassy","porous"]],
+["Marble, slate, and quartzite are ___ rocks.","metamorphic",["igneous","sedimentary","volcanic"]],
+["Layers of sedimentary rock are called ___.","strata",["horizons","humus","moraines"]],
+["The organic material in soil, made from decayed organisms, is called ___.","humus",["loam","silt","bedrock"]],
+["Which soil horizon is mineral-rich soil where plant roots absorb nutrients?","topsoil",["subsoil","substratum","bedrock"]],
+["Granite is a ___ rock.","plutonic igneous",["volcanic igneous","sedimentary","metamorphic"]],
+["Basalt, obsidian, and pumice are ___ igneous rocks.","volcanic",["plutonic","sedimentary","metamorphic"]],
+["Sandstone, shale, limestone, and conglomerate are ___ rocks.","sedimentary",["igneous","metamorphic","plutonic"]]];
+const tf=[
+["The study of the earth is called geosphere.",false,"It's called geology. The geosphere is the solid parts of the earth."],
+["Charles Darwin developed uniformitarianism.",false,"Charles Lyell developed uniformitarianism."],
+["People who believe in uniformitarianism believe the present is the key to the past.",true,""],
+["The theory of evolution was developed after uniformitarianism.",true,""],
+["The geosphere is made up of the liquid parts of the earth.",false,"The geosphere is the SOLID parts of the earth."],
+["An emptied magma chamber can result in the formation of a caldera.",true,""],
+["An earthquake begins at its epicenter.",false,"It begins at the hypocenter (focus). The epicenter is directly above it."],
+["Mount Everest is a fault-block mountain.",false,"Mount Everest is a folded mountain (part of the Himalayas)."],
+["The earth's inner core is probably solid.",true,"It is under the most pressure."],
+["Granite is a plutonic igneous rock.",true,""],
+["Subsoil is lighter in color than topsoil.",true,"It has less organic matter."],
+["Minerals are sometimes made by people.",false,"Minerals are never manmade."],
+["Sedimentary rocks are formed from sediments that have been hardened by a cementing process.",true,""],
+["Marble is a rock that was once limestone.",true,"Heat and pressure changed it."]];
+const fbRaw=[
+["The solid parts of the earth are included in the ___.",["geosphere"]],
+["The principle of uniformity ('the present is the key to the past') was developed by ___.",["charles lyell","lyell"]],
+["The theory of evolution was developed by ___.",["charles darwin","darwin"]],
+["Molten rock is called ___.",["magma"]],
+["The deeper in the earth you go, the higher the ___ rises.",["temperature"]],
+["The innermost part of the earth is the ___.",["core"]],
+["A mineral has a ___ structure.",["crystal"]],
+["Basalt, obsidian, and pumice are ___ igneous rock.",["volcanic"]],
+["Granite is a plutonic ___ rock.",["igneous"]],
+["Conglomerate, sandstone, shale, and limestone are common types of ___ rock.",["sedimentary"]],
+["Marble, slate, and quartzite are ___ rock.",["metamorphic"]],
+["The five soil horizons are organic matter, topsoil, subsoil, ___, and bedrock.",["substratum"]],
+["The place directly above the hypocenter, where damage is most severe, is the ___.",["epicenter"]],
+["The earth's outer layer is called the ___.",["crust"]],
+["Rocks that can be formed from magma or lava are called ___ rock.",["igneous"]]];
+const MODES=[["flash","🃏 Flashcards"],["mc","Multiple Choice"],["tf","True / False"],["fb","Fill-in"],["match","Matching"],["all","🏆 Mixed Test"]];
+let st={};
+function nav(m){$("nav").innerHTML=MODES.map(x=>`<button class="${x[0]==m?'on':''}" onclick="start('${x[0]}')">${x[1]}</button>`).join("")}
+function build(m){
+ const mc=mcRaw.map(x=>({t:"mc",q:x[0],a:x[1],o:sh([x[1],...x[2]])}));
+ const t=tf.map(x=>({t:"tf",q:x[0],a:x[1],e:x[2]}));
+ const f=fbRaw.map(x=>({t:"fb",q:x[0],a:x[1]}));
+ if(m=="mc")return sh(mc);if(m=="tf")return sh(t);if(m=="fb")return sh(f);
+ return sh([...sh(mc).slice(0,8),...sh(t).slice(0,6),...sh(f).slice(0,6)]);
+}
+function start(m){
+ nav(m);
+ if(m=="flash"){st={m,i:0,list:sh(TERMS),back:false};return flash()}
+ if(m=="match")return match();
+ st={m,i:0,q:build(m),res:[]};renderQ();
+}
+function flash(){
+ const c=st.list[st.i];
+ $("card").innerHTML=`<div class="top"><span>Card ${st.i+1} / ${st.list.length}</span><span>Tap card to flip</span></div>
+ <div class="bar"><i style="width:${(st.i+1)/st.list.length*100}%"></i></div>
+ <div class="flash ${st.back?'back':''}" onclick="st.back=!st.back;flash()">${st.back?c[1]:c[0]}</div>
+ <div class="hint">${st.back?'Definition':'Term'}</div>
+ <div class="row"><button class="btn gray" ${st.i==0?'disabled':''} onclick="st.i--;st.back=false;flash()">← Prev</button>
+ <button class="btn gray" onclick="st.list=sh(TERMS);st.i=0;st.back=false;flash()">🔀</button>
+ <button class="btn" ${st.i==st.list.length-1?'disabled':''} onclick="st.i++;st.back=false;flash()">Next →</button></div>`;
+}
+function norm(s){return s.toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/^(the|a|an) /,"").trim()}
+function score(){return st.res.filter(r=>r&&r.ok).length}
+function renderQ(){
+ const n=st.q.length;
+ if(st.i>=n)return results();
+ const q=st.q[st.i],r=st.res[st.i],done=!!r;
+ let body="";
+ if(q.t=="mc")body=q.o.map((o,k)=>{let c="";if(done){if(o==q.a)c="ok";else if(o==r.g)c="no"}return `<button class="opt ${c}" ${done?'disabled':''} onclick="ans(${k})">${o}</button>`}).join("");
+ if(q.t=="tf")body=[true,false].map(v=>{let c="";if(done){if(v==q.a)c="ok";else if(v==r.g)c="no"}return `<button class="opt ${c}" ${done?'disabled':''} onclick="ansTF(${v})">${v?'✅ True':'❌ False'}</button>`}).join("");
+ if(q.t=="fb")body=`<input class="fb" id="fi" placeholder="Type your answer" autocomplete="off" autocapitalize="off" ${done?'disabled value="'+r.g.replace(/"/g,'')+'"':''} onkeydown="if(event.key=='Enter')ansFB()">`+(done?'':`<div class="row"><span></span><button class="btn" onclick="ansFB()">Check</button></div>`);
+ let fk="";
+ if(done){
+  const corr=q.t=="tf"?(q.a?"True":"False"):q.t=="fb"?q.a[0]:q.a;
+  fk=`<div class="fbk ${r.ok?'ok':'no'}">${r.ok?'🎉 Correct!':'❌ The answer is: <b>'+corr+'</b>'}${q.e?'<br>'+q.e:''}</div>`;
+ }
+ $("card").innerHTML=`<div class="bar"><i style="width:${(st.i+(done?1:0))/n*100}%"></i></div>
+ <div class="top"><span>Question ${st.i+1} / ${n}</span><span>⭐ ${score()}</span></div>
+ <div class="q">${q.q}</div>${body}${fk}
+ <div class="row"><button class="btn gray" ${st.i==0?'disabled':''} onclick="st.i--;renderQ()">← Prev</button>
+ <button class="btn" ${done?'':'disabled'} onclick="st.i++;renderQ()">${st.i==n-1?'Results':'Next →'}</button></div>`;
+ if(q.t=="fb"&&!done)setTimeout(()=>{const e=$("fi");e&&e.focus()},50);
+}
+function ans(k){const q=st.q[st.i];if(st.res[st.i])return;const g=q.o[k];st.res[st.i]={g,ok:g==q.a};renderQ()}
+function ansTF(v){const q=st.q[st.i];if(st.res[st.i])return;st.res[st.i]={g:v,ok:v==q.a};renderQ()}
+function ansFB(){const q=st.q[st.i];if(st.res[st.i])return;const g=$("fi").value;if(!g.trim())return;st.res[st.i]={g,ok:q.a.some(a=>norm(a)==norm(g))};renderQ()}
+function results(){
+ const n=st.q.length,s=score(),p=Math.round(s/n*100);
+ const wr=st.q.map((q,i)=>[q,st.res[i]]).filter(x=>x[1]&&!x[1].ok);
+ const corr=q=>q.t=="tf"?(q.a?"True":"False"):q.t=="fb"?q.a[0]:q.a;
+ $("card").innerHTML=`<div class="big">${s} / ${n}</div><div style="text-align:center;font-size:18px;margin:6px 0 14px">${p}% — ${p>=90?'Amazing! 🌟':p>=70?'Great job! 👍':'Keep practicing! 💪'}</div>
+ ${wr.length?'<b>Review your mistakes:</b>'+wr.map(x=>`<div class="rev">${x[0].q}<br>✅ <b>${corr(x[0])}</b>${x[0].e?'<br><i>'+x[0].e+'</i>':''}</div>`).join(''):'<div style="text-align:center">Perfect score — no mistakes! 🎊</div>'}
+ <div class="row"><button class="btn gray" onclick="st.i=0;renderQ()">Review all</button><button class="btn" onclick="start('${st.m}')">Try again 🔁</button></div>`;
+ if(p>=80)confetti();
+}
+function match(){
+ const pairs=sh(TERMS).slice(0,8);
+ st={m:"match",pairs,L:sh(pairs.map((p,i)=>i)),R:sh(pairs.map((p,i)=>i)),sel:null,done:{},tries:0};drawMatch();
+}
+function drawMatch(){
+ const d=Object.keys(st.done).length,n=st.pairs.length;
+ const L=st.L.map(i=>`<button id="l${i}" class="${st.done[i]?'done':st.sel===i?'sel':''}" ${st.done[i]?'disabled':''} onclick="pickL(${i})">${st.pairs[i][0]}</button>`).join("");
+ const R=st.R.map(i=>`<button id="r${i}" class="${st.done[i]?'done':''}" ${st.done[i]?'disabled':''} onclick="pickR(${i})">${st.pairs[i][1]}</button>`).join("");
+ $("card").innerHTML=`<div class="bar"><i style="width:${d/n*100}%"></i></div>
+ <div class="top"><span>Matched ${d} / ${n}</span><span>Tries: ${st.tries}</span></div>
+ <div class="q" style="font-size:15px">Tap a term, then tap its meaning.</div>
+ <div class="mt"><div>${L.replace(/<button/g,'<button style="width:100%;margin-bottom:8px"')}</div><div>${R.replace(/<button/g,'<button style="width:100%;margin-bottom:8px"')}</div></div>
+ ${d==n?`<div class="fbk ok" style="text-align:center">🎉 All matched in ${st.tries} tries!</div><div class="row"><span></span><button class="btn" onclick="match()">New set 🔁</button></div>`:''}`;
+ if(d==n&&st.tries<=n+3)confetti();
+}
+function pickL(i){st.sel=i;drawMatch()}
+function pickR(i){
+ if(st.sel===null)return;
+ st.tries++;
+ if(st.sel===i){st.done[i]=true;st.sel=null;drawMatch()}
+ else{const b=$("r"+i);drawMatch();$("r"+i).classList.add("bad");setTimeout(()=>{const e=$("r"+i);e&&e.classList.remove("bad")},500)}
+}
+function confetti(){
+ const e=["🎉","⭐","🌟","🎊","🪨","🌋"];
+ for(let i=0;i<30;i++){const s=document.createElement("span");s.className="conf";s.textContent=e[i%e.length];s.style.left=Math.random()*100+"vw";s.style.animationDelay=Math.random()*.8+"s";document.body.appendChild(s);setTimeout(()=>s.remove(),3600)}
+}
+start("flash");
+</script></body></html>
