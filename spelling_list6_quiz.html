@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spelling List 6 Quiz</title>
+<style>
+html,body{background:#eaf4fb !important;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1c3d5a}
+.wrap{max-width:560px;margin:0 auto;padding:16px}
+h1{font-size:22px;text-align:center;margin:8px 0 2px}
+.sub{text-align:center;color:#5b7a93;font-size:14px;margin-bottom:14px}
+.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 10px rgba(0,60,100,.12)}
+button{font:inherit;border:0;border-radius:12px;padding:12px 16px;cursor:pointer;background:#2b7bb9;color:#fff;font-weight:600}
+button.alt{background:#dbe9f4;color:#1c3d5a}
+button:disabled{opacity:.5}
+.menu button{display:block;width:100%;margin:8px 0;font-size:17px;padding:16px}
+.bar{height:8px;background:#dbe9f4;border-radius:6px;overflow:hidden;margin-bottom:6px}
+.bar i{display:block;height:100%;background:#2b7bb9;width:0;transition:width .3s}
+.top{display:flex;justify-content:space-between;font-size:14px;color:#5b7a93;margin-bottom:10px}
+.q{font-size:18px;text-align:center;margin:14px 0;min-height:56px;display:flex;align-items:center;justify-content:center;line-height:1.4}
+.speak{display:flex;gap:10px;justify-content:center;margin:10px 0}
+.speak button{font-size:18px;padding:14px 20px}
+input{width:100%;box-sizing:border-box;font-size:22px;text-align:center;padding:12px;border:2px solid #b7d3e8;border-radius:12px;margin:10px 0;outline:0}
+input:focus{border-color:#2b7bb9}
+.fb{text-align:center;font-size:17px;min-height:48px;font-weight:600;margin:6px 0}
+.ok{color:#1e8a4c}.no{color:#c0392b}
+.row{display:flex;gap:10px}.row button{flex:1}
+.big{font-size:44px;text-align:center;font-weight:800;margin:6px 0}
+.wr{border-bottom:1px solid #e3edf5;padding:8px 0;font-size:15px}
+.wr small{color:#5b7a93}
+canvas{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🐙 Spelling List 6</h1>
+  <div class="sub">Lessons 29–33</div>
+  <div id="app"></div>
+</div>
+<canvas id="cv"></canvas>
+<script>
+const SPELL=[["pre-algebra", "prealgebra"], "preamble", "prearranged", "predetermined", "predicate", "preoccupied", "assignment", "commandment", "equipment", "fragment", "parliament", "sediment", "consent", "dissent", "nonsensical", "resent", "sensitize", "sensor", "sentimental", "sentinel", ["1 and 2 Chronicles", "1 & 2 Chronicles"], "Ezra"];
+const VOCAB=[["barbecue", "meat roasted over an open fire; a party or picnic where such meat is served"], ["carbohydrates", "food nutrients that provide cells with energy"], ["delicatessen", "a store that sells prepared food such as sandwiches, salads, cheese, or pickles"], ["gourmet", "relating to food of fine quality"], ["herbs", "leaves of certain plants used in cooking to add flavor to food"], ["nutritious", "useful to the body as food"], ["protein", "a nutrient which helps the body grow, repair, and replace cells and that helps build muscle tissue"], ["sauté", "to fry lightly and quickly", "saute"]];
+const app=document.getElementById('app');
+let Q=[],i=0,score=0,wrong=[],checked=false,voice=null;
+
+function getBestVoice(){
+  const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));
+  const pref=["Samantha","Karen","Google US English","Aria","Jenny","Daniel"];
+  for(const p of pref){const v=vs.find(v=>v.name.includes(p));if(v)return v}
+  return vs.find(v=>/en-(US|CA)/i.test(v.lang))||vs[0]||null;
+}
+speechSynthesis.onvoiceschanged=()=>{voice=getBestVoice()};
+function say(t,rate){
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);
+  voice=voice||getBestVoice();
+  if(voice)u.voice=voice;
+  u.lang="en-US";u.rate=rate||0.85;
+  speechSynthesis.speak(u);
+}
+function shuffle(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
+function norm(s){return s.toLowerCase().replace(/\./g,'').replace(/&/g,'and').replace(/\s+/g,' ').trim()}
+function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+
+function menu(){
+  speechSynthesis.cancel();
+  app.innerHTML=`<div class="card menu">
+  <div style="text-align:center;margin-bottom:6px">Choose a mode 👇</div>
+  <button onclick="start('spell')">🔊 Spelling (Listen &amp; Type) · ${SPELL.length}</button>
+  <button onclick="start('vocab')">📖 Vocabulary (Read &amp; Type) · ${VOCAB.length}</button>
+  <button onclick="start('all')">⭐ Mixed · ${SPELL.length+VOCAB.length}</button></div>`;
+}
+function start(mode,list){
+  let s=SPELL.map(x=>{x=[].concat(x);return{t:'s',w:x[0],alt:x.slice(1)}}),v=VOCAB.map(([w,d,...alt])=>({t:'v',w,d,alt}));
+  Q=list||shuffle(mode==='spell'?s:mode==='vocab'?v:s.concat(v));
+  window._mode=mode;i=0;score=0;wrong=[];show();
+}
+function show(){
+  if(i>=Q.length)return result();
+  const q=Q[i];checked=false;
+  app.innerHTML=`<div class="card">
+  <div class="bar"><i style="width:${i/Q.length*100}%"></i></div>
+  <div class="top"><span>${i+1} / ${Q.length}</span><span>✅ ${score}</span></div>
+  ${q.t==='s'
+   ?`<div class="q">Listen to the word and spell it!</div>
+     <div class="speak"><button onclick="say(Q[i].w)">🔊 Say it</button><button class="alt" onclick="say(Q[i].w,0.5)">🐢 Slow</button></div>`
+   :`<div class="q">📖 ${esc(q.d)}</div>
+     <div class="speak"><button class="alt" onclick="say(Q[i].d)">🔊 Hear definition</button></div>`}
+  <input id="in" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="type here">
+  <div class="fb" id="fb"></div>
+  <div class="row"><button id="go" onclick="act()">Check</button></div>
+  </div>`;
+  const inp=document.getElementById('in');
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')act()});
+  inp.focus();
+  if(q.t==='s')setTimeout(()=>say(q.w),300);
+}
+function act(){
+  const q=Q[i],inp=document.getElementById('in'),fb=document.getElementById('fb'),go=document.getElementById('go');
+  if(checked){i++;show();return}
+  const a=inp.value.trim();
+  if(!a){fb.innerHTML='';inp.focus();return}
+  checked=true;inp.disabled=true;
+  if([q.w].concat(q.alt||[]).some(z=>norm(z)===norm(a))){
+    score++;fb.className='fb ok';fb.textContent='🎉 Correct!';
+  }else{
+    wrong.push({q,a});fb.className='fb no';
+    fb.innerHTML=`❌ Answer: <span style="font-size:22px">${q.w}</span><br><small>Your answer: ${esc(a)}</small>`;
+    if(q.t==='s')say(q.w);
+  }
+  go.textContent=i===Q.length-1?'See Results':'Next ▶';
+}
+function result(){
+  const pct=Math.round(score/Q.length*100);
+  app.innerHTML=`<div class="card">
+  <div class="big">${pct>=80?'🏆':pct>=60?'👍':'💪'} ${score}/${Q.length}</div>
+  <div style="text-align:center;margin-bottom:10px">${pct}%</div>
+  ${wrong.length?`<div style="font-weight:700;margin:8px 0">Review Missed Words</div>`+wrong.map(x=>`<div class="wr"><b>${x.q.w}</b> <small>(Your answer: ${esc(x.a)})</small>${x.q.d?`<br><small>${esc(x.q.d)}</small>`:''}</div>`).join(''):'<div style="text-align:center">Perfect! All correct 🎉</div>'}
+  <div class="row" style="margin-top:14px">
+  ${wrong.length?`<button onclick="start(_mode,wrong.map(x=>x.q))">Retry Missed</button>`:''}
+  <button class="alt" onclick="menu()">Home</button></div></div>`;
+  if(pct>=80)confetti();
+}
+function confetti(){
+  const c=document.getElementById('cv'),x=c.getContext('2d');
+  c.width=innerWidth;c.height=innerHeight;
+  const P=Array.from({length:120},()=>({x:Math.random()*c.width,y:-Math.random()*c.height,r:4+Math.random()*5,s:2+Math.random()*4,h:Math.random()*360}));
+  let f=0;
+  (function t(){x.clearRect(0,0,c.width,c.height);
+    P.forEach(p=>{p.y+=p.s;x.fillStyle=`hsl(${p.h},80%,60%)`;x.fillRect(p.x,p.y,p.r,p.r)});
+    if(++f<200)requestAnimationFrame(t);else x.clearRect(0,0,c.width,c.height)})();
+}
+menu();
+</script>
+</body>
+</html>
