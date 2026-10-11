@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Max – Français : Un jour bizarre</title>
+<style>
+html,body{background:#e8f0fe !important;margin:0;padding:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1f2a44}
+*{box-sizing:border-box}
+.wrap{max-width:720px;margin:0 auto;padding:16px 14px 60px}
+.hero{text-align:center;padding:18px 0 8px}
+.hero h1{margin:0 0 4px;font-size:26px}
+.hero p{margin:0;color:#5a6890}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+.mode{background:#fff;border:2px solid #d3def7;border-radius:16px;padding:16px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;font:inherit;color:inherit;transition:.15s}
+.mode:hover{border-color:#2b5fd9;transform:translateY(-2px)}
+.mode .ico{font-size:28px}
+.mode b{font-size:17px}
+.mode small{color:#5a6890}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-weight:700}
+.card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 4px 18px rgba(30,60,140,.12)}
+.bar{height:10px;background:#e3eafb;border-radius:8px;overflow:hidden;margin-bottom:10px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#2b5fd9,#6a8df0);border-radius:8px;transition:width .3s}
+.meta{display:flex;justify-content:space-between;align-items:center;color:#5a6890;font-size:14px;margin-bottom:14px;gap:8px;flex-wrap:wrap}
+.chip{background:#eef3ff;border:1px solid #cdd9f6;border-radius:20px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer;color:#2b4aa8}
+.btn{background:#2b5fd9;color:#fff;border:0;border-radius:12px;padding:12px 18px;font:inherit;font-weight:700;font-size:16px;cursor:pointer}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:#eef3ff;color:#2b4aa8}
+.btn.green{background:#2e9e5b}
+.nav{display:flex;gap:10px;justify-content:space-between;margin-top:18px}
+.prompt{font-size:30px;font-weight:800;text-align:center;margin:10px 0 4px;line-height:1.25}
+.q-sub{text-align:center;color:#5a6890;margin-bottom:14px;font-size:14px}
+.opts{display:grid;gap:10px}
+.opt{background:#f5f8ff;border:2px solid #d3def7;border-radius:14px;padding:14px;font:inherit;font-size:18px;cursor:pointer;color:inherit;text-align:center}
+.opt:hover:not(:disabled){border-color:#2b5fd9}
+.opt.right{background:#dff6e8;border-color:#2e9e5b}
+.opt.wrong{background:#fde3e3;border-color:#d64545}
+.sent{font-size:21px;line-height:2.1;text-align:center;margin:8px 0}
+.pic{font-size:34px;text-align:center}
+input.blank,input.big{font:inherit;font-size:19px;border:0;border-bottom:3px solid #2b5fd9;background:#f5f8ff;padding:4px 8px;border-radius:8px 8px 0 0;text-align:center;min-width:110px;color:#1f2a44}
+input.big{display:block;margin:6px auto;width:min(340px,100%);font-size:24px}
+input.right{border-bottom-color:#2e9e5b;background:#dff6e8}
+input.wrong{border-bottom-color:#d64545;background:#fde3e3}
+.accents{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.accents button{background:#eef3ff;border:1px solid #cdd9f6;border-radius:8px;padding:6px 11px;font:inherit;font-size:18px;cursor:pointer}
+.fb{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:16px;line-height:1.5}
+.fb.ok{background:#dff6e8}
+.fb.no{background:#fde3e3}
+.fb .note{color:#5a6890;font-size:14px;margin-top:4px}
+.fc{min-height:210px;border-radius:18px;background:#f5f8ff;border:2px solid #d3def7;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;cursor:pointer;text-align:center;gap:6px}
+.fc.back{background:#fff7e0;border-color:#f0c969}
+.fc .big{font-size:36px;font-weight:800}
+.fc .tiny{color:#8a96b8;font-size:13px}
+.fc .note{color:#6b5a1f;font-size:15px}
+.spk{background:#eef3ff;border:1px solid #cdd9f6;border-radius:50%;width:38px;height:38px;font-size:17px;cursor:pointer;margin-left:8px;vertical-align:middle}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.mb{background:#f5f8ff;border:2px solid #d3def7;border-radius:12px;padding:12px 8px;font:inherit;font-size:16px;cursor:pointer;color:inherit}
+.mb.sel{border-color:#2b5fd9;background:#e1eaff}
+.mb.ok{background:#dff6e8;border-color:#2e9e5b;opacity:.7;cursor:default}
+.mb.shake{animation:sh .35s;border-color:#d64545;background:#fde3e3}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.res{text-align:center}
+.res .score{font-size:54px;font-weight:900;color:#2b5fd9}
+.rv{text-align:left;margin-top:14px}
+.rv div{background:#fff4f4;border-left:4px solid #d64545;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:15px}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+#cv{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:50}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<canvas id="cv"></canvas>
+<script>
+/* ===== DATA ===== [fr, en, accepted answers, note] */
+const V0=[
+['habillé','dressed up',['habillé','habillée'],''],
+['part','leave',['part'],`On part = we leave`],
+['ciel','sky',['ciel'],''],
+['par terre','on the ground',['par terre'],''],
+['impossible','impossible',['impossible'],''],
+['jamais','never',['jamais'],`Je n'ai jamais fait du camping!`],
+['brille','shine',['brille'],`Le soleil brille.`],
+['paire','a pair',['paire'],`une paire de chaussettes`],
+['claque','tap',['claque'],`On claque les doigts = we snap our fingers`],
+['talon','heel',['talon'],''],
+['te','to you',['te'],`Je te parle.`],
+['rêve','dream, to dream',['rêve'],`un dragon dans le rêve du garçon`],
+['embrasse','hug, embrace',['embrasse'],`J'embrasse ma mère.`],
+['fort(e)','strong',['fort(e)','fort','forte'],''],
+['dis-le-moi','tell me',['dis-le-moi'],''],
+['chéri(e)','my dear',['chéri(e)','chéri','chérie'],`mon chéri / ma chérie`],
+['revient','come back',['revient'],''],
+['droite','right',['droite'],''],
+['a bien marché','worked out well',['a bien marché'],`Ça a bien marché!`],
+['jeune','young',['jeune'],''],
+['bête','beast',['bête'],''],
+['terrible','horrible',['terrible'],''],
+['ce qui','that which',['ce qui'],''],
+['baiser','kiss',['baiser'],''],
+['dégoûtant(e)','disgusting',['dégoûtant(e)','dégoûtant','dégoûtante'],''],
+['laid(e)','ugly',['laid(e)','laid','laide'],`laid (m.) / laide (f.)`],
+['vraiment','really',['vraiment'],''],
+['ombre','shadow',['ombre'],''],
+['arbre','tree',['arbre'],''],
+['coud','sew',['coud'],`La fille coud une couverture.`],
+['bouge','move',['bouge'],`Il bouge tout le temps!`],
+['Pays Imaginaire','Never-never land',['pays imaginaire'],`Peter Pan habite au Pays Imaginaire.`],
+['déteste','hate',['déteste'],`(word list) Je déteste les devoirs!`],
+['ville','city, town',['ville'],`(word list)`]
+];
+const V=V0.map((v,i)=>({id:i,fr:v[0],en:v[1],a:v[2],note:v[3]}));
+
+const F=[
+{s:"Je n'aime pas les devoirs! Je ___ les devoirs!",b:[['déteste']]},
+{s:"Je parle à toi. Je ___ parle.",b:[['te']]},
+{s:"As-tu un secret? ___, s'il vous plaît.",b:[['dis-le-moi']]},
+{s:"Merci pour l'idée! Ça ___!",b:[['a bien marché']]},
+{s:"Regarde à ___.",b:[['droite']],p:'➡️'},
+{s:"Le contraire de beau est ___, et le contraire de belle est ___.",b:[['laid'],['laide']]},
+{s:"La ___ est très méchante. Elle est ___ aussi!",b:[['bête'],['laide']]},
+{s:"La mère donne un ___ à son bébé.",b:[['baiser']],p:'😘'},
+{s:"Je ne sais pas ___ est dans la boîte. C'est une surprise!!!",b:[['ce qui']]},
+{s:"Marie habite à Moncton. Elle visite son amie qui habite à Toronto. Après une semaine, elle ___ à Moncton.",b:[['revient']]},
+{s:"Je n'aime pas le fromage bleu. C'est ___!",b:[['dégoûtant','dégoûtante']]},
+{s:"L'enfant est ___. Sa grand-mère est vieille.",b:[['jeune']]},
+{s:"L'homme regarde son ___.",b:[['ombre']],p:'🧍☀️'},
+{s:"La fille tombe ___. Elle a mal et crie: « Au secours! »",b:[['par terre']]},
+{s:"Il y a beaucoup de feuilles sur un ___.",b:[['arbre']],p:'🌳'},
+{s:"La fille ___ une couverture.",b:[['coud']],p:'🧵'},
+{s:"Jenny: « J'ai dix ans aujourd'hui! » Ben: « ___? C'est ton anniversaire? »",b:[['vraiment']]},
+{s:"Il n'est pas ___ pour l'hiver. Il porte un T-shirt et un short!",b:[['habillé','habillée']]},
+{s:"5 + 6 x 60 - 400 x 3 = ? C'est ___! Je ne peux pas le faire!",b:[['impossible']]},
+{s:"Peter Pan habite dans un ___.",b:[['pays imaginaire']]},
+{s:"On ___ pour les vacances maintenant! Au revoir!!!",b:[['part']]},
+{s:"Regarde en haut. Dans le ___ il y a beaucoup de nuages et un peu de soleil.",b:[['ciel']]},
+{s:"Grand-mère dit: « Viens ici, mon ___. J'ai une histoire pour toi. »",b:[['chéri','chérie']]},
+{s:"Je veux faire du camping. Je n'ai ___ fait du camping!",b:[['jamais']]},
+{s:"Le soleil est en haut et le soleil ___ fort.",b:[['brille']]},
+{s:"Voici une ___ de chaussettes.",b:[['paire']],p:'🧦'},
+{s:"On ___ les doigts.",b:[['claque']]},
+{s:"Voici un ___.",b:[['talon']],p:'👠'},
+{s:"Il doit rester à sa place, mais il ___ tout le temps!",b:[['bouge']]},
+{s:"Il y a un dragon dans le ___ du garçon.",b:[['rêve']]},
+{s:"Je suis tellement ___! J'ai beaucoup de muscles.",b:[['fort','forte']]},
+{s:"J'adore ma mère, alors quand je retourne à la maison après l'école, j'___ ma mère très fort.",b:[['embrasse',"j'embrasse"]]}
+];
+
+/* ===== HELPERS ===== */
+const app=document.getElementById('app');
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=s=>String(s).toLowerCase().replace(/[’‘`´]/g,"'").replace(/[-_]/g,' ').replace(/\s+/g,' ').trim().replace(/[.!?]+$/,'');
+const strip=s=>norm(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function grade(inp,acc){const n=norm(inp);if(!n)return 'no';if(acc.some(a=>norm(a)===n))return 'exact';const s=strip(inp);if(acc.some(a=>strip(a)===s))return 'loose';return 'no'}
+
+/* speech */
+let frVoice=null;
+function pickVoice(){if(!('speechSynthesis' in window))return;const vs=speechSynthesis.getVoices().filter(v=>/^fr/i.test(v.lang));const pref=['Amélie','Thomas','Google français','Microsoft Denise','Microsoft Henri','Audrey','Julie'];frVoice=vs.find(v=>pref.some(p=>v.name.includes(p)))||vs.find(v=>/CA/i.test(v.lang))||vs[0]||null}
+if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+function speakIdx(i){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(V[i].fr.replace(/\(.*?\)/g,''));u.lang=frVoice?frVoice.lang:'fr-CA';if(frVoice)u.voice=frVoice;u.rate=.85;speechSynthesis.speak(u)}
+
+/* confetti */
+function confetti(){const c=document.getElementById('cv'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;const cols=['#2b5fd9','#e63946','#f4c430','#2e9e5b','#ffffff','#ff8fab'];const ps=Array.from({length:140},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,r:4+Math.random()*6,vx:-2+Math.random()*4,vy:2+Math.random()*4,col:cols[Math.floor(Math.random()*cols.length)],rot:Math.random()*6}));let t=0;(function f(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.rot+=.1;x.save();x.translate(p.x,p.y);x.rotate(p.rot);x.fillStyle=p.col;x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++t<200)requestAnimationFrame(f);else x.clearRect(0,0,c.width,c.height)})()}
+
+/* accent bar */
+let lastIn=null;
+document.addEventListener('focusin',e=>{if(e.target.tagName==='INPUT')lastIn=e.target});
+function ins(ch){let el=lastIn;if(!el||el.disabled||!document.body.contains(el))el=document.querySelector('input:not([disabled])');if(!el)return;el.focus();const s=el.selectionStart??el.value.length,e=el.selectionEnd??s;el.value=el.value.slice(0,s)+ch+el.value.slice(e);el.setSelectionRange(s+1,s+1)}
+const accentBar=()=>`<div class="accents">${['é','è','ê','à','â','ç','î','ï','ô','û','ù','ë'].map(c=>`<button onmousedown="event.preventDefault()" onclick="ins('${c}')">${c}</button>`).join('')}</div>`;
+
+const topbar=t=>`<div class="top"><button class="chip" onclick="home()">🏠 Menu</button><span>${t}</span></div>`;
+
+/* ===== HOME ===== */
+const modes=[
+{i:'🃏',t:'Flashcards',d:'Flip cards, FR ↔ EN, with sound',fn:'flash()'},
+{i:'🔘',t:'Multiple Choice',d:'20 questions, both directions',fn:"start('mc')"},
+{i:'⌨️',t:'Write It',d:'English → write the French word',fn:"start('type')"},
+{i:'✏️',t:'Fill in the Blank',d:'All 32 worksheet sentences',fn:"start('fill')"},
+{i:'🔗',t:'Matching',d:'Match French with English',fn:'matchStart()'},
+{i:'🏆',t:'Final Test',d:'Mixed: choice + write + sentences',fn:"start('test')"}
+];
+function home(){
+ app.innerHTML=`<div class="hero"><h1>🇫🇷 Un jour bizarre</h1><p>Max's French Vocabulary · PDL 4/5 · pp. 29–30</p></div>
+ <div class="grid">${modes.map(m=>`<button class="mode" onclick="${m.fn}"><span class="ico">${m.i}</span><b>${m.t}</b><small>${m.d}</small></button>`).join('')}</div>`;
+ window.scrollTo(0,0);
+}
+
+/* ===== FLASHCARDS ===== */
+let FL={deck:[],i:0,flip:false,dir:'fr'};
+function flash(){FL.deck=shuffle(V);FL.i=0;FL.flip=false;drawFlash()}
+function fgo(d){FL.i=Math.max(0,Math.min(FL.deck.length-1,FL.i+d));FL.flip=false;drawFlash()}
+function drawFlash(){
+ const c=FL.deck[FL.i],fr=FL.dir==='fr';
+ const front=fr?c.fr:c.en,back=fr?c.en:c.fr;
+ const showTxt=FL.flip?back:front;
+ const frontIsFr=FL.flip?!fr:fr;
+ app.innerHTML=topbar('Flashcards')+`<div class="card">
+ <div class="bar"><i style="width:${(FL.i+1)/FL.deck.length*100}%"></i></div>
+ <div class="meta"><span>${FL.i+1} / ${FL.deck.length}</span><span>
+ <button class="chip" onclick="FL.dir=FL.dir==='fr'?'en':'fr';FL.flip=false;drawFlash()">${fr?'FR → EN':'EN → FR'}</button>
+ <button class="chip" onclick="flash()">🔀 Shuffle</button></span></div>
+ <div class="fc ${FL.flip?'back':''}" onclick="FL.flip=!FL.flip;drawFlash()">
+ <div class="big">${esc(showTxt)}${frontIsFr?`<button class="spk" onclick="event.stopPropagation();speakIdx(${c.id})">🔊</button>`:''}</div>
+ ${FL.flip&&c.note?`<div class="note">${esc(c.note)}</div>`:''}
+ <div class="tiny">${FL.flip?'tap to flip back':'tap to flip'}</div></div>
+ <div class="nav"><button class="btn ghost" ${FL.i===0?'disabled':''} onclick="fgo(-1)">◀ Prev</button>
+ <button class="btn" ${FL.i===FL.deck.length-1?'disabled':''} onclick="fgo(1)">Next ▶</button></div></div>`;
+}
+
+/* ===== QUIZ ENGINE ===== */
+let Q=null;
+function makeMC(v){
+ const dir=Math.random()<.5?'fr':'en';
+ const key=dir==='fr'?'en':'fr';
+ const correct=v[key];
+ const pool=[...new Set(V.filter(x=>x.id!==v.id).map(x=>x[key]).filter(s=>s!==correct))];
+ const options=shuffle([correct,...shuffle(pool).slice(0,3)]);
+ return {t:'mc',ptype:dir,prompt:dir==='fr'?v.fr:v.en,options,correct,vid:v.id,note:v.note,done:false};
+}
+const makeType=v=>({t:'type',prompt:v.en,blanks:[v.a],show:[v.fr],note:v.note,vid:v.id,done:false});
+const makeFill=f=>({t:'fill',parts:f.s.split('___'),blanks:f.b,show:f.b.map(b=>b[0]),pic:f.p||'',done:false});
+function start(mode){
+ let qs=[],title='';
+ if(mode==='mc'){qs=shuffle(V).slice(0,20).map(makeMC);title='Multiple Choice'}
+ if(mode==='type'){qs=shuffle(V).slice(0,20).map(makeType);title='Write It'}
+ if(mode==='fill'){qs=shuffle(F).map(makeFill);title='Fill in the Blank'}
+ if(mode==='test'){const a=shuffle(V);qs=shuffle([...a.slice(0,10).map(makeMC),...a.slice(10,20).map(makeType),...shuffle(F).slice(0,12).map(makeFill)]);title='Final Test'}
+ Q={mode,title,qs,i:0};draw();
+}
+function bodyOf(q){
+ if(q.t==='mc'){
+  const spk=q.ptype==='fr'?`<button class="spk" onclick="speakIdx(${q.vid})">🔊</button>`:'';
+  return `<div class="prompt">${esc(q.prompt)}${spk}</div><div class="q-sub">${q.ptype==='fr'?'What does it mean?':'Which French word or phrase?'}</div>
+  <div class="opts">${q.options.map((o,k)=>{let cls='';if(q.done){if(o===q.correct)cls='right';else if(k===q.user)cls='wrong'}
+  return `<button class="opt ${cls}" ${q.done?'disabled':''} onclick="pick(${k})">${esc(o)}</button>`}).join('')}</div>`;
+ }
+ const val=k=>q.done?esc(q.user[k]):'';
+ const cl=k=>q.done?(q.det[k]==='no'?'wrong':'right'):'';
+ const dis=q.done?'disabled':'';
+ if(q.t==='type')
+  return `<div class="prompt">${esc(q.prompt)}</div><div class="q-sub">Write it in French</div>
+  <input class="big ${cl(0)}" id="i0" ${dis} value="${val(0)}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">${q.done?'':accentBar()}`;
+ const sent=q.parts.map((p,k)=>esc(p)+(k<q.blanks.length?`<input class="blank ${cl(k)}" id="i${k}" ${dis} value="${val(k)}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">`:'')).join('');
+ return `${q.pic?`<div class="pic">${q.pic}</div>`:''}<div class="sent">${sent}</div>${q.done?'':accentBar()}`;
+}
+function fbOf(q){
+ if(!q.done)return '';
+ const note=q.note?`<div class="note">💡 ${esc(q.note)}</div>`:'';
+ if(q.t==='mc')return q.ok?`<div class="fb ok">✅ Correct!${note}</div>`:`<div class="fb no">❌ The answer is <b>${esc(q.correct)}</b>${note}</div>`;
+ const lines=q.blanks.map((b,k)=>{const g=q.det[k],sh=esc(q.show[k]);
+  if(g==='exact')return `✅ <b>${sh}</b>`;
+  if(g==='loose')return `✅ <b>${sh}</b> — watch the accents!`;
+  return `❌ ${q.user[k]?`<s>${esc(q.user[k])}</s> → `:''}<b>${sh}</b>`}).join('<br>');
+ return `<div class="fb ${q.ok?'ok':'no'}">${lines}${note}</div>`;
+}
+function draw(){
+ const q=Q.qs[Q.i],n=Q.qs.length,done=Q.qs.filter(x=>x.done).length,score=Q.qs.filter(x=>x.ok).length;
+ app.innerHTML=topbar(Q.title)+`<div class="card">
+ <div class="bar"><i style="width:${done/n*100}%"></i></div>
+ <div class="meta"><span>Question ${Q.i+1} / ${n}</span><span>⭐ ${score}</span></div>
+ ${bodyOf(q)}${fbOf(q)}
+ <div class="nav"><button class="btn ghost" ${Q.i===0?'disabled':''} onclick="go(-1)">◀ Prev</button>
+ ${q.t!=='mc'&&!q.done?`<button class="btn green" onclick="check()">Check ✓</button>`:''}
+ <button class="btn" ${q.done?'':'disabled'} onclick="go(1)">${Q.i===n-1?'Finish 🏁':'Next ▶'}</button></div></div>`;
+ if(!q.done&&q.t!=='mc'){
+  const ins_=[...document.querySelectorAll('input')];
+  ins_.forEach((el,k)=>el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(k<ins_.length-1)ins_[k+1].focus();else check()}}));
+  if(ins_[0])ins_[0].focus({preventScroll:true});
+ }
+}
+function pick(k){const q=Q.qs[Q.i];if(q.done)return;q.user=k;q.ok=q.options[k]===q.correct;q.done=true;draw()}
+function check(){
+ const q=Q.qs[Q.i];if(q.done)return;
+ const vals=q.blanks.map((_,k)=>document.getElementById('i'+k).value);
+ q.user=vals;q.det=vals.map((v,k)=>grade(v,q.blanks[k]));q.ok=q.det.every(g=>g!=='no');q.done=true;draw();
+}
+function go(d){Q.i+=d;if(Q.i>=Q.qs.length)resultsQ();else draw()}
+function filled(q){if(q.t==='fill'){let s='';q.parts.forEach((p,k)=>{s+=p+(k<q.show.length?`[${q.show[k]}]`:'')});return s}
+ if(q.t==='type')return `${q.prompt} → ${q.show[0]}`;
+ return `${q.prompt} → ${q.correct}`}
+function resultsQ(){
+ const n=Q.qs.length,score=Q.qs.filter(x=>x.ok).length,wrong=Q.qs.filter(x=>!x.ok);
+ showResults(score,n,wrong.map(filled),wrong.length?'retryWrong()':null);
+}
+function retryWrong(){const w=Q.qs.filter(x=>!x.ok).map(q=>Object.assign({},q,{done:false,ok:false,user:null,det:null}));Q={mode:Q.mode,title:'Retry: wrong ones',qs:w,i:0};draw()}
+function showResults(score,n,wrongTxt,retry){
+ const pct=Math.round(score/n*100);
+ const msg=pct>=90?'Excellent! Super! 🌟':pct>=80?'Très bien! 🎉':pct>=60?'Good job — a bit more practice! 💪':'Keep practicing, you can do it! 📚';
+ app.innerHTML=topbar('Results')+`<div class="card res"><div class="score">${score} / ${n}</div><h2>${pct}% — ${msg}</h2>
+ ${wrongTxt.length?`<div class="rv"><b>Review these:</b><br><br>${wrongTxt.map(t=>`<div>${esc(t)}</div>`).join('')}</div>`:''}
+ <div class="row">${retry?`<button class="btn" onclick="${retry}">🔁 Retry wrong ones</button>`:''}<button class="btn ghost" onclick="home()">🏠 Menu</button></div></div>`;
+ if(pct>=80)confetti();
+}
+
+/* ===== MATCHING ===== */
+let M=null;
+function matchStart(){
+ const all=shuffle(V),rounds=[];
+ for(let i=0;i<all.length;i+=7)rounds.push(all.slice(i,i+7));
+ M={rounds,r:0,total:all.length,miss:new Set(),wrongTxt:[],cur:null};newRound();
+}
+function newRound(){const R=M.rounds[M.r];M.cur={L:shuffle(R),R:shuffle(R),ok:new Set(),sl:null,sr:null,shake:null};drawMatch()}
+function drawMatch(){
+ const c=M.cur,R=M.rounds[M.r],all=c.ok.size===R.length;
+ const btn=(v,side)=>{const id=v.id,isOk=c.ok.has(id),sel=(side==='L'?c.sl:c.sr)===id,sh=c.shake&&c.shake[side]===id;
+  return `<button class="mb ${isOk?'ok':''} ${sel?'sel':''} ${sh?'shake':''}" ${isOk?'disabled':''} onclick="mpick('${side}',${id})">${esc(side==='L'?v.fr:v.en)}</button>`};
+ app.innerHTML=topbar('Matching')+`<div class="card"><div class="bar"><i style="width:${(M.r+c.ok.size/R.length)/M.rounds.length*100}%"></i></div>
+ <div class="meta"><span>Round ${M.r+1} / ${M.rounds.length}</span><span>${c.ok.size} / ${R.length} matched</span></div>
+ <div class="q-sub">Tap a French word, then its English meaning</div>
+ <div class="mgrid"><div style="display:grid;gap:10px">${c.L.map(v=>btn(v,'L')).join('')}</div><div style="display:grid;gap:10px">${c.R.map(v=>btn(v,'R')).join('')}</div></div>
+ <div class="nav"><span></span><button class="btn" ${all?'':'disabled'} onclick="mnext()">${M.r===M.rounds.length-1?'Finish 🏁':'Next round ▶'}</button></div></div>`;
+ c.shake=null;
+}
+function mpick(side,id){
+ const c=M.cur;
+ if(side==='L')c.sl=c.sl===id?null:id;else c.sr=c.sr===id?null:id;
+ if(c.sl!==null&&c.sr!==null){
+  if(c.sl===c.sr){c.ok.add(c.sl)}
+  else{M.miss.add(c.sl);M.miss.add(c.sr);c.shake={L:c.sl,R:c.sr}}
+  c.sl=null;c.sr=null;
+ }
+ drawMatch();
+}
+function mnext(){
+ if(M.r<M.rounds.length-1){M.r++;newRound()}
+ else{
+  const bad=V.filter(v=>M.miss.has(v.id));
+  showResults(M.total-bad.length,M.total,bad.map(v=>`${v.fr} = ${v.en}`),null);
+ }
+}
+home();
+</script>
+</body>
+</html>
