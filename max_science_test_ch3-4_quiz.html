@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Max's Science Test – Ch. 3 &amp; 4</title>
+<style>
+html,body{background:#dff1f5 !important;margin:0;padding:0}
+*{box-sizing:border-box}
+body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#0a2e44;line-height:1.45}
+.wrap{max-width:720px;margin:0 auto;padding:16px 14px 60px}
+h1{font-size:1.45rem;margin:6px 0 2px;color:#08506b}
+.sub{margin:0 0 12px;color:#35637a;font-size:.95rem}
+.tabs,.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tabs button{flex:1 1 auto;padding:10px 8px;border:2px solid #0d6e8a;background:#fff;color:#08506b;border-radius:10px;font-weight:700;font-size:.95rem;cursor:pointer}
+.tabs button.on{background:#0d6e8a;color:#fff}
+.chips button{padding:6px 12px;border:1.5px solid #7fb4c6;background:#f4fbfd;color:#2b5a70;border-radius:99px;font-size:.88rem;cursor:pointer}
+.chips button.on{background:#08506b;border-color:#08506b;color:#fff}
+.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(8,80,107,.15)}
+.bar{height:8px;background:#cfe6ed;border-radius:6px;overflow:hidden;margin-bottom:8px}
+.bar i{display:block;height:100%;background:#0d6e8a;transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:.9rem;color:#35637a;margin-bottom:10px}
+.q{font-size:1.15rem;font-weight:700;margin:6px 0 14px}
+.opt{display:block;width:100%;text-align:left;padding:12px 14px;margin:8px 0;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:12px;font-size:1rem;color:#0a2e44;cursor:pointer}
+.opt:hover:not(:disabled){border-color:#0d6e8a}
+.opt.good{background:#d8f3e6;border-color:#1f9d6b}
+.opt.bad{background:#fde0de;border-color:#d9534f}
+.opt:disabled{cursor:default}
+input.fib{width:100%;padding:12px;font-size:1.05rem;border:2px solid #b9d9e4;border-radius:12px}
+.fb{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:.95rem}
+.fb.good{background:#d8f3e6}.fb.bad{background:#fde0de}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
+.btn{padding:10px 18px;border:0;border-radius:10px;background:#0d6e8a;color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
+.btn.alt{background:#e3f1f6;color:#08506b}
+.btn:disabled{opacity:.4;cursor:default}
+.flip{min-height:190px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer;padding:20px;border:2px dashed #7fb4c6;border-radius:14px;background:#f4fbfd}
+.flip .t{font-size:1.4rem;font-weight:800;color:#08506b}
+.flip .d{font-size:1.1rem}
+.flip small{color:#6a93a5;margin-top:10px}
+.mt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mt button{padding:10px;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:10px;font-size:.88rem;color:#0a2e44;cursor:pointer;text-align:left}
+.mt button.sel{border-color:#0d6e8a;background:#d6edf5}
+.mt button.done{background:#d8f3e6;border-color:#1f9d6b;color:#4a6;cursor:default}
+.mt button.shake{background:#fde0de;border-color:#d9534f}
+.big{font-size:2.4rem;font-weight:800;color:#08506b;text-align:center;margin:4px 0}
+.rev{border-top:1px solid #d3e6ed;padding:10px 0;font-size:.95rem}
+.rev b{color:#08506b}
+.cf{position:fixed;top:-12px;width:10px;height:14px;z-index:9;animation:fall 2.4s linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.8}}
+@media (prefers-reduced-motion:reduce){.cf{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Science Test – Geology &amp; Marine Geology</h1>
+  <p class="sub">Investigating God's World · Chapters 3 &amp; 4</p>
+  <div class="tabs" id="tabs"></div>
+  <div class="chips" id="chips"></div>
+  <div id="app"></div>
+</div>
+
+<script>
+/* ---------- DATA (all from textbook Ch. 4, 4.1–4.4) ---------- */
+// [section, term, definition]
+const TERMS=[
+[41,"hydrosphere","All water on Earth, whether liquid, solid, or gas"],
+[41,"oceanography","Study of the ocean"],
+[41,"salinity","Saltiness"],
+[41,"tributary","Stream that empties into a river and joins its course"],
+[41,"drainage basin","Land drained by a river; watershed"],
+[41,"aquifer","Layer of rock that holds water"],
+[41,"drainage divide","High ridge that separates two river systems"],
+[41,"continental divide","Drainage divide at which two major river systems flow into different oceans"],
+[42,"wave","Back-and-forth movement that transfers energy"],
+[42,"tsunami","Enormous wave caused by an earthquake on the ocean floor"],
+[42,"tide","Daily predictable movement of the ocean caused by the moon's gravitational pull"],
+[42,"high tide","When the ocean tide is at its highest point"],
+[42,"low tide","When the ocean tide is at its lowest point"],
+[42,"spring tide","Highest high tide, during a full or new moon, when the sun's and moon's gravitational forces combine"],
+[42,"neap tide","Weaker high tide during a quarter moon, when the sun's and moon's gravitational forces work at right angles against each other"],
+[42,"ocean current","Large stream that moves through the ocean"],
+[42,"surface current","Ocean current that moves across the surface of the ocean"],
+[42,"subsurface current","Ocean current that moves deep in the ocean"],
+[42,"upwelling","Upward-flowing current that happens when wind pushes surface water away from the coast"],
+[43,"shore","Land along the edge of the ocean"],
+[43,"longshore drift","Process in which sediments are transported along the coast with the current"],
+[43,"sandbar","Offshore ridge made of sand and other sediments"],
+[43,"barrier island","Island parallel to the mainland's shore"],
+[43,"estuary","Body of water where the river meets the ocean; contains brackish water"],
+[43,"salt marsh","Low area of land near the coast that floods with the tide"],
+[44,"continental crust","Thicker part of the earth's crust that lies beneath the continents"],
+[44,"oceanic crust","Thinner part of the earth's crust below the ocean basins"],
+[44,"continental margin","Underwater area of continental crust: continental shelf, slope, and rise"],
+[44,"continental shelf","Underwater plains that border the continents"],
+[44,"continental slope","Steep incline at the edge of the continental shelf leading toward the ocean floor"],
+[44,"continental rise","Buildup of sediment at the base of the continental slope"],
+[44,"abyssal plain","Flat and mostly level floor of the ocean"],
+[44,"ooze","Type of seafloor mud made from minerals and the remains of tiny ocean organisms"],
+[44,"seamount","Underwater volcanic mountain"],
+[44,"mid-ocean ridge","Underwater mountain range"],
+[44,"rift","Valley where the oceanic crust seems to be separating"],
+[44,"subduction","Tectonic plate activity in which a heavier plate slides under a lighter plate"],
+[44,"ocean trench","Deep valley that cuts through the abyssal plain; deepest places of the ocean"],
+[44,"hydrothermal vent","Opening in the ocean floor that releases hot, mineral-rich water"]
+];
+// [section, question, answer]  (short-answer flashcards)
+const QA=[
+[41,"Name three ways water is essential for life.","Every living cell needs water; rain helps plants grow; plants use water in photosynthesis (phytoplankton supply 50–80% of Earth's oxygen)."],
+[41,"How does salt water differ chemically from fresh water?","Salt water contains additional dissolved elements, including the minerals that make it salty."],
+[42,"How do ocean currents help regulate Earth's moderate temperature?","Warm water from near the equator circulates to colder places and cold water circulates to warm places, so cold places are warmed and hot places are cooled."],
+[42,"Why is the ocean warmer at the Tropic of Cancer than at the Arctic Circle?","It is closer to the equator, where ocean water absorbs more heat from the sun."],
+[42,"What is the difference between a surface current and a subsurface current?","A surface current moves across the ocean's surface (pushed by wind). A subsurface current moves below the surface, deep in the ocean."],
+[43,"How do sandbars and barrier islands protect the mainland?","They break large waves before the waves can erode the coast or flood the mainland."],
+[43,"How might a dam or wall near a river's mouth hurt sandy beaches farther down the coast?","It blocks or reroutes the sediments carried by longshore drift, so less sand reaches those beaches."],
+[43,"How does planting grasses in coastal dunes protect communities farther inland?","Grasses trap sand and help dunes keep their shape. Dunes act as a natural erosion barrier and stop flooding."],
+[44,"Why was the HMS Challenger Expedition important?","It was the world's first oceanographic expedition. The crew measured depths and temperatures, mapped parts of the sea floor, and discovered the Mariana Trench."]
+];
+// [section, question, correct, wrong1, wrong2, wrong3, explanation]
+const MCS=[
+[41,"Which of these is NOT part of the hydrosphere?","Mountains","Rivers","Polar ice caps","Water vapor","The hydrosphere is all water on Earth (liquid, solid, or gas)."],
+[41,"About how much of Earth's surface is covered with water?","70 percent","30 percent","50 percent","90 percent","About seventy percent of Earth's surface is water."],
+[41,"Scientists estimate that phytoplankton supply how much of Earth's oxygen?","50 to 80 percent","5 to 10 percent","20 to 30 percent","95 to 100 percent","Tiny ocean organisms called phytoplankton give off oxygen during photosynthesis."],
+[41,"A water molecule contains…","two hydrogen atoms and one oxygen atom","one hydrogen atom and two oxygen atoms","two hydrogen atoms and two oxygen atoms","one hydrogen atom and one oxygen atom","H₂O = 2 hydrogen + 1 oxygen."],
+[41,"What is the largest drainage basin in the United States?","Mississippi River Basin","Colorado River Basin","Columbia River system","St. Lawrence River basin","Its tributaries empty into the Gulf of Mexico."],
+[41,"Rain that falls west of the Great Divide eventually flows into the…","Pacific Ocean","Atlantic Ocean","Gulf of Mexico","Arctic Ocean","Rain east of the Eastern Continental Divide drains into the Atlantic."],
+[41,"Old Faithful in Yellowstone National Park is a…","geyser","aquifer","tributary","drainage divide","Heated groundwater erupts at the surface, about twenty times a day."],
+[42,"Waves of the sea are caused by…","wind blowing over the water","the moon's gravity","earthquakes","the earth's rotation only","Wind causes waves; the moon and sun cause tides."],
+[42,"A tsunami is caused by…","an earthquake on the ocean floor","wind","the moon's pull","a hurricane","Tectonic plate activity moves the water above the earthquake's hypocenter."],
+[42,"Tides are caused primarily by…","the gravitational pull of the moon","wind","ocean currents","the sun's heat","The moon's gravity makes bulges of water, which are high tides."],
+[42,"A spring tide happens during…","a full moon or new moon","a quarter moon only","a lunar eclipse only","any day of the month","The sun and moon are aligned, so their gravity combines."],
+[42,"A neap tide happens during…","a quarter moon","a full moon","a new moon","a tsunami","The sun and moon are at right angles and almost cancel each other out."],
+[42,"Who is called the Pathfinder of the Sea?","Matthew Maury","Jacques Piccard","Robert Ballard","James Cameron","Maury designed a system for finding the ocean's currents."],
+[42,"Why is the Gulf Stream a warm current?","It begins near the tip of southern Florida, near the Tropic of Cancer","It begins in the Arctic Ocean","It flows toward the poles only","It is pushed by the moon","Warm water from near the equator is carried toward the poles."],
+[42,"In the Northern Hemisphere, winds move surface currents…","clockwise","counterclockwise","straight north","straight east","In the Southern Hemisphere it is counterclockwise."],
+[42,"How do upwellings help ocean life?","They bring up nutrients from deep water","They make the water saltier","They cause tsunamis","They stop the tides","Subsurface currents and upwellings distribute nutrients found in deep water."],
+[42,"Tsunamis happen more often near the…","Ring of Fire","Great Divide","Gulf Stream","Tropic of Cancer","The Ring of Fire is a chain of geologically active volcanoes around the Pacific Ocean."],
+[43,"Longshore drift transports…","sediments along the coast with the current","fish toward the shore","salt into rivers","tsunamis across the ocean","Without longshore drift we would not have the beaches we enjoy."],
+[43,"What kind of water is found in an estuary?","Brackish water","Fresh water only","Salt water only","Distilled water","Estuaries mix salt water from the ocean tide with fresh water from a river."],
+[43,"Islands that lie parallel to the mainland's shore are called…","barrier islands","atolls","seamounts","sandbars","A barrier island breaks large waves, like a sandbar."],
+[44,"What is the underwater part of the continental crust called?","Continental margin","Abyssal plain","Mid-ocean ridge","Ocean trench","It has three parts: shelf, slope, and rise."],
+[44,"Which is NOT part of the continental margin?","Abyssal plain","Continental shelf","Continental slope","Continental rise","The abyssal plain is the flat ocean floor between the continental margins."],
+[44,"What is the deepest place on Earth?","Challenger Deep in the Mariana Trench","The abyssal plain","The continental slope","The Galapagos Rift","It is about seven miles below the surface."],
+[44,"Which of these is NOT caused by plate tectonics?","Ocean currents","Hydrothermal vents","Ocean trenches","Rifts","Currents are caused by wind, earth's rotation, the sun's heat, and water density."],
+[44,"Which submersible found hydrothermal vents in 1977?","Alvin","Trieste","HMS Challenger","Maury","Alvin explored the mid-ocean ridge near the Galapagos Rift."],
+[44,"A black smoker looks dark and is hotter because of…","sulfur discharged from the vent","barium and calcium","fresh water","sand","White smokers are cooler and emit minerals like barium, calcium, and silicon."],
+[44,"The Marshall Islands in the Pacific Ocean are an…","atoll","estuary","aquifer","trench","Atolls are circular coral reef islands that form around seamounts."],
+[44,"Ocean trenches form where…","a heavier plate slides under a lighter plate","rivers meet the ocean","wind pushes water from shore","sediment builds up","This plate activity is called subduction."]
+];
+// [section, statement, true?, fix]
+const TFS=[
+[41,"Water vapor is part of the hydrosphere.",true,""],
+[41,"Most of Earth's water is fresh water.",false,"Only about 3% is fresh; the rest contains salt."],
+[41,"A tributary is a ridge that separates two river systems.",false,"That is a drainage divide. A tributary is a stream that empties into a river."],
+[42,"Waves carry water from one side of the ocean to the other.",false,"Waves carry energy. Water molecules move in circles inside the wave."],
+[42,"Tsunamis are formed by wind.",false,"Tsunamis are caused by earthquakes on the ocean floor."],
+[42,"A spring tide is the weakest high tide.",false,"Spring tide is the highest high tide. Neap tide is the weakest."],
+[42,"Cold water is denser than warm water.",true,""],
+[42,"In the Southern Hemisphere, surface currents move counterclockwise.",true,""],
+[43,"Longshore drift moves sediments in the direction of the current.",true,""],
+[43,"Sandbars help break large waves that could erode the mainland.",true,""],
+[43,"Salt marsh grasses filter pollution and prevent coastal erosion.",true,""],
+[44,"The world's first oceanographic expedition was led by the crew of the Alvin.",false,"It was the crew of the HMS Challenger."],
+[44,"The thinner part of the earth's crust below the ocean basins is called continental crust.",false,"It is called oceanic crust."],
+[44,"The continental rise is made of sediments.",true,""],
+[44,"Seamounts, ridges, and rifts are found in the continental plain.",false,"They are found in the abyssal plain."],
+[44,"Ocean trenches were caused by subduction.",true,""],
+[44,"The deepest place on the earth is the abyssal plain.",false,"It is Challenger Deep in the Mariana Trench (an ocean trench)."],
+[44,"Hydrothermal vents are openings in the ocean floor that emit hot, mineral-rich water.",true,""]
+];
+// [section, question, [accepted answers]]
+const FIBS=[
+[41,"All of the earth's water is called the ______.",["hydrosphere"]],
+[41,"The study of the earth's ocean is called ______.",["oceanography"]],
+[41,"The saltiness of ocean water is called ______.",["salinity"]],
+[41,"A stream that empties into a river is a ______.",["tributary"]],
+[41,"A watershed is another name for the land that makes a ______.",["drainage basin"]],
+[41,"Groundwater is held in an ______.",["aquifer"]],
+[41,"A high ridge that separates two river systems is a ______.",["drainage divide"]],
+[42,"An enormous wave caused by an underwater earthquake is a ______.",["tsunami"]],
+[42,"A high tide at its very highest during a full or new moon is a ______ tide.",["spring"]],
+[42,"A high tide at its weakest during a quarter moon is a ______ tide.",["neap"]],
+[42,"An upward-flowing ocean current is called an ______.",["upwelling"]],
+[43,"The land along the edge of the ocean is called the ______.",["shore"]],
+[43,"An offshore ridge made of sand and other sediments is a ______.",["sandbar"]],
+[43,"A body of water where a river meets the ocean is an ______.",["estuary"]],
+[44,"An underwater volcanic mountain is a ______.",["seamount"]],
+[44,"The flat and mostly level floor of the ocean is the ______ plain.",["abyssal"]],
+[44,"A valley where the oceanic crust seems to be separating is a ______.",["rift"]],
+[44,"The thinner crust below the ocean basins is ______ crust.",["oceanic"]],
+[44,"The deepest place on earth is in the ______ Trench.",["mariana"]],
+[44,"The submersible ______ found hydrothermal vents in 1977.",["alvin"]]
+];
+
+
+const T3=[
+[31,"geology","Study of the earth"],
+[31,"geosphere","Solid parts of the earth, such as rocks and minerals"],
+[31,"uniformitarianism","Idea that present observations can explain all the geological features of the earth; developed by Charles Lyell"],
+[31,"Flooding Stage","First stage of Noah's Flood in which the earth was flooded with water"],
+[31,"Recessive Stage","Second stage of Noah's Flood in which the waters drained off the continents and land became dry again"],
+[32,"crust","Earth's outer layer of solid rock"],
+[32,"mantle","Layer of the earth beneath the crust; made of mostly solid rock"],
+[32,"magma","Molten rock beneath the earth's crust in the mantle"],
+[32,"core","Innermost part of the earth"],
+[32,"plate tectonics","Theory that crustal plate activity can cause geological events and processes"],
+[32,"magma chamber","Reservoir at the bottom of a volcano's vent filled with magma"],
+[32,"hypocenter","Beginning point of an earthquake below the earth's surface; focus"],
+[32,"epicenter","Where the earthquake damage is most severe; located above the hypocenter"],
+[32,"volcanic mountain","Mountain formed by a volcanic eruption"],
+[32,"domed mountain","Mountain formed when the pressure of magma thrusts part of the crust upward but does not erupt as lava"],
+[32,"fault-block mountain","Mountain that may have formed when one side of the crustal plate was thrust upward while the other side fell downward"],
+[32,"folded mountain","Mountain that may have formed when hardening sedimentary rock folded up as tectonic plates moved below"],
+[33,"mineral","Substance with a crystal structure found naturally in the earth"],
+[33,"humus","Organic material in soil"],
+[33,"soil horizons","Layers of organic matter, topsoil, subsoil, substratum, and bedrock"],
+[33,"igneous rock","Type of rock formed from magma or lava"],
+[33,"sedimentary rock","Type of rock formed from hardened sediments during a cementing process"],
+[33,"strata","Rock layers (stratum, singular)"],
+[33,"metamorphic rock","Igneous or sedimentary rock changed in form by heat and pressure"],
+[34,"deposition","Settling of sediments at new locations"],
+[34,"glacier","Thick ice sheet that slowly moves under its own weight"],
+[34,"moraines","Piles of large rocks left by glaciers"],
+[35,"fossil","Remains or impression of living things, usually preserved in sedimentary rock"],
+[35,"fossil record","Fossils found in rock revealing clues about the history of living things"],
+[35,"paleontologist","Scientist who studies fossils"],
+[35,"transitional form","Term evolutionists use for a \"missing link\" between two kinds of animals"],
+[35,"bone bed","Fossil graveyard in which the remains of more than one animal have been found"],
+[35,"geologic column","Graphic organizer that illustrates how evolutionists interpret the fossil record"],
+[36,"metal","Mineral that has luster, is heavier than water, can usually conduct electricity, and is malleable"],
+[36,"ore","Mineral containing metal"],
+[36,"precious stone","Rare, valuable, very hard mineral, such as diamond, ruby, sapphire, or emerald"],
+[36,"fossil fuel","Nonrenewable energy source, such as coal, petroleum, or natural gas; made from remains of living organisms"],
+[36,"coal","Sedimentary rock formed from the remains of living things instead of minerals"],
+[36,"emissions","Release of gases from the use of fuel"],
+[36,"petroleum","Thick, dark liquid called crude oil"],
+[36,"natural gas","Vaporous fossil fuel"],
+[36,"geothermal energy","Use of hot springs to generate electricity"],
+[36,"solar energy","Energy from the sun; electricity produced using this energy"],
+[36,"wind power","Use of wind to generate electricity through a turbine"],
+[36,"hydropower","Use of moving water power to generate electricity"],
+[36,"biofuel","Use of plant and animal products to create alternative fuel"]
+];
+const Q3=[
+[31,"How do evolutionists and Creationists explain the Grand Canyon differently?","Evolutionists: a little water over a lot of time. Creationists: a lot of water over a little time (Noah's Flood)."],
+[31,"Who developed uniformitarianism, and what does it say?","Charles Lyell (1830). \"The present is the key to the past\": the earth changes only by slow processes we see today."],
+[32,"Name the three layers of the earth.","Crust, mantle, and core."],
+[32,"Which part of the earth's core is hotter, the inner or outer core?","The inner core. The deeper you go, the higher the temperature."],
+[32,"Name the three kinds of plate boundaries.","Divergent (plates pull apart), transform (plates slide past each other, like the San Andreas Fault), convergent (plates collide)."],
+[33,"List the soil horizons in order from the top.","Organic matter (O), topsoil (A), subsoil (B), substratum (C), bedrock (R)."],
+[34,"Why is a delta triangular but an alluvial fan spread out?","A delta forms where the river's load is deposited rapidly. An alluvial fan forms where it is deposited slowly."],
+[35,"Why do Creation scientists say there is no \"prehistory\"?","God created all animals on days 5 and 6, and the historical record begins with Genesis 1."],
+[36,"Name the renewable energy sources.","Geothermal, solar, wind, hydropower, and biofuel."]
+];
+const M3=[
+[31,"The study of the earth is called…","geology","geosphere","uniformitarianism","biosphere","Geo = earth, ology = the study of."],
+[31,"Who developed uniformitarianism?","Charles Lyell","Charles Darwin","Inge Lehmann","Sir Edmund Hillary","Lyell was a Scottish geologist. Darwin applied his ideas to form the theory of evolution."],
+[31,"In which stage of Noah's Flood did the waters drain off the continents?","Recessive Stage","Flooding Stage","Eruptive Stage","Creation Stage","The Flooding Stage was first; the Recessive Stage was second."],
+[31,"According to Genesis 1, God created the world in…","six literal, consecutive, 24-hour days","seven days","billions of years","one thousand years","On the seventh day He rested."],
+[32,"Molten rock beneath the earth's crust is called…","magma","lava","core","mantle","When magma reaches the surface and erupts, it is lava."],
+[32,"An earthquake begins at its…","hypocenter","epicenter","fault","tremor","The epicenter is directly above the hypocenter, where damage is usually worst."],
+[32,"The earth's inner core is probably solid because…","it is under the most pressure","it is the coolest part","it is made of rock","it is closest to the crust","Both parts of the core are probably molten nickel and iron."],
+[32,"Which Danish seismologist showed in 1936 that the core is not completely liquid?","Inge Lehmann","Mary Anning","Matthew Maury","Charles Lyell","She studied seismic waves bouncing off a solid part of the core."],
+[32,"The Ring of Fire is at the edge of the…","Pacific Plate","African Plate","Eurasian Plate","Antarctic Plate","Hundreds of active volcanoes are along this fault."],
+[32,"Which type of volcano ejects lava slowly and has a shield shape?","Shield volcano","Cinder-cone volcano","Composite volcano","Caldera","Kilauea in Hawaii is a shield volcano."],
+[32,"A mountain formed when magma pushes the crust up without erupting is a…","domed mountain","fault-block mountain","folded mountain","volcanic mountain","The Black Hills of South Dakota are domed mountains."],
+[32,"Mount Everest is a ___ mountain.","folded","domed","fault-block","volcanic","It is part of the Himalayas, a folded mountain range."],
+[32,"The San Andreas Fault is what kind of boundary?","Transform","Divergent","Convergent","Volcanic","Two plates slide past each other."],
+[33,"Humus is…","organic material in soil","broken-down rock","the layer above bedrock","a kind of igneous rock","It is made from decayed organisms."],
+[33,"Which soil horizon is right above bedrock?","Substratum (C)","Topsoil (A)","Subsoil (B)","Organic matter (O)","It is made of partly weathered rock."],
+[33,"Granite is a…","plutonic igneous rock","volcanic igneous rock","sedimentary rock","metamorphic rock","Plutonic rock forms underground when magma cools slowly."],
+[33,"Marble is a metamorphic rock that was once…","limestone","shale","sandstone","basalt","Shale becomes slate. Sandstone becomes quartzite."],
+[33,"Which rock fizzes in the vinegar acid test because it contains carbonate?","Limestone","Granite","Basalt","Obsidian","Limestone is made of calcium carbonate, often from seashells."],
+[33,"The law of superposition says the first sediment laid down is…","the bottom stratum","the top stratum","always shale","always limestone","The last layer laid down is the top stratum."],
+[34,"The settling of sediments in new locations is called…","deposition","weathering","erosion","subduction","Weathering breaks rock apart. Erosion carries sediments away."],
+[34,"When acid changes the properties of rock, it is…","chemical weathering","physical weathering","deposition","erosion","Lichens and mosses produce acids that break down rock."],
+[34,"Piles of large rocks left behind by a glacier are called…","moraines","deltas","strata","alluvial fans","Random boulders in a landscape may be evidence a glacier passed through."],
+[34,"Plowing across a slope instead of up and down is called…","contour plowing","terracing","a windbreak","a levee","Terracing makes steep land less steep."],
+[35,"A fossil graveyard where many animals are found together is a…","bone bed","jacket","geologic column","stratum","Paleontologists use plaster jackets to move fossils."],
+[35,"In which type of rock are most fossils found?","Sedimentary rock","Igneous rock","Metamorphic rock","Magma","A fossil must be quickly buried by sediment."],
+[35,"Which graphic organizer shows how evolutionists interpret the fossil record?","Geologic column","Bone bed","Transitional form","Fossil record","It illustrates the evolutionary idea of Earth's history."],
+[36,"Which of these is NOT a property of metal?","It is a fossil fuel","It conducts electricity","It is heavier than water","It is malleable","Metals also have luster."],
+[36,"Which fossil fuel is a sedimentary rock?","Coal","Petroleum","Natural gas","Uranium","Coal forms from the remains of living things."],
+[36,"Which alternative energy source can only be used near tectonic plates?","Geothermal energy","Hydropower","Solar energy","Wind power","It needs hot springs, found near plate activity."],
+[36,"Which of these is NOT a precious stone?","Opal","Emerald","Ruby","Sapphire","Opal is semiprecious."],
+[36,"Copper and zinc form an alloy called…","brass","bronze","steel","platinum","Copper and tin form bronze."]
+];
+const F3=[
+[31,"The study of the earth is called geosphere.",false,"It is called geology. The geosphere is the solid parts of the earth."],
+[31,"Charles Darwin developed uniformitarianism.",false,"Charles Lyell developed it."],
+[31,"People who believe in uniformitarianism believe the present is the key to the past.",true,""],
+[31,"The waters drained off the continents during the Flooding Stage of Noah's Flood.",false,"They drained during the Recessive Stage."],
+[31,"The geosphere is made up of the liquid parts of the earth.",false,"It is made up of the solid parts."],
+[32,"An earthquake begins at its epicenter.",false,"It begins at the hypocenter (focus). The epicenter is directly above it."],
+[32,"An emptied magma chamber can result in the formation of a caldera.",true,""],
+[32,"Mount Everest is a fault-block mountain.",false,"It is a folded mountain."],
+[32,"The earth's outer crust is divided into seven major tectonic plates and several minor ones.",true,""],
+[33,"The topsoil horizon is the organic matter layer.",false,"Organic matter (O) is a separate layer above the topsoil (A)."],
+[33,"Basalt, obsidian, and pumice are volcanic igneous rocks.",true,""],
+[33,"Shale can harden and change to become slate.",true,""],
+[34,"The breaking down of rock into sediments is called erosion.",false,"It is called weathering. Erosion carries sediments away."],
+[34,"A delta looks triangular because the river's load is deposited rapidly.",true,""],
+[35,"Scientists have found a true transitional form in the fossil record.",false,"Not one true transitional form has been found."],
+[36,"Silver is the best conductor of electricity, but copper is used because of its lower cost.",true,""],
+[36,"Coal is a sedimentary rock formed from the remains of living things.",true,""],
+[36,"Hydropower produces emissions.",false,"Hydropower does not produce emissions, though dams change a river's flow."]
+];
+const B3=[
+[31,"The solid parts of the earth are included in the ______.",["geosphere"]],
+[31,"Developed by ______, the principle of uniformity says the present is the key to the past.",["Charles Lyell","Lyell"]],
+[31,"The first stage of Noah's Flood is the ______ Stage.",["Flooding"]],
+[32,"Molten rock beneath the earth's crust is called ______.",["magma"]],
+[32,"The innermost part of the earth is the ______.",["core"]],
+[32,"The theory that crustal plate activity causes geological events is ______.",["plate tectonics"]],
+[32,"A scientist who studies earthquakes is a ______.",["seismologist"]],
+[32,"Directly above the hypocenter is the ______.",["epicenter"]],
+[32,"A bowl-shaped landform made when a volcano empties its magma chamber is a ______.",["caldera"]],
+[33,"A substance with a crystal structure found naturally in the earth is a ______.",["mineral"]],
+[33,"Organic material in soil is called ______.",["humus"]],
+[33,"Igneous rock is formed from magma or ______.",["lava"]],
+[33,"Layers of rock are called ______.",["strata"]],
+[33,"Marble, slate, and quartzite are ______ rock.",["metamorphic"]],
+[34,"The settling of sediments in new locations is called ______.",["deposition"]],
+[34,"A thick ice sheet that slowly moves under its own weight is a ______.",["glacier"]],
+[35,"A scientist who studies fossils is a ______.",["paleontologist"]],
+[35,"Another word for a fossil graveyard is a ______ bed.",["bone"]],
+[36,"Any mineral that contains metal is called ______.",["ore"]],
+[36,"Coal, petroleum, and natural gas are ______ fuels.",["fossil"]],
+[36,"Energy from the sun is called ______ energy.",["solar"]]
+];
+TERMS.unshift(...T3);QA.unshift(...Q3);MCS.unshift(...M3);TFS.unshift(...F3);FIBS.unshift(...B3);
+const RANGES={0:[0,99],c3:[31,36],c4:[41,44],a:[31,33],b:[34,36]};
+const secLbl=s=>s>40?'4.'+(s-40):'3.'+(s-30);
+/* ---------- HELPERS ---------- */
+const $=s=>document.querySelector(s);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pool=a=>{const r=RANGES[S.sec];return a.filter(x=>x[0]>=r[0]&&x[0]<=r[1])};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const norm=s=>s.toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').replace(/^(a|an|the) /,'').trim();
+function lev(a,b){const m=[];for(let i=0;i<=a.length;i++){m[i]=[i];}for(let j=0;j<=b.length;j++)m[0][j]=j;
+ for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return m[a.length][b.length]}
+function fibOk(inp,acc){const x=norm(inp);if(!x)return false;
+ return acc.some(a=>{a=norm(a);return x==a||x.replace(/ /g,'')==a.replace(/ /g,'')||(a.length>5&&lev(x,a)<=1)})}
+function confetti(){const c=['#0d6e8a','#1f9d6b','#f0b429','#ef6f4f','#7fb4c6'];
+ for(let i=0;i<60;i++){const d=document.createElement('div');d.className='cf';
+ d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDelay=Math.random()*.8+'s';
+ document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}}
+
+/* ---------- STATE / UI ---------- */
+const S={mode:'cards',sec:0};
+const MODES=[['cards','Flashcards'],['mc','Multiple Choice'],['tf','True / False'],['fib','Fill-in'],['match','Matching'],['test','Test']];
+const SECS=[[0,'All (Ch. 3 + 4)'],['c3','Ch. 3 Geology'],['c4','Ch. 4 Marine Geology'],['a','3.1–3.3'],['b','3.4–3.6']];
+function head(){
+ $('#tabs').innerHTML=MODES.map(m=>`<button class="${S.mode==m[0]?'on':''}" onclick="S.mode='${m[0]}';start()">${m[1]}</button>`).join('');
+ $('#chips').innerHTML=SECS.map(s=>`<button class="${S.sec==s[0]?'on':''}" onclick="S.sec='${s[0]}';start()">${s[1]}</button>`).join('');
+}
+function start(){head();
+ if(S.mode=='cards')initCards();else if(S.mode=='match')initMatch();else initQuiz();}
+
+/* ----- Flashcards ----- */
+let C={d:[],i:0,f:false};
+function initCards(){C.d=shuf([...pool(TERMS).map(t=>({s:t[0],f:t[1],b:t[2],k:'t'})),...pool(QA).map(t=>({s:t[0],f:t[1],b:t[2],k:'q'}))]);C.i=0;C.f=false;drawCards()}
+function drawCards(){const c=C.d[C.i];
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Card ${C.i+1} / ${C.d.length}</span><span>${c.k=='q'?'Short answer':'Term'} · ${secLbl(c.s)}</span></div>
+ <div class="bar"><i style="width:${(C.i+1)/C.d.length*100}%"></i></div>
+ <div class="flip" onclick="C.f=!C.f;drawCards()">${C.f?`<div class="d">${esc(c.b)}</div>`:`<div class="${c.k=='q'?'d':'t'}">${esc(c.f)}</div><small>tap to flip</small>`}</div>
+ <div class="nav"><button class="btn alt" onclick="cardGo(-1)" ${C.i==0?'disabled':''}>◀ Prev</button><button class="btn alt" onclick="initCards()">Shuffle</button><button class="btn" onclick="cardGo(1)" ${C.i==C.d.length-1?'disabled':''}>Next ▶</button></div></div>`}
+function cardGo(n){C.i+=n;C.f=false;drawCards()}
+
+/* ----- Quiz engine (MC / TF / Fill-in / Test) ----- */
+let Q={items:[],i:0,res:[],mode:''};
+function mkMC(r){const o=shuf(r.slice(2,6));return{t:'mc',q:r[1],opts:o,a:o.indexOf(r[2]),ans:r[2],ex:r[6]}}
+function mkTF(r){return{t:'tf',q:r[1],opts:['True','False'],a:r[2]?0:1,ans:r[2]?'True':'False',ex:r[3]}}
+function mkFIB(r){return{t:'fib',q:r[1],acc:r[2],ans:r[2][0],ex:''}}
+function initQuiz(){let it=[];const M=S.mode;
+ if(M=='mc')it=shuf(pool(MCS)).map(mkMC);
+ else if(M=='tf')it=shuf(pool(TFS)).map(mkTF);
+ else if(M=='fib')it=shuf(pool(FIBS)).map(mkFIB);
+ else{const G=S.sec==0?[[31,36],[41,44]]:[RANGES[S.sec]],k=G.length;
+ const pk=(a,n,r)=>shuf(a.filter(x=>x[0]>=r[0]&&x[0]<=r[1])).slice(0,Math.ceil(n/k));
+ it=shuf(G.flatMap(r=>[...pk(MCS,12,r).map(mkMC),...pk(TFS,8,r).map(mkTF),...pk(FIBS,10,r).map(mkFIB)]));}
+ Q={items:it,i:0,res:[],mode:M};drawQ()}
+function score(){return Q.res.filter(r=>r&&r.ok).length}
+function drawQ(){
+ if(Q.i>=Q.items.length)return results();
+ const it=Q.items[Q.i],r=Q.res[Q.i],n=Q.items.length;
+ let body='';
+ if(it.t=='fib'){body=`<input class="fib" id="fi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer" ${r?'disabled value="'+esc(r.pick)+'"':''} onkeydown="if(event.key=='Enter')checkFib()">
+  ${r?'':'<div class="nav" style="justify-content:flex-start"><button class="btn" onclick="checkFib()">Check</button></div>'}`}
+ else body=it.opts.map((o,k)=>`<button class="opt ${r?(k==it.a?'good':(k==r.pick?'bad':'')):''}" ${r?'disabled':''} onclick="pick(${k})">${esc(o)}</button>`).join('');
+ const fb=r?`<div class="fb ${r.ok?'good':'bad'}">${r.ok?'✅ Correct!':'❌ Not quite. Answer: <b>'+esc(it.ans)+'</b>'} ${it.ex?'<br>'+esc(it.ex):''}</div>`:'';
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>${Q.mode=='test'?'Test · ':''}Question ${Q.i+1} / ${n}</span><span>Score: ${score()}</span></div>
+ <div class="bar"><i style="width:${Q.i/n*100}%"></i></div>
+ <div class="q">${it.t=='tf'?'True or False: ':''}${esc(it.q)}</div>${body}${fb}
+ <div class="nav"><button class="btn alt" onclick="Q.i--;drawQ()" ${Q.i==0?'disabled':''}>◀ Prev</button><button class="btn" onclick="Q.i++;drawQ()" ${r?'':'disabled'}>${Q.i==n-1?'Finish':'Next ▶'}</button></div></div>`;
+ if(it.t=='fib'&&!r)setTimeout(()=>{const e=$('#fi');e&&e.focus()},30)}
+function pick(k){const it=Q.items[Q.i];if(Q.res[Q.i])return;Q.res[Q.i]={ok:k==it.a,pick:k};drawQ()}
+function checkFib(){const it=Q.items[Q.i];if(Q.res[Q.i])return;const v=$('#fi').value;if(!v.trim())return;
+ Q.res[Q.i]={ok:fibOk(v,it.acc),pick:v};drawQ()}
+function results(){const n=Q.items.length,s=score(),p=Math.round(s/n*100);
+ const wrong=Q.items.map((it,i)=>({it,r:Q.res[i]})).filter(x=>!x.r||!x.r.ok);
+ const msg=p>=90?'Amazing! Test-ready! 🌊':p>=70?'Great job! Review the misses below.':'Keep practicing — you can do it!';
+ if(p>=80)confetti();
+ $('#app').innerHTML=`<div class="card"><div class="big">${s} / ${n} (${p}%)</div><p style="text-align:center">${msg}</p>
+ <div class="nav" style="justify-content:center"><button class="btn" onclick="initQuiz()">Try again</button></div>
+ ${wrong.length?'<h3>Review your misses</h3>'+wrong.map(x=>`<div class="rev"><b>${esc(x.it.q)}</b><br>Answer: ${esc(x.it.ans)}${x.it.ex?'<br><i>'+esc(x.it.ex)+'</i>':''}</div>`).join(''):''}</div>`}
+
+/* ----- Matching ----- */
+let M={L:[],R:[],sel:null,done:0,miss:0,n:0};
+function initMatch(){const p=shuf(pool(TERMS)).slice(0,6);M={L:shuffIdx(p),R:shuffIdx(p),sel:null,done:0,miss:0,n:p.length,p,ok:{}};drawMatch()}
+function shuffIdx(p){return shuf(p.map((_,i)=>i))}
+function drawMatch(){const p=M.p;
+ if(M.done==M.n){if(M.miss<=1)confetti();
+  $('#app').innerHTML=`<div class="card"><div class="big">All matched! 🎉</div><p style="text-align:center">Wrong tries: ${M.miss}</p><div class="nav" style="justify-content:center"><button class="btn" onclick="initMatch()">New round</button></div></div>`;return}
+ const b=(side,i)=>{const k=side+i,ok=M.ok[side+i];return `<button class="${ok?'done':''} ${M.sel&&M.sel.k==k?'sel':''} ${M.bad&&M.bad.includes(k)?'shake':''}" ${ok?'disabled':''} onclick="mpick('${side}',${i})">${esc(side=='L'?p[i][1]:p[i][2])}</button>`};
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Tap a term, then its meaning</span><span>${M.done} / ${M.n} · Wrong: ${M.miss}</span></div>
+ <div class="bar"><i style="width:${M.done/M.n*100}%"></i></div>
+ <div class="mt"><div>${M.L.map(i=>b('L',i)).join('')}</div><div>${M.R.map(i=>b('R',i)).join('')}</div></div>
+ <div class="nav"><button class="btn alt" onclick="initMatch()">New round</button><span></span></div></div>`;
+ document.querySelectorAll('.mt>div').forEach(d=>{d.style.display='grid';d.style.gap='8px'})}
+function mpick(side,i){M.bad=null;
+ if(!M.sel||M.sel.side==side){M.sel={side,i,k:side+i};return drawMatch()}
+ const li=side=='L'?i:M.sel.i,ri=side=='R'?i:M.sel.i;
+ if(li==ri){M.ok['L'+li]=M.ok['R'+ri]=1;M.done++;M.sel=null}
+ else{M.miss++;M.bad=[M.sel.k,side+i];M.sel=null}
+ drawMatch();if(M.bad)setTimeout(()=>{M.bad=null;drawMatch()},600)}
+
+start();
+</script>
+</body>
+</html>
