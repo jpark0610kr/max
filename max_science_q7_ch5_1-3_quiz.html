@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Max's Science Q7 – Ch. 5 Meteorology (5.1–5.3)</title>
+<style>
+html,body{background:#dff1f5 !important;margin:0;padding:0}
+*{box-sizing:border-box}
+body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#0a2e44;line-height:1.45}
+.wrap{max-width:720px;margin:0 auto;padding:16px 14px 60px}
+h1{font-size:1.45rem;margin:6px 0 2px;color:#08506b}
+.sub{margin:0 0 12px;color:#35637a;font-size:.95rem}
+.tabs,.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tabs button{flex:1 1 auto;padding:10px 8px;border:2px solid #0d6e8a;background:#fff;color:#08506b;border-radius:10px;font-weight:700;font-size:.95rem;cursor:pointer}
+.tabs button.on{background:#0d6e8a;color:#fff}
+.chips button{padding:6px 12px;border:1.5px solid #7fb4c6;background:#f4fbfd;color:#2b5a70;border-radius:99px;font-size:.88rem;cursor:pointer}
+.chips button.on{background:#08506b;border-color:#08506b;color:#fff}
+.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(8,80,107,.15)}
+.bar{height:8px;background:#cfe6ed;border-radius:6px;overflow:hidden;margin-bottom:8px}
+.bar i{display:block;height:100%;background:#0d6e8a;transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:.9rem;color:#35637a;margin-bottom:10px}
+.q{font-size:1.15rem;font-weight:700;margin:6px 0 14px}
+.opt{display:block;width:100%;text-align:left;padding:12px 14px;margin:8px 0;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:12px;font-size:1rem;color:#0a2e44;cursor:pointer}
+.opt:hover:not(:disabled){border-color:#0d6e8a}
+.opt.good{background:#d8f3e6;border-color:#1f9d6b}
+.opt.bad{background:#fde0de;border-color:#d9534f}
+.opt:disabled{cursor:default}
+input.fib{width:100%;padding:12px;font-size:1.05rem;border:2px solid #b9d9e4;border-radius:12px}
+.fb{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:.95rem}
+.fb.good{background:#d8f3e6}.fb.bad{background:#fde0de}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
+.btn{padding:10px 18px;border:0;border-radius:10px;background:#0d6e8a;color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
+.btn.alt{background:#e3f1f6;color:#08506b}
+.btn:disabled{opacity:.4;cursor:default}
+.flip{min-height:190px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer;padding:20px;border:2px dashed #7fb4c6;border-radius:14px;background:#f4fbfd}
+.flip .t{font-size:1.4rem;font-weight:800;color:#08506b}
+.flip .d{font-size:1.1rem}
+.flip small{color:#6a93a5;margin-top:10px}
+.mt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mt button{padding:10px;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:10px;font-size:.88rem;color:#0a2e44;cursor:pointer;text-align:left}
+.mt button.sel{border-color:#0d6e8a;background:#d6edf5}
+.mt button.done{background:#d8f3e6;border-color:#1f9d6b;color:#4a6;cursor:default}
+.mt button.shake{background:#fde0de;border-color:#d9534f}
+.big{font-size:2.4rem;font-weight:800;color:#08506b;text-align:center;margin:4px 0}
+.rev{border-top:1px solid #d3e6ed;padding:10px 0;font-size:.95rem}
+.rev b{color:#08506b}
+.cf{position:fixed;top:-12px;width:10px;height:14px;z-index:9;animation:fall 2.4s linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.8}}
+@media (prefers-reduced-motion:reduce){.cf{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Science Q7 – Meteorology</h1>
+  <p class="sub">Investigating God's World · Chapter 5 (5.1–5.3)</p>
+  <div class="tabs" id="tabs"></div>
+  <div class="chips" id="chips"></div>
+  <div id="app"></div>
+</div>
+
+<script>
+/* ---------- DATA (textbook Ch. 5, 5.1–5.3) ---------- */
+// [section, term, definition]
+const TERMS=[
+[1,"meteorology","Study of weather"],
+[1,"atmosphere","Layer of gases held to a planet by its gravity"],
+[1,"troposphere","First, or lowest, layer of the atmosphere; where most weather occurs"],
+[1,"tropopause","Troposphere's topmost boundary"],
+[1,"stratosphere","Second layer of the atmosphere"],
+[1,"ozone layer","Shield of ozone gas in the stratosphere that protects the earth's surface from the sun's ultraviolet radiation"],
+[1,"mesosphere","Third and middle layer of the atmosphere"],
+[1,"thermosphere","Fourth layer of the atmosphere; contains the hottest temperatures"],
+[1,"exosphere","Outermost layer of the atmosphere; contains the thinnest air"],
+[1,"Earth's magnetic field","Region in which a magnetic force field exists; surrounds the earth to protect it from the sun's electrically charged particles"],
+[2,"meteorologist","Scientist who studies weather"],
+[2,"weather","Condition of the atmosphere at a given time"],
+[2,"climate","Typical weather an area experiences year-round"],
+[2,"climatologist","Scientist who studies climate"],
+[2,"Köppen Climate Classification System","Climate zones determined by precipitation and vegetation: tropical, dry, mild, continental, polar"],
+[2,"arid","Dry"],
+[2,"temperate","Neither extremely hot nor extremely cold"],
+[2,"solar radiation","Thermal (heat) energy from the sun being transferred to the earth's surface"],
+[2,"greenhouse effect","Natural process that maintains a proper temperature balance in Earth's atmosphere by trapping heat"],
+[3,"hydrologic cycle","Movement of water from the earth's surface into the air and back to the earth's surface (water cycle)"],
+[3,"evaporation","Process by which liquid water becomes water vapor"],
+[3,"transpiration","Form of evaporation in which plants release water vapor"],
+[3,"relative humidity","Measure of water vapor in air"],
+[3,"dew point","Temperature at which cooling air becomes saturated"],
+[3,"hygrometer","Instrument used to measure humidity"],
+[3,"condensation","Process by which water vapor changes back into liquid water"],
+[3,"condensation nuclei","Particles in air onto which water vapor condenses"],
+[3,"cumulus cloud","Billowy, low-level cloud with a flat base"],
+[3,"stratus cloud","Low-level cloud that forms a flat layer of heavy clouds not far above the ground"],
+[3,"cirrus cloud","Feather-like, high-level cloud made of ice crystals"],
+[3,"nimbus cloud","Rain cloud"],
+[3,"precipitation","Water falling to the earth's surface in the form of rain, sleet, snow, or hail"],
+[3,"rain or snow gauge","Instruments used to measure precipitation"]
+];
+// [section, question, answer]
+const QA=[
+[1,"Which layer of the atmosphere is most influenced by gravity, and why?","The troposphere. Gravity pulls most air molecules into the bottom layer, so the air there is the most dense."],
+[1,"Which is more rarefied, the stratosphere or the thermosphere? Why?","The thermosphere. The farther up you go, the more spread out and scarce the air molecules are."],
+[1,"How does Earth's magnetic field protect the earth?","It blocks most of the sun's electrically charged particles. Some are guided to the poles, where they collide with air molecules and make an aurora."],
+[1,"Why can people live in the thermosphere even though it is extremely hot?","The air is so rarefied that heat cannot transfer through the structure of the International Space Station, so people inside are protected."],
+[2,"What is the difference between weather and climate?","Weather is the condition of the atmosphere at a given time. Climate is the typical weather an area experiences year-round."],
+[2,"How does the greenhouse effect work?","Solar radiation warms the earth's surface. The surface radiates heat upward, and greenhouse gases keep some of that heat from escaping into space."],
+[2,"List the five main Köppen climate zones.","Tropical, dry, mild, continental, and polar."],
+[2,"Would more water in the atmosphere cause lower or higher temperatures?","Higher. Water vapor is a greenhouse gas that traps heat."],
+[3,"Name the three main processes of the water cycle.","Evaporation, condensation, and precipitation. (Water runoff is also important.)"],
+[3,"What are the three main ingredients of cloud formation?","Water, rising air, and microscopic particles (condensation nuclei)."],
+[3,"How does the hydrosphere interact with the atmosphere to form clouds?","Water evaporates into water vapor. Warm, moist air rises and cools to its dew point. The vapor condenses around condensation nuclei into tiny droplets that form clouds."]
+];
+// [section, question, correct, wrong1, wrong2, wrong3, explanation]
+const MCS=[
+[1,"Which layer of the atmosphere is where most weather occurs?","Troposphere","Stratosphere","Mesosphere","Exosphere","It holds almost all of the atmosphere's water vapor."],
+[1,"The troposphere's topmost boundary is called the…","tropopause","ozone layer","mesosphere","exosphere","Tropo means \"change\" in Greek."],
+[1,"Which layer contains the ozone layer?","Stratosphere","Troposphere","Mesosphere","Thermosphere","The stratosphere is the second layer."],
+[1,"The ozone layer protects the earth from…","ultraviolet radiation","meteoroids","solar wind","thunderstorms","Ultraviolet rays cause sunburn."],
+[1,"Which layer helps protect the earth by burning up most meteoroids?","Mesosphere","Troposphere","Stratosphere","Exosphere","Friction with air molecules makes meteoroids burn."],
+[1,"Which layer of the atmosphere is the hottest?","Thermosphere","Mesosphere","Stratosphere","Troposphere","Temperatures there can be over 3,000 degrees Fahrenheit."],
+[1,"Which layer is the outermost layer of the atmosphere?","Exosphere","Thermosphere","Mesosphere","Stratosphere","Exo means \"outer.\""],
+[1,"The International Space Station orbits the earth in the…","thermosphere","mesosphere","stratosphere","troposphere","Satellites also orbit in this layer."],
+[1,"About what percent of the air is nitrogen?","78%","21%","50%","1%","Oxygen is about 21%."],
+[1,"What causes an aurora?","Charged particles from the sun hitting air molecules near the poles","Meteoroids burning up","Sunlight reflecting off ice","Lightning in the exosphere","The northern lights are the aurora borealis."],
+[1,"Which Greek philosopher wrote Meteorologica around 350 B.C.?","Aristotle","Thales","Galileo","Luke Howard","Most of his weather ideas were very wrong."],
+[1,"Who invented the first modern thermometer, made with mercury, in 1714?","Daniel Gabriel Fahrenheit","Galileo Galilei","Luke Howard","Aristotle","Galileo used a simple liquid thermometer earlier."],
+[2,"Who is called the Father of Meteorology?","Luke Howard","Aristotle","Wladimir Köppen","Galileo","He grouped clouds into three main families."],
+[2,"Which scientist organized the globe into climate zones in the 1920s?","Wladimir Köppen","Luke Howard","Aristotle","Fahrenheit","He used precipitation and vegetation."],
+[2,"Which climate zones are temperate?","Mild and continental","Tropical and dry","Dry and polar","Polar and tropical","Temperate means neither extremely hot nor extremely cold."],
+[2,"Earth's most arid climates are found in…","deserts like the Sahara","the tundra","tropical rainforests","coastal areas","Arid means dry."],
+[2,"Which of these helps determine an area's climate?","Latitude","Wind speed","Air pressure","Wind direction","Climate is also determined by ocean currents, elevation, vegetation, and topography."],
+[2,"How is heat energy from the sun transferred to the earth?","Solar radiation","Condensation","Precipitation","Transpiration","Radiation is thermal energy from the sun."],
+[2,"Without the greenhouse effect, the earth's average temperature would be…","freezing","boiling","exactly the same","unpredictable","Greenhouse gases keep the earth warm enough for life."],
+[2,"What does Doppler radar send into the atmosphere?","Electromagnetic waves","Sound waves","Laser beams","Water vapor","The waves bounce off raindrops."],
+[3,"The movement of water from the earth's surface into the air and back is the…","hydrologic cycle","dew point","relative humidity","precipitation","Another name is the water cycle."],
+[3,"A form of evaporation in which plants release water vapor is…","transpiration","condensation","precipitation","relative humidity","Water leaves through stomata, tiny pores in leaves."],
+[3,"Warm air is ___ than cool air.","lighter","heavier","cleaner","lower","That is why warm air rises."],
+[3,"The temperature at which cooling air becomes saturated is the…","dew point","freezing point","boiling point","condensation point","At that point relative humidity is 100%."],
+[3,"Water vapor condenses around…","condensation nuclei","oxygen","raindrops","ozone","They are particles like dust, soot, smoke, ash, and sea salt."],
+[3,"Which instrument measures humidity?","Hygrometer","Barometer","Anemometer","Rain gauge","A pinecone can work as a simple hygrometer."],
+[3,"A cloud made of ice crystals is a…","cirrus cloud","cumulus cloud","stratus cloud","nimbus cloud","Cirrus clouds are high and feather-like."],
+[3,"A rain cloud is called a…","nimbus cloud","cumulus cloud","stratus cloud","cirrus cloud","The main rain makers are cumulonimbus and nimbostratus."],
+[3,"Which cloud group is billowy, low-level, and has a flat base?","Cumulus","Stratus","Cirrus","Nimbus","Cumulus clouds grow upward as warm, moist air rises."],
+[3,"Who named the three main cloud groups in 1803?","Luke Howard","Aristotle","Wladimir Köppen","Fahrenheit","They are cumulus, stratus, and cirrus."],
+[3,"What is the largest water reservoir of all?","The ocean","Lakes","Glaciers","Aquifers","Water runoff eventually returns to the ocean."]
+];
+// [section, statement, true?, fix]
+const TFS=[
+[1,"The troposphere is the lowest layer of the atmosphere.",true,""],
+[1,"The stratosphere is the layer where most weather occurs.",false,"Most weather occurs in the troposphere."],
+[1,"Nitrogen makes up about 78% of the air.",true,""],
+[1,"The thermosphere is the coldest layer of the atmosphere.",false,"It is the hottest layer."],
+[1,"The mesosphere helps protect the earth by burning up most meteoroids.",true,""],
+[1,"The ozone layer absorbs most of the sun's ultraviolet rays.",true,""],
+[1,"The air gets more rarefied the higher you go in the atmosphere.",true,""],
+[2,"Weather is the typical weather an area experiences year-round.",false,"That is climate. Weather is the condition of the atmosphere at a given time."],
+[2,"Luke Howard is called the Father of Meteorology.",true,""],
+[2,"A climatologist is a scientist who studies weather.",false,"A meteorologist studies weather. A climatologist studies climate."],
+[2,"Under the Köppen system there are five main climate zones.",true,""],
+[2,"Tropical rainforests receive rain only during one season.",false,"They receive consistent rain throughout the year."],
+[2,"The greenhouse effect keeps the earth warm enough for life.",true,""],
+[3,"Cold air can hold more water vapor than warm air.",false,"Warm air holds much more water vapor than cold air."],
+[3,"Cirrus clouds are made of water droplets.",false,"They are made of very small ice crystals."],
+[3,"At the dew point, the relative humidity is 100%.",true,""],
+[3,"Transpiration is a form of evaporation in which plants release water vapor.",true,""],
+[3,"Cumulus clouds form when warm, moist air rises.",true,""]
+];
+// [section, question, [accepted answers]]
+const FIBS=[
+[1,"The study of weather is called ______.",["meteorology"]],
+[1,"The layer of gases held to a planet by its gravity is the ______.",["atmosphere"]],
+[1,"The lowest layer of the atmosphere is the ______.",["troposphere"]],
+[1,"The topmost boundary of the troposphere is the ______.",["tropopause"]],
+[1,"The second layer of the atmosphere is the ______.",["stratosphere"]],
+[1,"The ozone layer protects the earth from ______ radiation.",["ultraviolet","UV"]],
+[1,"The third and middle layer of the atmosphere is the ______.",["mesosphere"]],
+[1,"The hottest layer of the atmosphere is the ______.",["thermosphere"]],
+[1,"The outermost layer of the atmosphere is the ______.",["exosphere"]],
+[1,"The colorful light display near the poles is called an ______.",["aurora"]],
+[2,"A scientist who studies weather is a ______.",["meteorologist"]],
+[2,"The condition of the atmosphere at a given time is ______.",["weather"]],
+[2,"The typical weather an area experiences year-round is ______.",["climate"]],
+[2,"A scientist who studies climate is a ______.",["climatologist"]],
+[2,"Another word for dry is ______.",["arid"]],
+[2,"A climate that is neither extremely hot nor extremely cold is ______.",["temperate"]],
+[2,"Heat energy from the sun transferred to the earth is solar ______.",["radiation"]],
+[2,"The natural process that keeps the earth warm by trapping heat is the ______ effect.",["greenhouse"]],
+[3,"Another name for the water cycle is the ______ cycle.",["hydrologic","hydrologic cycle","hydrological"]],
+[3,"The process by which liquid water becomes water vapor is ______.",["evaporation"]],
+[3,"A form of evaporation in which plants release water vapor is ______.",["transpiration"]],
+[3,"The instrument used to measure humidity is a ______.",["hygrometer"]],
+[3,"The process by which water vapor changes back into liquid water is ______.",["condensation"]],
+[3,"A feather-like, high-level cloud made of ice crystals is a ______ cloud.",["cirrus"]],
+[3,"Water falling to the earth as rain, sleet, snow, or hail is ______.",["precipitation"]]
+];
+
+/* ---------- HELPERS ---------- */
+const $=s=>document.querySelector(s);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pool=a=>S.sec?a.filter(x=>x[0]==S.sec):a;
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const norm=s=>s.toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').replace(/^(a|an|the) /,'').trim();
+function lev(a,b){const m=[];for(let i=0;i<=a.length;i++){m[i]=[i];}for(let j=0;j<=b.length;j++)m[0][j]=j;
+ for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return m[a.length][b.length]}
+function fibOk(inp,acc){const x=norm(inp);if(!x)return false;
+ return acc.some(a=>{a=norm(a);return x==a||x.replace(/ /g,'')==a.replace(/ /g,'')||(a.length>5&&lev(x,a)<=1)})}
+function confetti(){const c=['#0d6e8a','#1f9d6b','#f0b429','#ef6f4f','#7fb4c6'];
+ for(let i=0;i<60;i++){const d=document.createElement('div');d.className='cf';
+ d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDelay=Math.random()*.8+'s';
+ document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}}
+
+/* ---------- STATE / UI ---------- */
+const S={mode:'cards',sec:0};
+const MODES=[['cards','Flashcards'],['mc','Multiple Choice'],['tf','True / False'],['fib','Fill-in'],['match','Matching'],['test','Test']];
+const SECS=[[0,'All (5.1–5.3)'],[1,'5.1 Atmosphere'],[2,'5.2 Weather & Climate'],[3,'5.3 Water Cycle & Clouds']];
+function head(){
+ $('#tabs').innerHTML=MODES.map(m=>`<button class="${S.mode==m[0]?'on':''}" onclick="S.mode='${m[0]}';start()">${m[1]}</button>`).join('');
+ $('#chips').innerHTML=SECS.map(s=>`<button class="${S.sec==s[0]?'on':''}" onclick="S.sec=${s[0]};start()">${s[1]}</button>`).join('');
+}
+function start(){head();
+ if(S.mode=='cards')initCards();else if(S.mode=='match')initMatch();else initQuiz();}
+
+/* ----- Flashcards ----- */
+let C={d:[],i:0,f:false};
+function initCards(){C.d=shuf([...pool(TERMS).map(t=>({s:t[0],f:t[1],b:t[2],k:'t'})),...pool(QA).map(t=>({s:t[0],f:t[1],b:t[2],k:'q'}))]);C.i=0;C.f=false;drawCards()}
+function drawCards(){const c=C.d[C.i];
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Card ${C.i+1} / ${C.d.length}</span><span>${c.k=='q'?'Short answer':'Term'} · ${'5.'+c.s}</span></div>
+ <div class="bar"><i style="width:${(C.i+1)/C.d.length*100}%"></i></div>
+ <div class="flip" onclick="C.f=!C.f;drawCards()">${C.f?`<div class="d">${esc(c.b)}</div>`:`<div class="${c.k=='q'?'d':'t'}">${esc(c.f)}</div><small>tap to flip</small>`}</div>
+ <div class="nav"><button class="btn alt" onclick="cardGo(-1)" ${C.i==0?'disabled':''}>◀ Prev</button><button class="btn alt" onclick="initCards()">Shuffle</button><button class="btn" onclick="cardGo(1)" ${C.i==C.d.length-1?'disabled':''}>Next ▶</button></div></div>`}
+function cardGo(n){C.i+=n;C.f=false;drawCards()}
+
+/* ----- Quiz engine (MC / TF / Fill-in / Test) ----- */
+let Q={items:[],i:0,res:[],mode:''};
+function mkMC(r){const o=shuf(r.slice(2,6));return{t:'mc',q:r[1],opts:o,a:o.indexOf(r[2]),ans:r[2],ex:r[6]}}
+function mkTF(r){return{t:'tf',q:r[1],opts:['True','False'],a:r[2]?0:1,ans:r[2]?'True':'False',ex:r[3]}}
+function mkFIB(r){return{t:'fib',q:r[1],acc:r[2],ans:r[2][0],ex:''}}
+function initQuiz(){let it=[];const M=S.mode;
+ if(M=='mc')it=shuf(pool(MCS)).map(mkMC);
+ else if(M=='tf')it=shuf(pool(TFS)).map(mkTF);
+ else if(M=='fib')it=shuf(pool(FIBS)).map(mkFIB);
+ else it=shuf([...shuf(pool(MCS)).slice(0,12).map(mkMC),...shuf(pool(TFS)).slice(0,8).map(mkTF),...shuf(pool(FIBS)).slice(0,10).map(mkFIB)]);
+ Q={items:it,i:0,res:[],mode:M};drawQ()}
+function score(){return Q.res.filter(r=>r&&r.ok).length}
+function drawQ(){
+ if(Q.i>=Q.items.length)return results();
+ const it=Q.items[Q.i],r=Q.res[Q.i],n=Q.items.length;
+ let body='';
+ if(it.t=='fib'){body=`<input class="fib" id="fi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer" ${r?'disabled value="'+esc(r.pick)+'"':''} onkeydown="if(event.key=='Enter')checkFib()">
+  ${r?'':'<div class="nav" style="justify-content:flex-start"><button class="btn" onclick="checkFib()">Check</button></div>'}`}
+ else body=it.opts.map((o,k)=>`<button class="opt ${r?(k==it.a?'good':(k==r.pick?'bad':'')):''}" ${r?'disabled':''} onclick="pick(${k})">${esc(o)}</button>`).join('');
+ const fb=r?`<div class="fb ${r.ok?'good':'bad'}">${r.ok?'✅ Correct!':'❌ Not quite. Answer: <b>'+esc(it.ans)+'</b>'} ${it.ex?'<br>'+esc(it.ex):''}</div>`:'';
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>${Q.mode=='test'?'Test · ':''}Question ${Q.i+1} / ${n}</span><span>Score: ${score()}</span></div>
+ <div class="bar"><i style="width:${Q.i/n*100}%"></i></div>
+ <div class="q">${it.t=='tf'?'True or False: ':''}${esc(it.q)}</div>${body}${fb}
+ <div class="nav"><button class="btn alt" onclick="Q.i--;drawQ()" ${Q.i==0?'disabled':''}>◀ Prev</button><button class="btn" onclick="Q.i++;drawQ()" ${r?'':'disabled'}>${Q.i==n-1?'Finish':'Next ▶'}</button></div></div>`;
+ if(it.t=='fib'&&!r)setTimeout(()=>{const e=$('#fi');e&&e.focus()},30)}
+function pick(k){const it=Q.items[Q.i];if(Q.res[Q.i])return;Q.res[Q.i]={ok:k==it.a,pick:k};drawQ()}
+function checkFib(){const it=Q.items[Q.i];if(Q.res[Q.i])return;const v=$('#fi').value;if(!v.trim())return;
+ Q.res[Q.i]={ok:fibOk(v,it.acc),pick:v};drawQ()}
+function results(){const n=Q.items.length,s=score(),p=Math.round(s/n*100);
+ const wrong=Q.items.map((it,i)=>({it,r:Q.res[i]})).filter(x=>!x.r||!x.r.ok);
+ const msg=p>=90?'Amazing! Test-ready! 🌊':p>=70?'Great job! Review the misses below.':'Keep practicing — you can do it!';
+ if(p>=80)confetti();
+ $('#app').innerHTML=`<div class="card"><div class="big">${s} / ${n} (${p}%)</div><p style="text-align:center">${msg}</p>
+ <div class="nav" style="justify-content:center"><button class="btn" onclick="initQuiz()">Try again</button></div>
+ ${wrong.length?'<h3>Review your misses</h3>'+wrong.map(x=>`<div class="rev"><b>${esc(x.it.q)}</b><br>Answer: ${esc(x.it.ans)}${x.it.ex?'<br><i>'+esc(x.it.ex)+'</i>':''}</div>`).join(''):''}</div>`}
+
+/* ----- Matching ----- */
+let M={L:[],R:[],sel:null,done:0,miss:0,n:0};
+function initMatch(){const p=shuf(pool(TERMS)).slice(0,6);M={L:shuffIdx(p),R:shuffIdx(p),sel:null,done:0,miss:0,n:p.length,p,ok:{}};drawMatch()}
+function shuffIdx(p){return shuf(p.map((_,i)=>i))}
+function drawMatch(){const p=M.p;
+ if(M.done==M.n){if(M.miss<=1)confetti();
+  $('#app').innerHTML=`<div class="card"><div class="big">All matched! 🎉</div><p style="text-align:center">Wrong tries: ${M.miss}</p><div class="nav" style="justify-content:center"><button class="btn" onclick="initMatch()">New round</button></div></div>`;return}
+ const b=(side,i)=>{const k=side+i,ok=M.ok[side+i];return `<button class="${ok?'done':''} ${M.sel&&M.sel.k==k?'sel':''} ${M.bad&&M.bad.includes(k)?'shake':''}" ${ok?'disabled':''} onclick="mpick('${side}',${i})">${esc(side=='L'?p[i][1]:p[i][2])}</button>`};
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Tap a term, then its meaning</span><span>${M.done} / ${M.n} · Wrong: ${M.miss}</span></div>
+ <div class="bar"><i style="width:${M.done/M.n*100}%"></i></div>
+ <div class="mt"><div>${M.L.map(i=>b('L',i)).join('')}</div><div>${M.R.map(i=>b('R',i)).join('')}</div></div>
+ <div class="nav"><button class="btn alt" onclick="initMatch()">New round</button><span></span></div></div>`;
+ document.querySelectorAll('.mt>div').forEach(d=>{d.style.display='grid';d.style.gap='8px'})}
+function mpick(side,i){M.bad=null;
+ if(!M.sel||M.sel.side==side){M.sel={side,i,k:side+i};return drawMatch()}
+ const li=side=='L'?i:M.sel.i,ri=side=='R'?i:M.sel.i;
+ if(li==ri){M.ok['L'+li]=M.ok['R'+ri]=1;M.done++;M.sel=null}
+ else{M.miss++;M.bad=[M.sel.k,side+i];M.sel=null}
+ drawMatch();if(M.bad)setTimeout(()=>{M.bad=null;drawMatch()},600)}
+
+start();
+</script>
+</body>
+</html>

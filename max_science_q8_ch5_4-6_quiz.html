@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Max's Science Q8 – Ch. 5 Meteorology (5.4–5.6)</title>
+<style>
+html,body{background:#dff1f5 !important;margin:0;padding:0}
+*{box-sizing:border-box}
+body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#0a2e44;line-height:1.45}
+.wrap{max-width:720px;margin:0 auto;padding:16px 14px 60px}
+h1{font-size:1.45rem;margin:6px 0 2px;color:#08506b}
+.sub{margin:0 0 12px;color:#35637a;font-size:.95rem}
+.tabs,.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tabs button{flex:1 1 auto;padding:10px 8px;border:2px solid #0d6e8a;background:#fff;color:#08506b;border-radius:10px;font-weight:700;font-size:.95rem;cursor:pointer}
+.tabs button.on{background:#0d6e8a;color:#fff}
+.chips button{padding:6px 12px;border:1.5px solid #7fb4c6;background:#f4fbfd;color:#2b5a70;border-radius:99px;font-size:.88rem;cursor:pointer}
+.chips button.on{background:#08506b;border-color:#08506b;color:#fff}
+.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(8,80,107,.15)}
+.bar{height:8px;background:#cfe6ed;border-radius:6px;overflow:hidden;margin-bottom:8px}
+.bar i{display:block;height:100%;background:#0d6e8a;transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:.9rem;color:#35637a;margin-bottom:10px}
+.q{font-size:1.15rem;font-weight:700;margin:6px 0 14px}
+.opt{display:block;width:100%;text-align:left;padding:12px 14px;margin:8px 0;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:12px;font-size:1rem;color:#0a2e44;cursor:pointer}
+.opt:hover:not(:disabled){border-color:#0d6e8a}
+.opt.good{background:#d8f3e6;border-color:#1f9d6b}
+.opt.bad{background:#fde0de;border-color:#d9534f}
+.opt:disabled{cursor:default}
+input.fib{width:100%;padding:12px;font-size:1.05rem;border:2px solid #b9d9e4;border-radius:12px}
+.fb{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:.95rem}
+.fb.good{background:#d8f3e6}.fb.bad{background:#fde0de}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
+.btn{padding:10px 18px;border:0;border-radius:10px;background:#0d6e8a;color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
+.btn.alt{background:#e3f1f6;color:#08506b}
+.btn:disabled{opacity:.4;cursor:default}
+.flip{min-height:190px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer;padding:20px;border:2px dashed #7fb4c6;border-radius:14px;background:#f4fbfd}
+.flip .t{font-size:1.4rem;font-weight:800;color:#08506b}
+.flip .d{font-size:1.1rem}
+.flip small{color:#6a93a5;margin-top:10px}
+.mt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mt button{padding:10px;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:10px;font-size:.88rem;color:#0a2e44;cursor:pointer;text-align:left}
+.mt button.sel{border-color:#0d6e8a;background:#d6edf5}
+.mt button.done{background:#d8f3e6;border-color:#1f9d6b;color:#4a6;cursor:default}
+.mt button.shake{background:#fde0de;border-color:#d9534f}
+.big{font-size:2.4rem;font-weight:800;color:#08506b;text-align:center;margin:4px 0}
+.rev{border-top:1px solid #d3e6ed;padding:10px 0;font-size:.95rem}
+.rev b{color:#08506b}
+.cf{position:fixed;top:-12px;width:10px;height:14px;z-index:9;animation:fall 2.4s linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.8}}
+@media (prefers-reduced-motion:reduce){.cf{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Science Q8 – Weather Systems</h1>
+  <p class="sub">Investigating God's World · Chapter 5 (5.4–5.6)</p>
+  <div class="tabs" id="tabs"></div>
+  <div class="chips" id="chips"></div>
+  <div id="app"></div>
+</div>
+
+<script>
+/* ---------- DATA (textbook Ch. 5, 5.4–5.6; s=1→5.4, 2→5.5, 3→5.6) ---------- */
+const TERMS=[
+[1,"air pressure","Weight of air"],
+[1,"barometer","Instrument used to measure air pressure"],
+[1,"weather vane","Instrument used to monitor wind direction"],
+[1,"anemometer","Instrument used to measure wind speed"],
+[1,"wind","Air moving into low-pressure areas"],
+[1,"global winds","Bands of wind that flow in predictable directions at certain latitudes"],
+[1,"air mass","Large body of air having uniform temperature and humidity"],
+[1,"source region","Area of land or ocean where an air mass forms"],
+[1,"front","Boundary between two air masses"],
+[1,"warm front","Location where a warm air mass takes the place of a cold air mass"],
+[1,"cold front","Location where a cold air mass takes the place of a warm air mass"],
+[1,"jet stream","Band of high-altitude wind that flows from west to east around the earth"],
+[2,"cumulonimbus cloud","Vertical cloud that produces a thunderstorm"],
+[2,"updraft","Upward vertical movement of air"],
+[2,"downdraft","Downward vertical movement of air"],
+[2,"hail","Frozen precipitation formed in cumulonimbus clouds"],
+[2,"stepped leader","First stage of lightning, in which a stream of electricity travels from a cumulonimbus cloud"],
+[2,"tornado","Whirling funnel cloud that stretches from a cumulonimbus cloud to the ground"],
+[2,"tornado watch","Notification that conditions are right for tornado formation"],
+[2,"tornado warning","Notification that a tornado has been spotted"],
+[2,"Enhanced Fujita (EF) Scale","Tornado severity rating scale, rating tornadoes from EF0 to EF5"],
+[3,"cyclone","Storm that rotates around a low-pressure area"],
+[3,"hurricane","Tropical cyclone with winds of 74 miles per hour or greater"],
+[3,"eye","Calm, low-pressure area around which a hurricane rotates"],
+[3,"eyewall","Band of storm clouds surrounding the eye of a hurricane, where the winds are strongest"],
+[3,"storm surge","Rise in ocean water surrounding a hurricane"],
+[3,"Saffir-Simpson Hurricane Wind Scale","Scale used to rank hurricanes by their wind speed and potential for destruction"],
+[3,"natural disaster","Destructive event caused by forces of nature"]
+];
+const QA=[
+[1,"Why does warm air rise?","Warm air has fewer molecules in the same space, so it weighs less than cool air. Heavier cool air pushes it upward."],
+[1,"How are global winds created?","By the uneven heating of the earth. Warm air at the equator rises, and cooler air flows in to fill the low-pressure area."],
+[1,"What is the difference between a warm front and a cold front?","Warm front: warm air takes the place of cold air; slow; days of clouds and drizzle. Cold front: cold air takes the place of warm air; fast; short, severe storms, then clear and colder."],
+[1,"Why is an air mass named for its source region?","The air above a region takes on the temperature and moisture of the land or water below it."],
+[2,"How does an updraft help a hailstone get larger?","It tosses the hailstone up and down inside the cloud. Each trip adds a layer of ice until it is too heavy for the updraft."],
+[2,"What is the difference between a tornado watch and a tornado warning?","Watch: conditions are right for a tornado. Warning: a tornado has been spotted, so take shelter right away."],
+[2,"Why should you protect your head and neck in a tornado?","Flying debris is a major danger. Crouch down and cover your head and neck with your arms."],
+[2,"Why do you see lightning before you hear thunder?","Light travels much faster than sound."],
+[3,"How does a tropical cyclone develop?","Tropical disturbance, then tropical depression, then tropical storm (given a name), then hurricane when winds reach 74 mph or more."],
+[3,"Why does a hurricane weaken over land or colder water?","A hurricane gets its energy from warm water."],
+[3,"Which natural disasters are meteorological and which are geological?","Meteorological: hurricane, tornado, flood. Geological: earthquake, tsunami, volcanic eruption."]
+];
+const MCS=[
+[1,"Air pressure is the weight of…","air","water","wind","clouds","The weight of the atmosphere pushes down on the earth."],
+[1,"Warm air is…","lighter than cool air","heavier than cool air","denser than cool air","the same weight as cool air","Warm air has fewer molecules in the same space."],
+[1,"Wind is air moving into…","low-pressure areas","high-pressure areas","warm fronts","the jet stream","Air flows from high pressure to low pressure."],
+[1,"Which instrument measures air pressure?","Barometer","Anemometer","Weather vane","Hygrometer","Falling air pressure can mean stormy weather."],
+[1,"Which instrument measures wind speed?","Anemometer","Weather vane","Barometer","Thermometer","A weather vane shows wind direction."],
+[1,"Bands of wind that flow in predictable directions at certain latitudes are…","global winds","local winds","jet streams","fronts","Uneven heating of the earth creates them."],
+[1,"The winds nearest the equator, between the easterlies and westerlies, are the…","trade winds","polar easterlies","prevailing westerlies","jet streams","Sailors used them to push ships along trade routes."],
+[1,"A wind that blows from the south toward the north is called a…","south wind","north wind","east wind","west wind","Winds are named for the direction they come from."],
+[1,"A large body of air having uniform temperature and humidity is a(n)…","air mass","front","jet stream","source region","It forms over a source region."],
+[1,"A maritime air mass is moist because it forms over…","the ocean","land","mountains","deserts","A continental air mass is dry because it forms over land."],
+[1,"Which air masses are the coldest?","Arctic","Polar","Tropical","Maritime","They form over the Arctic or Antarctic Circle."],
+[1,"Who named fronts after the battle lines of World War I?","Vilhelm Bjerknes","Luke Howard","T. Theodore Fujita","Matthew Maury","He led the Bergen Group in Norway."],
+[1,"Which front brings several days of cloudy, drizzly weather?","Warm front","Cold front","Jet stream","Squall line","Warm fronts advance slowly."],
+[1,"Which front moves quickly and can bring heavy rain, thunder, hail, and tornadoes?","Cold front","Warm front","Jet stream","Source region","Its stormy weather is short-lived, followed by clear skies and colder temperatures."],
+[1,"The jet stream flows around the earth from…","west to east","east to west","north to south","south to north","Storms on fronts often move with the jet stream."],
+[1,"A sea breeze blows during the day from…","the ocean toward land","land toward the ocean","a mountain down to a valley","the poles to the equator","At night a land breeze reverses the flow."],
+[2,"Which cloud forms vertically and produces thunderstorms?","Cumulonimbus","Stratus","Cirrus","Cumulus","It is sometimes called a thunderhead."],
+[2,"What gives a cumulonimbus cloud its energy?","Updrafts","Downdrafts","Hail","Lightning","Updrafts are warm air moving upward."],
+[2,"Why does a thunderhead spread out into an anvil shape?","It cannot rise past the tropopause","It runs out of water","It is full of hail","It is cooled by a sea breeze","Upper-level winds blow the icy top forward."],
+[2,"Hail can form only in…","very tall cumulonimbus clouds with powerful updrafts","any cumulus cloud","cirrus clouds","stratus clouds","The stronger the updraft, the larger the hailstone."],
+[2,"The first stage of lightning is the…","stepped leader","thunder","downdraft","wall cloud","A positive charge then shoots up to meet it."],
+[2,"Why do you hear thunder after you see lightning?","Light travels much faster than sound","Thunder happens later","Lightning is closer","Sound is louder","Light and sound start at the same time."],
+[2,"The part of a tornado that drops from the cumulonimbus cloud is the…","wall cloud","stepped leader","anvil","eyewall","If the tornado touches down, a dark debris cloud forms at its base."],
+[2,"A tornado watch means…","conditions are right for a tornado to form","a tornado has been spotted","a tornado is over your town","a tornado has ended","A tornado warning means one has been spotted."],
+[2,"Which scale rates tornado severity?","Enhanced Fujita Scale","Saffir-Simpson Scale","Beaufort Scale","Richter Scale","It runs from EF0 to EF5."],
+[2,"Which is a safe place during a tornado?","A basement or interior room","Under a bridge or overpass","A mobile home","A gym with a large roof","Stay away from windows and doors."],
+[2,"After the last clap of thunder, how long should you stay inside?","30 minutes","5 minutes","10 minutes","1 hour","If you hear thunder, you are close enough to be hit by lightning."],
+[3,"A storm that rotates around a low-pressure area is a…","cyclone","front","jet stream","thunderhead","Tropical cyclones begin over warm, tropical seas."],
+[3,"A hurricane is a tropical cyclone with winds of at least…","74 miles per hour","39 miles per hour","111 miles per hour","157 miles per hour","Below that it is a tropical depression or storm."],
+[3,"In the western Pacific, tropical cyclones are usually called…","typhoons","hurricanes","tornadoes","monsoons","In the Atlantic they are called hurricanes."],
+[3,"In the Northern Hemisphere, tropical cyclones spin…","counterclockwise","clockwise","straight","in no pattern","In the Southern Hemisphere they spin clockwise."],
+[3,"The calm, low-pressure center of a hurricane is the…","eye","eyewall","storm surge","wall cloud","The eyewall is the band of storm clouds around it."],
+[3,"Where are a hurricane's strongest winds?","Eyewall","Eye","Outer edge","Storm surge","The most powerful part arrives after the eye passes."],
+[3,"A hurricane's greatest damage usually comes from its…","storm surge","eye","anvil","stepped leader","Storm surge is the rise in ocean water."],
+[3,"A hurricane gets its energy from…","warm water","cold water","mountains","the jet stream","So it weakens over land or colder water."],
+[3,"Which scale ranks hurricanes?","Saffir-Simpson Hurricane Wind Scale","Enhanced Fujita Scale","Beaufort Scale","Richter Scale","Category 5 is catastrophic."],
+[3,"Which of these is a geological natural disaster?","Tsunami","Tornado","Hurricane","Flood","Tsunamis are caused by earthquakes on the ocean floor."],
+[3,"What was the deadliest Atlantic hurricane ever recorded?","The Great Hurricane of 1780","Hurricane Ivan","Hurricane Ian","Tropical Storm Alex","It killed over 20,000 people."],
+[3,"A barometer reading that drops fast usually means…","stormy weather is on its way","fair weather is coming","a warm front is leaving","no change","If air pressure rises, fair weather will come."]
+];
+const TFS=[
+[1,"Air pressure is the weight of air.",true,""],
+[1,"Cool air is lighter than warm air.",false,"Cool air is denser and heavier than warm air."],
+[1,"Wind is air moving from a high-pressure area into a low-pressure area.",true,""],
+[1,"An anemometer is used to measure air pressure.",false,"A barometer measures air pressure. An anemometer measures wind speed."],
+[1,"A cold front advances more quickly than a warm front.",true,""],
+[1,"A jet stream flows around the earth from east to west.",false,"Jet streams flow from west to east."],
+[1,"A continental air mass is moist because it forms over land.",false,"A continental air mass is dry. A maritime air mass is moist."],
+[1,"The boundary between two air masses is called a front.",true,""],
+[2,"A thunderstorm is produced by a cumulonimbus cloud.",true,""],
+[2,"Hail can form in any kind of cloud.",false,"It forms only in very tall cumulonimbus clouds with powerful updrafts."],
+[2,"Thunder is heard before lightning is seen.",false,"Lightning is seen first because light travels faster than sound."],
+[2,"A tornado warning means conditions are right for a tornado to form.",false,"That is a tornado watch. A warning means a tornado has been spotted."],
+[2,"The Enhanced Fujita Scale rates tornadoes from EF0 to EF5.",true,""],
+[2,"Mobile homes are safe shelters during severe storms.",false,"They tip over easily. A sturdy, well-constructed building is safest."],
+[2,"If you are caught outdoors during lightning, you should lie flat on the ground.",false,"Crouch low instead, so you touch a smaller area."],
+[3,"A hurricane is a tropical cyclone with winds of 74 miles per hour or greater.",true,""],
+[3,"Tropical cyclones spin clockwise in the Northern Hemisphere.",false,"They spin counterclockwise in the Northern Hemisphere."],
+[3,"The strongest winds of a hurricane are in the eyewall.",true,""],
+[3,"A hurricane gets its energy from cold water.",false,"It gets its energy from warm water."],
+[3,"A tsunami is a meteorological natural disaster.",false,"A tsunami is geological. It is caused by an earthquake."],
+[3,"Storm surge is the rise in ocean water surrounding a hurricane.",true,""],
+[3,"On the Saffir-Simpson scale, a category 1 hurricane is the most catastrophic.",false,"Category 5 is the most catastrophic."]
+];
+const FIBS=[
+[1,"The weight of air is called air ______.",["pressure"]],
+[1,"The instrument used to measure air pressure is a ______.",["barometer"]],
+[1,"The instrument used to measure wind speed is an ______.",["anemometer"]],
+[1,"The instrument used to monitor wind direction is a ______.",["weather vane","weathervane","wind vane"]],
+[1,"Bands of wind that flow in predictable directions at certain latitudes are ______ winds.",["global"]],
+[1,"The winds nearest the equator are called the ______ winds.",["trade"]],
+[1,"A large body of air with uniform temperature and humidity is an air ______.",["mass"]],
+[1,"The area of land or ocean where an air mass forms is its ______ region.",["source"]],
+[1,"The boundary between two air masses is called a ______.",["front"]],
+[1,"A band of high-altitude wind that flows from west to east is the ______ stream.",["jet"]],
+[2,"The vertical cloud that produces a thunderstorm is the ______ cloud.",["cumulonimbus"]],
+[2,"Upward vertical movement of air is an ______.",["updraft"]],
+[2,"Downward vertical movement of air is a ______.",["downdraft"]],
+[2,"Frozen precipitation formed in cumulonimbus clouds is ______.",["hail"]],
+[2,"The first stage of lightning is the stepped ______.",["leader"]],
+[2,"A whirling funnel cloud that stretches from a cumulonimbus cloud to the ground is a ______.",["tornado"]],
+[2,"A notification that a tornado has been spotted is a tornado ______.",["warning"]],
+[2,"The most severe tornado rating on the Enhanced Fujita Scale is ______.",["EF5","EF 5","EF-5"]],
+[3,"A storm that rotates around a low-pressure area is a ______.",["cyclone"]],
+[3,"The calm, low-pressure center of a hurricane is the ______.",["eye"]],
+[3,"The band of storm clouds around the eye of a hurricane is the ______.",["eyewall"]],
+[3,"The rise in ocean water surrounding a hurricane is the storm ______.",["surge"]],
+[3,"Hurricanes are ranked on the ______ Hurricane Wind Scale.",["Saffir-Simpson","Saffir Simpson"]],
+[3,"A destructive event caused by the forces of nature is a ______ disaster.",["natural"]],
+[3,"In the western Pacific, tropical cyclones are usually called ______.",["typhoons","typhoon"]],
+[3,"A category ______ hurricane is the most catastrophic (write the word).",["five","5"]]
+];
+
+/* ---------- HELPERS ---------- */
+const $=s=>document.querySelector(s);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pool=a=>S.sec?a.filter(x=>x[0]==S.sec):a;
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const norm=s=>s.toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').replace(/^(a|an|the) /,'').trim();
+function lev(a,b){const m=[];for(let i=0;i<=a.length;i++){m[i]=[i];}for(let j=0;j<=b.length;j++)m[0][j]=j;
+ for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return m[a.length][b.length]}
+function fibOk(inp,acc){const x=norm(inp);if(!x)return false;
+ return acc.some(a=>{a=norm(a);return x==a||x.replace(/ /g,'')==a.replace(/ /g,'')||(a.length>5&&lev(x,a)<=1)})}
+function confetti(){const c=['#0d6e8a','#1f9d6b','#f0b429','#ef6f4f','#7fb4c6'];
+ for(let i=0;i<60;i++){const d=document.createElement('div');d.className='cf';
+ d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDelay=Math.random()*.8+'s';
+ document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}}
+
+/* ---------- STATE / UI ---------- */
+const S={mode:'cards',sec:0};
+const MODES=[['cards','Flashcards'],['mc','Multiple Choice'],['tf','True / False'],['fib','Fill-in'],['match','Matching'],['test','Test']];
+const SECS=[[0,'All (5.4–5.6)'],[1,'5.4 Winds & Air Masses'],[2,'5.5 Thunderstorms & Tornadoes'],[3,'5.6 Hurricanes & Forecasting']];
+function head(){
+ $('#tabs').innerHTML=MODES.map(m=>`<button class="${S.mode==m[0]?'on':''}" onclick="S.mode='${m[0]}';start()">${m[1]}</button>`).join('');
+ $('#chips').innerHTML=SECS.map(s=>`<button class="${S.sec==s[0]?'on':''}" onclick="S.sec=${s[0]};start()">${s[1]}</button>`).join('');
+}
+function start(){head();
+ if(S.mode=='cards')initCards();else if(S.mode=='match')initMatch();else initQuiz();}
+
+/* ----- Flashcards ----- */
+let C={d:[],i:0,f:false};
+function initCards(){C.d=shuf([...pool(TERMS).map(t=>({s:t[0],f:t[1],b:t[2],k:'t'})),...pool(QA).map(t=>({s:t[0],f:t[1],b:t[2],k:'q'}))]);C.i=0;C.f=false;drawCards()}
+function drawCards(){const c=C.d[C.i];
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Card ${C.i+1} / ${C.d.length}</span><span>${c.k=='q'?'Short answer':'Term'} · ${'5.'+(c.s+3)}</span></div>
+ <div class="bar"><i style="width:${(C.i+1)/C.d.length*100}%"></i></div>
+ <div class="flip" onclick="C.f=!C.f;drawCards()">${C.f?`<div class="d">${esc(c.b)}</div>`:`<div class="${c.k=='q'?'d':'t'}">${esc(c.f)}</div><small>tap to flip</small>`}</div>
+ <div class="nav"><button class="btn alt" onclick="cardGo(-1)" ${C.i==0?'disabled':''}>◀ Prev</button><button class="btn alt" onclick="initCards()">Shuffle</button><button class="btn" onclick="cardGo(1)" ${C.i==C.d.length-1?'disabled':''}>Next ▶</button></div></div>`}
+function cardGo(n){C.i+=n;C.f=false;drawCards()}
+
+/* ----- Quiz engine (MC / TF / Fill-in / Test) ----- */
+let Q={items:[],i:0,res:[],mode:''};
+function mkMC(r){const o=shuf(r.slice(2,6));return{t:'mc',q:r[1],opts:o,a:o.indexOf(r[2]),ans:r[2],ex:r[6]}}
+function mkTF(r){return{t:'tf',q:r[1],opts:['True','False'],a:r[2]?0:1,ans:r[2]?'True':'False',ex:r[3]}}
+function mkFIB(r){return{t:'fib',q:r[1],acc:r[2],ans:r[2][0],ex:''}}
+function initQuiz(){let it=[];const M=S.mode;
+ if(M=='mc')it=shuf(pool(MCS)).map(mkMC);
+ else if(M=='tf')it=shuf(pool(TFS)).map(mkTF);
+ else if(M=='fib')it=shuf(pool(FIBS)).map(mkFIB);
+ else it=shuf([...shuf(pool(MCS)).slice(0,12).map(mkMC),...shuf(pool(TFS)).slice(0,8).map(mkTF),...shuf(pool(FIBS)).slice(0,10).map(mkFIB)]);
+ Q={items:it,i:0,res:[],mode:M};drawQ()}
+function score(){return Q.res.filter(r=>r&&r.ok).length}
+function drawQ(){
+ if(Q.i>=Q.items.length)return results();
+ const it=Q.items[Q.i],r=Q.res[Q.i],n=Q.items.length;
+ let body='';
+ if(it.t=='fib'){body=`<input class="fib" id="fi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer" ${r?'disabled value="'+esc(r.pick)+'"':''} onkeydown="if(event.key=='Enter')checkFib()">
+  ${r?'':'<div class="nav" style="justify-content:flex-start"><button class="btn" onclick="checkFib()">Check</button></div>'}`}
+ else body=it.opts.map((o,k)=>`<button class="opt ${r?(k==it.a?'good':(k==r.pick?'bad':'')):''}" ${r?'disabled':''} onclick="pick(${k})">${esc(o)}</button>`).join('');
+ const fb=r?`<div class="fb ${r.ok?'good':'bad'}">${r.ok?'✅ Correct!':'❌ Not quite. Answer: <b>'+esc(it.ans)+'</b>'} ${it.ex?'<br>'+esc(it.ex):''}</div>`:'';
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>${Q.mode=='test'?'Test · ':''}Question ${Q.i+1} / ${n}</span><span>Score: ${score()}</span></div>
+ <div class="bar"><i style="width:${Q.i/n*100}%"></i></div>
+ <div class="q">${it.t=='tf'?'True or False: ':''}${esc(it.q)}</div>${body}${fb}
+ <div class="nav"><button class="btn alt" onclick="Q.i--;drawQ()" ${Q.i==0?'disabled':''}>◀ Prev</button><button class="btn" onclick="Q.i++;drawQ()" ${r?'':'disabled'}>${Q.i==n-1?'Finish':'Next ▶'}</button></div></div>`;
+ if(it.t=='fib'&&!r)setTimeout(()=>{const e=$('#fi');e&&e.focus()},30)}
+function pick(k){const it=Q.items[Q.i];if(Q.res[Q.i])return;Q.res[Q.i]={ok:k==it.a,pick:k};drawQ()}
+function checkFib(){const it=Q.items[Q.i];if(Q.res[Q.i])return;const v=$('#fi').value;if(!v.trim())return;
+ Q.res[Q.i]={ok:fibOk(v,it.acc),pick:v};drawQ()}
+function results(){const n=Q.items.length,s=score(),p=Math.round(s/n*100);
+ const wrong=Q.items.map((it,i)=>({it,r:Q.res[i]})).filter(x=>!x.r||!x.r.ok);
+ const msg=p>=90?'Amazing! Test-ready! 🌊':p>=70?'Great job! Review the misses below.':'Keep practicing — you can do it!';
+ if(p>=80)confetti();
+ $('#app').innerHTML=`<div class="card"><div class="big">${s} / ${n} (${p}%)</div><p style="text-align:center">${msg}</p>
+ <div class="nav" style="justify-content:center"><button class="btn" onclick="initQuiz()">Try again</button></div>
+ ${wrong.length?'<h3>Review your misses</h3>'+wrong.map(x=>`<div class="rev"><b>${esc(x.it.q)}</b><br>Answer: ${esc(x.it.ans)}${x.it.ex?'<br><i>'+esc(x.it.ex)+'</i>':''}</div>`).join(''):''}</div>`}
+
+/* ----- Matching ----- */
+let M={L:[],R:[],sel:null,done:0,miss:0,n:0};
+function initMatch(){const p=shuf(pool(TERMS)).slice(0,6);M={L:shuffIdx(p),R:shuffIdx(p),sel:null,done:0,miss:0,n:p.length,p,ok:{}};drawMatch()}
+function shuffIdx(p){return shuf(p.map((_,i)=>i))}
+function drawMatch(){const p=M.p;
+ if(M.done==M.n){if(M.miss<=1)confetti();
+  $('#app').innerHTML=`<div class="card"><div class="big">All matched! 🎉</div><p style="text-align:center">Wrong tries: ${M.miss}</p><div class="nav" style="justify-content:center"><button class="btn" onclick="initMatch()">New round</button></div></div>`;return}
+ const b=(side,i)=>{const k=side+i,ok=M.ok[side+i];return `<button class="${ok?'done':''} ${M.sel&&M.sel.k==k?'sel':''} ${M.bad&&M.bad.includes(k)?'shake':''}" ${ok?'disabled':''} onclick="mpick('${side}',${i})">${esc(side=='L'?p[i][1]:p[i][2])}</button>`};
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Tap a term, then its meaning</span><span>${M.done} / ${M.n} · Wrong: ${M.miss}</span></div>
+ <div class="bar"><i style="width:${M.done/M.n*100}%"></i></div>
+ <div class="mt"><div>${M.L.map(i=>b('L',i)).join('')}</div><div>${M.R.map(i=>b('R',i)).join('')}</div></div>
+ <div class="nav"><button class="btn alt" onclick="initMatch()">New round</button><span></span></div></div>`;
+ document.querySelectorAll('.mt>div').forEach(d=>{d.style.display='grid';d.style.gap='8px'})}
+function mpick(side,i){M.bad=null;
+ if(!M.sel||M.sel.side==side){M.sel={side,i,k:side+i};return drawMatch()}
+ const li=side=='L'?i:M.sel.i,ri=side=='R'?i:M.sel.i;
+ if(li==ri){M.ok['L'+li]=M.ok['R'+ri]=1;M.done++;M.sel=null}
+ else{M.miss++;M.bad=[M.sel.k,side+i];M.sel=null}
+ drawMatch();if(M.bad)setTimeout(()=>{M.bad=null;drawMatch()},600)}
+
+start();
+</script>
+</body>
+</html>
