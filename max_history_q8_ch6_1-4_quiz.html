@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>History Q8 – East Asia 6.1–6.4</title>
+<style>
+html,body{background:#e9f2f7!important;margin:0;color:#14324a;font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+.w{max-width:680px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 2px}.sub{color:#4a6a82;font-size:14px;margin-bottom:12px}
+.tabs,.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+button{font:inherit;cursor:pointer;border-radius:10px;border:2px solid #14324a;background:#fff;color:#14324a;padding:8px 14px}
+button:focus-visible{outline:3px solid #f4a300;outline-offset:2px}
+.tabs button.on,.chips button.on{background:#14324a;color:#fff}
+.chips button{padding:5px 10px;font-size:14px;border-width:1px}
+.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 8px #14324a22;margin-top:10px}
+.bar{height:8px;background:#cfdde7;border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:#2a9d8f;width:0;transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:14px;margin:6px 0}
+.q{font-size:19px;line-height:1.4;margin:10px 0 14px}
+.o{display:block;width:100%;text-align:left;margin:8px 0;padding:12px}
+.o.ok{background:#c9efe3;border-color:#2a9d8f}.o.no{background:#fadadd;border-color:#d6455d}
+input[type=text]{font:inherit;width:100%;box-sizing:border-box;padding:12px;border:2px solid #14324a;border-radius:10px}
+.fb{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:15px}
+.fb.ok{background:#c9efe3}.fb.no{background:#fadadd}
+.nav{display:flex;justify-content:space-between;margin-top:14px}
+.go{background:#14324a;color:#fff}
+.fc{min-height:150px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:21px;cursor:pointer}
+.fc small{display:block;font-size:13px;color:#4a6a82;margin-top:10px}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mg button{text-align:left;font-size:14px;padding:10px}
+.mg button.sel{background:#f4a300;border-color:#b57600}.mg button.done{background:#c9efe3;border-color:#2a9d8f;opacity:.6}
+.mg button.bad{background:#fadadd}
+.big{font-size:40px;font-weight:700}
+</style></head><body><div class="w">
+<h1>History Q8: East Asia</h1><div class="sub">Chapter 6, sections 6.1 to 6.4 · Eastern Hemisphere History &amp; Geography</div>
+<div class="tabs" id="tabs"></div><div class="chips" id="chips"></div><div id="app"></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const norm=s=>s.toLowerCase().replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
+
+/* [section, term, definition] */
+const T=[
+['6.1','Ring of Fire','Multicontinental chain of volcanoes along the Pacific coasts that has frequent earthquakes'],
+['6.1','Gobi Desert','One of the coldest deserts in the world (East Asia)'],
+['6.1','Taklamakan Desert','One of the largest shifting-sand deserts in the world (China)'],
+['6.1','Yangtze River','Asia’s longest river (over 3,900 miles)'],
+['6.1','Yellow River','River called “China’s Sorrow” because of its flooding'],
+['6.1','Beijing-Hangzhou Grand Canal','Oldest and longest manmade waterway in the world'],
+['6.1','Mekong River','Creates the borders between Myanmar, Laos, and Thailand'],
+['6.1','textiles','Various types of cloth'],
+['6.2','French Indochina','Name for Laos, Cambodia, and Vietnam before World War II'],
+['6.2','Communism','Form of government led by a dictator with absolute rule and control'],
+['6.2','Khmer Empire','Earliest known empire in ancient Cambodia'],
+['6.2','Angkor Wat','Largest religious structure in the world'],
+['6.2','Khmer Rouge','Communist group that took control of the Cambodian government'],
+['6.2','Pol Pot','Leader of the Khmer Rouge'],
+['6.2','Ho Chi Minh','Communist leader of North Vietnam during the Vietnam War'],
+['6.2','Socialist Republic of Vietnam','Name of the combined North and South Vietnam'],
+['6.2','Vietnam War','Fought from 1954 to 1975'],
+['6.3','Borneo','Third-largest island in the world'],
+['6.3','rotating monarchy','Nine sultans take turns ruling for five years (Malaysia)'],
+['6.3','Brunei','Smallest country in East Asia by population'],
+['6.3','Kampong Ayer','World’s largest floating village, on the Brunei River'],
+['6.3','city-state','City and its surrounding area ruled by an independent government'],
+['6.3','archipelago','Group of islands'],
+['6.3','Malay Archipelago','World’s largest archipelago'],
+['6.3','Ferdinand Magellan','Portuguese explorer who claimed the Philippine islands for Spain (1521)'],
+['6.3','Luzon','Largest Philippine island'],
+['6.3','Mount Pinatubo','Philippine mountain with one of the largest eruptions of the 20th century (1991)'],
+['6.4','Nippon','Japan’s name for itself: “Land of the Rising Sun”'],
+['6.4','Commodore Matthew Perry','U.S. naval officer who signed a trade agreement with Japan in 1854'],
+['6.4','Hirohito','Emperor of Japan during World War II'],
+['6.4','Tojo','Japanese official in WWII who wanted to rule all of Asia'],
+['6.4','Pearl Harbor','Important U.S. military base in Hawaii, attacked December 7, 1941'],
+['6.4','Hiroshima and Nagasaki','Japanese cities where the first atomic bombs were dropped'],
+['6.4','terracing','Planting crops on mountainsides by cutting the slope into steps'],
+['6.4','38th parallel','Line of latitude that roughly marks the border of North and South Korea'],
+['6.4','Kim Il-Sung','Founder of North Korea']
+];
+
+/* mc: q, correct, wrongs */
+const M=(s,q,a,w)=>({s,k:'mc',q,a,w});
+const F=(s,q,a)=>({s,k:'tf',q,a});
+const B=(s,q,a)=>({s,k:'fill',q,a:Array.isArray(a)?a:[a]});
+const Q=[
+M('6.1','Which two rivers did early East Asian civilizations begin along?','Yangtze and Yellow',['Mekong and Yangtze','Yellow and Irrawaddy','Mekong and Yellow']),
+M('6.1','The Ring of Fire is a chain of ___ along the Pacific coasts.','volcanoes',['mountains','deserts','rivers']),
+M('6.1','Which river is called “China’s Sorrow”?','Yellow River',['Yangtze River','Mekong River','Irrawaddy River']),
+M('6.1','Which three countries make most of the world’s electronics?','Japan, South Korea, China',['Japan, Laos, Thailand','China, Mongolia, Brunei','South Korea, Vietnam, Cambodia']),
+M('6.1','Which country has the world’s fourth largest population and over 700 languages?','Indonesia',['Myanmar','China','Japan']),
+M('6.2','Who was the leader of the Khmer Rouge?','Pol Pot',['Ho Chi Minh','Kim Il-Sung','Hirohito']),
+M('6.2','Which country is home to about 4,000 islands in the Mekong River?','Laos',['Cambodia','Thailand','Vietnam']),
+M('6.2','Which Southeast Asian country was never ruled by a European country?','Thailand',['Vietnam','Laos','Cambodia']),
+M('6.2','What does the name Thailand mean?','Land of the Free',['Land of the Rising Sun','Land of Spice','Land of a Thousand Islands']),
+M('6.3','Which country is the world’s only rotating monarchy?','Malaysia',['Brunei','Singapore','Indonesia']),
+M('6.3','Which country is the smallest in East Asia by population?','Brunei',['Singapore','Malaysia','Philippines']),
+M('6.3','Which is one of only three city-states left in the world?','Singapore',['Brunei','Jakarta','Manila']),
+M('6.3','Which country has more languages than any other country in the world?','Papua New Guinea',['Indonesia','Philippines','Thailand']),
+M('6.4','Which U.S. naval officer signed the 1854 trade agreement with Japan?','Commodore Matthew Perry',['Tojo','Hirohito','Ferdinand Magellan']),
+M('6.4','Which line of latitude roughly divides North and South Korea?','38th parallel',['49th parallel','Equator','Tropic of Cancer']),
+M('6.4','Which country helped Kim Il-Sung set up North Korea’s government?','Soviet Union',['United States','China','Japan']),
+F('6.1','The Gobi Desert is one of the coldest deserts in the world.',true),
+F('6.1','The Yellow River is Asia’s longest river.',false),
+F('6.2','Laos, Cambodia, and Vietnam were controlled by France before World War II.',true),
+F('6.2','Angkor Wat was built in Vietnam.',false),
+F('6.2','The Vietnam War lasted from 1954 to 1975.',true),
+F('6.3','Borneo is the third-largest island in the world.',true),
+F('6.3','Indonesia has fewer active volcanoes than any other country.',false),
+F('6.3','Ferdinand Magellan claimed the Philippines for Spain in 1521.',true),
+F('6.4','Japan’s capital city is Hirohito.',false),
+F('6.4','Japan attacked Pearl Harbor on December 7, 1941.',true),
+F('6.4','The U.S. dropped an atomic bomb on Tokyo.',false),
+F('6.4','The Korean War was fought from 1950 to 1953.',true),
+F('6.4','South Korea has a Communist government.',false),
+B('6.1','The longest manmade waterway in the world is the Beijing-Hangzhou ___ Canal.','Grand'),
+B('6.1','The river that makes borders between Myanmar, Laos, and Thailand is the ___ River.','Mekong'),
+B('6.1','Various types of cloth are called ___.',['textiles','textile']),
+B('6.2','Communism is a form of government led by a ___ with absolute rule and control.','dictator'),
+B('6.2','The capital of Vietnam is ___.','Hanoi'),
+B('6.2','The capital of Thailand is ___.','Bangkok'),
+B('6.3','Indonesia was once called “the ___ Islands.”',['Spice','Spice Islands']),
+B('6.3','The Philippines’ Mount ___ erupted in 1991.','Pinatubo'),
+B('6.3','The capital of Papua New Guinea is ___.',['Port Moresby']),
+B('6.4','In Japanese, Japan is called ___.','Nippon'),
+B('6.4','Japan farms mountainsides using a method called ___.','terracing'),
+B('6.4','The capital of South Korea is ___.','Seoul'),
+B('6.4','The capital of North Korea is ___.','Pyongyang')
+];
+
+const SECS=['All','6.1','6.2','6.3','6.4'];
+let mode='fc',sec='All',st={};
+const pool=a=>sec==='All'?a:a.filter(x=>(Array.isArray(x)?x[0]:x.s)===sec);
+
+function head(){
+ $('#tabs').innerHTML=[['fc','Flashcards'],['qz','Quiz'],['mt','Matching']].map(([k,n])=>`<button class="${mode===k?'on':''}" data-m="${k}">${n}</button>`).join('');
+ $('#chips').innerHTML=SECS.map(s=>`<button class="${sec===s?'on':''}" data-s="${s}">${s==='All'?'All sections':s}</button>`).join('');
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.m){mode=b.dataset.m;start()}
+ else if(b.dataset.s){sec=b.dataset.s;start()}
+});
+function start(){head();({fc:fcInit,qz:qzInit,mt:mtInit})[mode]()}
+
+/* Flashcards */
+function fcInit(){st={d:shuf(pool(T)),i:0,f:false,k:0};fcDraw()}
+function fcDraw(){
+ const c=st.d[st.i];
+ $('#app').innerHTML=`<div class="meta"><span>Card ${st.i+1} of ${st.d.length}</span><span>Know it: ${st.k}</span></div>
+ <div class="bar"><i style="width:${(st.i)/st.d.length*100}%"></i></div>
+ <div class="card fc" id="fc" tabindex="0" role="button"><div>${st.f?esc(c[2]):'<b>'+esc(c[1])+'</b>'}<small>${st.f?'Section '+c[0]:'Tap to flip'}</small></div></div>
+ <div class="nav"><button id="pv">Back</button><button id="kn">I know it</button><button class="go" id="nx">Next</button></div>`;
+ const flip=()=>{st.f=!st.f;fcDraw()};
+ $('#fc').onclick=flip;$('#fc').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};
+ $('#pv').onclick=()=>{if(st.i>0){st.i--;st.f=false;fcDraw()}};
+ const nx=()=>{st.f=false;if(st.i<st.d.length-1){st.i++;fcDraw()}else{$('#app').innerHTML=`<div class="card" style="text-align:center"><div class="big">${st.k}/${st.d.length}</div><p>cards you knew</p><button class="go" onclick="fcInit()">Shuffle again</button></div>`}};
+ $('#nx').onclick=nx;$('#kn').onclick=()=>{st.k++;nx()};
+}
+
+/* Quiz */
+function qzInit(){
+ const qs=shuf(pool(Q));
+ st={q:qs,i:0,s:0,done:false,wrong:[]};qzDraw();
+}
+function qzDraw(){
+ if(st.i>=st.q.length)return qzEnd();
+ const q=st.q[st.i];st.done=false;
+ let body='';
+ if(q.k==='mc'){st.o=shuf([q.a,...q.w]);body=st.o.map((o,n)=>`<button class="o" data-n="${n}">${esc(o)}</button>`).join('')}
+ else if(q.k==='tf')body=`<button class="o" data-n="1">True</button><button class="o" data-n="0">False</button>`;
+ else body=`<input type="text" id="fi" autocomplete="off" aria-label="Your answer"><div class="nav"><button class="go" id="ck">Check</button></div>`;
+ $('#app').innerHTML=`<div class="meta"><span>Question ${st.i+1} of ${st.q.length} · ${q.s}</span><span>Score: ${st.s}</span></div>
+ <div class="bar"><i style="width:${st.i/st.q.length*100}%"></i></div>
+ <div class="card"><div class="q">${esc(q.q)}</div>${body}<div id="fb"></div><div class="nav"><span></span><button class="go" id="nx" style="display:none">${st.i===st.q.length-1?'See results':'Next'}</button></div></div>`;
+ $('#nx').onclick=()=>{st.i++;qzDraw()};
+ if(q.k==='fill'){const go=()=>{if(st.done)return;fin(q,norm($('#fi').value),$('#fi').value.trim()!=='' )};$('#ck').onclick=go;$('#fi').onkeydown=e=>{if(e.key==='Enter')go()};$('#fi').focus()}
+ else document.querySelectorAll('.o').forEach(b=>b.onclick=()=>{if(st.done)return;const n=+b.dataset.n;
+  const ok=q.k==='mc'?st.o[n]===q.a:(n===1)===q.a;
+  document.querySelectorAll('.o').forEach((x,m)=>{const isC=q.k==='mc'?st.o[m]===q.a:(m===1)===q.a;if(isC)x.classList.add('ok');else if(x===b)x.classList.add('no')});
+  fin(q,null,true,ok)});
+}
+function fin(q,val,has,okIn){
+ if(q.k==='fill'&&!has)return;
+ st.done=true;
+ const ok=q.k==='fill'?q.a.some(a=>norm(a)===val):okIn;
+ const ans=q.k==='tf'?(q.a?'True':'False'):q.k==='mc'?q.a:q.a[0];
+ if(ok)st.s++;else st.wrong.push(q);
+ $('#fb').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'Correct!':'Not quite. Answer: <b>'+esc(ans)+'</b>'}</div>`;
+ if(q.k==='fill'){$('#fi').disabled=true;$('#ck').style.display='none'}
+ $('#nx').style.display='';$('#nx').focus();
+}
+function qzEnd(){
+ const p=Math.round(st.s/st.q.length*100);
+ $('#app').innerHTML=`<div class="card" style="text-align:center"><div class="big">${st.s}/${st.q.length}</div><p>${p}%${p>=90?' Amazing!':p>=70?' Nice work!':' Keep practicing, you’ll get it!'}</p>
+ <button class="go" onclick="qzInit()">Try again</button>
+ ${st.wrong.length?`<button onclick="rev()">Review ${st.wrong.length} missed</button>`:''}</div><div id="rv"></div>`;
+ if(p>=90)confetti();
+}
+function rev(){
+ $('#rv').innerHTML=st.wrong.map(q=>`<div class="card"><div class="q" style="font-size:16px">${esc(q.q)}</div><div class="fb ok">${esc(q.k==='tf'?(q.a?'True':'False'):q.k==='mc'?q.a:q.a[0])}</div></div>`).join('');
+}
+function confetti(){
+ const c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;pointer-events:none;width:100%;height:100%';
+ c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);const x=c.getContext('2d');
+ const ps=Array.from({length:120},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height/2,v:2+Math.random()*4,r:4+Math.random()*5,c:['#f4a300','#2a9d8f','#d6455d','#14324a'][Math.random()*4|0]}));
+ let f=0;(function t(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.y+=p.v;x.fillStyle=p.c;x.fillRect(p.x,p.y,p.r,p.r)});if(++f<150)requestAnimationFrame(t);else c.remove()})();
+}
+
+/* Matching */
+function mtInit(){
+ const set=shuf(pool(T)).slice(0,8);
+ st={set,t:shuf(set),d:shuf(set),a:null,n:0,tries:0};mtDraw();
+}
+function mtDraw(){
+ $('#app').innerHTML=`<div class="meta"><span>Matched ${st.n} of ${st.set.length}</span><span>Misses: ${st.tries}</span></div>
+ <div class="bar"><i style="width:${st.n/st.set.length*100}%"></i></div>
+ <div class="card"><p style="margin-top:0">Tap a term, then tap its meaning.</p><div class="mg">
+ <div>${st.t.map((x,i)=>`<button style="width:100%;margin-bottom:8px" data-t="${i}" class="${x.done?'done':''}">${esc(x[1])}</button>`).join('')}</div>
+ <div>${st.d.map((x,i)=>`<button style="width:100%;margin-bottom:8px" data-d="${i}" class="${x.done?'done':''}">${esc(x[2])}</button>`).join('')}</div></div>
+ ${st.n===st.set.length?`<p style="text-align:center"><b>All matched!</b></p><button class="go" onclick="mtInit()">New set</button>`:''}</div>`;
+ if(st.a!==null)document.querySelector(`[data-t="${st.a}"]`).classList.add('sel');
+ document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{if(st.t[b.dataset.t].done)return;st.a=+b.dataset.t;mtDraw()});
+ document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{
+  if(st.a===null||st.d[b.dataset.d].done)return;
+  const t=st.t[st.a],d=st.d[b.dataset.d];
+  if(t===d){t.done=true;st.n++;st.a=null;mtDraw()}
+  else{st.tries++;st.a=null;mtDraw();const nb=document.querySelector(`[data-d="${b.dataset.d}"]`);nb.classList.add('bad');setTimeout(()=>nb&&nb.classList.remove('bad'),600)}
+ });
+}
+start();
+</script></body></html>
