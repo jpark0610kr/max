@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Max's Science Exam Quest – Study Sheet #1</title>
+<style>
+html,body{background:#0f2a43 !important;margin:0;padding:0}
+*{box-sizing:border-box}
+body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#0a2e44;line-height:1.45}
+.wrap{max-width:780px;margin:0 auto;padding:12px 12px 70px}
+.hud{background:linear-gradient(135deg,#0d6e8a,#1b8f7a);color:#fff;border-radius:16px;padding:12px 14px;margin-bottom:10px;box-shadow:0 3px 12px rgba(0,0,0,.35)}
+.hud h1{font-size:1.2rem;margin:0 0 6px}
+.hrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.92rem}
+.lv{background:#ffd23f;color:#5a3d00;font-weight:800;border-radius:99px;padding:2px 11px}
+.xpbar{flex:1 1 140px;height:12px;background:rgba(255,255,255,.28);border-radius:8px;overflow:hidden}
+.xpbar i{display:block;height:100%;background:#ffd23f;transition:width .4s}
+.badges{margin-top:6px;font-size:1.25rem;letter-spacing:2px}
+.badges span{opacity:.25;filter:grayscale(1)}.badges span.on{opacity:1;filter:none}
+.tabs,.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.tabs button{flex:1 1 auto;padding:9px 6px;border:2px solid #7fd0e3;background:#143a59;color:#e9f9ff;border-radius:10px;font-weight:700;font-size:.88rem;cursor:pointer}
+.tabs button.on{background:#ffd23f;color:#4a3300;border-color:#ffd23f}
+.chips button{padding:6px 12px;border:1.5px solid #5d93ad;background:#143a59;color:#cfeaf5;border-radius:99px;font-size:.86rem;cursor:pointer}
+.chips button.on{background:#7fd0e3;border-color:#7fd0e3;color:#06324a;font-weight:700}
+.card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.bar{height:8px;background:#cfe6ed;border-radius:6px;overflow:hidden;margin-bottom:8px}
+.bar i{display:block;height:100%;background:#0d6e8a;transition:width .3s}
+.boss{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:700;color:#8a1f1f}
+.boss .bar{flex:1;margin:0;height:14px;background:#f3c6c3}.boss .bar i{background:#d9534f}
+.meta{display:flex;justify-content:space-between;gap:8px;font-size:.9rem;color:#35637a;margin-bottom:10px;flex-wrap:wrap}
+.tag{display:inline-block;background:#e3f1f6;color:#08506b;border-radius:8px;padding:2px 9px;font-weight:700;font-size:.85rem}
+.q{font-size:1.15rem;font-weight:700;margin:6px 0 14px}
+.q u{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.warn{background:#fff6d6;border:1.5px solid #e6bf3a;color:#6b5200;border-radius:10px;padding:8px 11px;font-size:.88rem;margin:0 0 12px}
+.tip{background:#efe6ff;border:1.5px solid #a78bdb;color:#3d246b;border-radius:10px;padding:8px 11px;font-size:.9rem;margin-top:10px}
+.opt{display:block;width:100%;text-align:left;padding:12px 14px;margin:8px 0;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:12px;font-size:1rem;color:#0a2e44;cursor:pointer}
+.opt:hover:not(:disabled){border-color:#0d6e8a}
+.opt.good{background:#d8f3e6;border-color:#1f9d6b}
+.opt.bad{background:#fde0de;border-color:#d9534f}
+.opt:disabled{cursor:default}
+.two{display:flex;gap:10px}.two .opt{text-align:center;font-weight:700}
+input.fib,textarea.fib{width:100%;padding:12px;font-size:1.05rem;border:2px solid #b9d9e4;border-radius:12px;font-family:inherit}
+textarea.fib{min-height:84px;resize:vertical}
+.fb{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:.95rem}
+.fb.good{background:#d8f3e6}.fb.bad{background:#fde0de}.fb.info{background:#e3f1f6}
+.fb ul{margin:6px 0 0 18px;padding:0}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
+.btn{padding:10px 18px;border:0;border-radius:10px;background:#0d6e8a;color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
+.btn.alt{background:#e3f1f6;color:#08506b}
+.btn.ok{background:#1f9d6b}.btn.no{background:#d9534f}
+.btn:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.flip{min-height:200px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer;padding:20px;border:2px dashed #7fb4c6;border-radius:14px;background:#f4fbfd}
+.flip .t{font-size:1.25rem;font-weight:800;color:#08506b}
+.flip .d{font-size:1.1rem}
+.flip small{color:#6a93a5;margin-top:10px}
+.flip ul{text-align:left;margin:6px 0 0}
+.big{font-size:2.4rem;font-weight:800;color:#08506b;text-align:center;margin:4px 0}
+.rev{border-top:1px solid #d3e6ed;padding:10px 0;font-size:.95rem}
+.rev b{color:#08506b}
+.world{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.wcard{background:#fff;border-radius:14px;padding:12px;border:3px solid transparent;cursor:pointer;text-align:left}
+.wcard:hover{border-color:#ffd23f}
+.wcard .em{font-size:2rem}.wcard b{display:block;color:#08506b}.wcard small{color:#4d7589}
+.learn h3{margin:16px 0 6px;color:#08506b}
+.learn .li{padding:7px 0;border-top:1px solid #e0eef3;font-size:.97rem}
+mark{background:#fff0a6;padding:0 3px;border-radius:4px;font-weight:700;color:#0a2e44}
+.lab svg{width:100%;height:auto;border-radius:12px;display:block;background:#fff}
+.pin{cursor:pointer}.pin circle{fill:#ef6f4f;stroke:#fff;stroke-width:2}.pin text{fill:#fff;font-weight:800;font-size:13px;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.pin.sel circle{fill:#0d6e8a;stroke:#ffd23f;stroke-width:3}.pin.good circle{fill:#1f9d6b}.pin.bad circle{fill:#d9534f}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px;margin:12px 0 6px}
+.slot{display:flex;gap:8px;align-items:center;border:2px dashed #9cc3d3;border-radius:10px;padding:6px 8px;background:#f7fcfe;cursor:pointer;min-height:42px}
+.slot.sel{border-style:solid;border-color:#0d6e8a;background:#e3f1f6}
+.slot.good{background:#d8f3e6;border-color:#1f9d6b}.slot.bad{background:#fde0de;border-color:#d9534f}
+.slot .n{background:#ef6f4f;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;flex:none}
+.bank{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.bank button{padding:8px 12px;border-radius:99px;border:2px solid #0d6e8a;background:#fff;color:#08506b;font-weight:700;cursor:pointer;font-size:.92rem}
+.bank button.used{opacity:.35}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#ffd23f;color:#4a3300;font-weight:800;padding:9px 18px;border-radius:99px;z-index:20;box-shadow:0 4px 14px rgba(0,0,0,.4);animation:pop 2.2s ease forwards;pointer-events:none;max-width:90vw;text-align:center}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,20px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
+.cf{position:fixed;top:-12px;width:10px;height:14px;z-index:9;animation:fall 2.4s linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.8}}
+@media (prefers-reduced-motion:reduce){.cf,.toast{animation:none}.toast{opacity:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hud">
+    <h1>🔬 Max's Science Exam Quest</h1>
+    <div class="hrow"><span class="lv" id="lv"></span><div class="xpbar"><i id="xpb"></i></div><span id="xpt"></span><span id="stk"></span></div>
+    <div class="badges" id="badges"></div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="chips" id="chips"></div>
+  <div id="app"></div>
+</div>
+<script>
+/* ---------- DATA: every question of Study Sheet #1, in sheet order ----------
+ t: fib = type the answer | self = write, reveal, mark yourself | tf = true/false (fix the underlined word)
+ ch: 1 Science & Method, 2 Astronomy, 3 Geology, 4 Marine Geology, 5 Meteorology
+ warn = something to check with the teacher */
+const CH={1:"Ch.1 Science",2:"Ch.2 Astronomy",3:"Ch.3 Geology",4:"Ch.4 Marine",5:"Ch.5 Weather"};
+const ITEMS=[
+{id:"1",ch:5,t:"self",q:"Name the layers of the atmosphere.",ans:["Troposphere","Stratosphere","Mesosphere","Thermosphere","Exosphere"],note:"From the ground up. The sheet has a 6th blank, but the handwritten answer sheet leaves it empty. 5 layers is right."},
+{id:"2",ch:2,t:"self",q:"Name the parts of the sun.",ans:["Core","Photosphere","Corona"],note:"Core = center of the sun. Photosphere = the visible part. Corona = part of the sun's atmosphere. (Core, mantle and crust are the earth's layers, not the sun's.)"},
+{id:"3",ch:1,t:"self",q:"What is science?",ans:"The careful study of the wonders of the universe."},
+{id:"4",ch:3,t:"self",q:"The stages of Noah's Flood are:",ans:["Flooding Stage","Recessive Stage"]},
+{id:"5",ch:5,t:"self",q:"The three processes of the hydrologic cycle:",ans:["Evaporation","Condensation","Precipitation"]},
+{id:"6",ch:5,t:"self",q:"The 5 climate zones under the Köppen Climate Classification System are:",ans:["Tropical","Dry","Mild","Continental","Polar"]},
+{id:"7",ch:4,t:"self",q:"What causes tides?",ans:"The gravitational pull of the moon.",note:"The sun's gravity adds to it at spring tide and works against it at neap tide."},
+{id:"8",ch:5,t:"fib",q:"A hurricane is a tropical cyclone with winds at greater than ______ miles per hour.",acc:["74"],ans:"74"},
+{id:"9",ch:3,t:"fib",q:"______ is the theory that crustal plate activity can cause geological events and processes.",acc:["plate tectonics"],ans:"Plate tectonics"},
+{id:"10",ch:3,t:"fib",q:"______ are remains or impressions of living things.",acc:["fossils","fossil"],ans:"Fossils"},
+{id:"11",ch:4,t:"fib",q:"______ is a body of water where the river meets the ocean.",acc:["estuary"],ans:"Estuary"},
+{id:"12",ch:5,t:"fib",q:"______ is the study of the weather.",acc:["meteorology"],ans:"Meteorology"},
+{id:"13",ch:5,t:"fib",q:"What kind of clouds forms hail?",acc:["cumulonimbus","cumulonimbus clouds","cumulonimbus cloud"],ans:"Cumulonimbus clouds"},
+{id:"14",ch:5,t:"fib",q:"______ is a form of evaporation in which plants release water vapour.",acc:["transpiration"],ans:"Transpiration"},
+{id:"15",ch:3,t:"fib",q:"______ is the idea that present observations can explain all the geological features of the earth.",acc:["uniformitarianism"],ans:"Uniformitarianism"},
+{id:"16",ch:3,t:"fib",q:"______ is the study of the earth.",acc:["geology"],ans:"Geology"},
+{id:"17",ch:4,t:"self",q:"What is the hydrosphere?",ans:"All the water on earth, whether liquid, solid, or gas."},
+{id:"18",ch:4,t:"fib",q:"Beaches are formed by ______.",acc:["surface currents","surface current","currents","current","longshore drift","longshore"],ans:"Surface currents",note:"The answer sheet says surface currents. The book also says longshore drift carries sand along the coast to build beaches, so that counts too."},
+{id:"19",ch:4,t:"fib",q:"The continental crust is the ______ part of the earth's crust.",acc:["thicker","thick"],ans:"Thicker",note:"Oceanic crust is the thinner part."},
+{id:"20",ch:4,t:"fib",q:"______ is the study of the earth's oceans.",acc:["oceanography"],ans:"Oceanography"},
+{id:"21",ch:4,t:"fib",q:"______ is an underwater valley where the oceanic crust seems to be separating.",acc:["rift","rift valley"],ans:"Rift"},
+{id:"22",ch:1,t:"fib",q:"The second step of the scientific method is to ______.",acc:["form a hypothesis","hypothesis","make a hypothesis","state a hypothesis","write a hypothesis"],ans:"Form a hypothesis",note:"The 4 steps: 1) observe, ask questions, research. 2) form a hypothesis. 3) experiment and gather data. 4) study the data and reach a conclusion."},
+{id:"23",ch:2,t:"self",q:"The ______ is an evolutionary hypothesis about the ______ of the world.",ans:["Big Bang","origin"]},
+{id:"24",ch:5,t:"tf",q:"Wind is air moving into low-pressure areas.",tf:false,plain:true,ans:"False",warn:"The answer sheet says False, even though Q54 defines wind as air moving into low-pressure areas. Go with False for this one and ask the teacher if you can.",note:"Answer sheet: False."},
+{id:"25",ch:2,t:"fib",q:"Earth is part of the ______ planets.",acc:["inner","terrestrial","inner planets","terrestrial planets"],ans:"Inner (terrestrial)",note:"Mercury, Venus, Earth and Mars."},
+{id:"26a",ch:1,t:"fib",q:"The part of a graph that represents a certain fraction, or part, of the whole is a ______.",acc:["sector"],ans:"Sector",note:"A circle (pie) graph is divided into sectors."},
+{id:"26b",ch:2,t:"fib",q:"______ is the study of God's creation beyond our atmosphere.",acc:["astronomy"],ans:"Astronomy"},
+{id:"27",ch:5,t:"self",q:"What is the difference between a weather vane and an anemometer?",ans:["A weather vane shows wind direction.","An anemometer measures wind speed."]},
+{id:"28",ch:3,t:"fib",q:"Coal is a type of ______ rock.",acc:["sedimentary"],ans:"Sedimentary"},
+{id:"29",ch:3,t:"fib",q:"______ is the solid parts of the earth, such as its rocks and minerals.",acc:["geosphere"],ans:"Geosphere"},
+{id:"30",ch:2,t:"fib",q:"______ was the first person to walk on the moon.",acc:["neil armstrong","armstrong"],ans:"Neil Armstrong"},
+{id:"31",ch:1,t:"fib",q:"______ is a reasonable prediction that demonstrates cause and effect.",acc:["hypothesis"],ans:"Hypothesis"},
+{id:"32",ch:1,t:"fib",q:"______ is the study of the earth, its atmosphere, and outer space.",acc:["earth science"],ans:"Earth science"},
+{id:"33",ch:1,t:"fib",q:"A set of beliefs that shape what someone believes to be true is a ______.",acc:["worldview","world view"],ans:"Worldview"},
+{id:"34",ch:1,t:"fib",q:"The factor in an experiment that is changed to test the hypothesis is called the ______ variable.",acc:["independent","manipulated"],ans:"Independent (manipulated)"},
+{id:"35",ch:1,t:"fib",q:"The concept map that shows similarities and differences between a number of things is called a ______.",acc:["venn diagram","venn diagrams","venn"],ans:"Venn diagram"},
+{id:"36",ch:2,t:"fib",q:"______ occurs when the sun is directly above the earth's equator.",acc:["equinox","an equinox"],ans:"Equinox"},
+{id:"37",ch:2,t:"fib",q:"______ is a repetitive process that causes the moon's appearance to wax and wane.",acc:["lunar cycle","the lunar cycle","moon cycle"],ans:"The lunar cycle",note:"The moon waxes to a full moon, then wanes to a new moon."},
+{id:"38",ch:2,t:"fib",q:"______ is the closest star to the Earth.",acc:["sun","the sun"],ans:"The sun"},
+{id:"39",ch:2,t:"fib",q:"______ is a large cloud of gas and dust floating in space.",acc:["nebula"],ans:"Nebula"},
+{id:"40",ch:2,t:"fib",q:"A ______ does not include an atmosphere.",acc:["galaxy"],ans:"Galaxy",note:"From the handwritten answer sheet. It is not in the book text, so double-check with the teacher."},
+{id:"41",ch:3,t:"fib",q:"When the pressure of magma thrusts a part of the earth's crust upward without causing an eruption, a ______ mountain is formed.",acc:["domed","dome"],ans:"Domed"},
+{id:"42",ch:3,t:"fib",q:"A folded mountain is covered with ______ rock.",acc:["sedimentary"],ans:"Sedimentary",note:"Folded mountains form when hardening sedimentary rock folds up as tectonic plates move."},
+/* Q43: True or False. If false, replace the underlined word. */
+{id:"43.1",ch:3,t:"tf",q:"Fossils are found in a <u>sedimentary</u> rock.",tf:true,ans:"True"},
+{id:"43.2",ch:3,t:"tf",q:"The ability to conduct electricity is one property of most <u>metals</u>.",tf:true,ans:"True"},
+{id:"43.3",ch:3,t:"tf",q:"A mineral containing metal is an <u>ore</u>.",tf:true,ans:"True"},
+{id:"43.4",ch:3,t:"tf",q:"A diamond is a precious <u>metal</u>.",tf:false,fix:["stone","precious stone","gem"],ans:"stone (a precious stone)"},
+{id:"43.5",ch:3,t:"tf",q:"The breaking down of rock by the forces of nature is called <u>erosion</u>.",tf:false,fix:["weathering"],ans:"weathering",note:"Erosion carries the sediments away."},
+{id:"43.6",ch:5,t:"tf",q:"<u>Relative humidity</u> is the measure of water vapour in air.",tf:true,ans:"True"},
+{id:"43.7",ch:5,t:"tf",q:"<u>Evaporation</u> is the process by which water vapour changes back into liquid water.",tf:false,fix:["condensation"],ans:"condensation"},
+{id:"43.8",ch:5,t:"tf",q:"<u>Dew point</u> is a process by which liquid water becomes water vapour.",tf:false,fix:["evaporation"],ans:"evaporation",note:"Dew point is the temperature at which cooling air becomes saturated."},
+{id:"43.9",ch:4,t:"tf",q:"A high ridge that separates two river systems is a drainage <u>basin</u>.",tf:false,fix:["divide","drainage divide"],ans:"divide (drainage divide)"},
+{id:"43.10",ch:5,t:"tf",q:"The movement of water from the earth's surface into the air and back to the earth's surface is the <u>weather</u> cycle.",tf:false,fix:["hydrologic","water","hydrologic cycle","water cycle"],ans:"hydrologic (water) cycle"},
+{id:"43.11",ch:5,t:"tf",q:"The natural process that maintains a proper temperature balance in Earth's atmosphere by trapping heat is the <u>greenhouse effect</u>.",tf:true,ans:"True"},
+{id:"43.12",ch:1,t:"tf",q:"A table, diagram, or chart that shows data in a visually organized manner is a <u>concept map</u>.",tf:true,ans:"True"},
+{id:"43.13",ch:5,t:"tf",q:"<u>Precipitation</u> is water falling to the earth's surface in the form of rain, sleet, snow, or hail.",tf:true,ans:"True"},
+{id:"43.14",ch:4,t:"tf",q:"The hydrosphere includes all the <u>water</u> on earth.",tf:true,ans:"True"},
+{id:"44",ch:2,t:"self",q:"Explain the difference between the geocentric and heliocentric view of the universe.",ans:["Geocentric: earth-centered (the earth is the center of the universe).","Heliocentric: sun-centered (the earth and planets orbit the sun)."]},
+{id:"45",ch:1,t:"fib",q:"Variables are parts of an experiment that are ______.",acc:["controlled","can be controlled","able to be controlled"],ans:"Controlled (factors that can be controlled)"},
+{id:"46",ch:1,t:"fib",q:"An instrument used to separate parts of a mixture is a ______.",acc:["strainer"],ans:"Strainer"},
+{id:"47",ch:3,t:"fib",q:"The use of hot springs to generate electricity is called ______.",acc:["geothermal energy","geothermal"],ans:"Geothermal energy"},
+{id:"48",ch:5,t:"fib",q:"A low-pressure area around which a hurricane rotates is called an ______.",acc:["eye"],ans:"Eye"},
+{id:"49",ch:4,t:"fib",q:"A low area of land near the coast that floods with the tide is a ______.",acc:["salt marsh"],ans:"Salt marsh"},
+{id:"50",ch:5,t:"self",q:"Name two natural disasters.",ans:["Hurricane","Tornado","Flood","Tsunami","Forest fire","Earthquake","Volcanic eruption","Landslide"],note:"Any two of these."},
+{id:"51",ch:4,t:"self",q:"The parts of the ocean floor (name 6):",ans:["Continental shelf","Continental slope","Continental rise","Abyssal plain","Seamount","Mid-ocean ridge","Rift","Ocean trench","Hydrothermal vent"],note:"The book's diagram has these. Any 6."},
+{id:"52",ch:3,t:"self",q:"The layers of the soil horizon are:",ans:["Organic matter","Topsoil","Subsoil","Substratum","Bedrock"],note:"From the top down."},
+{id:"53",ch:5,t:"self",q:"What is a climatologist?",ans:"A scientist who studies climate."},
+{id:"54",ch:5,t:"self",q:"What is wind?",ans:"Air moving into low-pressure areas."},
+{id:"55",ch:5,t:"fib",q:"An instrument used to measure wind speed is an ______.",acc:["anemometer"],ans:"Anemometer"},
+{id:"56",ch:5,t:"fib",q:"A ______ is a storm that begins to rotate around a low-pressure area.",acc:["cyclone","tropical cyclone"],ans:"Cyclone"},
+{id:"57",ch:5,t:"fib",q:"The boundary between two air masses is a ______.",acc:["front"],ans:"Front"},
+{id:"58",ch:5,t:"fib",q:"The type of climate that is neither extremely hot nor extremely cold is ______.",acc:["temperate"],ans:"Temperate"},
+{id:"59",ch:4,t:"self",q:"The parts of the coastal zone are (name 7):",ans:["Shore (beach)","Coastal dunes","Sandbar","Barrier islands","Estuary","Salt marsh","Longshore drift"],note:"The book's coast picture also shows the current."},
+{id:"60",ch:4,t:"fib",q:"The type of seafloor mud made from minerals and the remains of tiny ocean organisms is ______.",acc:["ooze"],ans:"Ooze"},
+{id:"61",ch:2,t:"fib",q:"The flight and space agency for the United States is ______.",acc:["nasa","national aeronautics and space administration"],ans:"NASA"},
+{id:"62",ch:2,t:"fib",q:"The colour of the sun is ______.",acc:["yellow"],ans:"Yellow",note:"The book calls the sun a yellow star."},
+{id:"63",ch:1,t:"fib",q:"A scientific instrument that uses lenses and light to examine objects that cannot be seen with the human eye is a ______.",acc:["microscope"],ans:"Microscope"},
+{id:"64",ch:2,t:"fib",q:"The sun belongs to the ______ galaxy.",acc:["milky way","milkyway"],ans:"Milky Way"},
+{id:"65",ch:3,t:"fib",q:"Below the earth's surface, an earthquake begins at its ______.",acc:["hypocenter","focus"],ans:"Hypocenter (focus)",note:"The epicenter is directly above it."},
+{id:"66",ch:3,t:"fib",q:"A tsunami is caused by an ______.",acc:["earthquake","underwater earthquake"],ans:"Earthquake (on the ocean floor)"},
+{id:"67",ch:3,t:"fib",q:"The organic material in soil is called ______.",acc:["humus"],ans:"Humus"},
+{id:"68",ch:3,t:"fib",q:"______ is a term evolutionists use to describe a “missing link” between two kinds of animals.",acc:["transitional form","transitional forms"],ans:"Transitional form"},
+{id:"69",ch:3,t:"fib",q:"Rock changed in form by heat and pressure is ______ rock.",acc:["metamorphic"],ans:"Metamorphic"},
+{id:"70",ch:5,t:"fib",q:"The layer of gases held to a planet by its gravity is called the ______.",acc:["atmosphere"],ans:"Atmosphere"},
+/* Label tasks at the end of the sheet */
+{id:"Label 1",ch:3,t:"self",q:"Label: Mountains. Name the 4 kinds.",ans:["Volcanic mountain (Mount Rainier, Mount St. Helens)","Domed mountain (Black Hills)","Fault-block mountain","Folded mountain (Alps, Himalayas, Rockies, Appalachians)"]},
+{id:"Label 2",ch:2,t:"self",q:"Label: Parts of the sun.",ans:["Core","Photosphere","Corona"]},
+{id:"Label 3",ch:4,t:"self",q:"Label: Parts of the ocean floor.",ans:["Continental shelf","Continental slope","Continental rise","Abyssal plain","Seamount","Mid-ocean ridge","Rift","Ocean trench","Hydrothermal vent"],note:"Shelf, slope and rise together make the continental margin."},
+{id:"Label 4",ch:4,t:"self",q:"Label: Parts of the coastal zone.",ans:["Shore (beach)","Coastal dunes","Sandbar","Barrier islands","Estuary","Salt marsh","Longshore drift"]},
+{id:"Label 5",ch:5,t:"self",q:"Label: Layers of the atmosphere (bottom to top).",ans:["Troposphere (weather happens here)","Tropopause (top boundary of the troposphere)","Stratosphere (ozone layer)","Mesosphere (meteors burn up)","Thermosphere (hottest; space station)","Exosphere (outermost, thinnest air)"]},
+{id:"Label 6",ch:5,t:"self",q:"Label: The clouds.",ans:["Cumulus: low, puffy, flat base","Stratus: low, flat sheets","Cirrus: high, wispy, ice crystals","Cumulonimbus: tall storm cloud (hail, lightning, tornadoes)","Nimbostratus: dark, low, steady rain","Cirrocumulus, Cirrostratus: very high","Altocumulus, Altostratus: medium height","Stratocumulus, Fog: low"]},
+{id:"Label 7",ch:4,t:"self",q:"Label: The tides.",ans:["High tide: ocean at its highest point","Low tide: ocean at its lowest point","Spring tide: the very highest high tide (full or new moon)","Neap tide: the weaker high tide (quarter moon)"]}
+];
+const TIPS={"1":"Trick: “Tall Stan Makes Tasty Eggs” = Troposphere, Stratosphere, Mesosphere, Thermosphere, Exosphere.","2":"Trick: Core → Photosphere → Corona, “Cute Penguins Cuddle”.","5":"Trick: E-C-P, “Every Cloud Pours”.","6":"Trick: “Tiny Dogs Munch Cold Popsicles” = Tropical, Dry, Mild, Continental, Polar.","7":"Spring tide = sun + moon in a line (biggest). Neap = right angle (weak, “nap”).","42":"Folded = sedimentary layers bent like a rug pushed together.","51":"Trick: shelf → slope → rise → plain, going out to sea.","52":"Trick: “Orange Tigers Sleep Soundly Below” = Organic matter, Topsoil, Subsoil, Substratum, Bedrock.","59":"Think of the beach from the sea inwards: sandbar, barrier island, shore, dunes. Estuary and salt marsh are where the river meets the sea."};
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const norm=s=>s.toLowerCase().replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').replace(/^(a|an|the) /,'').trim();
+function lev(a,b){const m=[];for(let i=0;i<=a.length;i++)m[i]=[i];for(let j=0;j<=b.length;j++)m[0][j]=j;
+ for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return m[a.length][b.length]}
+function fibOk(inp,acc){const x=norm(inp);if(!x)return false;
+ return acc.some(a=>{a=norm(a);return x==a||x.replace(/ /g,'')==a.replace(/ /g,'')||(a.length>5&&lev(x,a)<=1)})}
+const ansHtml=a=>Array.isArray(a)?'<ul>'+a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':esc(a);
+const ansText=a=>Array.isArray(a)?a.join(' · '):a;
+const qPlain=q=>q.replace(/<\/?u>/g,'');
+const qid=id=>/^\d/.test(id)?'Q'+id:id;
+function confetti(){const c=['#0d6e8a','#1f9d6b','#f0b429','#ef6f4f','#7fb4c6'];
+ for(let i=0;i<60;i++){const d=document.createElement('div');d.className='cf';
+ d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDelay=Math.random()*.8+'s';
+ document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}}
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2300)}
+
+/* ---------- player progress (saved in this browser only) ---------- */
+const KEY='maxSciQuestV2';
+let P={xp:0,best:0,done:{},badges:{},labs:{},visited:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&typeof s==='object')P=Object.assign(P,s)}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+let streak=0;
+const TITLES=['Lab Rookie','Rock Hound','Star Gazer','Wave Rider','Storm Chaser','Science Master'];
+const BADGES=[['first','🌱','First correct answer'],['s5','🔥','5 in a row'],['s10','⚡','10 in a row'],['adv','🗺️','Finished an Adventure'],['lab','🏷️','Aced a Label Lab'],['labs','🧭','Aced all 7 Label Labs'],['boss','👹','Beat the Boss Test (80%+)'],['half','🏅','Mastered half the questions'],['all','🏆','Mastered every question']];
+const lvOf=x=>Math.min(5,Math.floor(x/150));
+function badge(k){if(P.badges[k])return;P.badges[k]=1;const b=BADGES.find(x=>x[0]==k);toast('New badge '+b[1]+' '+b[2]);confetti()}
+function hud(){const l=lvOf(P.xp),nxt=l>=5?P.xp:(l+1)*150,cur=l*150;
+ $('#lv').textContent='Lv '+(l+1)+' · '+TITLES[l];
+ $('#xpb').style.width=(l>=5?100:(P.xp-cur)/(nxt-cur)*100)+'%';
+ $('#xpt').textContent=P.xp+' XP';$('#stk').textContent=streak?'🔥 '+streak:'';
+ $('#badges').innerHTML=BADGES.map(b=>`<span class="${P.badges[b[0]]?'on':''}" title="${esc(b[2])}">${b[1]}</span>`).join('')}
+function award(it,ok){
+ if(ok){streak++;const prev=lvOf(P.xp);P.xp+=10+(streak>=3?5:0);P.done[it.id]=1;P.best=Math.max(P.best,streak);
+  badge('first');if(streak>=5)badge('s5');if(streak>=10)badge('s10');
+  const n=Object.keys(P.done).length;if(n>=ITEMS.filter(x=>!x.noscore).length/2)badge('half');if(n>=ITEMS.filter(x=>!x.noscore).length)badge('all');
+  if(lvOf(P.xp)>prev){toast('LEVEL UP! '+TITLES[lvOf(P.xp)]);confetti()}}
+ else streak=0;
+ save();hud()}
+
+/* ---------- state ---------- */
+const S={mode:'home',ch:0};
+const WORLD={1:['🧪','Science Lab'],2:['🪐','Space'],3:['🌋','Rocks & Earth'],4:['🌊','Oceans'],5:['⛈️','Weather']};
+const MODES=[['home','🗺️ Map'],['adv','🎮 Adventure'],['learn','📖 Learn'],['cards','🃏 Cards'],['fill','✏️ Fill'],['tf','✅ T/F'],['recall','🧠 Recall'],['lab','🏷️ Label Lab'],['test','👹 Boss Test'],['key','🔑 Key']];
+const CHIPS=[[0,'All'],[1,'Ch.1 Science'],[2,'Ch.2 Astronomy'],[3,'Ch.3 Geology'],[4,'Ch.4 Marine'],[5,'Ch.5 Weather']];
+const pool=()=>ITEMS.filter(x=>S.ch==0||x.ch==S.ch);
+function head(){
+ $('#tabs').innerHTML=MODES.map(m=>`<button class="${S.mode==m[0]?'on':''}" onclick="S.mode='${m[0]}';start()">${m[1]}</button>`).join('');
+ $('#chips').innerHTML=(S.mode=='home'||S.mode=='lab')?'':CHIPS.map(s=>`<button class="${S.ch==s[0]?'on':''}" onclick="S.ch=${s[0]};start()">${s[1]}</button>`).join('');
+ hud()}
+function start(){head();
+ if(S.mode=='home')return drawHome();
+ if(S.mode=='learn')return drawLearn();
+ if(S.mode=='cards')return initCards();
+ if(S.mode=='key')return drawKey();
+ if(S.mode=='lab')return initLab();
+ initQuiz()}
+
+/* ---------- Home / world map ---------- */
+function drawHome(){
+ const sc=ITEMS.filter(x=>!x.noscore);
+ $('#app').innerHTML=`<div class="card"><h2 style="margin:0 0 4px">Pick a world, beat the exam! 🏁</h2>
+ <p style="margin:0 0 12px;color:#35637a">Answer questions to earn XP, keep a streak 🔥, and collect badges. Tap a world to start an Adventure (12 mixed questions).</p>
+ <div class="world">`+[1,2,3,4,5].map(c=>{const l=sc.filter(x=>x.ch==c),d=l.filter(x=>P.done[x.id]).length;
+ return `<div class="wcard" onclick="S.ch=${c};S.mode='adv';start()"><span class="em">${WORLD[c][0]}</span><b>Ch.${c} · ${WORLD[c][1]}</b><small>${d} / ${l.length} mastered</small><div class="bar" style="margin:6px 0 0"><i style="width:${l.length?d/l.length*100:0}%"></i></div></div>`}).join('')+
+ `<div class="wcard" onclick="S.mode='lab';start()"><span class="em">🏷️</span><b>Label Lab</b><small>Label the diagrams from the sheet (7 labs)</small></div>
+  <div class="wcard" onclick="S.ch=0;S.mode='test';start()"><span class="em">👹</span><b>Boss Test</b><small>30 questions. Beat the boss with 80%+</small></div></div>
+ <p style="margin:14px 0 0;color:#4d7589;font-size:.9rem">New here? Start with 📖 Learn, then 🃏 Cards, then play an Adventure. Best streak: ${P.best} 🔥</p></div>`}
+
+/* ---------- Learn: study sentences ---------- */
+const TRICKS={
+1:['Scientific method (4 steps): observe & ask → <b>hypothesis</b> → experiment → conclude.','Independent variable = the one you CHANGE. Venn diagram = similarities and differences.'],
+2:['Sun, inside → out: <b>Core → Photosphere → Corona</b>. Trick: “Cute Penguins Cuddle”.','Inner (terrestrial) planets: Mercury, Venus, Earth, Mars.'],
+3:['Mountains: <b>V</b>olcanic, <b>D</b>omed, <b>F</b>ault-block, <b>F</b>olded. Trick: “Very Dizzy Fox Flips”.','Soil, top → down: Organic matter, Topsoil, Subsoil, Substratum, Bedrock. Trick: “Orange Tigers Sleep Soundly Below”.'],
+4:['Ocean floor, coast outward: Shelf → Slope → Rise → Abyssal plain. Trench = deep valley. Rift = valley where crust separates.','Tides come from the moon’s gravity. <b>Spring</b> tide = sun + moon line up (biggest). <b>Neap</b> = right angle (weak, “nap”).'],
+5:['Atmosphere, ground up: <b>T</b>roposphere, <b>S</b>tratosphere, <b>M</b>esosphere, <b>T</b>hermosphere, <b>E</b>xosphere. Trick: “Tall Stan Makes Tasty Eggs”.','Water cycle: Evaporation → Condensation → Precipitation (“E-C-P: Every Cloud Pours”). Köppen zones: “Tiny Dogs Munch Cold Popsicles” (Tropical, Dry, Mild, Continental, Polar).']};
+function learnLine(it){
+ if(it.t=='fib')return esc(it.q).replace(/_{3,}/,'<mark>'+esc(it.ans)+'</mark>');
+ if(it.t=='tf'){if(it.tf)return it.q.replace(/<\/?u>/g,'')+' <mark>True</mark>';
+  if(it.plain)return esc(it.q)+' <mark>False</mark>';
+  return it.q.replace(/<u>.*?<\/u>/,'<mark>'+esc(it.ans)+'</mark>')}
+ return '<b>'+esc(it.q)+'</b><br>'+(Array.isArray(it.ans)?'<mark>'+it.ans.map(esc).join('</mark> <mark>')+'</mark>':'<mark>'+esc(it.ans)+'</mark>')}
+function drawLearn(){const cs=S.ch?[S.ch]:[1,2,3,4,5];
+ $('#app').innerHTML='<div class="card learn"><p style="margin:0;color:#35637a">The answer is highlighted. Read it out loud, then try the games!</p>'+cs.map(c=>
+ `<h3>${WORLD[c][0]} Ch.${c} · ${WORLD[c][1]}</h3><div class="tip">💡 <b>Memory tricks</b><br>${TRICKS[c].join('<br>')}</div>`+
+ ITEMS.filter(x=>x.ch==c&&!/^Label/.test(x.id)).map(it=>`<div class="li"><span class="tag">${esc(qid(it.id))}</span> ${learnLine(it)}${it.note?'<br><small><i>'+esc(it.note)+'</i></small>':''}${it.warn?'<div class="warn" style="margin-top:6px">⚠️ '+esc(it.warn)+'</div>':''}</div>`).join('')).join('')+'</div>'}
+
+/* ---------- Answer key ---------- */
+function drawKey(){const p=pool();
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>${p.length} items, in sheet order</span><span>⚠️ = double-check</span></div>`+
+ p.map(it=>`<div class="rev"><span class="tag">${esc(qid(it.id))}</span> <small>${CH[it.ch]}</small><br>${it.t=='tf'?it.q:esc(it.q)}<br><b>${it.t=='tf'?(it.tf?'True':'False'+(it.plain?'':' → '+esc(it.ans))):ansHtml(it.ans)}</b>${it.note?'<br><i>'+esc(it.note)+'</i>':''}${it.warn?'<div class="warn" style="margin-top:6px">⚠️ '+esc(it.warn)+'</div>':''}</div>`).join('')+'</div>'}
+
+/* ---------- Flashcards ---------- */
+let C={d:[],i:0,f:false};
+function initCards(){C.d=pool();C.i=0;C.f=false;drawCards()}
+function drawCards(){if(!C.d.length)return $('#app').innerHTML='<div class="card">No cards in this chapter.</div>';
+ const c=C.d[C.i];
+ const front=c.t=='tf'?(c.q+'<br><small>True, or fix the underlined word</small>'):esc(c.q);
+ const back=c.t=='tf'?(c.tf?'<b>True</b>':'<b>False</b>'+(c.plain?'':'<br>Correct: '+esc(c.ans))):ansHtml(c.ans);
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Card ${C.i+1} / ${C.d.length}</span><span><span class="tag">${esc(qid(c.id))}</span> ${CH[c.ch]}</span></div>
+ <div class="bar"><i style="width:${(C.i+1)/C.d.length*100}%"></i></div>
+ <div class="flip" onclick="C.f=!C.f;drawCards()">${C.f?`<div class="d">${back}${c.note?'<br><i>'+esc(c.note)+'</i>':''}</div>`:`<div class="t">${front}</div><small>tap to flip</small>`}</div>
+ ${c.warn?`<div class="warn" style="margin-top:12px">⚠️ ${esc(c.warn)}</div>`:''}
+ ${TIPS[c.id]?`<div class="tip">💡 ${esc(TIPS[c.id])}</div>`:''}
+ <div class="nav"><button class="btn alt" onclick="cardGo(-1)" ${C.i==0?'disabled':''}>◀ Prev</button><button class="btn alt" onclick="C.d=shuf(C.d);C.i=0;C.f=false;drawCards()">Shuffle</button><button class="btn" onclick="cardGo(1)" ${C.i==C.d.length-1?'disabled':''}>Next ▶</button></div></div>`}
+function cardGo(n){C.i+=n;C.f=false;drawCards()}
+
+/* ---------- Quiz engine ---------- */
+let Q={list:[],i:0,res:[],mode:''};
+function initQuiz(){let l=pool().filter(x=>!/^Label/.test(x.id));const M=S.mode;
+ if(M=='adv')l=shuf(l.filter(x=>!x.noscore)).slice(0,12);
+ else if(M=='fill')l=shuf(l.filter(x=>x.t=='fib'));
+ else if(M=='tf')l=shuf(l.filter(x=>x.t=='tf'));
+ else if(M=='recall')l=l.filter(x=>x.t=='self');
+ else if(M=='test')l=shuf(l.filter(x=>!x.noscore)).slice(0,30);
+ Q={list:l,i:0,res:[],mode:M};streak=0;hud();drawQ()}
+const scored=()=>Q.list.filter(x=>!x.noscore);
+function score(){return Q.list.reduce((s,it,i)=>s+((Q.res[i]&&Q.res[i].ok&&!it.noscore)?1:0),0)}
+function done(r,it){return r&&(it.noscore?r.shown:r.ok!==null&&r.ok!==undefined)}
+function drawQ(){
+ if(!Q.list.length)return $('#app').innerHTML='<div class="card">Nothing here for this chapter. Try another mode or chapter.</div>';
+ if(Q.i>=Q.list.length)return results();
+ const it=Q.list[Q.i],r=Q.res[Q.i],n=Q.list.length;
+ let body='',fb='';
+ if(it.t=='fib'){
+  body=`<input class="fib" id="fi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer" ${r?'disabled value="'+esc(r.pick)+'"':''} onkeydown="if(event.key=='Enter')checkFib()">${r?'':'<div class="row"><button class="btn" onclick="checkFib()">Check</button></div>'}`;
+  if(r)fb=`<div class="fb ${r.ok?'good':'bad'}">${r.ok?'✅ Correct! +XP':'❌ Not quite. Answer: <b>'+esc(it.ans)+'</b>'}${it.note?'<br><i>'+esc(it.note)+'</i>':''}</div>`}
+ else if(it.t=='tf'){
+  const cls=v=>!r?'':(v===it.tf?'good':(v===r.pick?'bad':''));
+  body=`<div class="two"><button class="opt ${cls(true)}" ${r?'disabled':''} onclick="tfPick(true)">True</button><button class="opt ${cls(false)}" ${r?'disabled':''} onclick="tfPick(false)">False</button></div>`;
+  if(r&&r.stage==1)body+=`<p style="margin:12px 0 6px"><b>Right, it is false. What word replaces the underlined words?</b></p><input class="fib" id="fi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Correct word" onkeydown="if(event.key=='Enter')tfFix()"><div class="row"><button class="btn" onclick="tfFix()">Check</button></div>`;
+  if(r&&r.ok!==null&&r.ok!==undefined)fb=`<div class="fb ${r.ok?'good':'bad'}">${r.ok?'✅ Correct! +XP':'❌ Not quite.'} ${it.tf?'This one is <b>true</b>.':'This one is false.'+(it.plain?'':' Correct: <b>'+esc(it.ans)+'</b>')}${it.note?'<br><i>'+esc(it.note)+'</i>':''}</div>`}
+ else{
+  body=`<textarea class="fib" id="ta" placeholder="Write your answer here first, then tap Reveal" ${r?'disabled':''}>${r?esc(r.pick||''):''}</textarea>`;
+  if(!r)body+=`<div class="row"><button class="btn" onclick="revealSelf()">Reveal answer</button></div>`;
+  else{fb=`<div class="fb info"><b>Answer:</b> ${ansHtml(it.ans)}${it.note?'<i>'+esc(it.note)+'</i>':''}</div>`;
+   if(it.noscore)fb+=`<div class="fb info">Not scored: the answer isn't confirmed.</div>`;
+   else if(r.ok===null)fb+=`<div class="row"><button class="btn ok" onclick="markSelf(true)">⭕ I got it</button><button class="btn no" onclick="markSelf(false)">❌ I missed it</button></div>`;
+   else fb+=`<div class="fb ${r.ok?'good':'bad'}">${r.ok?'⭕ Marked correct +XP':'❌ Marked missed'}</div>`}}
+ if(r&&TIPS[it.id])fb+=`<div class="tip">💡 ${esc(TIPS[it.id])}</div>`;
+ const can=r&&(it.t=='self'?done(r,it):(r.ok!==null&&r.ok!==undefined));
+ const bossHp=Q.mode=='test'?`<div class="boss">👹 <div class="bar"><i style="width:${Math.max(0,100-score()/n*100)}%"></i></div> HP</div>`:'';
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>${Q.mode=='test'?'Boss · ':Q.mode=='adv'?'Adventure · ':''}Question ${Q.i+1} / ${n}</span><span><span class="tag">${esc(qid(it.id))}</span> ${CH[it.ch]} · Score ${score()}</span></div>
+ ${bossHp}<div class="bar"><i style="width:${Q.i/n*100}%"></i></div>
+ ${it.warn?`<div class="warn">⚠️ ${esc(it.warn)}</div>`:''}
+ <div class="q">${it.t=='tf'?(it.q.includes('<u>')?'True, or fix the underlined word:<br><span style="font-weight:600">'+it.q+'</span>':'True or False: '+it.q):esc(it.q)}</div>${body}${fb}
+ <div class="nav"><button class="btn alt" onclick="Q.i--;drawQ()" ${Q.i==0?'disabled':''}>◀ Prev</button><button class="btn" onclick="Q.i++;drawQ()" ${can?'':'disabled'}>${Q.i==n-1?'Finish':'Next ▶'}</button></div></div>`;
+ if(!r&&(it.t=='fib'))setTimeout(()=>{const e=$('#fi');e&&e.focus&&e.focus()},30)}
+function checkFib(){const it=Q.list[Q.i];if(Q.res[Q.i])return;const v=$('#fi').value;if(!v.trim())return;
+ const ok=fibOk(v,it.acc);Q.res[Q.i]={ok,pick:v};award(it,ok);drawQ()}
+function tfPick(v){const it=Q.list[Q.i];if(Q.res[Q.i])return;
+ if(v!==it.tf){Q.res[Q.i]={ok:false,pick:v,stage:2};award(it,false)}
+ else if(it.tf||it.plain){Q.res[Q.i]={ok:true,pick:v,stage:2};award(it,true)}
+ else Q.res[Q.i]={ok:null,pick:v,stage:1};
+ drawQ()}
+function tfFix(){const it=Q.list[Q.i],r=Q.res[Q.i];if(!r||r.stage!=1)return;const v=$('#fi').value;if(!v.trim())return;
+ r.ok=fibOk(v,it.fix);r.stage=2;award(it,r.ok);drawQ()}
+function revealSelf(){const t=$('#ta');Q.res[Q.i]={pick:t?t.value:'',shown:true,ok:Q.list[Q.i].noscore?undefined:null};drawQ()}
+function markSelf(ok){Q.res[Q.i].ok=ok;award(Q.list[Q.i],ok);drawQ()}
+function results(){const L=scored(),n=L.length,s=score(),p=n?Math.round(s/n*100):0;
+ const wrong=Q.list.map((it,i)=>({it,r:Q.res[i]})).filter(x=>!x.it.noscore&&(!x.r||!x.r.ok));
+ let msg=p>=90?'Amazing! Test-ready! 🌊':p>=70?'Great job! Review the misses below.':'Keep practicing, you can do it!';
+ if(Q.mode=='adv'){badge('adv');P.xp+=20;save();hud();msg+=' (+20 bonus XP)'}
+ if(Q.mode=='test'){msg=p>=80?'👹 You defeated the Boss!':'The Boss survived with '+Math.round(100-p)+'% HP. Try again!';if(p>=80)badge('boss')}
+ if(p>=80)confetti();
+ $('#app').innerHTML=`<div class="card"><div class="big">${s} / ${n} (${p}%)</div><p style="text-align:center">${msg}</p>
+ <div class="nav" style="justify-content:center"><button class="btn" onclick="initQuiz()">Play again</button><button class="btn alt" onclick="S.mode='home';start()">Map</button></div>
+ ${wrong.length?'<h3>Review your misses</h3>'+wrong.map(x=>`<div class="rev"><span class="tag">${esc(qid(x.it.id))}</span> <b>${x.it.t=='tf'?qPlain(x.it.q):esc(x.it.q)}</b><br>Answer: ${x.it.t=='tf'?(x.it.tf?'True':'False'+(x.it.plain?'':' → '+esc(x.it.ans))):esc(ansText(x.it.ans))}${x.it.note?'<br><i>'+esc(x.it.note)+'</i>':''}</div>`).join(''):''}</div>`}
+
+/* ---------- Label Lab ---------- */
+const sky='#dff0f7';
+const LABS=[
+{id:'Label 1',title:'1. Mountains',tip:'Trick: “Very Dizzy Fox Flips” = Volcanic, Domed, Fault-block, Folded.',
+ svg:`<rect width="420" height="250" fill="#e9f6fb"/><rect x="0" y="0" width="210" height="125" fill="${sky}"/><rect x="210" y="0" width="210" height="125" fill="#e6f1d8"/><rect x="0" y="125" width="210" height="125" fill="#f6ecd6"/><rect x="210" y="125" width="210" height="125" fill="#efe3f5"/>
+ <polygon points="20,118 105,38 190,118" fill="#7a5a3c"/><polygon points="92,45 105,30 118,45 105,50" fill="#e8472b"/><path d="M105,48 L96,80 M108,50 L120,86" stroke="#ff9d2e" stroke-width="3" fill="none"/>
+ <rect x="210" y="96" width="210" height="29" fill="#8a7a55"/><path d="M225,100 Q315,-5 405,100 Z" fill="#9aa56a"/><path d="M240,100 Q315,20 390,100" fill="none" stroke="#6f7f47" stroke-width="3"/>
+ <polygon points="12,240 12,200 70,175 70,240" fill="#b58a5a"/><polygon points="72,240 72,222 120,208 120,240" fill="#a07348"/><polygon points="122,240 122,190 198,162 198,240" fill="#b58a5a"/><path d="M71,175 V240 M121,208 V240" stroke="#3b2a18" stroke-width="2"/>
+ <path d="M222,240 L222,190 Q262,140 315,190 T408,190 L408,240Z" fill="#e0bf86"/><path d="M222,240 L222,208 Q262,160 315,208 T408,208 L408,240Z" fill="#c49a5f"/><path d="M222,240 L222,226 Q262,182 315,226 T408,226 L408,240Z" fill="#a87d45"/>`,
+ pins:[{x:105,y:82,a:'Volcanic mountain'},{x:315,y:70,a:'Domed mountain'},{x:160,y:195,a:'Fault-block mountain'},{x:315,y:190,a:'Folded mountain'}],
+ order:true,decoys:['Plateau']},
+{id:'Label 2',title:'2. Parts of the sun',tip:'Inside → out: Core → Photosphere → Corona. “Cute Penguins Cuddle”.',
+ svg:`<rect width="420" height="250" fill="#0b1b3a"/><g fill="#fff"><circle cx="30" cy="30" r="1.5"/><circle cx="380" cy="50" r="1.5"/><circle cx="60" cy="210" r="1.5"/><circle cx="360" cy="200" r="1.5"/><circle cx="330" cy="20" r="1"/></g>
+ <circle cx="210" cy="125" r="112" fill="#ffb347" opacity=".35"/><circle cx="210" cy="125" r="98" fill="#ffb347" opacity=".45"/><circle cx="210" cy="125" r="72" fill="#ffd23f"/><circle cx="210" cy="125" r="34" fill="#ff7a1a"/>`,
+ pins:[{x:210,y:125,a:'Core'},{x:210,y:70,a:'Photosphere'},{x:210,y:30,a:'Corona'}],decoys:['Mantle','Crust']},
+{id:'Label 3',title:'3. Parts of the ocean floor',tip:'Sheet answers: rift, trench, abyssal plain, hydrothermal vent, seamount, mid-ocean ridge. Shelf + slope + rise = the continental margin.',
+ svg:`<rect width="420" height="250" fill="#eaf7fb"/><rect x="0" y="50" width="420" height="200" fill="#8fd3ea"/>
+ <path d="M0,50 L55,50 L120,84 L158,150 L195,172 L236,176 L252,120 L268,176 L300,177 L308,224 L316,177 L345,177 L372,138 L384,156 L396,138 L420,177 L420,250 L0,250 Z" fill="#9a7b4f"/><rect x="0" y="45" width="55" height="6" fill="#5fa85a"/>
+ <rect x="355" y="146" width="7" height="14" fill="#3b2a18" transform="rotate(-20 358 153)"/><circle cx="347" cy="138" r="4" fill="#fff" opacity=".7"/><circle cx="343" cy="128" r="5" fill="#fff" opacity=".5"/>`,
+ pins:[{x:88,y:68,a:'Continental shelf'},{x:140,y:114,a:'Continental slope'},{x:178,y:162,a:'Continental rise'},{x:214,y:166,a:'Abyssal plain'},{x:252,y:146,a:'Seamount'},{x:308,y:206,a:'Ocean trench'},{x:405,y:156,a:'Mid-ocean ridge'},{x:384,y:136,a:'Rift'},{x:332,y:150,a:'Hydrothermal vent'}]},
+{id:'Label 4',title:'4. Parts of the coastal zone',tip:'Book picture, top view. Sheet answers: salt marsh, estuary, sandbar, barrier island, coastal dunes, shore, longshore drift.',
+ svg:`<rect width="420" height="250" fill="#8fd3ea"/><path d="M0,150 C80,140 150,165 220,150 S350,130 420,150 L420,250 L0,250Z" fill="#cfe8a8"/><path d="M0,150 C80,140 150,165 220,150 S350,130 420,150" fill="none" stroke="#f0d9a0" stroke-width="12"/>
+ <ellipse cx="60" cy="188" rx="22" ry="9" fill="#e6c98a"/><ellipse cx="110" cy="192" rx="24" ry="9" fill="#e6c98a"/><ellipse cx="162" cy="190" rx="22" ry="9" fill="#e6c98a"/>
+ <path d="M296,250 L298,178 L274,150 L346,138 L320,178 L324,250Z" fill="#8fd3ea"/><ellipse cx="258" cy="164" rx="20" ry="11" fill="#6fae7a"/><ellipse cx="358" cy="152" rx="20" ry="10" fill="#6fae7a"/>
+ <ellipse cx="150" cy="92" rx="72" ry="9" fill="#f0d9a0"/><ellipse cx="335" cy="108" rx="55" ry="6" fill="#e9eaa8" opacity=".9"/>
+ <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8Z" fill="#0d6e8a"/></marker></defs><path d="M30,125 Q90,118 160,128" stroke="#0d6e8a" stroke-width="4" fill="none" marker-end="url(#ar)"/>`,
+ pins:[{x:35,y:150,a:'Shore'},{x:110,y:192,a:'Coastal dunes'},{x:150,y:92,a:'Barrier island'},{x:335,y:108,a:'Sandbar'},{x:310,y:166,a:'Estuary'},{x:256,y:166,a:'Salt marsh'},{x:90,y:120,a:'Longshore drift'}]},
+{id:'Label 5',title:'5. Layers of the atmosphere',tip:'Ground up: “Tall Stan Makes Tasty Eggs” = Troposphere, Stratosphere, Mesosphere, Thermosphere, Exosphere. The book also marks the tropopause on top of the troposphere.',
+ svg:`<rect y="0" width="420" height="46" fill="#0b1b3a"/><rect y="46" width="420" height="48" fill="#243b7a"/><rect y="94" width="420" height="46" fill="#3f6fb5"/><rect y="140" width="420" height="46" fill="#7fb6e0"/><rect y="186" width="420" height="44" fill="#bfe3f5"/><rect y="230" width="420" height="20" fill="#5fa85a"/>
+ <g font-size="26" text-anchor="middle"><text x="340" y="78">🛰️</text><text x="340" y="126">☄️</text><text x="340" y="172">✈️</text><text x="340" y="218">☁️</text></g>`,
+ pins:[{x:60,y:208,a:'Troposphere'},{x:60,y:163,a:'Stratosphere'},{x:60,y:117,a:'Mesosphere'},{x:60,y:70,a:'Thermosphere'},{x:60,y:23,a:'Exosphere'}]},
+{id:'Label 6',title:'6. The clouds',tip:'Cirrus = high & wispy. Cumulus = puffy. Stratus = flat sheets. Nimbo = rain. Cumulonimbus = tall storm cloud (hail!).',
+ svg:`<defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fd3ef"/><stop offset="1" stop-color="#eaf7fb"/></linearGradient></defs><rect width="420" height="250" fill="url(#sk)"/><rect y="226" width="420" height="24" fill="#6fae7a"/>
+ <g stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"><path d="M30,38 Q70,20 120,40"/><path d="M50,52 Q100,36 150,54"/><path d="M20,26 Q50,14 90,24"/></g>
+ <g fill="#fff"><circle cx="50" cy="170" r="20"/><circle cx="80" cy="158" r="26"/><circle cx="112" cy="170" r="20"/><rect x="40" y="170" width="84" height="16"/></g>
+ <rect x="180" y="62" width="120" height="14" rx="7" fill="#d5dde2"/><rect x="170" y="82" width="140" height="10" rx="5" fill="#c9d3d9"/>
+ <rect x="160" y="112" width="140" height="34" rx="14" fill="#5d6b75"/><g stroke="#3d7fb0" stroke-width="2"><path d="M180,150 l-6,60 M205,150 l-6,60 M230,150 l-6,60 M255,150 l-6,60 M280,150 l-6,60"/></g>
+ <g fill="#f4f6f8"><ellipse cx="365" cy="170" rx="38" ry="22"/><ellipse cx="365" cy="130" rx="30" ry="24"/><ellipse cx="365" cy="92" rx="26" ry="22"/></g><ellipse cx="365" cy="62" rx="52" ry="12" fill="#e5eaee"/><rect x="335" y="170" width="60" height="22" fill="#9aa5ad"/>`,
+ pins:[{x:85,y:35,a:'Cirrus'},{x:80,y:166,a:'Cumulus'},{x:240,y:78,a:'Stratus'},{x:230,y:129,a:'Nimbostratus'},{x:365,y:112,a:'Cumulonimbus'}]},
+{id:'Label 7',title:'7. The tides',tip:'Spring tide = sun, earth and moon in a line (full/new moon) → very high. Neap = right angle → weaker. (“Neap” sounds like “nap”.)',
+ svg:`<rect width="420" height="250" fill="#f1f8fb"/><rect x="0" y="0" width="205" height="115" fill="#eaf7fb"/><rect x="215" y="0" width="205" height="115" fill="#eaf7fb"/>
+ <rect x="96" y="60" width="109" height="55" fill="#6cc0e0"/><path d="M0,25 L205,100 L205,115 L0,115 Z" fill="#e6c98a"/>
+ <rect x="387" y="88" width="33" height="27" fill="#6cc0e0"/><path d="M215,25 L420,100 L420,115 L215,115 Z" fill="#e6c98a"/>
+ <rect x="0" y="125" width="420" height="125" fill="#0b1b3a"/><g fill="#fff"><circle cx="20" cy="140" r="1.5"/><circle cx="190" cy="150" r="1.5"/><circle cx="260" cy="145" r="1.5"/><circle cx="400" cy="140" r="1.5"/></g>
+ <circle cx="25" cy="190" r="16" fill="#ffd23f"/><ellipse cx="110" cy="190" rx="24" ry="17" fill="#6cc0e0" opacity=".7"/><circle cx="110" cy="190" r="12" fill="#2f7fd0"/><circle cx="158" cy="190" r="6" fill="#c9ced2"/>
+ <circle cx="235" cy="190" r="16" fill="#ffd23f"/><ellipse cx="320" cy="190" rx="16" ry="14" fill="#6cc0e0" opacity=".7"/><circle cx="320" cy="190" r="12" fill="#2f7fd0"/><circle cx="320" cy="150" r="6" fill="#c9ced2"/>
+ <g fill="#cfe6f0" font-size="11" text-anchor="middle"><text x="25" y="217">Sun</text><text x="110" y="217">Earth</text><text x="158" y="207">Moon</text><text x="235" y="217">Sun</text><text x="320" y="217">Earth</text><text x="345" y="154">Moon</text></g>`,
+ pins:[{x:160,y:80,a:'High tide'},{x:400,y:78,a:'Low tide'},{x:100,y:238,a:'Spring tide'},{x:320,y:238,a:'Neap tide'}]}
+];
+let L={i:0,fill:[],sel:0,checked:false,revealed:false};
+function initLab(i){L={i:i||0,fill:[],sel:0,checked:false,revealed:false};drawLab()}
+function drawLab(){const lab=LABS[L.i],n=lab.pins.length;
+ const bankW=shuf0(lab);
+ $('#app').innerHTML=`<div class="card lab"><div class="meta"><span>${esc(lab.title)}</span><span>Lab ${L.i+1} / ${LABS.length}${P.labs[lab.id]?' · ⭐ done':''}</span></div>
+ <p style="margin:0 0 8px;color:#35637a">Tap a numbered dot (or a slot), then tap the right word. Then press Check.</p>
+ <svg viewBox="0 0 420 250" role="img" aria-label="${esc(lab.title)} diagram">${lab.svg}${lab.pins.map((p,k)=>`<g class="pin ${L.sel==k?'sel':''} ${pinCls(k)}" onclick="labSel(${k})"><circle cx="${p.x}" cy="${p.y}" r="11"/><text x="${p.x}" y="${p.y}">${k+1}</text></g>`).join('')}</svg>
+ <div class="slots">${lab.pins.map((p,k)=>`<div class="slot ${L.sel==k?'sel':''} ${pinCls(k)}" onclick="labSel(${k})"><span class="n">${k+1}</span><span>${L.fill[k]?esc(L.fill[k]):'<small style="color:#7a9aa9">tap a word…</small>'}${L.revealed&&L.fill[k]!=p.a?'<br><b style="color:#1f7a54">→ '+esc(p.a)+'</b>':''}</span></div>`).join('')}</div>
+ <div class="bank">${bankW.map(w=>`<button class="${L.fill.includes(w)?'used':''}" onclick="labPut(this.dataset.w)" data-w="${esc(w).replace(/"/g,'&quot;')}">${esc(w)}</button>`).join('')}</div>
+ <div class="row"><button class="btn" onclick="labCheck()">Check</button><button class="btn alt" onclick="L.revealed=true;L.checked=true;drawLab()">Show answers</button><button class="btn alt" onclick="initLab(L.i)">Reset</button></div>
+ ${L.checked?`<div class="fb info">${labMsg()}</div><div class="tip">💡 ${esc(lab.tip)}</div>`:''}
+ <div class="nav"><button class="btn alt" onclick="initLab(L.i-1)" ${L.i==0?'disabled':''}>◀ Prev</button><button class="btn" onclick="initLab(L.i+1)" ${L.i==LABS.length-1?'disabled':''}>Next ▶</button></div></div>`}
+function shuf0(lab){if(!lab._bank)lab._bank=shuf(lab.pins.map(p=>p.a).concat(lab.decoys||[]));return lab._bank}
+function pinCls(k){if(!L.checked)return '';return L.fill[k]==LABS[L.i].pins[k].a?'good':'bad'}
+function labSel(k){L.sel=k;L.checked=false;drawLab()}
+function labPut(w){const k=L.sel;const j=L.fill.indexOf(w);if(j>=0)L.fill[j]=undefined;L.fill[k]=w;L.checked=false;L.revealed=false;
+ const nx=LABS[L.i].pins.findIndex((p,x)=>!L.fill[x]);if(nx>=0)L.sel=nx;drawLab()}
+function labCheck(){const lab=LABS[L.i];L.checked=true;
+ const ok=lab.pins.filter((p,k)=>L.fill[k]==p.a).length;
+ const first=!L.labGot;L.labGot=ok;
+ const gain=Math.max(0,ok-(L.labGot0||0));L.labGot0=Math.max(L.labGot0||0,ok);P.xp+=gain*5;
+ if(ok==lab.pins.length){if(!P.labs[lab.id]){P.labs[lab.id]=1;P.xp+=25;badge('lab');if(LABS.every(l=>P.labs[l.id]))badge('labs')}confetti()}
+ save();hud();drawLab()}
+function labMsg(){const lab=LABS[L.i],ok=lab.pins.filter((p,k)=>L.fill[k]==p.a).length;
+ return ok==lab.pins.length?'🎉 Perfect! '+ok+' / '+ok+' (+25 bonus XP the first time)':ok+' / '+lab.pins.length+' correct. Fix the red ones and check again.'}
+
+start();
+</script>
+</body>
+</html>
