@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Max's Science Test – One at a Time</title>
+<style>html,body{background:#f4f9fb !important;margin:0}*{box-sizing:border-box}body{font-family:-apple-system,"Segoe UI",Arial,sans-serif;color:#0a2e44;line-height:1.45}
+.w{max-width:680px;margin:0 auto;padding:14px 14px 60px}.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(8,80,107,.15)}
+.bar{height:8px;background:#cfe6ed;border-radius:6px;overflow:hidden;margin:6px 0 12px}.bar i{display:block;height:100%;background:#0d6e8a}
+.meta{display:flex;justify-content:space-between;color:#35637a;font-size:.9rem}.q{font-size:1.2rem;font-weight:700;margin:8px 0 14px}
+input,textarea{width:100%;padding:12px;font-size:1.05rem;border:2px solid #b9d9e4;border-radius:12px;font-family:inherit}
+.two{display:flex;gap:10px}.opt{flex:1;padding:12px;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:12px;font-size:1.05rem;font-weight:700;color:#0a2e44}
+.opt.good{background:#d8f3e6;border-color:#1f9d6b}.opt.bad{background:#fde0de;border-color:#d9534f}
+.btn{padding:11px 18px;border:0;border-radius:10px;background:#0d6e8a;color:#fff;font-weight:700;font-size:1rem}.btn.alt{background:#e3f1f6;color:#08506b}.btn.ok{background:#1f9d6b}.btn.no{background:#d9534f}.btn:disabled{opacity:.4}
+.row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.nav{display:flex;justify-content:space-between;margin-top:16px}
+.fb{margin-top:12px;padding:10px 12px;border-radius:10px}.good{background:#d8f3e6}.bad{background:#fde0de}.info{background:#e3f1f6}.fb ul{margin:4px 0 0 18px;padding:0}
+.warn{background:#fff6d6;border:1.5px solid #e6bf3a;border-radius:10px;padding:8px 11px;font-size:.88rem;margin-bottom:10px}.big{font-size:2.2rem;font-weight:800;text-align:center;color:#08506b}
+.rv{border-top:1px solid #d3e6ed;padding:8px 0;font-size:.95rem}u{text-decoration-thickness:2px}</style></head><body><div class="w"><div id="app"></div></div>
+<script>
+const CH={1:"Ch.1 Science",2:"Ch.2 Astronomy",3:"Ch.3 Geology",4:"Ch.4 Marine",5:"Ch.5 Weather"};
+const ITEMS=[
+{id:"1",ch:5,t:"self",q:"Name the layers of the atmosphere.",ans:["Troposphere","Stratosphere","Mesosphere","Thermosphere","Exosphere"],note:"From the ground up. The sheet has a 6th blank, but the handwritten answer sheet leaves it empty. 5 layers is right."},
+{id:"2",ch:2,t:"self",q:"Name the parts of the sun.",ans:["Core","Photosphere","Corona"],note:"Core = center of the sun. Photosphere = the visible part. Corona = part of the sun's atmosphere. (Core, mantle and crust are the earth's layers, not the sun's.)"},
+{id:"3",ch:1,t:"self",q:"What is science?",ans:"The careful study of the wonders of the universe."},
+{id:"4",ch:3,t:"self",q:"The stages of Noah's Flood are:",ans:["Flooding Stage","Recessive Stage"]},
+{id:"5",ch:5,t:"self",q:"The three processes of the hydrologic cycle:",ans:["Evaporation","Condensation","Precipitation"]},
+{id:"6",ch:5,t:"self",q:"The 5 climate zones under the Köppen Climate Classification System are:",ans:["Tropical","Dry","Mild","Continental","Polar"]},
+{id:"7",ch:4,t:"self",q:"What causes tides?",ans:"The gravitational pull of the moon.",note:"The sun's gravity adds to it at spring tide and works against it at neap tide."},
+{id:"8",ch:5,t:"fib",q:"A hurricane is a tropical cyclone with winds at greater than ______ miles per hour.",acc:["74"],ans:"74"},
+{id:"9",ch:3,t:"fib",q:"______ is the theory that crustal plate activity can cause geological events and processes.",acc:["plate tectonics"],ans:"Plate tectonics"},
+{id:"10",ch:3,t:"fib",q:"______ are remains or impressions of living things.",acc:["fossils","fossil"],ans:"Fossils"},
+{id:"11",ch:4,t:"fib",q:"______ is a body of water where the river meets the ocean.",acc:["estuary"],ans:"Estuary"},
+{id:"12",ch:5,t:"fib",q:"______ is the study of the weather.",acc:["meteorology"],ans:"Meteorology"},
+{id:"13",ch:5,t:"fib",q:"What kind of clouds forms hail?",acc:["cumulonimbus","cumulonimbus clouds","cumulonimbus cloud"],ans:"Cumulonimbus clouds"},
+{id:"14",ch:5,t:"fib",q:"______ is a form of evaporation in which plants release water vapour.",acc:["transpiration"],ans:"Transpiration"},
+{id:"15",ch:3,t:"fib",q:"______ is the idea that present observations can explain all the geological features of the earth.",acc:["uniformitarianism"],ans:"Uniformitarianism"},
+{id:"16",ch:3,t:"fib",q:"______ is the study of the earth.",acc:["geology"],ans:"Geology"},
+{id:"17",ch:4,t:"self",q:"What is the hydrosphere?",ans:"All the water on earth, whether liquid, solid, or gas."},
+{id:"18",ch:4,t:"fib",q:"Beaches are formed by ______.",acc:["surface currents","surface current","currents","current","longshore drift","longshore"],ans:"Surface currents",note:"The answer sheet says surface currents. The book also says longshore drift carries sand along the coast to build beaches, so that counts too."},
+{id:"19",ch:4,t:"fib",q:"The continental crust is the ______ part of the earth's crust.",acc:["thicker","thick"],ans:"Thicker",note:"Oceanic crust is the thinner part."},
+{id:"20",ch:4,t:"fib",q:"______ is the study of the earth's oceans.",acc:["oceanography"],ans:"Oceanography"},
+{id:"21",ch:4,t:"fib",q:"______ is an underwater valley where the oceanic crust seems to be separating.",acc:["rift","rift valley"],ans:"Rift"},
+{id:"22",ch:1,t:"fib",q:"The second step of the scientific method is to ______.",acc:["form a hypothesis","hypothesis","make a hypothesis","state a hypothesis","write a hypothesis"],ans:"Form a hypothesis",note:"The 4 steps: 1) observe, ask questions, research. 2) form a hypothesis. 3) experiment and gather data. 4) study the data and reach a conclusion."},
+{id:"23",ch:2,t:"self",q:"The ______ is an evolutionary hypothesis about the ______ of the world.",ans:["Big Bang","origin"]},
+{id:"24",ch:5,t:"tf",q:"Wind is air moving into low-pressure areas.",tf:false,plain:true,ans:"False",warn:"The answer sheet says False, even though Q54 defines wind as air moving into low-pressure areas. Go with False for this one and ask the teacher if you can.",note:"Answer sheet: False."},
+{id:"25",ch:2,t:"fib",q:"Earth is part of the ______ planets.",acc:["inner","terrestrial","inner planets","terrestrial planets"],ans:"Inner (terrestrial)",note:"Mercury, Venus, Earth and Mars."},
+{id:"26a",ch:1,t:"fib",q:"The part of a graph that represents a certain fraction, or part, of the whole is a ______.",acc:["sector"],ans:"Sector",note:"A circle (pie) graph is divided into sectors."},
+{id:"26b",ch:2,t:"fib",q:"______ is the study of God's creation beyond our atmosphere.",acc:["astronomy"],ans:"Astronomy"},
+{id:"27",ch:5,t:"self",q:"What is the difference between a weather vane and an anemometer?",ans:["A weather vane shows wind direction.","An anemometer measures wind speed."]},
+{id:"28",ch:3,t:"fib",q:"Coal is a type of ______ rock.",acc:["sedimentary"],ans:"Sedimentary"},
+{id:"29",ch:3,t:"fib",q:"______ is the solid parts of the earth, such as its rocks and minerals.",acc:["geosphere"],ans:"Geosphere"},
+{id:"30",ch:2,t:"fib",q:"______ was the first person to walk on the moon.",acc:["neil armstrong","armstrong"],ans:"Neil Armstrong"},
+{id:"31",ch:1,t:"fib",q:"______ is a reasonable prediction that demonstrates cause and effect.",acc:["hypothesis"],ans:"Hypothesis"},
+{id:"32",ch:1,t:"fib",q:"______ is the study of the earth, its atmosphere, and outer space.",acc:["earth science"],ans:"Earth science"},
+{id:"33",ch:1,t:"fib",q:"A set of beliefs that shape what someone believes to be true is a ______.",acc:["worldview","world view"],ans:"Worldview"},
+{id:"34",ch:1,t:"fib",q:"The factor in an experiment that is changed to test the hypothesis is called the ______ variable.",acc:["independent","manipulated"],ans:"Independent (manipulated)"},
+{id:"35",ch:1,t:"fib",q:"The concept map that shows similarities and differences between a number of things is called a ______.",acc:["venn diagram","venn diagrams","venn"],ans:"Venn diagram"},
+{id:"36",ch:2,t:"fib",q:"______ occurs when the sun is directly above the earth's equator.",acc:["equinox","an equinox"],ans:"Equinox"},
+{id:"37",ch:2,t:"fib",q:"______ is a repetitive process that causes the moon's appearance to wax and wane.",acc:["lunar cycle","the lunar cycle","moon cycle"],ans:"The lunar cycle",note:"The moon waxes to a full moon, then wanes to a new moon."},
+{id:"38",ch:2,t:"fib",q:"______ is the closest star to the Earth.",acc:["sun","the sun"],ans:"The sun"},
+{id:"39",ch:2,t:"fib",q:"______ is a large cloud of gas and dust floating in space.",acc:["nebula"],ans:"Nebula"},
+{id:"40",ch:2,t:"fib",q:"A ______ does not include an atmosphere.",acc:["galaxy"],ans:"Galaxy",note:"From the handwritten answer sheet. It is not in the book text, so double-check with the teacher."},
+{id:"41",ch:3,t:"fib",q:"When the pressure of magma thrusts a part of the earth's crust upward without causing an eruption, a ______ mountain is formed.",acc:["domed","dome"],ans:"Domed"},
+{id:"42",ch:3,t:"fib",q:"A folded mountain is covered with ______ rock.",acc:["sedimentary"],ans:"Sedimentary",note:"Folded mountains form when hardening sedimentary rock folds up as tectonic plates move."},
+/* Q43: True or False. If false, replace the underlined word. */
+{id:"43.1",ch:3,t:"tf",q:"Fossils are found in a <u>sedimentary</u> rock.",tf:true,ans:"True"},
+{id:"43.2",ch:3,t:"tf",q:"The ability to conduct electricity is one property of most <u>metals</u>.",tf:true,ans:"True"},
+{id:"43.3",ch:3,t:"tf",q:"A mineral containing metal is an <u>ore</u>.",tf:true,ans:"True"},
+{id:"43.4",ch:3,t:"tf",q:"A diamond is a precious <u>metal</u>.",tf:false,fix:["stone","precious stone","gem"],ans:"stone (a precious stone)"},
+{id:"43.5",ch:3,t:"tf",q:"The breaking down of rock by the forces of nature is called <u>erosion</u>.",tf:false,fix:["weathering"],ans:"weathering",note:"Erosion carries the sediments away."},
+{id:"43.6",ch:5,t:"tf",q:"<u>Relative humidity</u> is the measure of water vapour in air.",tf:true,ans:"True"},
+{id:"43.7",ch:5,t:"tf",q:"<u>Evaporation</u> is the process by which water vapour changes back into liquid water.",tf:false,fix:["condensation"],ans:"condensation"},
+{id:"43.8",ch:5,t:"tf",q:"<u>Dew point</u> is a process by which liquid water becomes water vapour.",tf:false,fix:["evaporation"],ans:"evaporation",note:"Dew point is the temperature at which cooling air becomes saturated."},
+{id:"43.9",ch:4,t:"tf",q:"A high ridge that separates two river systems is a drainage <u>basin</u>.",tf:false,fix:["divide","drainage divide"],ans:"divide (drainage divide)"},
+{id:"43.10",ch:5,t:"tf",q:"The movement of water from the earth's surface into the air and back to the earth's surface is the <u>weather</u> cycle.",tf:false,fix:["hydrologic","water","hydrologic cycle","water cycle"],ans:"hydrologic (water) cycle"},
+{id:"43.11",ch:5,t:"tf",q:"The natural process that maintains a proper temperature balance in Earth's atmosphere by trapping heat is the <u>greenhouse effect</u>.",tf:true,ans:"True"},
+{id:"43.12",ch:1,t:"tf",q:"A table, diagram, or chart that shows data in a visually organized manner is a <u>concept map</u>.",tf:true,ans:"True"},
+{id:"43.13",ch:5,t:"tf",q:"<u>Precipitation</u> is water falling to the earth's surface in the form of rain, sleet, snow, or hail.",tf:true,ans:"True"},
+{id:"43.14",ch:4,t:"tf",q:"The hydrosphere includes all the <u>water</u> on earth.",tf:true,ans:"True"},
+{id:"44",ch:2,t:"self",q:"Explain the difference between the geocentric and heliocentric view of the universe.",ans:["Geocentric: earth-centered (the earth is the center of the universe).","Heliocentric: sun-centered (the earth and planets orbit the sun)."]},
+{id:"45",ch:1,t:"fib",q:"Variables are parts of an experiment that are ______.",acc:["controlled","can be controlled","able to be controlled"],ans:"Controlled (factors that can be controlled)"},
+{id:"46",ch:1,t:"fib",q:"An instrument used to separate parts of a mixture is a ______.",acc:["strainer"],ans:"Strainer"},
+{id:"47",ch:3,t:"fib",q:"The use of hot springs to generate electricity is called ______.",acc:["geothermal energy","geothermal"],ans:"Geothermal energy"},
+{id:"48",ch:5,t:"fib",q:"A low-pressure area around which a hurricane rotates is called an ______.",acc:["eye"],ans:"Eye"},
+{id:"49",ch:4,t:"fib",q:"A low area of land near the coast that floods with the tide is a ______.",acc:["salt marsh"],ans:"Salt marsh"},
+{id:"50",ch:5,t:"self",q:"Name two natural disasters.",ans:["Hurricane","Tornado","Flood","Tsunami","Forest fire","Earthquake","Volcanic eruption","Landslide"],note:"Any two of these."},
+{id:"51",ch:4,t:"self",q:"The parts of the ocean floor (name 6):",ans:["Continental shelf","Continental slope","Continental rise","Abyssal plain","Seamount","Mid-ocean ridge","Rift","Ocean trench","Hydrothermal vent"],note:"The book's diagram has these. Any 6."},
+{id:"52",ch:3,t:"self",q:"The layers of the soil horizon are:",ans:["Organic matter","Topsoil","Subsoil","Substratum","Bedrock"],note:"From the top down."},
+{id:"53",ch:5,t:"self",q:"What is a climatologist?",ans:"A scientist who studies climate."},
+{id:"54",ch:5,t:"self",q:"What is wind?",ans:"Air moving into low-pressure areas."},
+{id:"55",ch:5,t:"fib",q:"An instrument used to measure wind speed is an ______.",acc:["anemometer"],ans:"Anemometer"},
+{id:"56",ch:5,t:"fib",q:"A ______ is a storm that begins to rotate around a low-pressure area.",acc:["cyclone","tropical cyclone"],ans:"Cyclone"},
+{id:"57",ch:5,t:"fib",q:"The boundary between two air masses is a ______.",acc:["front"],ans:"Front"},
+{id:"58",ch:5,t:"fib",q:"The type of climate that is neither extremely hot nor extremely cold is ______.",acc:["temperate"],ans:"Temperate"},
+{id:"59",ch:4,t:"self",q:"The parts of the coastal zone are (name 7):",ans:["Shore (beach)","Coastal dunes","Sandbar","Barrier islands","Estuary","Salt marsh","Longshore drift"],note:"The book's coast picture also shows the current."},
+{id:"60",ch:4,t:"fib",q:"The type of seafloor mud made from minerals and the remains of tiny ocean organisms is ______.",acc:["ooze"],ans:"Ooze"},
+{id:"61",ch:2,t:"fib",q:"The flight and space agency for the United States is ______.",acc:["nasa","national aeronautics and space administration"],ans:"NASA"},
+{id:"62",ch:2,t:"fib",q:"The colour of the sun is ______.",acc:["yellow"],ans:"Yellow",note:"The book calls the sun a yellow star."},
+{id:"63",ch:1,t:"fib",q:"A scientific instrument that uses lenses and light to examine objects that cannot be seen with the human eye is a ______.",acc:["microscope"],ans:"Microscope"},
+{id:"64",ch:2,t:"fib",q:"The sun belongs to the ______ galaxy.",acc:["milky way","milkyway"],ans:"Milky Way"},
+{id:"65",ch:3,t:"fib",q:"Below the earth's surface, an earthquake begins at its ______.",acc:["hypocenter","focus"],ans:"Hypocenter (focus)",note:"The epicenter is directly above it."},
+{id:"66",ch:3,t:"fib",q:"A tsunami is caused by an ______.",acc:["earthquake","underwater earthquake"],ans:"Earthquake (on the ocean floor)"},
+{id:"67",ch:3,t:"fib",q:"The organic material in soil is called ______.",acc:["humus"],ans:"Humus"},
+{id:"68",ch:3,t:"fib",q:"______ is a term evolutionists use to describe a “missing link” between two kinds of animals.",acc:["transitional form","transitional forms"],ans:"Transitional form"},
+{id:"69",ch:3,t:"fib",q:"Rock changed in form by heat and pressure is ______ rock.",acc:["metamorphic"],ans:"Metamorphic"},
+{id:"70",ch:5,t:"fib",q:"The layer of gases held to a planet by its gravity is called the ______.",acc:["atmosphere"],ans:"Atmosphere"},
+/* Label tasks at the end of the sheet */
+{id:"Label 1",ch:3,t:"self",q:"Label: Mountains. Name the 4 kinds.",ans:["Volcanic mountain (Mount Rainier, Mount St. Helens)","Domed mountain (Black Hills)","Fault-block mountain","Folded mountain (Alps, Himalayas, Rockies, Appalachians)"]},
+{id:"Label 2",ch:2,t:"self",q:"Label: Parts of the sun.",ans:["Core","Photosphere","Corona"]},
+{id:"Label 3",ch:4,t:"self",q:"Label: Parts of the ocean floor.",ans:["Continental shelf","Continental slope","Continental rise","Abyssal plain","Seamount","Mid-ocean ridge","Rift","Ocean trench","Hydrothermal vent"],note:"Shelf, slope and rise together make the continental margin."},
+{id:"Label 4",ch:4,t:"self",q:"Label: Parts of the coastal zone.",ans:["Shore (beach)","Coastal dunes","Sandbar","Barrier islands","Estuary","Salt marsh","Longshore drift"]},
+{id:"Label 5",ch:5,t:"self",q:"Label: Layers of the atmosphere (bottom to top).",ans:["Troposphere (weather happens here)","Tropopause (top boundary of the troposphere)","Stratosphere (ozone layer)","Mesosphere (meteors burn up)","Thermosphere (hottest; space station)","Exosphere (outermost, thinnest air)"]},
+{id:"Label 6",ch:5,t:"self",q:"Label: The clouds.",ans:["Cumulus: low, puffy, flat base","Stratus: low, flat sheets","Cirrus: high, wispy, ice crystals","Cumulonimbus: tall storm cloud (hail, lightning, tornadoes)","Nimbostratus: dark, low, steady rain","Cirrocumulus, Cirrostratus: very high","Altocumulus, Altostratus: medium height","Stratocumulus, Fog: low"]},
+{id:"Label 7",ch:4,t:"self",q:"Label: The tides.",ans:["High tide: ocean at its highest point","Low tide: ocean at its lowest point","Spring tide: the very highest high tide (full or new moon)","Neap tide: the weaker high tide (quarter moon)"]}
+];
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const norm=s=>s.toLowerCase().replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').replace(/^(a|an|the) /,'').trim();
+function lev(a,b){const m=[];for(let i=0;i<=a.length;i++)m[i]=[i];for(let j=0;j<=b.length;j++)m[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return m[a.length][b.length]}
+function fibOk(inp,acc){const x=norm(inp);if(!x)return false;return acc.some(a=>{a=norm(a);return x==a||x.replace(/ /g,'')==a.replace(/ /g,'')||(a.length>5&&lev(x,a)<=1)})}
+const ah=a=>Array.isArray(a)?'<ul>'+a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':esc(a);
+const lab=it=>/^\d/.test(it.id)?'Q'+it.id:it.id;
+let i=0;const R=[];
+function draw(){if(i>=ITEMS.length)return fin();const it=ITEMS[i],r=R[i],n=ITEMS.length;let body='',fb='';
+ if(it.t=='fib'){body='<input id="f" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer" '+(r?'disabled value="'+esc(r.pick)+'"':'')+' onkeydown="if(event.key==\'Enter\')chk()">'+(r?'':'<div class="row"><button class="btn" onclick="chk()">Check</button></div>');
+  if(r)fb='<div class="fb '+(r.ok?'good':'bad')+'">'+(r.ok?'✅ Correct!':'❌ Answer: <b>'+esc(it.ans)+'</b>')+(it.note?'<br><i>'+esc(it.note)+'</i>':'')+'</div>'}
+ else if(it.t=='tf'){const c=v=>!r?'':(v===it.tf?'good':(v===r.pick?'bad':''));
+  body='<div class="two"><button class="opt '+c(true)+'" '+(r?'disabled':'')+' onclick="tfp(true)">True</button><button class="opt '+c(false)+'" '+(r?'disabled':'')+' onclick="tfp(false)">False</button></div>';
+  if(r&&r.stage==1)body+='<p><b>It is false. Which word replaces the underlined words?</b></p><input id="f" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==\'Enter\')tff()"><div class="row"><button class="btn" onclick="tff()">Check</button></div>';
+  if(r&&r.ok!=null)fb='<div class="fb '+(r.ok?'good':'bad')+'">'+(r.ok?'✅ Correct!':'❌ Not quite.')+' '+(it.tf?'It is <b>true</b>.':'It is false.'+(it.plain?'':' Correct: <b>'+esc(it.ans)+'</b>'))+(it.note?'<br><i>'+esc(it.note)+'</i>':'')+'</div>'}
+ else{body='<textarea id="f" rows="3" placeholder="Write your answer first, then tap Reveal" '+(r?'disabled':'')+'>'+(r?esc(r.pick):'')+'</textarea>'+(r?'':'<div class="row"><button class="btn" onclick="rev()">Reveal answer</button></div>');
+  if(r){fb='<div class="fb info"><b>Answer:</b>'+ah(it.ans)+(it.note?'<i>'+esc(it.note)+'</i>':'')+'</div>';
+   fb+=r.ok==null?'<div class="row"><button class="btn ok" onclick="mk(true)">⭕ I got it</button><button class="btn no" onclick="mk(false)">❌ I missed it</button></div>':'<div class="fb '+(r.ok?'good':'bad')+'">'+(r.ok?'⭕ Got it':'❌ Missed')+'</div>'}}
+ const can=r&&r.ok!=null;
+ $('#app').innerHTML='<div class="card"><div class="meta"><span>'+lab(it)+' · '+(i+1)+' / '+n+'</span><span>Score '+R.filter(x=>x&&x.ok).length+'</span></div><div class="bar"><i style="width:'+i/n*100+'%"></i></div>'+(it.warn?'<div class="warn">⚠️ '+esc(it.warn)+'</div>':'')+'<div class="q">'+(it.t=='tf'?(it.q.includes('<u>')?'True, or fix the underlined word:<br>'+it.q:'True or False: '+it.q):esc(it.q))+'</div>'+body+fb+'<div class="nav"><button class="btn alt" onclick="i--;draw()" '+(i?'':'disabled')+'>◀ Prev</button><button class="btn" onclick="i++;draw()" '+(can?'':'disabled')+'>'+(i==n-1?'Finish':'Next ▶')+'</button></div></div>';
+ if(!r&&it.t=='fib')setTimeout(()=>{const e=$('#f');e&&e.focus()},30)}
+function chk(){if(R[i])return;const v=$('#f').value;if(!v.trim())return;R[i]={ok:fibOk(v,ITEMS[i].acc),pick:v};draw()}
+function tfp(v){const it=ITEMS[i];if(R[i])return;if(v!==it.tf)R[i]={ok:false,pick:v,stage:2};else if(it.tf||it.plain)R[i]={ok:true,pick:v,stage:2};else R[i]={ok:null,pick:v,stage:1};draw()}
+function tff(){const r=R[i];const v=$('#f').value;if(!v.trim())return;r.ok=fibOk(v,ITEMS[i].fix);r.stage=2;draw()}
+function rev(){R[i]={pick:$('#f').value,ok:null};draw()}
+function mk(ok){R[i].ok=ok;draw()}
+function fin(){const s=R.filter(x=>x&&x.ok).length,n=ITEMS.length;const wrong=ITEMS.map((it,k)=>({it,r:R[k]})).filter(x=>!x.r||!x.r.ok);
+ $('#app').innerHTML='<div class="card"><div class="big">'+s+' / '+n+'</div><p style="text-align:center">'+(s/n>=.9?'Amazing! 🌊':s/n>=.7?'Great job!':'Keep practicing!')+'</p><div class="row" style="justify-content:center"><button class="btn" onclick="i=0;R.length=0;draw()">Try again</button></div><h3>Missed ('+wrong.length+')</h3>'+wrong.map(x=>'<div class="rv"><b>'+lab(x.it)+'</b> '+(x.it.t=='tf'?x.it.q:esc(x.it.q))+'<br>✅ <b>'+(x.it.t=='tf'?(x.it.tf?'True':'False'+(x.it.plain?'':' → '+esc(x.it.ans))):esc(Array.isArray(x.it.ans)?x.it.ans.join(' · '):x.it.ans))+'</b></div>').join('')+'</div>'}
+draw();
+</script></body></html>

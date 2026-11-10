@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>History Test – Review Sheet Lessons 1–5</title>
+<style>
+html,body{background:#e9f2f7!important;margin:0;color:#14324a;font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+.w{max-width:680px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 2px}.sub{color:#4a6a82;font-size:14px;margin-bottom:12px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+button{font:inherit;cursor:pointer;border-radius:10px;border:2px solid #14324a;background:#fff;color:#14324a;padding:8px 14px}
+button:focus-visible,input:focus-visible{outline:3px solid #f4a300;outline-offset:2px}
+.tabs button.on{background:#14324a;color:#fff}
+.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 8px #14324a22;margin-top:10px}
+.bar{height:8px;background:#cfdde7;border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:#2a9d8f;transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:14px;margin:6px 0}
+.q{font-size:19px;line-height:1.4;margin:6px 0 14px}
+.o{display:block;width:100%;text-align:left;margin:8px 0;padding:12px}
+.o.ok{background:#c9efe3;border-color:#2a9d8f}.o.no{background:#fadadd;border-color:#d6455d}
+input[type=text]{font:inherit;width:100%;box-sizing:border-box;padding:12px;border:2px solid #14324a;border-radius:10px}
+.fb{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:16px;background:#fff6dc;border:1px solid #f4a300}
+.warn{font-size:13px;color:#8a5a00;margin-top:6px}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:14px}
+.go{background:#14324a;color:#fff}.good{background:#c9efe3;border-color:#2a9d8f}.bad{background:#fadadd;border-color:#d6455d}
+.fc{min-height:150px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:21px;cursor:pointer}
+.fc small{display:block;font-size:13px;color:#4a6a82;margin-top:10px}
+.big{font-size:40px;font-weight:700}
+</style></head><body><div class="w">
+<h1>History Test: Review Sheet</h1><div class="sub">Lessons 1–5 · Eastern Hemisphere History &amp; Geography</div>
+<div class="tabs" id="tabs"></div><div id="app"></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+/* [sheet#, question, answer, checkFlag] — flag=1 means "verify with the textbook" */
+const I=[
+['1','The study of the earth’s surface, climate, countries, people and cultures is:','Geography',0],
+['2','What is a group of people who share a culture called?','Civilization',0],
+['3','The world’s highest mountain peak?','Mount Everest',0],
+['4','What peninsula connects Africa to Asia?','Sinai Peninsula',0],
+['5','The world’s third largest island is:','Borneo',0],
+['6','A government ruled by religious authority is:','Theocracy',0],
+['7','One of the largest shifting-sand deserts in the world:','Taklamakan Desert',0],
+['8','The three countries in the South Caucasus are:','Armenia, Azerbaijan, Georgia',0],
+['9','The first civilization that developed writing:','Sumerians',0],
+['10','A trading post in North Africa:','Carthage',0],
+['11','What is a rotating monarchy?','A monarchy in which sultans take turns ruling for 5 years',0],
+['12','What was the name of the Chinese government formed in 1912?','Republic of China',0],
+['13','Famous land route to China that helped trade between China and the Roman Empire:','Great Silk Road',0],
+['14','What is a dynasty?','A line of rulers in the same family that succeed each other',0],
+['15','The longest ruling dynasty in China:','Zhou Dynasty',0],
+['16','The largest of the three ancient Asian river valley cultures was:','Yellow River Valley civilization',0],
+['17','The peace agreement that recognized Israel as an independent country by many countries was called:','Abraham Accords',0],
+['18','Cedar trees: what country is known for them?','Lebanon',0],
+['19','What is the largest country in the Middle East?','Saudi Arabia',0],
+['20','What country is known for the caste system?','India',0],
+['21','“Kingdom of the Thunder Dragon” is:','Bhutan',0],
+['22a','Where did Mount Pinatubo erupt?','Philippines',0],
+['22b','In what year did Mount Pinatubo erupt?','1991',0],
+['23','The Khmer Empire was the earliest empire of what country?','Cambodia',0],
+['24','Where were cowrie shells used as currency?','Maldives',0],
+['25','Continents of the Western Hemisphere:','North and South America',0],
+['26','Two important lines of latitude in the Northern Hemisphere:','Tropic of Cancer and Arctic Circle',0],
+['27','What is a “grid”?','A group of lines that go up and down and from side to side, forming squares or boxes on a map',0],
+['28','The greatest distance around the earth is called:','Circumference',0],
+['28b','Countries that were called French Indochina before WWII:','Vietnam, Laos, Cambodia',0],
+['29','Who built the Taj Mahal and for whom?','A ruler of India built it for his wife',0],
+['30','Name of the multicontinental chain of volcanoes along the Pacific coast:','Ring of Fire',0],
+['31','Place where the 1989 protest against Communism in China took place:','Tiananmen Square (Beijing)',0],
+['32','Babylonian ruler who wrote 300 laws for daily life:','Hammurabi',0],
+['33','Who was taken from home in Israel to serve the king of Babylon?','Daniel',0],
+['34','Asia’s longest river is:','Yangtze River',0],
+['35','What are God’s basic laws for right and wrong?','Ten Commandments',0],
+['37','The source of the Jordan River is:','Mount Hermon',0],
+['38','The Fertile Crescent is called:','Cradle of Civilization',1],
+['39a','Plain:','Large, flat area of land',1],
+['39b','Peninsula:','Land surrounded by water on three sides',1],
+['39c','Altitude:','Height above sea level',1],
+['39d','Canyon:','Deep, narrow valley with steep sides',0],
+['39e','Geyser:','Hot spring that shoots hot water and steam into the air',1],
+['39f','Isthmus:','Narrow strip of land with water on both sides, connecting two larger land areas',1],
+['39g','Mountain peak:','The point (top) of a mountain',0]
+];
+const CAP=[['Damascus','Syria'],['New Delhi','India'],['Bangkok','Thailand'],['Taipei','Taiwan'],['Ankara','Turkey'],['Seoul','South Korea'],['Riyadh','Saudi Arabia'],['Jerusalem','Israel'],['Kabul','Afghanistan']];
+CAP.forEach(c=>I.push(['40','What country has the capital city '+c[0]+'?',c[1],0]));
+
+let mode='fc',st={};
+function head(){$('#tabs').innerHTML=[['fc','Flashcards'],['ts','Test (write &amp; check)'],['cp','Capitals']].map(([k,n])=>`<button class="${mode===k?'on':''}" data-m="${k}">${n}</button>`).join('')}
+document.addEventListener('click',e=>{const b=e.target.closest('button[data-m]');if(b){mode=b.dataset.m;start()}});
+function start(){head();({fc:fcInit,ts:tsInit,cp:cpInit})[mode]()}
+
+function warn(x){return x[3]?'<div class="warn">This one was blank on the sheet. Double-check with the textbook.</div>':''}
+
+/* Flashcards */
+function fcInit(){st={d:shuf(I),i:0,f:false,k:0};fcDraw()}
+function fcDraw(){
+ const c=st.d[st.i];
+ $('#app').innerHTML=`<div class="meta"><span>Card ${st.i+1} of ${st.d.length}</span><span>Know it: ${st.k}</span></div>
+ <div class="bar"><i style="width:${st.i/st.d.length*100}%"></i></div>
+ <div class="card fc" id="fc" tabindex="0" role="button"><div>${st.f?'<b>'+esc(c[2])+'</b>'+warn(c):esc(c[1])}<small>${st.f?'Sheet question '+c[0]:'Tap to flip'}</small></div></div>
+ <div class="nav"><button id="pv">Back</button><button id="kn">I know it</button><button class="go" id="nx">Next</button></div>`;
+ const flip=()=>{st.f=!st.f;fcDraw()};
+ $('#fc').onclick=flip;$('#fc').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};
+ $('#pv').onclick=()=>{if(st.i>0){st.i--;st.f=false;fcDraw()}};
+ const nx=()=>{st.f=false;if(st.i<st.d.length-1){st.i++;fcDraw()}else{$('#app').innerHTML=`<div class="card" style="text-align:center"><div class="big">${st.k}/${st.d.length}</div><p>cards you knew</p><button class="go" onclick="fcInit()">Shuffle again</button></div>`}};
+ $('#nx').onclick=nx;$('#kn').onclick=()=>{st.k++;nx()};
+}
+
+/* Test: write first, reveal, self-mark */
+function tsInit(){st={q:shuf(I),i:0,s:0,w:[],r:false};tsDraw()}
+function tsDraw(){
+ if(st.i>=st.q.length)return tsEnd();
+ const q=st.q[st.i];st.r=false;
+ $('#app').innerHTML=`<div class="meta"><span>Question ${st.i+1} of ${st.q.length}</span><span>Score: ${st.s}</span></div>
+ <div class="bar"><i style="width:${st.i/st.q.length*100}%"></i></div>
+ <div class="card"><div class="q">${esc(q[1])}</div>
+ <input type="text" id="ai" autocomplete="off" aria-label="Your answer" placeholder="Write your answer first">
+ <div class="nav"><button class="go" id="rv">Reveal answer</button></div><div id="ans"></div></div>`;
+ $('#ai').focus();
+ const rv=()=>{if(st.r)return;st.r=true;
+  $('#rv').style.display='none';
+  $('#ans').innerHTML=`<div class="fb"><b>${esc(q[2])}</b>${warn(q)}</div>
+  <div class="nav"><button class="bad" id="mx">I missed it</button><button class="good" id="gt">I got it</button></div>`;
+  $('#gt').onclick=()=>{st.s++;st.i++;tsDraw()};
+  $('#mx').onclick=()=>{st.w.push(q);st.i++;tsDraw()};
+ };
+ $('#rv').onclick=rv;$('#ai').onkeydown=e=>{if(e.key==='Enter')rv()};
+}
+function tsEnd(){
+ const p=Math.round(st.s/st.q.length*100);
+ $('#app').innerHTML=`<div class="card" style="text-align:center"><div class="big">${st.s}/${st.q.length}</div><p>${p}%${p>=90?' Amazing!':p>=70?' Nice work!':' Keep practicing, you’ll get it!'}</p>
+ <button class="go" onclick="tsInit()">Try again</button>${st.w.length?` <button onclick="tsRev()">Review ${st.w.length} missed</button>`:''}</div><div id="rv"></div>`;
+ if(p>=90)confetti();
+}
+function tsRev(){$('#rv').innerHTML=st.w.map(q=>`<div class="card"><div class="q" style="font-size:16px">${esc(q[1])}</div><div class="fb"><b>${esc(q[2])}</b></div></div>`).join('')}
+
+/* Capitals multiple choice */
+function cpInit(){st={q:shuf(CAP),i:0,s:0,w:[]};cpDraw()}
+function cpDraw(){
+ if(st.i>=st.q.length){const p=Math.round(st.s/st.q.length*100);
+  $('#app').innerHTML=`<div class="card" style="text-align:center"><div class="big">${st.s}/${st.q.length}</div><p>${p}%</p><button class="go" onclick="cpInit()">Try again</button></div>`;
+  if(p>=90)confetti();return}
+ const c=st.q[st.i];
+ const opts=shuf([c[1],...shuf(CAP.map(x=>x[1]).filter(x=>x!==c[1])).slice(0,3)]);
+ $('#app').innerHTML=`<div class="meta"><span>Question ${st.i+1} of ${st.q.length}</span><span>Score: ${st.s}</span></div>
+ <div class="bar"><i style="width:${st.i/st.q.length*100}%"></i></div>
+ <div class="card"><div class="q">${esc(c[0])} is the capital of:</div>${opts.map(o=>`<button class="o">${esc(o)}</button>`).join('')}<div class="nav"><span></span><button class="go" id="nx" style="display:none">Next</button></div></div>`;
+ let done=false;
+ document.querySelectorAll('.o').forEach(b=>b.onclick=()=>{if(done)return;done=true;
+  const ok=b.textContent===c[1];if(ok)st.s++;
+  document.querySelectorAll('.o').forEach(x=>{if(x.textContent===c[1])x.classList.add('ok');else if(x===b)x.classList.add('no')});
+  $('#nx').style.display='';$('#nx').focus()});
+ $('#nx').onclick=()=>{st.i++;cpDraw()};
+}
+function confetti(){
+ const c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;pointer-events:none;width:100%;height:100%';
+ c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);const x=c.getContext('2d');
+ const ps=Array.from({length:120},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height/2,v:2+Math.random()*4,r:4+Math.random()*5,c:['#f4a300','#2a9d8f','#d6455d','#14324a'][Math.random()*4|0]}));
+ let f=0;(function t(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.y+=p.v;x.fillStyle=p.c;x.fillRect(p.x,p.y,p.r,p.r)});if(++f<150)requestAnimationFrame(t);else c.remove()})();
+}
+start();
+</script></body></html>

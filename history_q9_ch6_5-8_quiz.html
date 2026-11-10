@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>History Q9 – East Asia 6.5–6.8</title>
+<style>
+html,body{background:#e9f2f7!important;margin:0;color:#14324a;font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+.w{max-width:680px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 2px}.sub{color:#4a6a82;font-size:14px;margin-bottom:12px}
+.tabs,.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+button{font:inherit;cursor:pointer;border-radius:10px;border:2px solid #14324a;background:#fff;color:#14324a;padding:8px 14px}
+button:focus-visible{outline:3px solid #f4a300;outline-offset:2px}
+.tabs button.on,.chips button.on{background:#14324a;color:#fff}
+.chips button{padding:5px 10px;font-size:14px;border-width:1px}
+.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 8px #14324a22;margin-top:10px}
+.bar{height:8px;background:#cfdde7;border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:#2a9d8f;width:0;transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:14px;margin:6px 0}
+.q{font-size:19px;line-height:1.4;margin:10px 0 14px}
+.o{display:block;width:100%;text-align:left;margin:8px 0;padding:12px}
+.o.ok{background:#c9efe3;border-color:#2a9d8f}.o.no{background:#fadadd;border-color:#d6455d}
+input[type=text]{font:inherit;width:100%;box-sizing:border-box;padding:12px;border:2px solid #14324a;border-radius:10px}
+.fb{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:15px}
+.fb.ok{background:#c9efe3}.fb.no{background:#fadadd}
+.nav{display:flex;justify-content:space-between;margin-top:14px}
+.go{background:#14324a;color:#fff}
+.fc{min-height:150px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:21px;cursor:pointer}
+.fc small{display:block;font-size:13px;color:#4a6a82;margin-top:10px}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mg button{text-align:left;font-size:14px;padding:10px}
+.mg button.sel{background:#f4a300;border-color:#b57600}.mg button.done{background:#c9efe3;border-color:#2a9d8f;opacity:.6}
+.mg button.bad{background:#fadadd}
+.big{font-size:40px;font-weight:700}
+</style></head><body><div class="w">
+<h1>History Q9: East Asia</h1><div class="sub">Chapter 6, sections 6.5 to 6.8 · Eastern Hemisphere History &amp; Geography</div>
+<div class="tabs" id="tabs"></div><div class="chips" id="chips"></div><div id="app"></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const norm=s=>s.toLowerCase().replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
+
+/* [section, term, definition] */
+const T=[
+['6.5','Yellow River Valley civilization','Largest of the three ancient Asian river valley cultures'],
+['6.5','Shang Dynasty','First Chinese dynasty with a recorded history'],
+['6.5','Zhou Dynasty','Longest-ruling dynasty in Chinese history'],
+['6.5','Mandate of Heaven','Belief that the Chinese ruler was given the power to rule by their gods'],
+['6.5','King Wen','First Chinese ruler to claim the Mandate of Heaven (Zhou Dynasty)'],
+['6.5','Confucius','Chinese teacher and philosopher'],
+['6.5','Five Classics','Five books that held Confucius’s teachings; taught at the university built during the Han Dynasty'],
+['6.5','Qin Shi Huang','First emperor of China; established the Qin Dynasty and united the states of China'],
+['6.5','Qin Dynasty','Dynasty from which China gets its name'],
+['6.5','Great Wall of China','Longest structure ever built by man'],
+['6.6','Han Dynasty','Empire that grew to be one of the greatest Chinese empires by size in ancient times (206 B.C.–A.D. 220)'],
+['6.6','Great Silk Road','Most famous land route to China; allowed trade between China and the Roman Empire'],
+['6.6','Song Dynasty','Most culturally brilliant dynasty in Chinese history; first movable type invented'],
+['6.6','porcelain','Delicate type of pottery first made in China'],
+['6.6','Marco Polo','Venetian trader who explored China and wrote a book about the country'],
+['6.6','movable type','Printing pieces made of baked clay, invented during the Song Dynasty'],
+['6.7','Qing Dynasty','China’s last dynasty'],
+['6.7','Republic of China','Chinese government formed in 1912'],
+['6.7','Sun Yat-sen','First leader of the Republic of China'],
+['6.7','Mao Zedong','Leader of the Chinese Communists'],
+['6.7','Chiang Kai-shek','Leader of the Nationalists of the Republic of China'],
+['6.7','People’s Republic of China','What the Communist-controlled mainland was called after 1949'],
+['6.8','Tiananmen Square','Site of a 1989 protest against Communism in Beijing'],
+['6.8','Hong Kong Special Administrative Region','Formal name of Hong Kong'],
+['6.8','Mongols','Group of nomadic tribes who wandered northeastern Asia on horseback in search of food for their livestock'],
+['6.8','Genghis Khan','Fierce Mongol ruler who united the Mongol tribes; began the Mongol Empire'],
+['6.8','Mongol Empire','Largest connected land empire in history at that time'],
+['6.8','Taiwan','Island where Chiang Kai-shek and his supporters fled; capital is Taipei'],
+['6.8','gers (yurts)','Round tents that Mongols carry their homes in']
+];
+
+const M=(s,q,a,w,c)=>({s,k:'mc',q,a,w,c});
+const F=(s,q,a)=>({s,k:'tf',q,a});
+const B=(s,q,a,c)=>({s,k:'fill',q,a:Array.isArray(a)?a:[a],c});
+const Q=[
+/* 6.5 */
+M('6.5','Along what river did the largest ancient Chinese civilization develop?','Yellow River',['Yangtze River','Mekong River','Nile River']),
+M('6.5','Which belief said the Chinese ruler was given power to rule by their gods?','Mandate of Heaven',['Five Classics','Great Silk Road','Balance of power']),
+M('6.5','Which was the first Chinese dynasty with a recorded history?','Shang',['Zhou','Qin','Han']),
+M('6.5','Which was the longest-ruling dynasty in Chinese history?','Zhou',['Shang','Qin','Song']),
+M('6.5','China gets its name from which dynasty?','Qin',['Han','Zhou','Shang']),
+M('6.5','Who was the first emperor of China?','Qin Shi Huang',['Confucius','King Wen','Sun Yat-sen']),
+M('6.5','Who was the first Chinese ruler to claim the Mandate of Heaven?','King Wen',['Qin Shi Huang','Confucius','Mao Zedong']),
+M('6.5','What is the longest structure ever built by man?','Great Wall of China',['Angkor Wat','Grand Canal','Taj Mahal']),
+M('6.5','The teachings of Confucius were written in five books called the:','Five Classics',['Ten Commandments','Great Books','Mandate of Heaven']),
+M('6.5','The Five Classics were taught at the university built during which dynasty?','Han',['Shang','Qin','Song']),
+F('6.5','The Yellow River Valley civilization was the largest of the three ancient Asian river valley cultures.',true),
+F('6.5','The Zhou Dynasty was the first Chinese dynasty with a recorded history.',false),
+F('6.5','Qin Shi Huang united the states of China.',true),
+F('6.5','Confucius’s teachings should be followed as a religion.',false),
+F('6.5','Tall mountains, vast deserts, and oceans surround China.',true),
+B('6.5','Qin Shi Huang established the ___ Dynasty, where China gets its name.','Qin'),
+B('6.5','Confucius’s teachings were written in the ___ Classics.',['Five','5']),
+/* 6.6 */
+M('6.6','During which dynasty did ancient China grow to its greatest size?','Han',['Shang','Song','Qin']),
+M('6.6','During which dynasty did the Chinese develop a writing system with more than three thousand symbols?','Shang',['Han','Song','Qin']),
+M('6.6','During which dynasty was the first movable type invented?','Song',['Han','Shang','Zhou']),
+M('6.6','Porcelain is a delicate type of what, first made in China?','Pottery',['Coin','Paper money','Silk']),
+M('6.6','Which land route allowed trade between China and the Roman Empire?','Great Silk Road',['Grand Canal','Great Wall','Ring of Fire']),
+M('6.6','The Chinese were the first people to discover and use silk produced by what?','Silkworms',['Spiders','Bamboo','Mulberry leaves']),
+M('6.6','Chinese paper was made from the inner bark of which tree?','Mulberry tree',['Bamboo tree','Teak tree','Cedar tree']),
+M('6.6','Marco Polo was a trader from which city?','Venice',['Rome','Beijing','Tokyo']),
+M('6.6','What was each piece of the first movable type made of?','Baked clay',['Wood','Bronze','Jade']),
+F('6.6','The Chinese kept their knowledge of how to make silk a secret for over three thousand years.',true),
+F('6.6','Movable type was very practical for the Chinese because their writing has only a few symbols.',false),
+F('6.6','Marco Polo left Italy in 1271 and returned to Venice in 1295.',true),
+F('6.6','The Song Dynasty is considered the most culturally brilliant dynasty in Chinese history.',true),
+B('6.6','Block prints were made by carving a picture or symbol on a piece of ___.','wood'),
+B('6.6','People called porcelain dishes “___” after the country they came from.','china'),
+/* 6.7 */
+M('6.7','What was China’s last dynasty?','Qing',['Han','Song','Zhou']),
+M('6.7','What Chinese government was formed in 1912?','Republic of China',['People’s Republic of China','Qing Dynasty','Mongol Empire']),
+M('6.7','Who was the first leader of the Republic of China?','Sun Yat-sen',['Mao Zedong','Chiang Kai-shek','Confucius']),
+M('6.7','Who became the leader of the Chinese Communists?','Mao Zedong',['Chiang Kai-shek','Sun Yat-sen','Genghis Khan']),
+M('6.7','Who replaced Sun Yat-sen as leader of the Nationalists?','Chiang Kai-shek',['Mao Zedong','Qin Shi Huang','Confucius']),
+M('6.7','In what year did the Communists gain control of China?','1949',['1911','1912','1989']),
+M('6.7','Where did Chiang Kai-shek and his supporters flee?','Taiwan',['Hong Kong','Mongolia','Japan']),
+M('6.7','According to the book, what is the most important right people can have in free countries?','Freedom of religion',['Freedom to travel','Right to vote','Right to own property']),
+F('6.7','The Republic of China was roughly patterned after governments in the West.',true),
+F('6.7','The civil war in China was paused while China joined the Allies in World War II.',true),
+F('6.7','In Communist countries, citizens have a lot of privacy.',false),
+F('6.7','In Communist countries, the media is tightly controlled by the government.',true),
+F('6.7','In free countries, citizens are generally considered innocent until proven guilty.',true),
+B('6.7','The ___ took control of mainland China in 1949.','Communists'),
+/* 6.8 */
+M('6.8','China is home to almost what percent of the world’s population?','20 percent',['5 percent','50 percent','80 percent']),
+M('6.8','What is the capital city of China?','Beijing',['Taipei','Ulaanbaatar','Seoul']),
+M('6.8','What is the capital city of Taiwan?','Taipei',['Beijing','Ulaanbaatar','Hong Kong']),
+M('6.8','What is the capital city of Mongolia?','Ulaanbaatar',['Taipei','Beijing','Pyongyang']),
+M('6.8','In 1989, a million Chinese people gathered at which place to protest Communism?','Tiananmen Square',['Great Wall','Forbidden City','Taipei Square']),
+M('6.8','Which form of government does Taiwan have?','Republican',['Communist','Dynasty','Rotating monarchy']),
+M('6.8','Mongolia is landlocked between which two major powers?','Russia and China',['China and Japan','Russia and India','Korea and China']),
+M('6.8','Mongolia’s name is taken from which group of nomadic tribes?','Mongols',['Manchus','Han','Khmer']),
+M('6.8','The Mongol leader who united the Mongol tribes in the early 1200s was:','Genghis Khan',['Mao Zedong','Marco Polo','Chiang Kai-shek']),
+M('6.8','In what year did Mongolia declare its independence after being ruled by China?','1911',['1949','1989','1271']),
+M('6.8','What does the name Hong Kong mean?','Fragrant Harbor',['Land of the Rising Sun','Peaceful Island','Eastern Pearl'],true),
+M('6.8','In 1997, Hong Kong was placed under Chinese rule after being governed by:','Great Britain',['Japan','Portugal','Russia'],true),
+F('6.8','Over 1,000 Chinese people died during the Tiananmen Square protest.',true),
+F('6.8','Mainland China claims that Taiwan is still part of China.',true),
+F('6.8','Taiwan’s main exports are electronics.',true),
+F('6.8','Most Mongolians have always lived in big cities.',false),
+B('6.8','Round Mongolian tents are called gers or ___.',['yurts','yurt']),
+B('6.8','The Mongol Empire was the largest connected ___ empire in history at that time.','land'),
+B('6.8','Mongolia’s capital city is ___.','Ulaanbaatar')
+];
+
+const SECS=['All','6.5','6.6','6.7','6.8'];
+let mode='fc',sec='All',st={};
+const pool=a=>sec==='All'?a:a.filter(x=>(Array.isArray(x)?x[0]:x.s)===sec);
+
+function head(){
+ $('#tabs').innerHTML=[['fc','Flashcards'],['qz','Quiz'],['mt','Matching']].map(([k,n])=>`<button class="${mode===k?'on':''}" data-m="${k}">${n}</button>`).join('');
+ $('#chips').innerHTML=SECS.map(s=>`<button class="${sec===s?'on':''}" data-s="${s}">${s==='All'?'All sections':s}</button>`).join('');
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.m){mode=b.dataset.m;start()}
+ else if(b.dataset.s){sec=b.dataset.s;start()}
+});
+function start(){head();({fc:fcInit,qz:qzInit,mt:mtInit})[mode]()}
+
+/* Flashcards */
+function fcInit(){st={d:shuf(pool(T)),i:0,f:false,k:0};fcDraw()}
+function fcDraw(){
+ const c=st.d[st.i];
+ $('#app').innerHTML=`<div class="meta"><span>Card ${st.i+1} of ${st.d.length}</span><span>Know it: ${st.k}</span></div>
+ <div class="bar"><i style="width:${(st.i)/st.d.length*100}%"></i></div>
+ <div class="card fc" id="fc" tabindex="0" role="button"><div>${st.f?esc(c[2]):'<b>'+esc(c[1])+'</b>'}<small>${st.f?'Section '+c[0]:'Tap to flip'}</small></div></div>
+ <div class="nav"><button id="pv">Back</button><button id="kn">I know it</button><button class="go" id="nx">Next</button></div>`;
+ const flip=()=>{st.f=!st.f;fcDraw()};
+ $('#fc').onclick=flip;$('#fc').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};
+ $('#pv').onclick=()=>{if(st.i>0){st.i--;st.f=false;fcDraw()}};
+ const nx=()=>{st.f=false;if(st.i<st.d.length-1){st.i++;fcDraw()}else{$('#app').innerHTML=`<div class="card" style="text-align:center"><div class="big">${st.k}/${st.d.length}</div><p>cards you knew</p><button class="go" onclick="fcInit()">Shuffle again</button></div>`}};
+ $('#nx').onclick=nx;$('#kn').onclick=()=>{st.k++;nx()};
+}
+
+/* Quiz */
+function qzInit(){
+ const qs=shuf(pool(Q));
+ st={q:qs,i:0,s:0,done:false,wrong:[]};qzDraw();
+}
+function qzDraw(){
+ if(st.i>=st.q.length)return qzEnd();
+ const q=st.q[st.i];st.done=false;
+ let body='';
+ if(q.k==='mc'){st.o=shuf([q.a,...q.w]);body=st.o.map((o,n)=>`<button class="o" data-n="${n}">${esc(o)}</button>`).join('')}
+ else if(q.k==='tf')body=`<button class="o" data-n="1">True</button><button class="o" data-n="0">False</button>`;
+ else body=`<input type="text" id="fi" autocomplete="off" aria-label="Your answer"><div class="nav"><button class="go" id="ck">Check</button></div>`;
+ $('#app').innerHTML=`<div class="meta"><span>Question ${st.i+1} of ${st.q.length} · ${q.s}</span><span>Score: ${st.s}</span></div>
+ <div class="bar"><i style="width:${st.i/st.q.length*100}%"></i></div>
+ <div class="card"><div class="q">${esc(q.q)}</div>${body}<div id="fb"></div><div class="nav"><span></span><button class="go" id="nx" style="display:none">${st.i===st.q.length-1?'See results':'Next'}</button></div></div>`;
+ $('#nx').onclick=()=>{st.i++;qzDraw()};
+ if(q.k==='fill'){const go=()=>{if(st.done)return;fin(q,norm($('#fi').value),$('#fi').value.trim()!=='' )};$('#ck').onclick=go;$('#fi').onkeydown=e=>{if(e.key==='Enter')go()};$('#fi').focus()}
+ else document.querySelectorAll('.o').forEach(b=>b.onclick=()=>{if(st.done)return;const n=+b.dataset.n;
+  const ok=q.k==='mc'?st.o[n]===q.a:(n===1)===q.a;
+  document.querySelectorAll('.o').forEach((x,m)=>{const isC=q.k==='mc'?st.o[m]===q.a:(m===1)===q.a;if(isC)x.classList.add('ok');else if(x===b)x.classList.add('no')});
+  fin(q,null,true,ok)});
+}
+function fin(q,val,has,okIn){
+ if(q.k==='fill'&&!has)return;
+ st.done=true;
+ const ok=q.k==='fill'?q.a.some(a=>norm(a)===val):okIn;
+ const ans=q.k==='tf'?(q.a?'True':'False'):q.k==='mc'?q.a:q.a[0];
+ if(ok)st.s++;else st.wrong.push(q);
+ $('#fb').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'Correct!':'Not quite. Answer: <b>'+esc(ans)+'</b>'}</div>${q.c?'<div class="fb" style="background:#fff6dc">This one wasn’t on the scanned pages. Double-check with the book.</div>':''}`;
+ if(q.k==='fill'){$('#fi').disabled=true;$('#ck').style.display='none'}
+ $('#nx').style.display='';$('#nx').focus();
+}
+function qzEnd(){
+ const p=Math.round(st.s/st.q.length*100);
+ $('#app').innerHTML=`<div class="card" style="text-align:center"><div class="big">${st.s}/${st.q.length}</div><p>${p}%${p>=90?' Amazing!':p>=70?' Nice work!':' Keep practicing, you’ll get it!'}</p>
+ <button class="go" onclick="qzInit()">Try again</button>
+ ${st.wrong.length?`<button onclick="rev()">Review ${st.wrong.length} missed</button>`:''}</div><div id="rv"></div>`;
+ if(p>=90)confetti();
+}
+function rev(){
+ $('#rv').innerHTML=st.wrong.map(q=>`<div class="card"><div class="q" style="font-size:16px">${esc(q.q)}</div><div class="fb ok">${esc(q.k==='tf'?(q.a?'True':'False'):q.k==='mc'?q.a:q.a[0])}</div></div>`).join('');
+}
+function confetti(){
+ const c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;pointer-events:none;width:100%;height:100%';
+ c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);const x=c.getContext('2d');
+ const ps=Array.from({length:120},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height/2,v:2+Math.random()*4,r:4+Math.random()*5,c:['#f4a300','#2a9d8f','#d6455d','#14324a'][Math.random()*4|0]}));
+ let f=0;(function t(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.y+=p.v;x.fillStyle=p.c;x.fillRect(p.x,p.y,p.r,p.r)});if(++f<150)requestAnimationFrame(t);else c.remove()})();
+}
+
+/* Matching */
+function mtInit(){
+ const set=shuf(pool(T)).slice(0,8);
+ st={set,t:shuf(set),d:shuf(set),a:null,n:0,tries:0};mtDraw();
+}
+function mtDraw(){
+ $('#app').innerHTML=`<div class="meta"><span>Matched ${st.n} of ${st.set.length}</span><span>Misses: ${st.tries}</span></div>
+ <div class="bar"><i style="width:${st.n/st.set.length*100}%"></i></div>
+ <div class="card"><p style="margin-top:0">Tap a term, then tap its meaning.</p><div class="mg">
+ <div>${st.t.map((x,i)=>`<button style="width:100%;margin-bottom:8px" data-t="${i}" class="${x.done?'done':''}">${esc(x[1])}</button>`).join('')}</div>
+ <div>${st.d.map((x,i)=>`<button style="width:100%;margin-bottom:8px" data-d="${i}" class="${x.done?'done':''}">${esc(x[2])}</button>`).join('')}</div></div>
+ ${st.n===st.set.length?`<p style="text-align:center"><b>All matched!</b></p><button class="go" onclick="mtInit()">New set</button>`:''}</div>`;
+ if(st.a!==null)document.querySelector(`[data-t="${st.a}"]`).classList.add('sel');
+ document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{if(st.t[b.dataset.t].done)return;st.a=+b.dataset.t;mtDraw()});
+ document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{
+  if(st.a===null||st.d[b.dataset.d].done)return;
+  const t=st.t[st.a],d=st.d[b.dataset.d];
+  if(t===d){t.done=true;st.n++;st.a=null;mtDraw()}
+  else{st.tries++;st.a=null;mtDraw();const nb=document.querySelector(`[data-d="${b.dataset.d}"]`);nb.classList.add('bad');setTimeout(()=>nb&&nb.classList.remove('bad'),600)}
+ });
+}
+start();
+</script></body></html>
