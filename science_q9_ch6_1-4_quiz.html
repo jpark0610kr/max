@@ -34,7 +34,7 @@ input.fib{width:100%;padding:12px;font-size:1.05rem;border:2px solid #b9d9e4;bor
 .btn.alt{background:#e3f1f6;color:#08506b}
 .btn:disabled{opacity:.4;cursor:default}
 .flip{min-height:190px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer;padding:20px;border:2px dashed #7fb4c6;border-radius:14px;background:#f4fbfd}
-.flip .t{font-size:1.4rem;font-weight:800;color:#08506b}
+.flip .t{font-size:1.3rem;font-weight:800;color:#08506b}
 .flip .d{font-size:1.1rem}
 .flip small{color:#6a93a5;margin-top:10px}
 .mt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -308,7 +308,7 @@ function confetti(){const c=['#0d6e8a','#1f9d6b','#f0b429','#ef6f4f','#7fb4c6'];
 /* ---------- STATE / UI ---------- */
 const S={mode:'cards',sec:0};
 const MODES=[['cards','Flashcards'],['mc','Multiple Choice'],['tf','True / False'],['fib','Fill-in'],['match','Matching'],['test','Test']];
-const SECS=[[0,'All (6.1–6.4)'],[1,'6.1 Cells & the Biosphere'],[2,'6.2 Classifying Organisms'],[3,'6.3 Animals'],[4,'6.4 Insects & Biogenesis']];
+const SECS=[[0,'All (6.1–6.4)'],[1,'6.1 The Living Cell'],[2,'6.2 Classifying Organisms'],[3,'6.3 Kingdom Animalia'],[4,'6.4 Insects & Biogenesis']];
 function head(){
  $('#tabs').innerHTML=MODES.map(m=>`<button class="${S.mode==m[0]?'on':''}" onclick="S.mode='${m[0]}';start()">${m[1]}</button>`).join('');
  $('#chips').innerHTML=SECS.map(s=>`<button class="${S.sec==s[0]?'on':''}" onclick="S.sec=${s[0]};start()">${s[1]}</button>`).join('');
@@ -320,9 +320,9 @@ function start(){head();
 let C={d:[],i:0,f:false};
 function initCards(){C.d=shuf([...pool(TERMS).map(t=>({s:t[0],f:t[1],b:t[2],k:'t'})),...pool(QA).map(t=>({s:t[0],f:t[1],b:t[2],k:'q'}))]);C.i=0;C.f=false;drawCards()}
 function drawCards(){const c=C.d[C.i];
- $('#app').innerHTML=`<div class="card"><div class="meta"><span>Card ${C.i+1} / ${C.d.length}</span><span>${c.k=='q'?'Short answer':'Term'} · ${'5.'+(c.s+3)}</span></div>
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Card ${C.i+1} / ${C.d.length}</span><span>${c.k=='q'?'Short answer':'Term'} · ${'6.'+c.s}</span></div>
  <div class="bar"><i style="width:${(C.i+1)/C.d.length*100}%"></i></div>
- <div class="flip" onclick="C.f=!C.f;drawCards()">${C.f?`<div class="d">${esc(c.b)}</div>`:`<div class="${c.k=='q'?'d':'t'}">${esc(c.f)}</div><small>tap to flip</small>`}</div>
+ <div class="flip" onclick="C.f=!C.f;drawCards()">${C.f?`<div class="d">${esc(c.b)}</div>`:`<div class="t">${esc(c.f)}</div><small>tap to flip</small>`}</div>
  <div class="nav"><button class="btn alt" onclick="cardGo(-1)" ${C.i==0?'disabled':''}>◀ Prev</button><button class="btn alt" onclick="initCards()">Shuffle</button><button class="btn" onclick="cardGo(1)" ${C.i==C.d.length-1?'disabled':''}>Next ▶</button></div></div>`}
 function cardGo(n){C.i+=n;C.f=false;drawCards()}
 
