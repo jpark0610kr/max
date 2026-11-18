@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Max's Science Q10 – Ch. 6 Botany (6.5–6.7)</title>
+<style>
+html,body{background:#dff1f5 !important;margin:0;padding:0}
+*{box-sizing:border-box}
+body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#0a2e44;line-height:1.45}
+.wrap{max-width:720px;margin:0 auto;padding:16px 14px 60px}
+h1{font-size:1.45rem;margin:6px 0 2px;color:#08506b}
+.sub{margin:0 0 12px;color:#35637a;font-size:.95rem}
+.tabs,.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tabs button{flex:1 1 auto;padding:10px 8px;border:2px solid #0d6e8a;background:#fff;color:#08506b;border-radius:10px;font-weight:700;font-size:.95rem;cursor:pointer}
+.tabs button.on{background:#0d6e8a;color:#fff}
+.chips button{padding:6px 12px;border:1.5px solid #7fb4c6;background:#f4fbfd;color:#2b5a70;border-radius:99px;font-size:.88rem;cursor:pointer}
+.chips button.on{background:#08506b;border-color:#08506b;color:#fff}
+.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(8,80,107,.15)}
+.bar{height:8px;background:#cfe6ed;border-radius:6px;overflow:hidden;margin-bottom:8px}
+.bar i{display:block;height:100%;background:#0d6e8a;transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:.9rem;color:#35637a;margin-bottom:10px}
+.q{font-size:1.15rem;font-weight:700;margin:6px 0 14px}
+.opt{display:block;width:100%;text-align:left;padding:12px 14px;margin:8px 0;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:12px;font-size:1rem;color:#0a2e44;cursor:pointer}
+.opt:hover:not(:disabled){border-color:#0d6e8a}
+.opt.good{background:#d8f3e6;border-color:#1f9d6b}
+.opt.bad{background:#fde0de;border-color:#d9534f}
+.opt:disabled{cursor:default}
+input.fib{width:100%;padding:12px;font-size:1.05rem;border:2px solid #b9d9e4;border-radius:12px}
+.fb{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:.95rem}
+.fb.good{background:#d8f3e6}.fb.bad{background:#fde0de}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
+.btn{padding:10px 18px;border:0;border-radius:10px;background:#0d6e8a;color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
+.btn.alt{background:#e3f1f6;color:#08506b}
+.btn:disabled{opacity:.4;cursor:default}
+.flip{min-height:190px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer;padding:20px;border:2px dashed #7fb4c6;border-radius:14px;background:#f4fbfd}
+.flip .t{font-size:1.3rem;font-weight:800;color:#08506b}
+.flip .d{font-size:1.1rem}
+.flip small{color:#6a93a5;margin-top:10px}
+.mt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mt button{padding:10px;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:10px;font-size:.88rem;color:#0a2e44;cursor:pointer;text-align:left}
+.mt button.sel{border-color:#0d6e8a;background:#d6edf5}
+.mt button.done{background:#d8f3e6;border-color:#1f9d6b;color:#4a6;cursor:default}
+.mt button.shake{background:#fde0de;border-color:#d9534f}
+.big{font-size:2.4rem;font-weight:800;color:#08506b;text-align:center;margin:4px 0}
+.rev{border-top:1px solid #d3e6ed;padding:10px 0;font-size:.95rem}
+.rev b{color:#08506b}
+.cf{position:fixed;top:-12px;width:10px;height:14px;z-index:9;animation:fall 2.4s linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.8}}
+@media (prefers-reduced-motion:reduce){.cf{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Science Q10 – Life Science: Botany</h1>
+  <p class="sub">Investigating God's World · Chapter 6 (6.5–6.7)</p>
+  <div class="tabs" id="tabs"></div>
+  <div class="chips" id="chips"></div>
+  <div id="app"></div>
+</div>
+
+<script>
+/* ---------- DATA (textbook Ch. 6, 6.5–6.7; s=1→6.5, 2→6.6, 3→6.7) ---------- */
+const TERMS=[
+[1,"botany","Study of plants"],
+[1,"kingdom Plantae","Plant kingdom; multicellular organisms that produce their own food through photosynthesis"],
+[1,"cell wall","Stiff, protective outermost layer found outside the cell membrane of a plant cell"],
+[1,"chloroplast","Chlorophyll-containing organelle where photosynthesis takes place within the cell of a green plant"],
+[1,"chlorophyll","Green matter in a plant that traps sunlight energy"],
+[1,"photosynthesis","Food-making process in green plants; uses sunlight, carbon dioxide, and water to make glucose and give off oxygen"],
+[1,"glucose","Simple sugar produced by plants"],
+[1,"cellular respiration","Process that combines glucose with oxygen to release energy and produce carbon dioxide and water"],
+[1,"xylem","Tissue that carries water and nutrients from a plant's roots to its leaves"],
+[1,"phloem","Tissue that carries glucose from a plant's leaves to the stem and roots"],
+[1,"vascular plants","Plants having xylem and phloem tissue"],
+[1,"nonvascular plants","Plants without xylem and phloem tissue"],
+[1,"stomata","Air pores on a leaf (stoma, singular)"],
+[1,"transpiration","Release of water vapor from plants into the air; a form of evaporation"],
+[2,"conifer tree","Tree that produces seeds in cones"],
+[2,"broadleaf tree","Tree having flat, broad leaves that produces seeds in flowers"],
+[2,"deciduous tree","Tree that loses its leaves and is bare for a part of the year"],
+[2,"pistil","Vase-shaped part of the flower; makes undeveloped seeds"],
+[2,"ovary","Lower part of the pistil where seeds develop"],
+[2,"ovule","Undeveloped seed; contains the female egg cell of a flowering plant"],
+[2,"stamen","Part of the flower that makes pollen"],
+[2,"pollination","Transfer of pollen from the stamen to the pistil"],
+[2,"fertilization","Uniting of a male sperm cell with a female egg cell"],
+[2,"embryo","Living part of the seed that is the beginning of a new plant"],
+[2,"endosperm","Stored food within a seed for the new plant"],
+[2,"seed coat","Protective outer covering of a seed"],
+[2,"cotyledon","Structure in the embryo that absorbs and stores food from the endosperm"],
+[2,"fruit","Ripened ovary of the plant that contains seeds"],
+[2,"germination","When a seed sprouts and begins to grow"],
+[2,"sepals","Leaf-like structures at the base of a flower's petals"],
+[3,"spore","Single-celled reproductive structure"],
+[3,"frond","Fern leaf"],
+[3,"rhizome","Underground stem that grows sideways"],
+[3,"rhizoid","Hair-like thread that absorbs water and nutrients; root-like structure of a nonvascular plant"],
+[3,"fiddlehead","A new fern frond with a coiled top"],
+[3,"seedless vascular plants","Plants that have xylem and phloem but grow from spores (ferns, horsetails, club mosses)"],
+[3,"seedless nonvascular plants","Plants without xylem and phloem that grow from spores (mosses, liverworts, hornworts)"]
+];
+const QA=[
+[1,"What do all organisms of kingdom Plantae have in common?","They make their own food through photosynthesis."],
+[1,"In what two ways are plant cells different from animal cells?","Plant cells have a cell wall made of cellulose, and they have chloroplasts that contain chlorophyll."],
+[1,"What happens during photosynthesis?","Plants combine sunlight energy, water, and carbon dioxide to make glucose, and release oxygen (and water) into the air."],
+[1,"What happens during cellular respiration?","Plants combine glucose and oxygen to release energy, and produce carbon dioxide and water."],
+[1,"How are photosynthesis and cellular respiration different?","Photosynthesis happens only in plants, during the day. Cellular respiration happens in almost all living things, day and night. Respiration is the reverse of photosynthesis."],
+[1,"Why are plants considered oxygen producers for our planet?","Plants use more carbon dioxide than oxygen, so they give off more oxygen than they use."],
+[1,"What do xylem and phloem do?","Xylem carries water and minerals upward from the roots to the stems and leaves. Phloem carries glucose downward from the leaves to the stem and roots."],
+[1,"What do the stomata do?","They are tiny air pores on leaves that open and close to let carbon dioxide in and oxygen and water vapor out."],
+[2,"How are the two main categories of Kingdom Plantae divided?","Vascular plants and nonvascular plants. Vascular plants are divided again into plants that reproduce from seeds and plants that reproduce from spores."],
+[2,"Where do seed plants form their seeds?","In flowers or in cones."],
+[2,"How are conifers different from broadleaf trees?","Conifers have needle-like leaves and make seeds in cones, and the wind pollinates them. Broadleaf trees have flat, broad leaves and make seeds in flowers."],
+[2,"What is the difference between pollination and fertilization?","Pollination is the transfer of pollen from the stamen to the pistil. Fertilization is when a sperm cell from the pollen unites with an egg cell."],
+[2,"What is the difference between self-pollination and cross-pollination?","Self-pollination: the flower is pollinated by its own pollen. Cross-pollination: pollen is transferred from one flower to another."],
+[2,"What are the three main parts of a flowering plant's seed?","The embryo, the endosperm (stored food), and the seed coat."],
+[2,"What does a seed need in order to germinate?","The right moisture, oxygen, and temperature."],
+[2,"What happens when a seed germinates?","The shoot pushes out of the softened seed coat and grows upward toward sunlight. The primary root grows downward to find water and minerals."],
+[3,"Where does a spore get its food?","From its environment. A seed has its own stored food (endosperm), but a spore does not."],
+[3,"Describe the life cycle of a fern.","The first plant makes spores. A spore grows into a tiny second plant. The second plant makes egg and sperm cells. They join in fertilization and a new first plant grows."],
+[3,"What are the characteristics of seedless, nonvascular plants?","No xylem or phloem, and no true leaves, stems, or roots. They have chlorophyll, grow from spores, absorb water, and live in moist, shady places."],
+[3,"What does the fossil record show about ferns and mosses?","The first plants in the fossil record are vascular plants. Ferns appear before mosses, liverworts, and hornworts, which fits God creating all plant kinds on day 3."]
+];
+const MCS=[
+[1,"The study of plants is called…","botany","zoology","taxonomy","biology","Scientists who study plants are botanists."],
+[1,"All organisms of kingdom Plantae…","make their own food","find food by moving","have no cells","are prokaryotes","They make food through photosynthesis."],
+[1,"The outermost boundary of a plant cell is the…","cell wall","cell membrane","nucleus","cytoplasm","The cell wall is made of cellulose and makes plant cells box-like."],
+[1,"Chlorophyll is found in organelles called…","chloroplasts","mitochondria","stomata","cotyledons","Photosynthesis takes place in the chloroplasts."],
+[1,"Plant cells are…","eukaryotic","prokaryotic","unicellular only","without a nucleus","Plant cells have a true nucleus."],
+[1,"Which process uses sunlight, carbon dioxide, and water to make glucose?","photosynthesis","cellular respiration","transpiration","germination","It gives off oxygen."],
+[1,"Which process combines glucose with oxygen to release energy?","cellular respiration","photosynthesis","pollination","metamorphosis","It produces carbon dioxide and water."],
+[1,"The simple sugar produced by plants is…","glucose","chlorophyll","cellulose","chitin","Plants make glucose during photosynthesis."],
+[1,"In which process do plants release oxygen?","photosynthesis","cellular respiration","both at night","neither","Photosynthesis gives off oxygen."],
+[1,"When does cellular respiration happen in plants?","day and night","only during the day","only at night","only in spring","It happens constantly."],
+[1,"Photosynthesis occurs in…","only plants","almost all living things","only animals","only bacteria","Cellular respiration is the one that occurs in almost all living things."],
+[1,"Tissue that carries water and minerals from the roots to the leaves is…","xylem","phloem","stomata","chlorophyll","Xylem carries matter upward."],
+[1,"Tissue that carries glucose from the leaves to the stem and roots is…","phloem","xylem","cellulose","rhizoid","Phloem carries matter downward."],
+[1,"Plants that have xylem and phloem are called…","vascular plants","nonvascular plants","seedless plants only","cellular plants","Vascular tissue is like a plant's circulatory system."],
+[1,"Air pores on a leaf are called…","stomata","spiracles","sensilla","rhizoids","Stoma is the singular."],
+[1,"Plants release water vapor into the air through…","transpiration","germination","fertilization","pollination","Transpiration is a form of evaporation."],
+[2,"Conifer trees produce seeds in…","cones","flowers","fruit only","spores","Pines, spruces, and firs are conifers."],
+[2,"Which tree is a conifer?","pine","oak","maple","elm","Oak, maple, and elm are broadleaf trees."],
+[2,"Conifers are pollinated by…","wind","bees","bats","birds","Seeds flutter away in the wind when a cone opens."],
+[2,"A tree that loses its leaves and is bare for part of the year is…","deciduous","coniferous","nonvascular","dormant","Most broadleaf trees are deciduous."],
+[2,"The vase-shaped part of the flower that makes seeds is the…","pistil","stamen","sepal","anther","The pistil makes female egg cells."],
+[2,"The lower part of the pistil, where seeds develop, is the…","ovary","stigma","filament","style","The ovary holds the ovules."],
+[2,"An undeveloped seed that contains an egg cell is the…","ovule","embryo","pollen grain","cotyledon","Ovules are inside the ovary."],
+[2,"The part of the flower that makes pollen is the…","stamen","pistil","ovary","sepal","Pollen covers the anthers."],
+[2,"The transfer of pollen from the stamen to the pistil is…","pollination","fertilization","germination","transpiration","Insects, birds, bats, and wind help."],
+[2,"The uniting of a sperm cell and an egg cell is…","fertilization","pollination","germination","respiration","The fertilized egg cell divides to form the embryo."],
+[2,"The living part of the seed that is the beginning of a new plant is the…","embryo","endosperm","seed coat","ovary","It includes the shoot, primary root, and cotyledon."],
+[2,"Stored food within a seed is the…","endosperm","embryo","cotyledon","seed coat","The cotyledon absorbs and stores food from the endosperm."],
+[2,"The protective outer covering of a seed is the…","seed coat","endosperm","ovary","sepal","Moisture softens it during germination."],
+[2,"The ripened ovary that contains seeds is called…","fruit","pollen","an embryo","a spore","Tomatoes, cucumbers, apples, and maple keys are fruit structures."],
+[2,"Each pollen grain contains…","two sperm cells","one egg cell","two egg cells","an embryo","Pollen is produced by the stamen."],
+[2,"A seed sprouting is called…","germination","pollination","fertilization","transpiration","Seeds need moisture, oxygen, and the right temperature."],
+[2,"During germination, the primary root grows…","downward","upward","sideways only","toward sunlight","It searches for water and minerals."],
+[2,"Which flower smells like rotten meat to attract beetles and flies?","skunk cabbage","lily","jasmine","lilac","God designed some flowers to smell unpleasant for their pollinators."],
+[3,"A spore is…","a single-celled reproductive structure","a type of seed","a fern leaf","a root","You need a microscope to see one."],
+[3,"Which plants grow from spores?","ferns","pine trees","oak trees","tomatoes","Ferns, horsetails, and club mosses are seedless vascular plants."],
+[3,"The leaf of a fern is called a…","frond","rhizome","rhizoid","spore","A new frond is called a fiddlehead."],
+[3,"The underground stem of a fern that grows sideways is the…","rhizome","frond","rhizoid","stomata","It creeps under the soil."],
+[3,"Rhizoids are…","root-like structures that absorb water and nutrients","fern leaves","spore cases","pistils","Hair-like threads on the second plant and on nonvascular plants."],
+[3,"A spore gets its food from…","its environment","endosperm","a cotyledon","a fruit","A spore lands in a moist, shady area with nutrients and air."],
+[3,"Which fern plant form makes spores?","the first plant","the second plant","the seed","the fruit","The first plant is the large, feathery plant."],
+[3,"Which fern plant form makes egg and sperm cells?","the second plant","the first plant","the frond","the spore case","The second plant is tiny."],
+[3,"What forms after a fern egg and sperm unite?","a new fern cell","a seed","a flower","a cone","It grows into a new first plant."],
+[3,"Spore cases are seen as spots on the…","bottom of fern leaves","roots of a fern","flowers of a fern","seeds of a fern","The spore cases open and release the spores."],
+[3,"Which is a seedless, nonvascular plant?","moss","fern","horsetail","club moss","Mosses, liverworts, and hornworts are nonvascular."],
+[3,"Nonvascular plants get water by…","absorbing it","xylem and phloem","stomata only","fruit","So they live in moist, shady places."],
+[3,"What do the first plants in the fossil record show?","they were vascular plants","they were mosses","they were bacteria only","they were animals","Ferns appear before mosses, liverworts, and hornworts."]
+];
+const TFS=[
+[1,"The study of plants is called botany.",true,""],
+[1,"Plant cells have a cell wall made of cellulose.",true,""],
+[1,"Chlorophyll is found in the nucleus of a plant cell.",false,"Chlorophyll is found in chloroplasts."],
+[1,"Photosynthesis happens only in plants.",true,""],
+[1,"Photosynthesis takes place at night.",false,"Plants perform photosynthesis during the day when the sun is shining."],
+[1,"Cellular respiration occurs in plants day and night.",true,""],
+[1,"In photosynthesis, plants use oxygen to make glucose.",false,"Plants use carbon dioxide, water, and sunlight. They give off oxygen."],
+[1,"Xylem carries water from the roots to the leaves.",true,""],
+[1,"Phloem carries water upward from the roots.",false,"Xylem carries water upward. Phloem carries glucose downward."],
+[1,"Nonvascular plants do not have xylem and phloem.",true,""],
+[1,"Stomata are air pores on a leaf.",true,""],
+[1,"Plants are consumers.",false,"Plants are producers. They make their own food."],
+[2,"Conifers have flat, broad leaves.",false,"Conifers usually have needle-like leaves. Broadleaf trees have flat, broad leaves."],
+[2,"Conifers are pollinated by wind.",true,""],
+[2,"Most broadleaf trees such as oak, maple, and elm are deciduous.",true,""],
+[2,"The stamen is the part of the flower that makes seeds.",false,"The pistil makes seeds. The stamen makes pollen."],
+[2,"The ovary holds the ovules.",true,""],
+[2,"Pollination is the uniting of a sperm cell with an egg cell.",false,"That is fertilization. Pollination is the transfer of pollen."],
+[2,"Each pollen grain contains two sperm cells.",true,""],
+[2,"Self-pollination means pollen is carried from one flower to another.",false,"That is cross-pollination. Self-pollination uses the flower's own pollen."],
+[2,"Fruit is the ripened ovary of a plant that contains seeds.",true,""],
+[2,"A tomato is a fruit structure because it holds seeds.",true,""],
+[2,"The endosperm is the protective outer covering of a seed.",false,"The seed coat is the covering. The endosperm is stored food."],
+[2,"Cotyledons absorb and store food from the endosperm.",true,""],
+[2,"Some seeds have one cotyledon and others have two.",true,""],
+[2,"Oxygen softens the seed coat during germination.",false,"Moisture softens the seed coat. Oxygen helps the plant release energy by cellular respiration."],
+[2,"The primary root grows downward in search of water.",true,""],
+[2,"Insects, birds, bats, and wind help with pollination.",true,""],
+[3,"A spore has its own stored food called endosperm.",false,"A seed has endosperm. A spore gets food from its environment."],
+[3,"Ferns grow from spores.",true,""],
+[3,"Ferns grow from seeds.",false,"Ferns are seedless. They grow from spores."],
+[3,"A fern's stem is called a rhizome.",true,""],
+[3,"Fern leaves are called rhizoids.",false,"Fern leaves are fronds. Rhizoids are root-like threads."],
+[3,"The second plant of a fern makes egg and sperm cells.",true,""],
+[3,"The first plant of a fern makes egg and sperm cells.",false,"The second plant makes egg and sperm cells. The first plant makes spores."],
+[3,"Spore cases can be seen as spots on the bottom of fern leaves.",true,""],
+[3,"Mosses, liverworts, and hornworts have true leaves, stems, and roots.",false,"They do not have true leaves, stems, or roots."],
+[3,"Mosses, liverworts, and hornworts have chlorophyll.",true,""],
+[3,"Nonvascular plants usually live in dry, sunny places.",false,"They need moist, shady places because they absorb water."],
+[3,"Vascular plants appear in the fossil record before mosses.",true,""]
+];
+const FIBS=[
+[1,"The study of plants is called ______.",["botany"]],
+[1,"Scientists who study plants are called ______.",["botanists","botanist"]],
+[1,"The outermost boundary of a plant cell is the cell ______.",["wall"]],
+[1,"The green matter in a plant that traps sunlight energy is ______.",["chlorophyll"]],
+[1,"Chlorophyll is found in organelles called ______.",["chloroplasts","chloroplast"]],
+[1,"The food-making process in green plants is ______.",["photosynthesis"]],
+[1,"The simple sugar produced by plants is ______.",["glucose"]],
+[1,"The process that combines glucose with oxygen to release energy is cellular ______.",["respiration"]],
+[1,"Tissue that carries water from the roots to the leaves is ______.",["xylem"]],
+[1,"Tissue that carries glucose from the leaves to the stem and roots is ______.",["phloem"]],
+[1,"Plants with xylem and phloem are called ______ plants.",["vascular"]],
+[1,"Plants without xylem and phloem are called ______ plants.",["nonvascular","non vascular"]],
+[1,"Air pores on a leaf are called ______.",["stomata"]],
+[1,"Plants release water vapor into the air through ______.",["transpiration"]],
+[2,"Trees that produce seeds in cones are ______ trees.",["conifer","conifers"]],
+[2,"Trees with flat, broad leaves are ______ trees.",["broadleaf","broad leaf"]],
+[2,"A tree that loses its leaves and is bare part of the year is ______.",["deciduous"]],
+[2,"The vase-shaped part of the flower that makes seeds is the ______.",["pistil"]],
+[2,"The lower part of the pistil where seeds develop is the ______.",["ovary"]],
+[2,"An undeveloped seed that contains an egg cell is an ______.",["ovule"]],
+[2,"The part of the flower that makes pollen is the ______.",["stamen"]],
+[2,"The transfer of pollen from the stamen to the pistil is ______.",["pollination"]],
+[2,"The uniting of a sperm cell and an egg cell is ______.",["fertilization"]],
+[2,"The living part of the seed that is the beginning of a new plant is the ______.",["embryo"]],
+[2,"Stored food within a seed is the ______.",["endosperm"]],
+[2,"The protective outer covering of a seed is the seed ______.",["coat"]],
+[2,"A structure in the embryo that absorbs and stores food is a ______.",["cotyledon"]],
+[2,"The ripened ovary of a plant that contains seeds is a ______.",["fruit"]],
+[2,"When a seed sprouts, it ______.",["germinates","germinate"]],
+[2,"Leaf-like structures at the base of a flower's petals are ______.",["sepals","sepal"]],
+[2,"Pine, spruce, and fir trees are ______.",["conifers","conifer"]],
+[3,"A single-celled reproductive structure is a ______.",["spore"]],
+[3,"A fern leaf is called a ______.",["frond"]],
+[3,"The underground stem of a fern that grows sideways is a ______.",["rhizome"]],
+[3,"The root-like structure of a nonvascular plant is a ______.",["rhizoid","rhizoids"]],
+[3,"A new fern frond with a coiled top is called a ______.",["fiddlehead"]],
+[3,"Ferns, horsetails, and club mosses are seedless ______ plants.",["vascular"]],
+[3,"Mosses, liverworts, and hornworts are seedless ______ plants.",["nonvascular","non vascular"]],
+[3,"In a fern, the ______ plant form makes spores.",["first"]],
+[3,"In a fern, the ______ plant form makes egg and sperm cells.",["second"]],
+[3,"A spore gets its food from its ______.",["environment"]]
+];
+
+const $=s=>document.querySelector(s);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pool=a=>S.sec?a.filter(x=>x[0]==S.sec):a;
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const norm=s=>s.toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').replace(/^(a|an|the) /,'').trim();
+function lev(a,b){const m=[];for(let i=0;i<=a.length;i++){m[i]=[i];}for(let j=0;j<=b.length;j++)m[0][j]=j;
+ for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return m[a.length][b.length]}
+function fibOk(inp,acc){const x=norm(inp);if(!x)return false;
+ return acc.some(a=>{a=norm(a);return x==a||x.replace(/ /g,'')==a.replace(/ /g,'')||(a.length>5&&lev(x,a)<=1)})}
+function confetti(){const c=['#0d6e8a','#1f9d6b','#f0b429','#ef6f4f','#7fb4c6'];
+ for(let i=0;i<60;i++){const d=document.createElement('div');d.className='cf';
+ d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDelay=Math.random()*.8+'s';
+ document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}}
+
+/* ---------- STATE / UI ---------- */
+const S={mode:'cards',sec:0};
+const MODES=[['cards','Flashcards'],['mc','Multiple Choice'],['tf','True / False'],['fib','Fill-in'],['match','Matching'],['test','Test']];
+const SECS=[[0,'All (6.5–6.7)'],[1,'6.5 Kingdom Plantae'],[2,'6.6 Life Cycle of a Seed Plant'],[3,'6.7 Life Cycle of a Seedless Plant']];
+function head(){
+ $('#tabs').innerHTML=MODES.map(m=>`<button class="${S.mode==m[0]?'on':''}" onclick="S.mode='${m[0]}';start()">${m[1]}</button>`).join('');
+ $('#chips').innerHTML=SECS.map(s=>`<button class="${S.sec==s[0]?'on':''}" onclick="S.sec=${s[0]};start()">${s[1]}</button>`).join('');
+}
+function start(){head();
+ if(S.mode=='cards')initCards();else if(S.mode=='match')initMatch();else initQuiz();}
+
+/* ----- Flashcards ----- */
+let C={d:[],i:0,f:false};
+function initCards(){C.d=shuf([...pool(TERMS).map(t=>({s:t[0],f:t[1],b:t[2],k:'t'})),...pool(QA).map(t=>({s:t[0],f:t[1],b:t[2],k:'q'}))]);C.i=0;C.f=false;drawCards()}
+function drawCards(){const c=C.d[C.i];
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Card ${C.i+1} / ${C.d.length}</span><span>${c.k=='q'?'Short answer':'Term'} · ${'6.'+(c.s+4)}</span></div>
+ <div class="bar"><i style="width:${(C.i+1)/C.d.length*100}%"></i></div>
+ <div class="flip" onclick="C.f=!C.f;drawCards()">${C.f?`<div class="d">${esc(c.b)}</div>`:`<div class="t">${esc(c.f)}</div><small>tap to flip</small>`}</div>
+ <div class="nav"><button class="btn alt" onclick="cardGo(-1)" ${C.i==0?'disabled':''}>◀ Prev</button><button class="btn alt" onclick="initCards()">Shuffle</button><button class="btn" onclick="cardGo(1)" ${C.i==C.d.length-1?'disabled':''}>Next ▶</button></div></div>`}
+function cardGo(n){C.i+=n;C.f=false;drawCards()}
+
+/* ----- Quiz engine (MC / TF / Fill-in / Test) ----- */
+let Q={items:[],i:0,res:[],mode:''};
+function mkMC(r){const o=shuf(r.slice(2,6));return{t:'mc',q:r[1],opts:o,a:o.indexOf(r[2]),ans:r[2],ex:r[6]}}
+function mkTF(r){return{t:'tf',q:r[1],opts:['True','False'],a:r[2]?0:1,ans:r[2]?'True':'False',ex:r[3]}}
+function mkFIB(r){return{t:'fib',q:r[1],acc:r[2],ans:r[2][0],ex:''}}
+function initQuiz(){let it=[];const M=S.mode;
+ if(M=='mc')it=shuf(pool(MCS)).map(mkMC);
+ else if(M=='tf')it=shuf(pool(TFS)).map(mkTF);
+ else if(M=='fib')it=shuf(pool(FIBS)).map(mkFIB);
+ else it=shuf([...shuf(pool(MCS)).slice(0,12).map(mkMC),...shuf(pool(TFS)).slice(0,8).map(mkTF),...shuf(pool(FIBS)).slice(0,10).map(mkFIB)]);
+ Q={items:it,i:0,res:[],mode:M};drawQ()}
+function score(){return Q.res.filter(r=>r&&r.ok).length}
+function drawQ(){
+ if(Q.i>=Q.items.length)return results();
+ const it=Q.items[Q.i],r=Q.res[Q.i],n=Q.items.length;
+ let body='';
+ if(it.t=='fib'){body=`<input class="fib" id="fi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer" ${r?'disabled value="'+esc(r.pick)+'"':''} onkeydown="if(event.key=='Enter')checkFib()">
+  ${r?'':'<div class="nav" style="justify-content:flex-start"><button class="btn" onclick="checkFib()">Check</button></div>'}`}
+ else body=it.opts.map((o,k)=>`<button class="opt ${r?(k==it.a?'good':(k==r.pick?'bad':'')):''}" ${r?'disabled':''} onclick="pick(${k})">${esc(o)}</button>`).join('');
+ const fb=r?`<div class="fb ${r.ok?'good':'bad'}">${r.ok?'✅ Correct!':'❌ Not quite. Answer: <b>'+esc(it.ans)+'</b>'} ${it.ex?'<br>'+esc(it.ex):''}</div>`:'';
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>${Q.mode=='test'?'Test · ':''}Question ${Q.i+1} / ${n}</span><span>Score: ${score()}</span></div>
+ <div class="bar"><i style="width:${Q.i/n*100}%"></i></div>
+ <div class="q">${it.t=='tf'?'True or False: ':''}${esc(it.q)}</div>${body}${fb}
+ <div class="nav"><button class="btn alt" onclick="Q.i--;drawQ()" ${Q.i==0?'disabled':''}>◀ Prev</button><button class="btn" onclick="Q.i++;drawQ()" ${r?'':'disabled'}>${Q.i==n-1?'Finish':'Next ▶'}</button></div></div>`;
+ if(it.t=='fib'&&!r)setTimeout(()=>{const e=$('#fi');e&&e.focus()},30)}
+function pick(k){const it=Q.items[Q.i];if(Q.res[Q.i])return;Q.res[Q.i]={ok:k==it.a,pick:k};drawQ()}
+function checkFib(){const it=Q.items[Q.i];if(Q.res[Q.i])return;const v=$('#fi').value;if(!v.trim())return;
+ Q.res[Q.i]={ok:fibOk(v,it.acc),pick:v};drawQ()}
+function results(){const n=Q.items.length,s=score(),p=Math.round(s/n*100);
+ const wrong=Q.items.map((it,i)=>({it,r:Q.res[i]})).filter(x=>!x.r||!x.r.ok);
+ const msg=p>=90?'Amazing! Test-ready! 🌊':p>=70?'Great job! Review the misses below.':'Keep practicing — you can do it!';
+ if(p>=80)confetti();
+ $('#app').innerHTML=`<div class="card"><div class="big">${s} / ${n} (${p}%)</div><p style="text-align:center">${msg}</p>
+ <div class="nav" style="justify-content:center"><button class="btn" onclick="initQuiz()">Try again</button></div>
+ ${wrong.length?'<h3>Review your misses</h3>'+wrong.map(x=>`<div class="rev"><b>${esc(x.it.q)}</b><br>Answer: ${esc(x.it.ans)}${x.it.ex?'<br><i>'+esc(x.it.ex)+'</i>':''}</div>`).join(''):''}</div>`}
+
+/* ----- Matching ----- */
+let M={L:[],R:[],sel:null,done:0,miss:0,n:0};
+function initMatch(){const p=shuf(pool(TERMS)).slice(0,6);M={L:shuffIdx(p),R:shuffIdx(p),sel:null,done:0,miss:0,n:p.length,p,ok:{}};drawMatch()}
+function shuffIdx(p){return shuf(p.map((_,i)=>i))}
+function drawMatch(){const p=M.p;
+ if(M.done==M.n){if(M.miss<=1)confetti();
+  $('#app').innerHTML=`<div class="card"><div class="big">All matched! 🎉</div><p style="text-align:center">Wrong tries: ${M.miss}</p><div class="nav" style="justify-content:center"><button class="btn" onclick="initMatch()">New round</button></div></div>`;return}
+ const b=(side,i)=>{const k=side+i,ok=M.ok[side+i];return `<button class="${ok?'done':''} ${M.sel&&M.sel.k==k?'sel':''} ${M.bad&&M.bad.includes(k)?'shake':''}" ${ok?'disabled':''} onclick="mpick('${side}',${i})">${esc(side=='L'?p[i][1]:p[i][2])}</button>`};
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Tap a term, then its meaning</span><span>${M.done} / ${M.n} · Wrong: ${M.miss}</span></div>
+ <div class="bar"><i style="width:${M.done/M.n*100}%"></i></div>
+ <div class="mt"><div>${M.L.map(i=>b('L',i)).join('')}</div><div>${M.R.map(i=>b('R',i)).join('')}</div></div>
+ <div class="nav"><button class="btn alt" onclick="initMatch()">New round</button><span></span></div></div>`;
+ document.querySelectorAll('.mt>div').forEach(d=>{d.style.display='grid';d.style.gap='8px'})}
+function mpick(side,i){M.bad=null;
+ if(!M.sel||M.sel.side==side){M.sel={side,i,k:side+i};return drawMatch()}
+ const li=side=='L'?i:M.sel.i,ri=side=='R'?i:M.sel.i;
+ if(li==ri){M.ok['L'+li]=M.ok['R'+ri]=1;M.done++;M.sel=null}
+ else{M.miss++;M.bad=[M.sel.k,side+i];M.sel=null}
+ drawMatch();if(M.bad)setTimeout(()=>{M.bad=null;drawMatch()},600)}
+
+start();
+</script>
+</body>
+</html>

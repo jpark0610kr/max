@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Max's Science Test – Chapter 6 (6.1–6.7)</title>
+<style>
+html,body{background:#dff1f5 !important;margin:0;padding:0}
+*{box-sizing:border-box}
+body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#0a2e44;line-height:1.45}
+.wrap{max-width:720px;margin:0 auto;padding:16px 14px 60px}
+h1{font-size:1.45rem;margin:6px 0 2px;color:#08506b}
+.sub{margin:0 0 12px;color:#35637a;font-size:.95rem}
+.tabs,.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tabs button{flex:1 1 auto;padding:10px 8px;border:2px solid #0d6e8a;background:#fff;color:#08506b;border-radius:10px;font-weight:700;font-size:.95rem;cursor:pointer}
+.tabs button.on{background:#0d6e8a;color:#fff}
+.chips button{padding:6px 12px;border:1.5px solid #7fb4c6;background:#f4fbfd;color:#2b5a70;border-radius:99px;font-size:.88rem;cursor:pointer}
+.chips button.on{background:#08506b;border-color:#08506b;color:#fff}
+.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(8,80,107,.15)}
+.bar{height:8px;background:#cfe6ed;border-radius:6px;overflow:hidden;margin-bottom:8px}
+.bar i{display:block;height:100%;background:#0d6e8a;transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:.9rem;color:#35637a;margin-bottom:10px}
+.q{font-size:1.15rem;font-weight:700;margin:6px 0 14px}
+.opt{display:block;width:100%;text-align:left;padding:12px 14px;margin:8px 0;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:12px;font-size:1rem;color:#0a2e44;cursor:pointer}
+.opt:hover:not(:disabled){border-color:#0d6e8a}
+.opt.good{background:#d8f3e6;border-color:#1f9d6b}
+.opt.bad{background:#fde0de;border-color:#d9534f}
+.opt:disabled{cursor:default}
+input.fib{width:100%;padding:12px;font-size:1.05rem;border:2px solid #b9d9e4;border-radius:12px}
+.fb{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:.95rem}
+.fb.good{background:#d8f3e6}.fb.bad{background:#fde0de}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
+.btn{padding:10px 18px;border:0;border-radius:10px;background:#0d6e8a;color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
+.btn.alt{background:#e3f1f6;color:#08506b}
+.btn:disabled{opacity:.4;cursor:default}
+.flip{min-height:190px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer;padding:20px;border:2px dashed #7fb4c6;border-radius:14px;background:#f4fbfd}
+.flip .t{font-size:1.3rem;font-weight:800;color:#08506b}
+.flip .d{font-size:1.1rem}
+.flip small{color:#6a93a5;margin-top:10px}
+.mt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mt button{padding:10px;border:2px solid #b9d9e4;background:#f7fcfe;border-radius:10px;font-size:.88rem;color:#0a2e44;cursor:pointer;text-align:left}
+.mt button.sel{border-color:#0d6e8a;background:#d6edf5}
+.mt button.done{background:#d8f3e6;border-color:#1f9d6b;color:#4a6;cursor:default}
+.mt button.shake{background:#fde0de;border-color:#d9534f}
+.big{font-size:2.4rem;font-weight:800;color:#08506b;text-align:center;margin:4px 0}
+.rev{border-top:1px solid #d3e6ed;padding:10px 0;font-size:.95rem}
+.rev b{color:#08506b}
+.cf{position:fixed;top:-12px;width:10px;height:14px;z-index:9;animation:fall 2.4s linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.8}}
+@media (prefers-reduced-motion:reduce){.cf{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Science Test – Chapter 6: Life Science</h1>
+  <p class="sub">Investigating God's World · Chapter 6 (6.1–6.7)</p>
+  <div class="tabs" id="tabs"></div>
+  <div class="chips" id="chips"></div>
+  <div id="app"></div>
+</div>
+
+<script>
+/* ---------- DATA (textbook Ch. 6, 6.1–6.7) ---------- */
+const TERMS=[
+[1,"biology","Study of living things"],
+[1,"biosphere","Layer of Earth's surface where life exists"],
+[1,"organism","Living thing"],
+[1,"cell","Smallest unit of any living thing"],
+[1,"cell membrane","Barrier that surrounds and protects the cell"],
+[1,"cytoplasm","Jelly-like substance within the cell"],
+[1,"organelle","\"Little organ\" within the cell where chemical reactions occur"],
+[1,"nucleus","Control center of a cell; stores DNA"],
+[1,"mitochondria","Organelles where respiration happens; tiny power stations that use oxygen and sugar to release energy"],
+[1,"heredity","Passing of characteristics from parent to offspring"],
+[1,"DNA","Substance that stores the information used to determine characteristic traits"],
+[1,"gene","Unit of hereditary information stored in DNA"],
+[1,"cell theory","All living things are made of cells, and all cells come from preexisting cells"],
+[2,"taxonomy","Science of classification"],
+[2,"microorganism","Microscopic organism"],
+[2,"unicellular","Organism having only one cell"],
+[2,"multicellular","Organism having more than one cell"],
+[2,"bacterium","Single-celled microorganism that does not have a nucleus"],
+[2,"prokaryote","Unicellular organism without a true nucleus"],
+[2,"eukaryote","Organism whose cells have a true nucleus"],
+[2,"flagellum","Tail-like organ on some cells that propels them"],
+[2,"kingdom Animalia","Multicellular organisms that can move and must find food"],
+[2,"kingdom Plantae","Multicellular organisms that make their own food through photosynthesis"],
+[2,"kingdom Fungi","Plant-like organisms that do not make their own food (mushrooms, yeasts, molds)"],
+[2,"kingdom Protista","Mostly unicellular organisms (algae, amoeba, slime molds)"],
+[2,"kingdom Eubacteria","True bacteria; unicellular"],
+[2,"kingdom Archaebacteria","Specially designed bacteria that live in extreme environments"],
+[3,"zoology","Study of animals and how they live"],
+[3,"vertebrate","Animal with a backbone"],
+[3,"endoskeleton","Internal skeleton"],
+[3,"invertebrate","Animal without a backbone"],
+[3,"exoskeleton","External skeleton"],
+[3,"symmetry","Ability of an object to be divided into halves that are mirror images of each other"],
+[3,"asymmetry","Inability of an object to be divided into equal halves"],
+[3,"bilateral symmetry","Symmetry in which an object can be divided in half in only one way"],
+[3,"radial symmetry","Symmetry of objects with arms reaching out from a central disk, or round objects; can be cut in half many ways"],
+[3,"warm-blooded","Keeps the same body temperature range no matter the environment (mammals and birds)"],
+[3,"cold-blooded","Body temperature changes with the environment (fish, amphibians, reptiles, all invertebrates)"],
+[3,"arthropod","Invertebrate with an exoskeleton, jointed legs, body segments, and an open circulatory system"],
+[3,"chitin","Starchy material that an arthropod's exoskeleton is made of"],
+[4,"simple eye","Eye having only one lens"],
+[4,"compound eye","Eye having multiple lenses"],
+[4,"sensilla","Tiny hair-like sense organs"],
+[4,"mandible","Side-to-side jaws"],
+[4,"spiracles","Breathing holes through which air enters an insect"],
+[4,"tracheae","Breathing tubes that carry air to an insect's cells"],
+[4,"ovipositor","Egg-laying organ of some female insects"],
+[4,"complete metamorphosis","Four stages of development in insects: egg, larva, pupa, adult"],
+[4,"incomplete metamorphosis","Three stages of development in insects: egg, nymph, adult"],
+[4,"law of biogenesis","Living things can come only from other living things"],
+[4,"spontaneous generation","False belief that living things come from nonliving things"],
+[4,"entomologist","Scientist who studies insects"],
+[5,"botany","Study of plants"],
+[5,"kingdom Plantae","Plant kingdom; multicellular organisms that produce their own food through photosynthesis"],
+[5,"cell wall","Stiff, protective outermost layer found outside the cell membrane of a plant cell"],
+[5,"chloroplast","Chlorophyll-containing organelle where photosynthesis takes place within the cell of a green plant"],
+[5,"chlorophyll","Green matter in a plant that traps sunlight energy"],
+[5,"photosynthesis","Food-making process in green plants; uses sunlight, carbon dioxide, and water to make glucose and give off oxygen"],
+[5,"glucose","Simple sugar produced by plants"],
+[5,"cellular respiration","Process that combines glucose with oxygen to release energy and produce carbon dioxide and water"],
+[5,"xylem","Tissue that carries water and nutrients from a plant's roots to its leaves"],
+[5,"phloem","Tissue that carries glucose from a plant's leaves to the stem and roots"],
+[5,"vascular plants","Plants having xylem and phloem tissue"],
+[5,"nonvascular plants","Plants without xylem and phloem tissue"],
+[5,"stomata","Air pores on a leaf (stoma, singular)"],
+[5,"transpiration","Release of water vapor from plants into the air; a form of evaporation"],
+[6,"conifer tree","Tree that produces seeds in cones"],
+[6,"broadleaf tree","Tree having flat, broad leaves that produces seeds in flowers"],
+[6,"deciduous tree","Tree that loses its leaves and is bare for a part of the year"],
+[6,"pistil","Vase-shaped part of the flower; makes undeveloped seeds"],
+[6,"ovary","Lower part of the pistil where seeds develop"],
+[6,"ovule","Undeveloped seed; contains the female egg cell of a flowering plant"],
+[6,"stamen","Part of the flower that makes pollen"],
+[6,"pollination","Transfer of pollen from the stamen to the pistil"],
+[6,"fertilization","Uniting of a male sperm cell with a female egg cell"],
+[6,"embryo","Living part of the seed that is the beginning of a new plant"],
+[6,"endosperm","Stored food within a seed for the new plant"],
+[6,"seed coat","Protective outer covering of a seed"],
+[6,"cotyledon","Structure in the embryo that absorbs and stores food from the endosperm"],
+[6,"fruit","Ripened ovary of the plant that contains seeds"],
+[6,"germination","When a seed sprouts and begins to grow"],
+[6,"sepals","Leaf-like structures at the base of a flower's petals"],
+[7,"spore","Single-celled reproductive structure"],
+[7,"frond","Fern leaf"],
+[7,"rhizome","Underground stem that grows sideways"],
+[7,"rhizoid","Hair-like thread that absorbs water and nutrients; root-like structure of a nonvascular plant"],
+[7,"fiddlehead","A new fern frond with a coiled top"],
+[7,"seedless vascular plants","Plants that have xylem and phloem but grow from spores (ferns, horsetails, club mosses)"],
+[7,"seedless nonvascular plants","Plants without xylem and phloem that grow from spores (mosses, liverworts, hornworts)"]
+];
+const QA=[
+[1,"What are the common characteristics of all organisms?","Organized structure; grow and respond to change; reproduce; use nutrients; produce energy using oxygen and release carbon dioxide; dispose of waste."],
+[1,"Who named the cell, and what did he observe?","Robert Hooke, in 1665. He saw box-like shapes in cork from an oak tree and named them cells, like rooms in a building."],
+[1,"Who was the first person to observe living cells?","Antonie van Leeuwenhoek, in 1675. He saw one-celled protozoa moving under his microscope."],
+[1,"What does cell theory state?","All living things are made of living units called cells, and all cells come from preexisting cells."],
+[1,"Why is the nucleus the most important part of the cell?","It is the control center. It stores DNA, which holds the information that decides the cell's traits."],
+[1,"How does the biosphere interact with the atmosphere, hydrosphere, and geosphere?","Plants and algae give off oxygen for the atmosphere; all life depends on water from the hydrosphere; all life depends on minerals from the geosphere."],
+[2,"Why is Carl Linnaeus called the Father of Taxonomy?","He organized living things into categories by body structure. In the 1700s he grouped all living things into two kingdoms, plants and animals."],
+[2,"How many kingdoms do taxonomists use now, and what are they?","Six: Animalia, Plantae, Fungi, Protista, Eubacteria, and Archaebacteria."],
+[2,"What is the difference between a prokaryotic cell and a eukaryotic cell?","Prokaryotic: DNA floats freely in the cytoplasm, no organelles, no true nucleus. Eukaryotic: DNA stored in a nucleus, and has organelles."],
+[2,"Which kingdoms are prokaryotic and which are eukaryotic?","Prokaryotic: Eubacteria and Archaebacteria. Eukaryotic: Protista, Fungi, Plantae, and Animalia."],
+[2,"Why does the flagellum show God's design?","It works like a rotary motor with many parts that must work together, so it could not have evolved one part at a time."],
+[3,"What are the five classes of vertebrates?","Mammals, birds, fish, amphibians, and reptiles."],
+[3,"Which vertebrates are warm-blooded and which are cold-blooded?","Warm-blooded: mammals and birds. Cold-blooded: fish, amphibians, and reptiles."],
+[3,"What are the main groups of invertebrates?","Arthropods, annelids, mollusks, echinoderms, coelenterates (cnidaria), and sponges (porifera)."],
+[3,"What are the characteristics of arthropods?","Exoskeleton made of chitin, jointed legs, segmented body, and an open circulatory system."],
+[3,"What are the five groups of arthropods?","Insects, crustaceans, arachnids, centipedes, and millipedes."],
+[3,"How are centipedes and millipedes different?","Centipede: one pair of legs per segment, long antennae, venom, eats insects and spiders. Millipede: two pairs of legs per segment, short antennae, a decomposer, rolls into a ball."],
+[3,"How are an open and a closed circulatory system different?","Closed (people and many animals): blood stays inside blood vessels. Open (arthropods): blood flows into a body cavity and covers the organs."],
+[4,"What are the characteristics of insects?","Three body regions (head, thorax, abdomen), six jointed legs, and one pair of antennae. They grow through metamorphosis."],
+[4,"What are the stages of complete and incomplete metamorphosis?","Complete: egg, larva, pupa, adult. Incomplete: egg, nymph, adult."],
+[4,"What did Francesco Redi's experiment show?","Meat in sealed jars grew no maggots. Maggots came from eggs laid by flies, not from the spoiled meat. So living things do not appear from nonliving things."],
+[4,"How does the law of biogenesis support a biblical worldview?","Living things come only from living things, so the first life came from the living God, who is the Source of all life."],
+[5,"What do all organisms of kingdom Plantae have in common?","They make their own food through photosynthesis."],
+[5,"In what two ways are plant cells different from animal cells?","Plant cells have a cell wall made of cellulose, and they have chloroplasts that contain chlorophyll."],
+[5,"What happens during photosynthesis?","Plants combine sunlight energy, water, and carbon dioxide to make glucose, and release oxygen (and water) into the air."],
+[5,"What happens during cellular respiration?","Plants combine glucose and oxygen to release energy, and produce carbon dioxide and water."],
+[5,"How are photosynthesis and cellular respiration different?","Photosynthesis happens only in plants, during the day. Cellular respiration happens in almost all living things, day and night. Respiration is the reverse of photosynthesis."],
+[5,"Why are plants considered oxygen producers for our planet?","Plants use more carbon dioxide than oxygen, so they give off more oxygen than they use."],
+[5,"What do xylem and phloem do?","Xylem carries water and minerals upward from the roots to the stems and leaves. Phloem carries glucose downward from the leaves to the stem and roots."],
+[5,"What do the stomata do?","They are tiny air pores on leaves that open and close to let carbon dioxide in and oxygen and water vapor out."],
+[6,"How are the two main categories of Kingdom Plantae divided?","Vascular plants and nonvascular plants. Vascular plants are divided again into plants that reproduce from seeds and plants that reproduce from spores."],
+[6,"Where do seed plants form their seeds?","In flowers or in cones."],
+[6,"How are conifers different from broadleaf trees?","Conifers have needle-like leaves and make seeds in cones, and the wind pollinates them. Broadleaf trees have flat, broad leaves and make seeds in flowers."],
+[6,"What is the difference between pollination and fertilization?","Pollination is the transfer of pollen from the stamen to the pistil. Fertilization is when a sperm cell from the pollen unites with an egg cell."],
+[6,"What is the difference between self-pollination and cross-pollination?","Self-pollination: the flower is pollinated by its own pollen. Cross-pollination: pollen is transferred from one flower to another."],
+[6,"What are the three main parts of a flowering plant's seed?","The embryo, the endosperm (stored food), and the seed coat."],
+[6,"What does a seed need in order to germinate?","The right moisture, oxygen, and temperature."],
+[6,"What happens when a seed germinates?","The shoot pushes out of the softened seed coat and grows upward toward sunlight. The primary root grows downward to find water and minerals."],
+[7,"Where does a spore get its food?","From its environment. A seed has its own stored food (endosperm), but a spore does not."],
+[7,"Describe the life cycle of a fern.","The first plant makes spores. A spore grows into a tiny second plant. The second plant makes egg and sperm cells. They join in fertilization and a new first plant grows."],
+[7,"What are the characteristics of seedless, nonvascular plants?","No xylem or phloem, and no true leaves, stems, or roots. They have chlorophyll, grow from spores, absorb water, and live in moist, shady places."],
+[7,"What does the fossil record show about ferns and mosses?","The first plants in the fossil record are vascular plants. Ferns appear before mosses, liverworts, and hornworts, which fits God creating all plant kinds on day 3."]
+];
+const MCS=[
+[1,"The study of living things is called…","biology","geology","zoology","taxonomy","Biology is the study of living things."],
+[1,"The layer of Earth's surface where life exists is the…","biosphere","atmosphere","hydrosphere","geosphere","Earth is the only planet that has a biosphere."],
+[1,"The smallest unit of any living thing is the…","cell","nucleus","organelle","gene","Every organism is made of one or more cells."],
+[1,"The English scientist who named the cell was…","Robert Hooke","Galileo","Antonie van Leeuwenhoek","Carl Linnaeus","Hooke saw box-like shapes in cork in 1665."],
+[1,"The first person to observe living cells was…","Antonie van Leeuwenhoek","Robert Hooke","Galileo","Francesco Redi","He saw moving protozoa in 1675."],
+[1,"Which part of the cell surrounds and protects it?","cell membrane","nucleus","cytoplasm","organelle","The membrane is a flexible barrier."],
+[1,"The jelly-like substance inside the cell membrane is the…","cytoplasm","nucleus","mitochondria","gene","Organelles float in the cytoplasm."],
+[1,"Where does respiration happen in a cell?","mitochondria","nucleus","cell membrane","cytoplasm only","Mitochondria are tiny power stations that use oxygen and sugar to release energy."],
+[1,"Where is DNA stored in a eukaryotic cell?","nucleus","cell membrane","cytoplasm","mitochondria","The nucleus is the control center."],
+[1,"The passing of characteristics from parent to offspring is called…","heredity","metamorphosis","taxonomy","respiration","DNA stores hereditary information in units called genes."],
+[1,"Which statement is part of cell theory?","All cells come from preexisting cells.","All cells have a nucleus.","All cells are microscopic.","All cells are the same size.","Cell theory: living things are made of cells, and all cells come from preexisting cells."],
+[2,"The science of classification is called…","taxonomy","zoology","botany","heredity","Taxonomy began in the 1600s."],
+[2,"Who is called the Father of Taxonomy?","Carl Linnaeus","John Ray","Robert Hooke","Francesco Redi","Linnaeus grouped all living things into two kingdoms in the 1700s."],
+[2,"Microscopic organisms are called…","microorganisms","vertebrates","arthropods","eukaryotes","Most of them have only one cell."],
+[2,"How many kingdoms do taxonomists use today?","six","two","four","eight","Animalia, Plantae, Fungi, Protista, Eubacteria, Archaebacteria."],
+[2,"Which kingdom makes its own food through photosynthesis?","Plantae","Animalia","Fungi","Protista","Green plants belong to kingdom Plantae."],
+[2,"Mushrooms, yeasts, and molds belong to kingdom…","Fungi","Plantae","Protista","Eubacteria","Fungi do not make their own food."],
+[2,"Algae and amoeba belong to kingdom…","Protista","Fungi","Plantae","Archaebacteria","Protists are mostly unicellular."],
+[2,"Bacteria that live near hydrothermal vents or in very salty water belong to kingdom…","Archaebacteria","Eubacteria","Protista","Fungi","Archaebacteria live in extreme environments."],
+[2,"A bacterium is…","a single-celled microorganism with no nucleus","a plant-like organism with a nucleus","a many-celled animal","a part of the cell","Bacteria are prokaryotes."],
+[2,"Prokaryotes are organisms…","without a true nucleus","with a true nucleus","with many cells","that make their own food","Prokaryotic DNA floats freely in the cytoplasm."],
+[2,"The tail-like part that helps some cells move is the…","flagellum","organelle","nucleus","mandible","Many parts must work together in a flagellum."],
+[2,"Which type of microscope uses beams of electrons?","electron microscope","standard microscope","telescope","magnifying glass","It shows things at a much higher resolution."],
+[3,"Zoology is the study of…","animals and how they live","plants","insects only","cells only","The word zoo comes from a Greek word meaning living being."],
+[3,"All animals are…","multicellular consumers","unicellular producers","prokaryotes","plants","Animals are eukaryotes with a true nucleus."],
+[3,"Vertebrates are animals with…","backbones","exoskeletons","no skeleton","six legs","Vertebrates have endoskeletons."],
+[3,"Which group is warm-blooded?","mammals and birds","fish and reptiles","amphibians and fish","reptiles and amphibians","Warm-blooded animals keep the same body temperature range."],
+[3,"Which vertebrate group is cold-blooded?","reptiles","mammals","birds","none of them","Fish, amphibians, and reptiles are cold-blooded."],
+[3,"Vertebrates have which kind of symmetry?","bilateral","radial","asymmetry","no symmetry","Bilateral: can be divided in half in only one way."],
+[3,"An animal that can be cut in half many ways and still have identical halves has…","radial symmetry","bilateral symmetry","asymmetry","an exoskeleton","Like a pie or a circle."],
+[3,"Most animal species in the world are…","invertebrates","vertebrates","mammals","birds","Invertebrates are animals without backbones."],
+[3,"All invertebrates are…","cold-blooded","warm-blooded","vertebrates","insects","This is why many do not live in cold climates."],
+[3,"Which is an invertebrate group?","mollusks","reptiles","amphibians","mammals","Mollusks, arthropods, annelids, echinoderms, coelenterates, and sponges."],
+[3,"The most common invertebrate group is…","arthropods","sponges","mollusks","annelids","Arthropods include insects, crustaceans, arachnids, centipedes, and millipedes."],
+[3,"An arthropod's exoskeleton is made of…","chitin","bone","cellulose","DNA","The arthropod molts as it grows."],
+[3,"Arthropods have what kind of circulatory system?","open","closed","none","vascular","Their organs sit in a body cavity filled with blood."],
+[3,"What percent of all arthropods are insects?","90 percent","10 percent","50 percent","25 percent","Ninety percent of all arthropods are insects."],
+[3,"Which animal is a crustacean?","crab","spider","centipede","beetle","Lobsters, crabs, and shrimp are crustaceans."],
+[3,"Which animals do NOT have antennae?","arachnids","insects","crustaceans","centipedes","Spiders, scorpions, and ticks are arachnids."],
+[3,"Which arthropod is a decomposer that rolls into a ball?","millipede","centipede","spider","scorpion","A centipede has venom and hunts prey."],
+[4,"An insect's three body regions are…","head, thorax, abdomen","head, trunk, tail","thorax, trunk, abdomen","head, wings, legs","Insects also have six legs and one pair of antennae."],
+[4,"An insect's legs are attached to its…","thorax","head","abdomen","antennae","Wings also grow from the thorax."],
+[4,"Eyes with multiple lenses are called…","compound eyes","simple eyes","sensilla","spiracles","Some insects have thousands of lenses."],
+[4,"Tiny hair-like sense organs are called…","sensilla","mandibles","tracheae","ovipositors","A butterfly can taste with its feet because of sensilla."],
+[4,"Side-to-side jaws are called…","mandibles","sensilla","spiracles","antennae","The stag beetle has the largest mandibles of any insect."],
+[4,"Breathing holes along the sides of an insect's abdomen are called…","spiracles","tracheae","sensilla","mandibles","Air enters through the spiracles."],
+[4,"Breathing tubes that carry oxygen to an insect's cells are called…","tracheae","spiracles","sensilla","ovipositors","Trachea (singular), tracheae (plural)."],
+[4,"The egg-laying organ of some female insects is the…","ovipositor","spiracle","mandible","trachea","It is at the end of the abdomen."],
+[4,"What is the correct order of complete metamorphosis?","egg, larva, pupa, adult","egg, nymph, adult","larva, egg, pupa, adult","egg, pupa, larva, adult","Four stages."],
+[4,"Which insect goes through incomplete metamorphosis?","grasshopper","honeybee","butterfly","beetle","Egg, nymph, adult."],
+[4,"A nymph is…","a miniature version of the adult insect","a cocoon","an egg","a worm-like larva","The nymph molts several times until it is an adult."],
+[4,"Who tested spontaneous generation with meat in jars?","Francesco Redi","Carl Linnaeus","Robert Hooke","Jean Henri Fabre","Redi did the experiment in 1668."],
+[4,"The belief that living things come from nonliving things is called…","spontaneous generation","biogenesis","metamorphosis","heredity","Redi's experiments showed it is false."],
+[4,"Jean Henri Fabre was a French pioneer in…","entomology","botany","taxonomy","cell biology","Entomology is the study of insects."],
+[5,"The study of plants is called…","botany","zoology","taxonomy","biology","Scientists who study plants are botanists."],
+[5,"All organisms of kingdom Plantae…","make their own food","find food by moving","have no cells","are prokaryotes","They make food through photosynthesis."],
+[5,"The outermost boundary of a plant cell is the…","cell wall","cell membrane","nucleus","cytoplasm","The cell wall is made of cellulose and makes plant cells box-like."],
+[5,"Chlorophyll is found in organelles called…","chloroplasts","mitochondria","stomata","cotyledons","Photosynthesis takes place in the chloroplasts."],
+[5,"Plant cells are…","eukaryotic","prokaryotic","unicellular only","without a nucleus","Plant cells have a true nucleus."],
+[5,"Which process uses sunlight, carbon dioxide, and water to make glucose?","photosynthesis","cellular respiration","transpiration","germination","It gives off oxygen."],
+[5,"Which process combines glucose with oxygen to release energy?","cellular respiration","photosynthesis","pollination","metamorphosis","It produces carbon dioxide and water."],
+[5,"The simple sugar produced by plants is…","glucose","chlorophyll","cellulose","chitin","Plants make glucose during photosynthesis."],
+[5,"In which process do plants release oxygen?","photosynthesis","cellular respiration","both at night","neither","Photosynthesis gives off oxygen."],
+[5,"When does cellular respiration happen in plants?","day and night","only during the day","only at night","only in spring","It happens constantly."],
+[5,"Photosynthesis occurs in…","only plants","almost all living things","only animals","only bacteria","Cellular respiration is the one that occurs in almost all living things."],
+[5,"Tissue that carries water and minerals from the roots to the leaves is…","xylem","phloem","stomata","chlorophyll","Xylem carries matter upward."],
+[5,"Tissue that carries glucose from the leaves to the stem and roots is…","phloem","xylem","cellulose","rhizoid","Phloem carries matter downward."],
+[5,"Plants that have xylem and phloem are called…","vascular plants","nonvascular plants","seedless plants only","cellular plants","Vascular tissue is like a plant's circulatory system."],
+[5,"Air pores on a leaf are called…","stomata","spiracles","sensilla","rhizoids","Stoma is the singular."],
+[5,"Plants release water vapor into the air through…","transpiration","germination","fertilization","pollination","Transpiration is a form of evaporation."],
+[6,"Conifer trees produce seeds in…","cones","flowers","fruit only","spores","Pines, spruces, and firs are conifers."],
+[6,"Which tree is a conifer?","pine","oak","maple","elm","Oak, maple, and elm are broadleaf trees."],
+[6,"Conifers are pollinated by…","wind","bees","bats","birds","Seeds flutter away in the wind when a cone opens."],
+[6,"A tree that loses its leaves and is bare for part of the year is…","deciduous","coniferous","nonvascular","dormant","Most broadleaf trees are deciduous."],
+[6,"The vase-shaped part of the flower that makes seeds is the…","pistil","stamen","sepal","anther","The pistil makes female egg cells."],
+[6,"The lower part of the pistil, where seeds develop, is the…","ovary","stigma","filament","style","The ovary holds the ovules."],
+[6,"An undeveloped seed that contains an egg cell is the…","ovule","embryo","pollen grain","cotyledon","Ovules are inside the ovary."],
+[6,"The part of the flower that makes pollen is the…","stamen","pistil","ovary","sepal","Pollen covers the anthers."],
+[6,"The transfer of pollen from the stamen to the pistil is…","pollination","fertilization","germination","transpiration","Insects, birds, bats, and wind help."],
+[6,"The uniting of a sperm cell and an egg cell is…","fertilization","pollination","germination","respiration","The fertilized egg cell divides to form the embryo."],
+[6,"The living part of the seed that is the beginning of a new plant is the…","embryo","endosperm","seed coat","ovary","It includes the shoot, primary root, and cotyledon."],
+[6,"Stored food within a seed is the…","endosperm","embryo","cotyledon","seed coat","The cotyledon absorbs and stores food from the endosperm."],
+[6,"The protective outer covering of a seed is the…","seed coat","endosperm","ovary","sepal","Moisture softens it during germination."],
+[6,"The ripened ovary that contains seeds is called…","fruit","pollen","an embryo","a spore","Tomatoes, cucumbers, apples, and maple keys are fruit structures."],
+[6,"Each pollen grain contains…","two sperm cells","one egg cell","two egg cells","an embryo","Pollen is produced by the stamen."],
+[6,"A seed sprouting is called…","germination","pollination","fertilization","transpiration","Seeds need moisture, oxygen, and the right temperature."],
+[6,"During germination, the primary root grows…","downward","upward","sideways only","toward sunlight","It searches for water and minerals."],
+[6,"Which flower smells like rotten meat to attract beetles and flies?","skunk cabbage","lily","jasmine","lilac","God designed some flowers to smell unpleasant for their pollinators."],
+[7,"A spore is…","a single-celled reproductive structure","a type of seed","a fern leaf","a root","You need a microscope to see one."],
+[7,"Which plants grow from spores?","ferns","pine trees","oak trees","tomatoes","Ferns, horsetails, and club mosses are seedless vascular plants."],
+[7,"The leaf of a fern is called a…","frond","rhizome","rhizoid","spore","A new frond is called a fiddlehead."],
+[7,"The underground stem of a fern that grows sideways is the…","rhizome","frond","rhizoid","stomata","It creeps under the soil."],
+[7,"Rhizoids are…","root-like structures that absorb water and nutrients","fern leaves","spore cases","pistils","Hair-like threads on the second plant and on nonvascular plants."],
+[7,"A spore gets its food from…","its environment","endosperm","a cotyledon","a fruit","A spore lands in a moist, shady area with nutrients and air."],
+[7,"Which fern plant form makes spores?","the first plant","the second plant","the seed","the fruit","The first plant is the large, feathery plant."],
+[7,"Which fern plant form makes egg and sperm cells?","the second plant","the first plant","the frond","the spore case","The second plant is tiny."],
+[7,"What forms after a fern egg and sperm unite?","a new fern cell","a seed","a flower","a cone","It grows into a new first plant."],
+[7,"Spore cases are seen as spots on the…","bottom of fern leaves","roots of a fern","flowers of a fern","seeds of a fern","The spore cases open and release the spores."],
+[7,"Which is a seedless, nonvascular plant?","moss","fern","horsetail","club moss","Mosses, liverworts, and hornworts are nonvascular."],
+[7,"Nonvascular plants get water by…","absorbing it","xylem and phloem","stomata only","fruit","So they live in moist, shady places."],
+[7,"What do the first plants in the fossil record show?","they were vascular plants","they were mosses","they were bacteria only","they were animals","Ferns appear before mosses, liverworts, and hornworts."]
+];
+const TFS=[
+[1,"Earth is the only planet that has a biosphere.",true,""],
+[1,"All organisms have a common characteristic of using nutrients.",true,""],
+[1,"A cell membrane is rigid and does not let anything pass through.",false,"The cell membrane is flexible, and molecules can pass through it."],
+[1,"The nucleus is the control center of the cell.",true,""],
+[1,"Mitochondria are where respiration happens.",true,""],
+[1,"Robert Hooke was the first person to see living cells.",false,"Hooke named the cell from dead cork. Leeuwenhoek was first to see living cells."],
+[1,"The cells Hooke observed were from a dead piece of a tree.",true,""],
+[1,"DNA is stored in the cytoplasm.",false,"DNA is stored in the nucleus."],
+[1,"Heredity is the passing of characteristics from parent to offspring.",true,""],
+[1,"Every organism is made of at least one cell.",true,""],
+[2,"Carl Linnaeus began taxonomy in the 1600s.",false,"John Ray began it in the 1600s. Linnaeus grouped living things in the 1700s."],
+[2,"Taxonomists now use six kingdoms of classification.",true,""],
+[2,"Bacteria have a true nucleus.",false,"Bacteria are prokaryotes. They have no nucleus."],
+[2,"Prokaryotic DNA floats freely in the cytoplasm.",true,""],
+[2,"Fungi make their own food through photosynthesis.",false,"Fungi do not make their own food. Plants do."],
+[2,"Protists are mostly unicellular organisms.",true,""],
+[2,"Plants, animals, and people are eukaryotes.",true,""],
+[2,"Archaebacteria are unable to live in extreme environments.",false,"Archaebacteria are designed to live in extreme environments."],
+[3,"Zoology is the study of plants.",false,"Zoology is the study of animals and how they live."],
+[3,"Animals use movement to find food.",true,""],
+[3,"Vertebrates have exoskeletons.",false,"Vertebrates have endoskeletons, or internal skeletons."],
+[3,"Mammals and birds are warm-blooded.",true,""],
+[3,"Fish, amphibians, and reptiles are warm-blooded.",false,"They are cold-blooded."],
+[3,"All invertebrates are cold-blooded.",true,""],
+[3,"All invertebrates have bilateral symmetry.",false,"Invertebrates can have bilateral symmetry, radial symmetry, or asymmetry."],
+[3,"Most animal species are vertebrates.",false,"Most animal species are invertebrates."],
+[3,"Arthropods have jointed legs.",true,""],
+[3,"Arthropods have closed circulatory systems.",false,"Arthropods have open circulatory systems."],
+[3,"Arachnids have antennae.",false,"Arachnids do not have antennae."],
+[3,"Crustaceans have two pairs of antennae.",true,""],
+[3,"A millipede is a decomposer.",true,""],
+[4,"All insects have six jointed legs.",true,""],
+[4,"An insect's wings grow from its abdomen.",false,"Wings grow from the thorax."],
+[4,"Insects are the only flying invertebrates.",true,""],
+[4,"Spiracles carry oxygen to an insect's cells.",false,"Tracheae carry oxygen. Spiracles are the breathing holes."],
+[4,"A grasshopper goes through complete metamorphosis.",false,"Grasshoppers have incomplete metamorphosis: egg, nymph, adult."],
+[4,"The pupa is a stage of complete metamorphosis.",true,""],
+[4,"Francesco Redi's experiment supported spontaneous generation.",false,"It showed that spontaneous generation is false."],
+[4,"The law of biogenesis says that living things come only from other living things.",true,""],
+[4,"Entomologists study insects.",true,""],
+[5,"The study of plants is called botany.",true,""],
+[5,"Plant cells have a cell wall made of cellulose.",true,""],
+[5,"Chlorophyll is found in the nucleus of a plant cell.",false,"Chlorophyll is found in chloroplasts."],
+[5,"Photosynthesis happens only in plants.",true,""],
+[5,"Photosynthesis takes place at night.",false,"Plants perform photosynthesis during the day when the sun is shining."],
+[5,"Cellular respiration occurs in plants day and night.",true,""],
+[5,"In photosynthesis, plants use oxygen to make glucose.",false,"Plants use carbon dioxide, water, and sunlight. They give off oxygen."],
+[5,"Xylem carries water from the roots to the leaves.",true,""],
+[5,"Phloem carries water upward from the roots.",false,"Xylem carries water upward. Phloem carries glucose downward."],
+[5,"Nonvascular plants do not have xylem and phloem.",true,""],
+[5,"Stomata are air pores on a leaf.",true,""],
+[5,"Plants are consumers.",false,"Plants are producers. They make their own food."],
+[6,"Conifers have flat, broad leaves.",false,"Conifers usually have needle-like leaves. Broadleaf trees have flat, broad leaves."],
+[6,"Conifers are pollinated by wind.",true,""],
+[6,"Most broadleaf trees such as oak, maple, and elm are deciduous.",true,""],
+[6,"The stamen is the part of the flower that makes seeds.",false,"The pistil makes seeds. The stamen makes pollen."],
+[6,"The ovary holds the ovules.",true,""],
+[6,"Pollination is the uniting of a sperm cell with an egg cell.",false,"That is fertilization. Pollination is the transfer of pollen."],
+[6,"Each pollen grain contains two sperm cells.",true,""],
+[6,"Self-pollination means pollen is carried from one flower to another.",false,"That is cross-pollination. Self-pollination uses the flower's own pollen."],
+[6,"Fruit is the ripened ovary of a plant that contains seeds.",true,""],
+[6,"A tomato is a fruit structure because it holds seeds.",true,""],
+[6,"The endosperm is the protective outer covering of a seed.",false,"The seed coat is the covering. The endosperm is stored food."],
+[6,"Cotyledons absorb and store food from the endosperm.",true,""],
+[6,"Some seeds have one cotyledon and others have two.",true,""],
+[6,"Oxygen softens the seed coat during germination.",false,"Moisture softens the seed coat. Oxygen helps the plant release energy by cellular respiration."],
+[6,"The primary root grows downward in search of water.",true,""],
+[6,"Insects, birds, bats, and wind help with pollination.",true,""],
+[7,"A spore has its own stored food called endosperm.",false,"A seed has endosperm. A spore gets food from its environment."],
+[7,"Ferns grow from spores.",true,""],
+[7,"Ferns grow from seeds.",false,"Ferns are seedless. They grow from spores."],
+[7,"A fern's stem is called a rhizome.",true,""],
+[7,"Fern leaves are called rhizoids.",false,"Fern leaves are fronds. Rhizoids are root-like threads."],
+[7,"The second plant of a fern makes egg and sperm cells.",true,""],
+[7,"The first plant of a fern makes egg and sperm cells.",false,"The second plant makes egg and sperm cells. The first plant makes spores."],
+[7,"Spore cases can be seen as spots on the bottom of fern leaves.",true,""],
+[7,"Mosses, liverworts, and hornworts have true leaves, stems, and roots.",false,"They do not have true leaves, stems, or roots."],
+[7,"Mosses, liverworts, and hornworts have chlorophyll.",true,""],
+[7,"Nonvascular plants usually live in dry, sunny places.",false,"They need moist, shady places because they absorb water."],
+[7,"Vascular plants appear in the fossil record before mosses.",true,""]
+];
+const FIBS=[
+[1,"The study of living things is called ______.",["biology"]],
+[1,"The layer of Earth's surface where life exists is the ______.",["biosphere"]],
+[1,"A living thing is called an ______.",["organism"]],
+[1,"The smallest unit of any living thing is the ______.",["cell"]],
+[1,"The scientist who named the cell was Robert ______.",["hooke"]],
+[1,"The control center of a cell is the ______.",["nucleus"]],
+[1,"The jelly-like substance within the cell is the ______.",["cytoplasm"]],
+[1,"A little organ within the cell where chemical reactions occur is an ______.",["organelle"]],
+[1,"The barrier that surrounds and protects the cell is the cell ______.",["membrane"]],
+[1,"The organelles where respiration happens are the ______.",["mitochondria"]],
+[1,"Units of hereditary information are called ______.",["genes","gene"]],
+[1,"The passing of characteristics from parent to offspring is ______.",["heredity"]],
+[2,"The science of classification is called ______.",["taxonomy"]],
+[2,"The Father of Taxonomy is Carl ______.",["linnaeus"]],
+[2,"A microscopic organism is called a ______.",["microorganism"]],
+[2,"Organisms having only one cell are ______.",["unicellular"]],
+[2,"Organisms having more than one cell are ______.",["multicellular"]],
+[2,"A single-celled microorganism that has no nucleus is a ______.",["bacterium","bacteria"]],
+[2,"A unicellular organism without a true nucleus is a ______.",["prokaryote"]],
+[2,"An organism whose cells have a true nucleus is a ______.",["eukaryote"]],
+[2,"The tail-like organ that propels some cells is a ______.",["flagellum"]],
+[2,"The kingdom of multicellular organisms that can move and find food is ______.",["animalia","kingdom animalia"]],
+[2,"The kingdom of plants is ______.",["plantae","kingdom plantae"]],
+[2,"Mushrooms, yeasts, and molds belong to kingdom ______.",["fungi"]],
+[3,"The study of animals and how they live is ______.",["zoology"]],
+[3,"Animals with backbones are called ______.",["vertebrates","vertebrate"]],
+[3,"Animals without backbones are called ______.",["invertebrates","invertebrate"]],
+[3,"An internal skeleton is called an ______.",["endoskeleton"]],
+[3,"An external skeleton is called an ______.",["exoskeleton"]],
+[3,"Animals that keep the same body temperature range are ______-blooded.",["warm"]],
+[3,"Animals whose body temperature changes with the environment are ______-blooded.",["cold"]],
+[3,"An object that can be divided in half only one way has ______ symmetry.",["bilateral"]],
+[3,"An object with arms reaching from a central disk has ______ symmetry.",["radial"]],
+[3,"An object that cannot be divided into equal halves has ______.",["asymmetry"]],
+[3,"The most common invertebrate group is the ______.",["arthropods","arthropod"]],
+[3,"An arthropod's exoskeleton is made of a starchy material called ______.",["chitin"]],
+[3,"Spiders, scorpions, and ticks are ______.",["arachnids","arachnid"]],
+[4,"An insect's three body regions are the head, the thorax, and the ______.",["abdomen"]],
+[4,"An eye with only one lens is a ______ eye.",["simple"]],
+[4,"An eye with multiple lenses is a ______ eye.",["compound"]],
+[4,"Tiny hair-like sense organs are called ______.",["sensilla"]],
+[4,"Side-to-side jaws are called ______.",["mandibles","mandible"]],
+[4,"Breathing holes in an insect's abdomen are called ______.",["spiracles","spiracle"]],
+[4,"Breathing tubes that carry air to an insect's cells are ______.",["tracheae","trachea"]],
+[4,"The egg-laying organ of some female insects is the ______.",["ovipositor"]],
+[4,"The four stages of complete metamorphosis are egg, larva, pupa, and ______.",["adult"]],
+[4,"The stages of incomplete metamorphosis are egg, nymph, and ______.",["adult"]],
+[4,"The miniature version of an insect in incomplete metamorphosis is a ______.",["nymph"]],
+[4,"The Italian scientist who tested spontaneous generation was Francesco ______.",["redi"]],
+[4,"The law of ______ says that living things come only from other living things.",["biogenesis"]],
+[4,"Scientists who study insects are called ______.",["entomologists","entomologist"]],
+[5,"The study of plants is called ______.",["botany"]],
+[5,"Scientists who study plants are called ______.",["botanists","botanist"]],
+[5,"The outermost boundary of a plant cell is the cell ______.",["wall"]],
+[5,"The green matter in a plant that traps sunlight energy is ______.",["chlorophyll"]],
+[5,"Chlorophyll is found in organelles called ______.",["chloroplasts","chloroplast"]],
+[5,"The food-making process in green plants is ______.",["photosynthesis"]],
+[5,"The simple sugar produced by plants is ______.",["glucose"]],
+[5,"The process that combines glucose with oxygen to release energy is cellular ______.",["respiration"]],
+[5,"Tissue that carries water from the roots to the leaves is ______.",["xylem"]],
+[5,"Tissue that carries glucose from the leaves to the stem and roots is ______.",["phloem"]],
+[5,"Plants with xylem and phloem are called ______ plants.",["vascular"]],
+[5,"Plants without xylem and phloem are called ______ plants.",["nonvascular","non vascular"]],
+[5,"Air pores on a leaf are called ______.",["stomata"]],
+[5,"Plants release water vapor into the air through ______.",["transpiration"]],
+[6,"Trees that produce seeds in cones are ______ trees.",["conifer","conifers"]],
+[6,"Trees with flat, broad leaves are ______ trees.",["broadleaf","broad leaf"]],
+[6,"A tree that loses its leaves and is bare part of the year is ______.",["deciduous"]],
+[6,"The vase-shaped part of the flower that makes seeds is the ______.",["pistil"]],
+[6,"The lower part of the pistil where seeds develop is the ______.",["ovary"]],
+[6,"An undeveloped seed that contains an egg cell is an ______.",["ovule"]],
+[6,"The part of the flower that makes pollen is the ______.",["stamen"]],
+[6,"The transfer of pollen from the stamen to the pistil is ______.",["pollination"]],
+[6,"The uniting of a sperm cell and an egg cell is ______.",["fertilization"]],
+[6,"The living part of the seed that is the beginning of a new plant is the ______.",["embryo"]],
+[6,"Stored food within a seed is the ______.",["endosperm"]],
+[6,"The protective outer covering of a seed is the seed ______.",["coat"]],
+[6,"A structure in the embryo that absorbs and stores food is a ______.",["cotyledon"]],
+[6,"The ripened ovary of a plant that contains seeds is a ______.",["fruit"]],
+[6,"When a seed sprouts, it ______.",["germinates","germinate"]],
+[6,"Leaf-like structures at the base of a flower's petals are ______.",["sepals","sepal"]],
+[6,"Pine, spruce, and fir trees are ______.",["conifers","conifer"]],
+[7,"A single-celled reproductive structure is a ______.",["spore"]],
+[7,"A fern leaf is called a ______.",["frond"]],
+[7,"The underground stem of a fern that grows sideways is a ______.",["rhizome"]],
+[7,"The root-like structure of a nonvascular plant is a ______.",["rhizoid","rhizoids"]],
+[7,"A new fern frond with a coiled top is called a ______.",["fiddlehead"]],
+[7,"Ferns, horsetails, and club mosses are seedless ______ plants.",["vascular"]],
+[7,"Mosses, liverworts, and hornworts are seedless ______ plants.",["nonvascular","non vascular"]],
+[7,"In a fern, the ______ plant form makes spores.",["first"]],
+[7,"In a fern, the ______ plant form makes egg and sperm cells.",["second"]],
+[7,"A spore gets its food from its ______.",["environment"]]
+];
+const $=s=>document.querySelector(s);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pool=a=>S.sec?a.filter(x=>x[0]==S.sec):a;
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const norm=s=>s.toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').replace(/^(a|an|the) /,'').trim();
+function lev(a,b){const m=[];for(let i=0;i<=a.length;i++){m[i]=[i];}for(let j=0;j<=b.length;j++)m[0][j]=j;
+ for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return m[a.length][b.length]}
+function fibOk(inp,acc){const x=norm(inp);if(!x)return false;
+ return acc.some(a=>{a=norm(a);return x==a||x.replace(/ /g,'')==a.replace(/ /g,'')||(a.length>5&&lev(x,a)<=1)})}
+function confetti(){const c=['#0d6e8a','#1f9d6b','#f0b429','#ef6f4f','#7fb4c6'];
+ for(let i=0;i<60;i++){const d=document.createElement('div');d.className='cf';
+ d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDelay=Math.random()*.8+'s';
+ document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}}
+
+/* ---------- STATE / UI ---------- */
+const S={mode:'cards',sec:0};
+const MODES=[['cards','Flashcards'],['mc','Multiple Choice'],['tf','True / False'],['fib','Fill-in'],['match','Matching'],['test','Test']];
+const SECS=[[0,'All (6.1–6.7)'],[1,'6.1 The Living Cell'],[2,'6.2 Classifying Organisms'],[3,'6.3 Kingdom Animalia'],[4,'6.4 Insect Life Cycles'],[5,'6.5 Kingdom Plantae'],[6,'6.6 Seed Plant Life Cycle'],[7,'6.7 Seedless Plant Life Cycle']];
+function head(){
+ $('#tabs').innerHTML=MODES.map(m=>`<button class="${S.mode==m[0]?'on':''}" onclick="S.mode='${m[0]}';start()">${m[1]}</button>`).join('');
+ $('#chips').innerHTML=SECS.map(s=>`<button class="${S.sec==s[0]?'on':''}" onclick="S.sec=${s[0]};start()">${s[1]}</button>`).join('');
+}
+function start(){head();
+ if(S.mode=='cards')initCards();else if(S.mode=='match')initMatch();else initQuiz();}
+
+/* ----- Flashcards ----- */
+let C={d:[],i:0,f:false};
+function initCards(){C.d=shuf([...pool(TERMS).map(t=>({s:t[0],f:t[1],b:t[2],k:'t'})),...pool(QA).map(t=>({s:t[0],f:t[1],b:t[2],k:'q'}))]);C.i=0;C.f=false;drawCards()}
+function drawCards(){const c=C.d[C.i];
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Card ${C.i+1} / ${C.d.length}</span><span>${c.k=='q'?'Short answer':'Term'} · ${'6.'+c.s}</span></div>
+ <div class="bar"><i style="width:${(C.i+1)/C.d.length*100}%"></i></div>
+ <div class="flip" onclick="C.f=!C.f;drawCards()">${C.f?`<div class="d">${esc(c.b)}</div>`:`<div class="t">${esc(c.f)}</div><small>tap to flip</small>`}</div>
+ <div class="nav"><button class="btn alt" onclick="cardGo(-1)" ${C.i==0?'disabled':''}>◀ Prev</button><button class="btn alt" onclick="initCards()">Shuffle</button><button class="btn" onclick="cardGo(1)" ${C.i==C.d.length-1?'disabled':''}>Next ▶</button></div></div>`}
+function cardGo(n){C.i+=n;C.f=false;drawCards()}
+
+/* ----- Quiz engine (MC / TF / Fill-in / Test) ----- */
+let Q={items:[],i:0,res:[],mode:''};
+function mkMC(r){const o=shuf(r.slice(2,6));return{t:'mc',q:r[1],opts:o,a:o.indexOf(r[2]),ans:r[2],ex:r[6]}}
+function mkTF(r){return{t:'tf',q:r[1],opts:['True','False'],a:r[2]?0:1,ans:r[2]?'True':'False',ex:r[3]}}
+function mkFIB(r){return{t:'fib',q:r[1],acc:r[2],ans:r[2][0],ex:''}}
+function initQuiz(){let it=[];const M=S.mode;
+ if(M=='mc')it=shuf(pool(MCS)).map(mkMC);
+ else if(M=='tf')it=shuf(pool(TFS)).map(mkTF);
+ else if(M=='fib')it=shuf(pool(FIBS)).map(mkFIB);
+ else it=shuf([...shuf(pool(MCS)).slice(0,20).map(mkMC),...shuf(pool(TFS)).slice(0,12).map(mkTF),...shuf(pool(FIBS)).slice(0,18).map(mkFIB)]);
+ Q={items:it,i:0,res:[],mode:M};drawQ()}
+function score(){return Q.res.filter(r=>r&&r.ok).length}
+function drawQ(){
+ if(Q.i>=Q.items.length)return results();
+ const it=Q.items[Q.i],r=Q.res[Q.i],n=Q.items.length;
+ let body='';
+ if(it.t=='fib'){body=`<input class="fib" id="fi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer" ${r?'disabled value="'+esc(r.pick)+'"':''} onkeydown="if(event.key=='Enter')checkFib()">
+  ${r?'':'<div class="nav" style="justify-content:flex-start"><button class="btn" onclick="checkFib()">Check</button></div>'}`}
+ else body=it.opts.map((o,k)=>`<button class="opt ${r?(k==it.a?'good':(k==r.pick?'bad':'')):''}" ${r?'disabled':''} onclick="pick(${k})">${esc(o)}</button>`).join('');
+ const fb=r?`<div class="fb ${r.ok?'good':'bad'}">${r.ok?'✅ Correct!':'❌ Not quite. Answer: <b>'+esc(it.ans)+'</b>'} ${it.ex?'<br>'+esc(it.ex):''}</div>`:'';
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>${Q.mode=='test'?'Test · ':''}Question ${Q.i+1} / ${n}</span><span>Score: ${score()}</span></div>
+ <div class="bar"><i style="width:${Q.i/n*100}%"></i></div>
+ <div class="q">${it.t=='tf'?'True or False: ':''}${esc(it.q)}</div>${body}${fb}
+ <div class="nav"><button class="btn alt" onclick="Q.i--;drawQ()" ${Q.i==0?'disabled':''}>◀ Prev</button><button class="btn" onclick="Q.i++;drawQ()" ${r?'':'disabled'}>${Q.i==n-1?'Finish':'Next ▶'}</button></div></div>`;
+ if(it.t=='fib'&&!r)setTimeout(()=>{const e=$('#fi');e&&e.focus()},30)}
+function pick(k){const it=Q.items[Q.i];if(Q.res[Q.i])return;Q.res[Q.i]={ok:k==it.a,pick:k};drawQ()}
+function checkFib(){const it=Q.items[Q.i];if(Q.res[Q.i])return;const v=$('#fi').value;if(!v.trim())return;
+ Q.res[Q.i]={ok:fibOk(v,it.acc),pick:v};drawQ()}
+function results(){const n=Q.items.length,s=score(),p=Math.round(s/n*100);
+ const wrong=Q.items.map((it,i)=>({it,r:Q.res[i]})).filter(x=>!x.r||!x.r.ok);
+ const msg=p>=90?'Amazing! Test-ready! 🌊':p>=70?'Great job! Review the misses below.':'Keep practicing — you can do it!';
+ if(p>=80)confetti();
+ $('#app').innerHTML=`<div class="card"><div class="big">${s} / ${n} (${p}%)</div><p style="text-align:center">${msg}</p>
+ <div class="nav" style="justify-content:center"><button class="btn" onclick="initQuiz()">Try again</button></div>
+ ${wrong.length?'<h3>Review your misses</h3>'+wrong.map(x=>`<div class="rev"><b>${esc(x.it.q)}</b><br>Answer: ${esc(x.it.ans)}${x.it.ex?'<br><i>'+esc(x.it.ex)+'</i>':''}</div>`).join(''):''}</div>`}
+
+/* ----- Matching ----- */
+let M={L:[],R:[],sel:null,done:0,miss:0,n:0};
+function initMatch(){const p=shuf(pool(TERMS)).slice(0,6);M={L:shuffIdx(p),R:shuffIdx(p),sel:null,done:0,miss:0,n:p.length,p,ok:{}};drawMatch()}
+function shuffIdx(p){return shuf(p.map((_,i)=>i))}
+function drawMatch(){const p=M.p;
+ if(M.done==M.n){if(M.miss<=1)confetti();
+  $('#app').innerHTML=`<div class="card"><div class="big">All matched! 🎉</div><p style="text-align:center">Wrong tries: ${M.miss}</p><div class="nav" style="justify-content:center"><button class="btn" onclick="initMatch()">New round</button></div></div>`;return}
+ const b=(side,i)=>{const k=side+i,ok=M.ok[side+i];return `<button class="${ok?'done':''} ${M.sel&&M.sel.k==k?'sel':''} ${M.bad&&M.bad.includes(k)?'shake':''}" ${ok?'disabled':''} onclick="mpick('${side}',${i})">${esc(side=='L'?p[i][1]:p[i][2])}</button>`};
+ $('#app').innerHTML=`<div class="card"><div class="meta"><span>Tap a term, then its meaning</span><span>${M.done} / ${M.n} · Wrong: ${M.miss}</span></div>
+ <div class="bar"><i style="width:${M.done/M.n*100}%"></i></div>
+ <div class="mt"><div>${M.L.map(i=>b('L',i)).join('')}</div><div>${M.R.map(i=>b('R',i)).join('')}</div></div>
+ <div class="nav"><button class="btn alt" onclick="initMatch()">New round</button><span></span></div></div>`;
+ document.querySelectorAll('.mt>div').forEach(d=>{d.style.display='grid';d.style.gap='8px'})}
+function mpick(side,i){M.bad=null;
+ if(!M.sel||M.sel.side==side){M.sel={side,i,k:side+i};return drawMatch()}
+ const li=side=='L'?i:M.sel.i,ri=side=='R'?i:M.sel.i;
+ if(li==ri){M.ok['L'+li]=M.ok['R'+ri]=1;M.done++;M.sel=null}
+ else{M.miss++;M.bad=[M.sel.k,side+i];M.sel=null}
+ drawMatch();if(M.bad)setTimeout(()=>{M.bad=null;drawMatch()},600)}
+
+start();
+</script>
+</body>
+</html>
